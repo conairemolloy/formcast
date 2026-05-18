@@ -1,0 +1,248 @@
+# FormCast — Sports Prediction Platform
+### Elo + Glicko-2 + Dixon-Coles + BTL + XGBoost + Neural Ensemble
+*Last updated: May 2026*
+
+---
+
+## What This Is
+A multi-sport prediction platform built on a seven-layer ensemble model with full 
+walk-forward backtesting, live in-play probability updating, and a React dashboard. 
+Starting with soccer (5 leagues, 8,982 matches), expanding to GAA, tennis, golf, 
+and NFL. Includes a value bet screener, accumulator builder, and live win probability 
+engine.
+
+---
+
+## Current Results
+| Metric | Value |
+|--------|-------|
+| Matches in database | 8,982 (EPL, La Liga, Bundesliga, Serie A, Ligue 1) |
+| Walk-forward hit rate | 68.8% (non-draw matches) |
+| Walk-forward Brier score | 0.163 |
+| Dixon-Coles Brier score | 0.179 (3-outcome) |
+| XGBoost Brier score | 0.170 |
+| Baseline (coin flip) Brier | 0.250 |
+
+---
+
+## Phase 1 — Core Models (In Progress)
+- [x] Data pipeline — football-data.co.uk, 5 leagues, 2020-25
+- [x] Elo model with MoV multiplier and home advantage
+- [x] Walk-forward backtesting pipeline (strict temporal ordering)
+- [x] Dixon-Coles bivariate Poisson model (temporal decay, tau correction)
+- [x] XGBoost classifier (Elo + form features, 13 features)
+- [ ] Stacking meta-learner (LogisticRegression on OOF predictions, 5-fold TimeSeriesSplit)
+- [ ] Hyperparameter grid search (K, home_advantage, decay, MoV cap)
+- [ ] Glicko-2 uncertainty-aware ratings (RD + volatility)
+- [ ] Bradley-Terry-Luce schedule-adjusted ratings (MLE)
+- [ ] Bayesian hierarchical model (PyMC — partial pooling across leagues)
+
+---
+
+## Phase 2 — Feature Engineering
+### Momentum (8 signals)
+- [ ] Result momentum — EWM(win=3, draw=1, loss=0, λ=0.6), last 5 matches
+- [ ] Score momentum — EWM(scored - conceded, λ=0.6), last 5 matches
+- [ ] Elo momentum — Elo_today minus Elo_28_days_ago
+- [ ] Scoring rate trend — OLS slope of goals scored, last 8 matches
+- [ ] Concession rate trend — OLS slope of goals conceded, last 8 matches
+- [ ] First-half momentum — EWM(H1 score_diff), last 5
+- [ ] Second-half momentum — EWM(H2 score_diff), last 5
+- [ ] Winning/losing streak — Bernoulli run length
+
+### Fatigue & Fixture Congestion (8 factors)
+- [ ] Days since last match (< 4 days = -40 Elo penalty)
+- [ ] Matches in last 21 days (3+ = -20 Elo additional)
+- [ ] Travel km in last 14 days
+- [ ] Cup + league dual burden (-15 Elo)
+- [ ] Rest asymmetry (home vs away rest days differential)
+- [ ] GAA dual code — football + hurling within 5 days (-25 Elo)
+- [ ] County team commitments during intercounty season (-10 Elo)
+- [ ] Altitude adjustment for away venue
+
+### Home Advantage (6 dimensions)
+- [ ] Base home advantage — OLS from score_diff ~ Elo_diff
+- [ ] Distance — great-circle km between grounds
+- [ ] Derby factor — same region binary
+- [ ] Neutral venue flag
+- [ ] Ground familiarity — matches at this ground this season
+- [ ] Crowd size proxy
+
+### Psychological & Situational (10 factors)
+- [ ] Manager change (binary, last 60 days, +15 Elo)
+- [ ] Cup final pressure (-5% scoring rate)
+- [ ] Revenge factor (+5 Elo vs opponent who beat them last)
+- [ ] Title-deciding match (+3% uplift)
+- [ ] Relegation pressure (+10 Elo survival instinct)
+- [ ] Post-loss bounce (+8 Elo)
+- [ ] Season-opener variance (widen CI 20%)
+- [ ] Referee tendency (historical cards/frees per referee)
+- [ ] H2H psychological dominance
+- [ ] Championship vs league priority (-10 Elo squad rotation)
+
+### Weather (7 conditions — OpenWeatherMap API)
+- [ ] Wind speed > 30 km/h (-15% scoring)
+- [ ] Heavy rain > 5mm/hr (-20% scoring)
+- [ ] Temperature extremes (< 5°C or > 25°C)
+- [ ] Pitch waterlogging proxy
+- [ ] Floodlit match binary
+- [ ] Wind direction advantage (H2 tactical)
+- [ ] Altitude > 1500m
+
+---
+
+## Phase 3 — Neural Network Suite
+- [ ] Feedforward: Input → Dense(256,ReLU) → BN → Dropout(0.3) → Dense(128,ReLU) → Dense(3,Softmax)
+- [ ] LSTM: last 5 match feature vectors → LSTM(128) → Dense(64) → Dense(1,σ)
+- [ ] Graph Neural Network: teams as nodes, matches as edges, GCN propagation
+- [ ] Transformer: self-attention over match history sequence
+
+---
+
+## Phase 4 — Live In-Play Engine
+- [ ] Markov chain game state model (score_diff, time_bucket, half, momentum)
+- [ ] Pre-computed win probability lookup table (O(1) query)
+- [ ] Bayesian in-game updater (posterior update per event, Supabase Realtime)
+- [ ] Event impact quantification (goal +12-25%, red card -8-20%, etc — learned from data)
+- [ ] Next-event prediction (P(goal) vs P(point), P(home scores next))
+- [ ] Tournament Monte Carlo simulator (100k simulations, < 5 seconds)
+- [ ] WebSocket live feed (< 1 second end-to-end latency target)
+- [ ] Live data feed integration (The Odds API €15/mo, football-data.org free tier, Betfair Exchange API)
+- [ ] Smart money tracker (odds movement > 10% in < 1hr = sharp money signal)
+
+---
+
+## Phase 5 — Betting Intelligence
+- [ ] Value bet screener (EV = P_model × odds - 1, threshold > 5%)
+- [ ] Kelly criterion stake sizing (half-Kelly)
+- [ ] Accumulator builder — optimal leg selection by EV
+- [ ] Accumulator independence testing (same-league correlation correction)
+- [ ] Accumulator EV matrix UI (best combinations visualised)
+- [ ] Closing line value (CLV) tracking — mean(log(P_model / P_close))
+- [ ] SHA256 prediction accountability ledger (hash-stamped pre-match)
+- [ ] Sharpe ratio + max drawdown on simulated betting strategy
+- [ ] Dutching calculator (stake across multiple outcomes)
+- [ ] Arbitrage detector (Σ(1/odds) < 1 across bookmakers)
+
+---
+
+## Phase 6 — Validation & Statistics
+- [ ] Full calibration curve (predicted prob vs empirical win rate per decile)
+- [ ] Reliability diagram with confidence intervals
+- [ ] Hosmer-Lemeshow goodness of fit test
+- [ ] Diebold-Mariano test vs naive baseline
+- [ ] Permutation feature importance
+- [ ] AIC/BIC model selection
+- [ ] Ljung-Box test (residual autocorrelation)
+- [ ] KS test (predicted vs empirical distribution)
+- [ ] Brier score by time bucket (early season vs late season)
+- [ ] Hit rate by Elo gap band
+
+---
+
+## Phase 7 — Sport Expansion
+### Soccer (additional data)
+- [ ] Extend history to 1993 (football-data.co.uk archive)
+- [ ] Understat xG integration (2014-present, top 5 leagues)
+- [ ] FBref advanced stats (2017-present)
+- [ ] Kaggle European Soccer Database (25k+ matches)
+- [ ] Referee statistics database
+
+### Tennis
+- [ ] Jeff Sackmann ATP dataset (500k+ matches, 1968-present)
+- [ ] Jeff Sackmann WTA dataset
+- [ ] Surface-adjusted Glicko-2 ratings
+- [ ] Point-by-point Markov chain live model
+
+### Golf
+- [ ] DataGolf Strokes Gained API (free tier)
+- [ ] Course-fit model (SG decomposition × course demand weights)
+- [ ] Ordinal regression (P(top 5), P(top 10), P(make cut))
+- [ ] Each-way market pricing
+
+### NFL
+- [ ] nfl_data_py play-by-play (free, 1999-present)
+- [ ] EPA-based win probability model
+- [ ] Drive-by-drive Markov chain
+- [ ] Injury report integration
+
+### GAA
+- [ ] Import Derry club results from PreGame Edge (594 matches)
+- [ ] All 32 county club results (scraping)
+- [ ] Foireann API for live fixtures
+- [ ] Dual-sport fatigue model (football + hurling — unique globally)
+- [ ] xP (expected points) shot model
+
+### Other Sports
+- [ ] Rugby (ESPN Scrum, World Rugby API)
+- [ ] NBA basketball (basketball-reference, NBA API)
+- [ ] Cricket T20 ball-by-ball (Cricsheet.org)
+- [ ] Australian Rules (AFL Tables)
+
+---
+
+## Phase 8 — Frontend (React + Vite)
+- [ ] Project scaffold (Vite + Tailwind + Recharts)
+- [ ] Elo ratings table — live, sortable, filterable by league
+- [ ] Calibration curve — predicted prob vs actual win rate
+- [ ] Brier score over time (rolling 90-match window)
+- [ ] Cumulative P&L chart (flat stake simulation)
+- [ ] SHAP feature importance (beeswarm + waterfall per match)
+- [ ] Elo history chart — animated, all teams, 2020-present
+- [ ] H2H Elo trajectory — two-team selector
+- [ ] Score distribution heatmap (actual vs model predicted)
+- [ ] Value bet screener UI (EV > 5%, Kelly stake shown)
+- [ ] Accumulator builder UI (select legs, see combined EV and optimal stake)
+- [ ] Win probability timeline (live match, Supabase Realtime)
+- [ ] Tournament probability evolution (updates after each result)
+- [ ] Momentum dashboard (8 signals per team)
+- [ ] Smart money tracker (odds movement visualised)
+- [ ] Model ensemble weight evolution chart
+
+---
+
+## Phase 9 — API & Deployment
+- [ ] Flask API scaffold
+- [ ] GET /api/ratings — current Elo ratings per league
+- [ ] GET /api/predictions — upcoming match predictions
+- [ ] GET /api/backtest — accuracy report
+- [ ] GET /api/value-bets — positive EV opportunities
+- [ ] GET /api/match/:id — single match deep dive + SHAP values
+- [ ] GET /api/accumulator — optimal accumulator builder
+- [ ] GET /api/tournament/:id — tournament simulation
+- [ ] WebSocket /live — real-time win probability stream
+- [ ] Deploy frontend to Vercel
+- [ ] Deploy API to Railway
+
+---
+
+## Architecture
+| Layer | Technology |
+|-------|-----------|
+| Modelling | Python — pandas, scipy, sklearn, XGBoost, PyTorch |
+| API | Flask + Socket.io |
+| Database | Supabase (PostgreSQL + Realtime) |
+| Frontend | React + Vite + Tailwind + Recharts + D3 |
+| Deployment | Vercel (frontend) + Railway (API) |
+| Repo | github.com/conairemolloy/formcast |
+
+---
+
+## Data Sources
+| Source | Sport | Coverage | Cost |
+|--------|-------|----------|------|
+| football-data.co.uk | Soccer | 5 leagues, 1993-present | Free |
+| Understat | Soccer | xG, top 5 leagues, 2014-present | Free |
+| FBref / StatsBomb | Soccer | Advanced stats, 2017-present | Free |
+| Kaggle European Soccer DB | Soccer | 25k+ matches | Free |
+| Jeff Sackmann tennis_atp/wta | Tennis | 500k+ matches, 1968-present | Free |
+| DataGolf.com | Golf | SG data, 2004-present | Free tier |
+| nfl_data_py | NFL | Play-by-play, 1999-present | Free |
+| Cricsheet.org | Cricket T20 | Ball-by-ball, 2008-present | Free |
+| AFL Tables | Aus Rules | Full AFL history | Free |
+| OpenWeatherMap API | All | Weather | Free tier |
+| The Odds API | All | Live odds, 40+ bookmakers | €15/mo |
+| Betfair Exchange API | All | Live prices + volume | Free (account required) |
+| football-data.org API | Soccer | Live scores (free tier) | Free |
+| Foireann API | GAA | Fixtures + results | Free |
+| PreGame Edge | GAA | 594 club results (unique) | Internal |

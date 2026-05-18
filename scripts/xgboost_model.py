@@ -7,8 +7,8 @@ from sklearn.preprocessing import LabelEncoder
 from xgboost import XGBClassifier
 
 STARTING_RATING = 1500
-K = 32
-HOME_ADVANTAGE = 100
+K = 16  # Optimised via hyperparameter grid search (hyperparameter_search.py)
+HOME_ADVANTAGE = 50  # Optimised via hyperparameter grid search (hyperparameter_search.py)
 COLD_START = 200
 FORM_WINDOW = 5
 
