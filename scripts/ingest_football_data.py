@@ -15,7 +15,15 @@ SEASONS = [
     ("2024-25", "2425"),
 ]
 
-BASE_URL = "https://www.football-data.co.uk/mmz4281/{code}/E0.csv"
+LEAGUES = [
+    ("EPL",        "E0"),
+    ("LaLiga",     "SP1"),
+    ("Bundesliga", "D1"),
+    ("SerieA",     "I1"),
+    ("Ligue1",     "F1"),
+]
+
+BASE_URL = "https://www.football-data.co.uk/mmz4281/{season_code}/{league_code}.csv"
 
 COLUMN_MAP = {
     "Date": "match_date",
@@ -30,8 +38,8 @@ COLUMN_MAP = {
 }
 
 
-def download_season(season_label: str, code: str) -> pd.DataFrame:
-    url = BASE_URL.format(code=code)
+def download_season(league_label: str, league_code: str, season_label: str, season_code: str) -> pd.DataFrame:
+    url = BASE_URL.format(season_code=season_code, league_code=league_code)
     response = requests.get(url, timeout=30)
     response.raise_for_status()
 
@@ -40,7 +48,7 @@ def download_season(season_label: str, code: str) -> pd.DataFrame:
     present = {src: dst for src, dst in COLUMN_MAP.items() if src in raw.columns}
     missing = [src for src in COLUMN_MAP if src not in raw.columns]
     if missing:
-        print(f"  Warning: missing columns for {season_label}: {missing}")
+        print(f"    Warning: missing columns: {missing}")
 
     df = raw[list(present.keys())].rename(columns=present)
 
@@ -50,11 +58,11 @@ def download_season(season_label: str, code: str) -> pd.DataFrame:
         ).dt.date
 
     df["season"] = season_label
-    df["league"] = "EPL"
+    df["league"] = league_label
 
     df = df.dropna(subset=["home_team", "away_team"])
 
-    print(f"  {season_label}: {len(df)} rows downloaded")
+    print(f"    {season_label}: {len(df)} rows")
     return df
 
 
@@ -63,12 +71,28 @@ def upsert_to_supabase(df: pd.DataFrame, batch_size: int = 500) -> None:
     key = os.environ["SUPABASE_KEY"]
     client = create_client(url, key)
 
+    print("  Deleting existing rows...")
+    client.table("matches").delete().neq("id", 0).execute()
+    print("  Existing rows deleted")
+
     records = df.copy()
     records["match_date"] = records["match_date"].astype(str)
 
-    rows = records.to_dict(orient="records")
-    total = len(rows)
+    # Convert all floats to Python native types and replace NaN with None
+    import math
+    rows = []
+    for record in records.to_dict(orient="records"):
+        clean = {}
+        for k, v in record.items():
+            if isinstance(v, float) and math.isnan(v):
+                clean[k] = None
+            elif hasattr(v, 'item'):  # numpy scalar
+                clean[k] = v.item()
+            else:
+                clean[k] = v
+        rows.append(clean)
 
+    total = len(rows)
     for i in range(0, total, batch_size):
         batch = rows[i : i + batch_size]
         client.table("matches").upsert(batch).execute()
@@ -81,16 +105,18 @@ def upsert_to_supabase(df: pd.DataFrame, batch_size: int = 500) -> None:
 def main() -> None:
     frames = []
 
-    print("Downloading seasons...")
-    for season_label, code in SEASONS:
-        df = download_season(season_label, code)
-        frames.append(df)
+    for league_label, league_code in LEAGUES:
+        print(f"\n{league_label}:")
+        for season_label, season_code in SEASONS:
+            df = download_season(league_label, league_code, season_label, season_code)
+            frames.append(df)
 
     combined = pd.concat(frames, ignore_index=True)
-    print(f"\nTotal rows: {len(combined)}")
+    print(f"\nTotal rows across all leagues: {len(combined)}")
 
-    out_path = os.path.join(os.path.dirname(__file__), "..", "data", "processed", "results.csv")
-    out_path = os.path.normpath(out_path)
+    out_path = os.path.normpath(
+        os.path.join(os.path.dirname(__file__), "..", "data", "processed", "results.csv")
+    )
     combined.to_csv(out_path, index=False)
     print(f"Saved to {out_path}")
 
