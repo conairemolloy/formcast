@@ -8,6 +8,33 @@ from supabase import create_client
 load_dotenv()
 
 SEASONS = [
+    ("1993-94", "9394"),
+    ("1994-95", "9495"),
+    ("1995-96", "9596"),
+    ("1996-97", "9697"),
+    ("1997-98", "9798"),
+    ("1998-99", "9899"),
+    ("1999-00", "9900"),
+    ("2000-01", "0001"),
+    ("2001-02", "0102"),
+    ("2002-03", "0203"),
+    ("2003-04", "0304"),
+    ("2004-05", "0405"),
+    ("2005-06", "0506"),
+    ("2006-07", "0607"),
+    ("2007-08", "0708"),
+    ("2008-09", "0809"),
+    ("2009-10", "0910"),
+    ("2010-11", "1011"),
+    ("2011-12", "1112"),
+    ("2012-13", "1213"),
+    ("2013-14", "1314"),
+    ("2014-15", "1415"),
+    ("2015-16", "1516"),
+    ("2016-17", "1617"),
+    ("2017-18", "1718"),
+    ("2018-19", "1819"),
+    ("2019-20", "1920"),
     ("2020-21", "2021"),
     ("2021-22", "2122"),
     ("2022-23", "2223"),
@@ -38,32 +65,47 @@ COLUMN_MAP = {
 }
 
 
-def download_season(league_label: str, league_code: str, season_label: str, season_code: str) -> pd.DataFrame:
-    url = BASE_URL.format(season_code=season_code, league_code=league_code)
-    response = requests.get(url, timeout=30)
-    response.raise_for_status()
+def download_season(league_label: str, league_code: str, season_label: str, season_code: str) -> pd.DataFrame | None:
+    try:
+        url = BASE_URL.format(season_code=season_code, league_code=league_code)
+        response = requests.get(url, timeout=30)
+        if response.status_code == 404:
+            print(f"    Warning: {league_label} {season_label} not found (404), skipping")
+            return None
+        response.raise_for_status()
 
-    raw = pd.read_csv(io.StringIO(response.text), low_memory=False)
+        raw = pd.read_csv(io.StringIO(response.text), low_memory=False, on_bad_lines='skip')
 
-    present = {src: dst for src, dst in COLUMN_MAP.items() if src in raw.columns}
-    missing = [src for src in COLUMN_MAP if src not in raw.columns]
-    if missing:
-        print(f"    Warning: missing columns: {missing}")
+        present = {src: dst for src, dst in COLUMN_MAP.items() if src in raw.columns}
+        missing = [src for src in COLUMN_MAP if src not in raw.columns]
+        if missing:
+            print(f"    Warning: missing columns: {missing}")
 
-    df = raw[list(present.keys())].rename(columns=present)
+        df = raw[list(present.keys())].rename(columns=present)
 
-    if "match_date" in df.columns:
-        df["match_date"] = pd.to_datetime(
-            df["match_date"], dayfirst=True, format="mixed"
-        ).dt.date
+        if "home_goals" in df.columns:
+            df["home_goals"] = pd.to_numeric(df["home_goals"], errors="coerce").fillna(0).astype(int)
+        if "away_goals" in df.columns:
+            df["away_goals"] = pd.to_numeric(df["away_goals"], errors="coerce").fillna(0).astype(int)
 
-    df["season"] = season_label
-    df["league"] = league_label
+        if "match_date" in df.columns:
+            df["match_date"] = pd.to_datetime(
+                df["match_date"], dayfirst=True, format="mixed"
+            ).dt.date
 
-    df = df.dropna(subset=["home_team", "away_team"])
+        df["season"] = season_label
+        df["league"] = league_label
 
-    print(f"    {season_label}: {len(df)} rows")
-    return df
+        df = df.dropna(subset=["home_team", "away_team"])
+
+        print(f"    {season_label}: {len(df)} rows")
+        return df
+    except requests.HTTPError as e:
+        print(f"    Warning: {league_label} {season_label} HTTP error ({e}), skipping")
+        return None
+    except Exception as e:
+        print(f"    Warning: {league_label} {season_label} failed ({e}), skipping")
+        return None
 
 
 def upsert_to_supabase(df: pd.DataFrame, batch_size: int = 500) -> None:
@@ -109,7 +151,8 @@ def main() -> None:
         print(f"\n{league_label}:")
         for season_label, season_code in SEASONS:
             df = download_season(league_label, league_code, season_label, season_code)
-            frames.append(df)
+            if df is not None:
+                frames.append(df)
 
     combined = pd.concat(frames, ignore_index=True)
     print(f"\nTotal rows across all leagues: {len(combined)}")
