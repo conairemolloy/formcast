@@ -35,6 +35,10 @@ FEATURE_COLS = [
     "home_form", "away_form", "form_diff",
     "home_goals_scored_avg", "home_goals_conceded_avg",
     "away_goals_scored_avg", "away_goals_conceded_avg",
+    # xG (last 5 prior matches, split by venue role)
+    "home_xg_avg", "away_xg_avg",
+    "home_xg_conceded_avg", "away_xg_conceded_avg",
+    "home_xg_diff_avg", "away_xg_diff_avg",
     # Momentum
     "home_result_momentum", "away_result_momentum",
     "home_score_momentum", "away_score_momentum",
@@ -54,7 +58,7 @@ FEATURE_COLS = [
     "post_loss_bounce", "post_loss_bounce_away",
     # Context
     "league_encoded", "is_early_season",
-]  # 42 features total
+]  # 48 features total
 
 
 # ---------------------------------------------------------------------------
@@ -206,6 +210,21 @@ def _team_features(
             break
     unbeaten = min(unbeaten, 15)
 
+    # xG (last 5 prior matches with xG data, split by venue role)
+    home_xg_hist = [h for h in hist if h.get("is_home") is True  and h.get("xg_scored") is not None]
+    away_xg_hist = [h for h in hist if h.get("is_home") is False and h.get("xg_scored") is not None]
+    all_xg_hist  = [h for h in hist if h.get("xg_scored") is not None]
+
+    fw_hxg = home_xg_hist[-FORM_WINDOW:]
+    fw_axg = away_xg_hist[-FORM_WINDOW:]
+    fw_axg_all = all_xg_hist[-FORM_WINDOW:]
+
+    xg_scored_home_avg   = sum(h["xg_scored"]   for h in fw_hxg) / len(fw_hxg) if fw_hxg else 1.3
+    xg_conceded_home_avg = sum(h["xg_conceded"] for h in fw_hxg) / len(fw_hxg) if fw_hxg else 1.3
+    xg_scored_away_avg   = sum(h["xg_scored"]   for h in fw_axg) / len(fw_axg) if fw_axg else 1.3
+    xg_conceded_away_avg = sum(h["xg_conceded"] for h in fw_axg) / len(fw_axg) if fw_axg else 1.3
+    xg_diff_avg          = sum(h["xg_diff"]     for h in fw_axg_all) / len(fw_axg_all) if fw_axg_all else 0.0
+
     return {
         "form": form, "gs_avg": gs_avg, "gc_avg": gc_avg,
         "result_momentum": rm, "score_momentum": sm,
@@ -213,6 +232,11 @@ def _team_features(
         "days_rest": days_rest, "matches_21d": matches_21d,
         "season_pos": season_pos, "is_early": is_early,
         "post_loss": post_loss, "unbeaten_run": unbeaten,
+        "xg_scored_home_avg": xg_scored_home_avg,
+        "xg_conceded_home_avg": xg_conceded_home_avg,
+        "xg_scored_away_avg": xg_scored_away_avg,
+        "xg_conceded_away_avg": xg_conceded_away_avg,
+        "xg_diff_avg": xg_diff_avg,
     }
 
 
@@ -285,7 +309,7 @@ def _fatigue_score(days_rest: int, matches_21d: int, asymmetry: float, home: boo
 # Single-pass feature builder
 # ---------------------------------------------------------------------------
 
-def build_features(df: pd.DataFrame) -> pd.DataFrame:
+def build_features(df: pd.DataFrame, xg_lookup: dict | None = None) -> pd.DataFrame:
     le = LabelEncoder()
     le.fit(df["league"])
     league_enc = {lg: int(i) for i, lg in enumerate(le.classes_)}
@@ -298,8 +322,10 @@ def build_features(df: pd.DataFrame) -> pd.DataFrame:
     h2h_hist:  dict[tuple, list] = defaultdict(list)
 
     pts_map = {"W": 3, "D": 1, "L": 0}
+    xg_lookup = xg_lookup or {}
     rows = []
     n_total = len(df)
+    n_xg_hits = 0
 
     for i, row in df.iterrows():
         if i > 0 and i % 2000 == 0:
@@ -313,6 +339,15 @@ def build_features(df: pd.DataFrame) -> pd.DataFrame:
         hg     = int(row["home_goals"])
         ag     = int(row["away_goals"])
         result = row["result"]
+
+        # ---- xG lookup for this match (stored in history after the match) -
+        xg_key = (date.date(), home, away, league)
+        xg_vals = xg_lookup.get(xg_key)
+        if xg_vals:
+            n_xg_hits += 1
+        h_xg = xg_vals[0] if xg_vals else None
+        a_xg = xg_vals[1] if xg_vals else None
+        xg_d  = xg_vals[2] if xg_vals else None
 
         # ---- Pre-match ratings -----------------------------------------
         home_elo = elo[home]
@@ -365,6 +400,13 @@ def build_features(df: pd.DataFrame) -> pd.DataFrame:
             "home_goals_conceded_avg": hf["gc_avg"],
             "away_goals_scored_avg": af["gs_avg"],
             "away_goals_conceded_avg": af["gc_avg"],
+            # xG (from prior matches, no leakage)
+            "home_xg_avg": hf["xg_scored_home_avg"],
+            "away_xg_avg": af["xg_scored_away_avg"],
+            "home_xg_conceded_avg": hf["xg_conceded_home_avg"],
+            "away_xg_conceded_avg": af["xg_conceded_away_avg"],
+            "home_xg_diff_avg": hf["xg_diff_avg"],
+            "away_xg_diff_avg": af["xg_diff_avg"],
             # Momentum
             "home_result_momentum": hf["result_momentum"],
             "away_result_momentum": af["result_momentum"],
@@ -419,13 +461,20 @@ def build_features(df: pd.DataFrame) -> pd.DataFrame:
             "date": date, "season": season, "result": home_res,
             "points": pts_map[home_res],
             "goal_diff": hg - ag, "goals_scored": hg, "goals_conceded": ag,
+            "is_home": True, "xg_scored": h_xg, "xg_conceded": a_xg,
+            "xg_diff": xg_d,
         })
         team_hist[away].append({
             "date": date, "season": season, "result": away_res,
             "points": pts_map[away_res],
             "goal_diff": ag - hg, "goals_scored": ag, "goals_conceded": hg,
+            "is_home": False, "xg_scored": a_xg, "xg_conceded": h_xg,
+            "xg_diff": (-xg_d if xg_d is not None else None),
         })
 
+    pct = 100.0 * n_xg_hits / n_total if n_total else 0.0
+    print(f"  xG data found: {n_xg_hits:,} / {n_total:,} matches ({pct:.1f}%)")
+    print(f"  xG defaults used for: {n_total - n_xg_hits:,} matches\n")
     return pd.DataFrame(rows)
 
 
@@ -444,8 +493,24 @@ def main() -> None:
     df = df.dropna(subset=["home_team", "away_team", "home_goals", "away_goals", "result"])
     print(f"Loaded {len(df):,} matches across {df['league'].nunique()} leagues\n")
 
+    # Load xG lookup from the pre-joined file (team names already mapped to football-data format)
+    xg_lookup: dict = {}
+    xg_path = os.path.normpath(
+        os.path.join(base, "..", "data", "processed", "results_with_xg.csv")
+    )
+    if os.path.exists(xg_path):
+        xg_df = pd.read_csv(xg_path, parse_dates=["match_date"])
+        xg_df = xg_df.dropna(subset=["home_xg", "away_xg", "xg_diff"])
+        for _, r in xg_df.iterrows():
+            key = (r["match_date"].date(), r["home_team"], r["away_team"], r["league"])
+            xg_lookup[key] = (float(r["home_xg"]), float(r["away_xg"]), float(r["xg_diff"]))
+        print(f"Loaded {len(xg_lookup):,} xG records from results_with_xg.csv")
+    else:
+        print("Warning: results_with_xg.csv not found — run merge_xg_features.py first")
+        print("  xG features will use default values (1.3 scored/conceded, 0.0 diff)\n")
+
     print(f"Building {len(FEATURE_COLS)} features for {len(df):,} matches...")
-    feat_df = build_features(df)
+    feat_df = build_features(df, xg_lookup)
     print(f"  Processed {len(df):,}/{len(df):,} matches (complete)\n")
 
     # Skip cold-start rows from training/test (state still built for all rows)
@@ -496,7 +561,7 @@ def main() -> None:
 
     # ---- Feature importances -------------------------------------------
     importances = pd.Series(model.feature_importances_, index=FEATURE_COLS)
-    print("=== Feature Importances (all 43 features ranked) ===")
+    print("=== Feature Importances (all 48 features ranked) ===")
     for feat, imp in importances.sort_values(ascending=False).items():
         bar = "█" * int(imp * 300)
         print(f"  {feat:<32s} {imp:.4f}  {bar}")
@@ -523,7 +588,7 @@ def main() -> None:
     print("\n=== Model Comparison (test set) ===")
     print(f"  {'Model':<32s}  {'N':>5}  {'HitRate':>8}  {'Brier':>9}")
     print(f"  {'-'*32}  {'-'*5}  {'-'*8}  {'-'*9}")
-    print(f"  {'Full XGB (new, 43 features)':<32s}  {len(test_df):>5}  {hit_rate:>7.4f}  {brier:>9.6f}")
+    print(f"  {'Full XGB (new, 48 features)':<32s}  {len(test_df):>5}  {hit_rate:>7.4f}  {brier:>9.6f}")
     if old_hit is not None:
         print(f"  {'Basic XGB (xgboost_model.py)':<32s}  {old_n:>5}  {old_hit:>7.4f}  {old_brier:>9.6f}")
     print(f"  {'Elo baseline':<32s}  {len(test_df):>5}  {elo_hit:>7.4f}  {'—':>9}")
