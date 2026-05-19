@@ -1,0 +1,201 @@
+match_date,n_legs,combined_odds,combined_p,acca_ev,won,profit_flat,leg1_home,leg1_away,leg1_outcome,leg1_odds,leg1_p,leg2_home,leg2_away,leg2_outcome,leg2_odds,leg2_p,leg3_home,leg3_away,leg3_outcome,leg3_odds,leg3_p
+2024-05-26,2,6.84,0.1787,0.2223,0,-1.0,Sevilla,Barcelona,A,1.8,0.5892,Celta,Valencia,A,3.8,0.3033,,,,,
+2024-08-17,2,25.5,0.1023,1.6094,0,-1.0,Ipswich,Liverpool,H,8.5,0.2012,Brest,Marseille,H,3.0,0.5086,,,,,
+2024-08-17,3,56.1,0.0668,2.7458,0,-1.0,Ipswich,Liverpool,H,8.5,0.2012,Parma,Fiorentina,A,2.2,0.6525,Brest,Marseille,H,3.0,0.5086
+2024-08-18,2,4.488,0.3356,0.5066,0,-1.0,Auxerre,Nice,A,2.35,0.528,Bologna,Udinese,H,1.91,0.6357,,,,,
+2024-08-18,3,21.32,0.0838,0.7862,0,-1.0,Verona,Napoli,H,4.75,0.2496,Auxerre,Nice,A,2.35,0.528,Bologna,Udinese,H,1.91,0.6357
+2024-08-19,2,17.0,0.0867,0.4734,0,-1.0,Valladolid,Espanol,A,3.4,0.3322,Leicester,Tottenham,H,5.0,0.2609,,,,,
+2024-08-19,3,31.45,0.0505,0.5881,0,-1.0,Valladolid,Espanol,A,3.4,0.3322,Leicester,Tottenham,H,5.0,0.2609,Lecce,Atalanta,A,1.85,0.5826
+2024-08-23,2,4.34,0.2746,0.1916,1,3.34,M'gladbach,Leverkusen,A,1.55,0.702,Sevilla,Villarreal,A,2.8,0.3911,,,,,
+2024-08-24,2,5.95,0.2513,0.4954,0,-1.0,St Etienne,Le Havre,A,3.5,0.3478,Parma,Milan,A,1.7,0.7226,,,,,
+2024-08-24,3,16.66,0.1082,0.8025,0,-1.0,Southampton,Nott'm Forest,A,2.8,0.4305,St Etienne,Le Havre,A,3.5,0.3478,Parma,Milan,A,1.7,0.7226
+2024-08-25,2,22.55,0.0936,1.1104,0,-1.0,Napoli,Bologna,A,4.1,0.3496,Ath Madrid,Girona,A,5.5,0.2677,,,,,
+2024-08-25,3,73.288,0.0384,1.8155,0,-1.0,Napoli,Bologna,A,4.1,0.3496,Alaves,Betis,A,3.25,0.4105,Ath Madrid,Girona,A,5.5,0.2677
+2024-08-26,2,4.011,0.3259,0.3072,0,-1.0,Cagliari,Como,H,2.1,0.596,Villarreal,Celta,H,1.91,0.5468,,,,,
+2024-08-30,2,4.202,0.3203,0.3457,1,3.202,Union Berlin,St Pauli,H,1.91,0.6308,Venezia,Torino,A,2.2,0.5077,,,,,
+2024-08-31,2,8.96,0.1881,0.6856,0,-1.0,Holstein Kiel,Wolfsburg,H,3.2,0.4239,Espanol,Vallecano,H,2.8,0.4438,,,,,
+2024-08-31,3,16.128,0.1296,1.0902,0,-1.0,Holstein Kiel,Wolfsburg,H,3.2,0.4239,Espanol,Vallecano,H,2.8,0.4438,Brest,St Etienne,H,1.8,0.6889
+2024-09-01,2,22.0,0.0977,1.1489,0,-1.0,Bayern Munich,Freiburg,D,8.0,0.193,Sevilla,Girona,A,2.75,0.5061,,,,,
+2024-09-01,3,60.5,0.0463,1.8023,0,-1.0,Bayern Munich,Freiburg,D,8.0,0.193,Le Havre,Auxerre,H,2.75,0.4742,Sevilla,Girona,A,2.75,0.5061
+2024-09-13,2,9.35,0.1486,0.389,0,-1.0,Dortmund,Heidenheim,D,5.5,0.2391,St Etienne,Lille,A,1.7,0.6213,,,,,
+2024-09-14,2,17.15,0.1206,1.0675,0,-1.0,Holstein Kiel,Bayern Munich,D,7.0,0.207,Como,Bologna,A,2.45,0.5824,,,,,
+2024-09-14,3,39.445,0.0628,1.4766,0,-1.0,Holstein Kiel,Bayern Munich,D,7.0,0.207,M'gladbach,Stuttgart,A,2.3,0.5208,Como,Bologna,A,2.45,0.5824
+2024-09-15,2,9.66,0.1935,0.8691,0,-1.0,Girona,Barcelona,H,4.2,0.3221,Tottenham,Arsenal,A,2.3,0.6007,,,,,
+2024-09-15,3,34.776,0.0638,1.2191,0,-1.0,Girona,Barcelona,H,4.2,0.3221,Tottenham,Arsenal,A,2.3,0.6007,Toulouse,Le Havre,D,3.6,0.3298
+2024-09-16,2,12.8,0.167,1.1371,0,-1.0,Parma,Udinese,A,3.2,0.4972,Vallecano,Osasuna,A,4.0,0.3358,,,,,
+2024-09-20,2,9.52,0.1413,0.3451,1,8.52,Verona,Torino,A,2.8,0.3929,Cagliari,Empoli,A,3.4,0.3596,,,,,
+2024-09-20,3,14.566,0.0987,0.4373,1,13.5656,Verona,Torino,A,2.8,0.3929,Cagliari,Empoli,A,3.4,0.3596,Nice,St Etienne,H,1.53,0.6984
+2024-09-21,2,20.0,0.0915,0.8294,0,-1.0,Valencia,Girona,A,2.5,0.5368,Werder Bremen,Bayern Munich,H,8.0,0.1704,,,,,
+2024-09-21,3,74.0,0.0328,1.4259,0,-1.0,Union Berlin,Hoffenheim,A,3.7,0.3584,Valencia,Girona,A,2.5,0.5368,Werder Bremen,Bayern Munich,H,8.0,0.1704
+2024-09-22,2,4.945,0.2567,0.2695,1,3.945,Montpellier,Auxerre,H,2.3,0.4866,Brest,Toulouse,H,2.15,0.5276,,,,,
+2024-09-22,3,8.011,0.173,0.3856,0,-1.0,St Pauli,RB Leipzig,A,1.62,0.6737,Montpellier,Auxerre,H,2.3,0.4866,Brest,Toulouse,H,2.15,0.5276
+2024-09-28,2,17.64,0.1133,0.9982,0,-1.0,Bayern Munich,Leverkusen,A,4.2,0.3415,Mainz,Heidenheim,A,4.2,0.3317,,,,,
+2024-09-28,3,52.92,0.0488,1.5801,0,-1.0,Bayern Munich,Leverkusen,A,4.2,0.3415,Mainz,Heidenheim,A,4.2,0.3317,Bologna,Atalanta,H,3.0,0.4304
+2024-09-29,2,16.25,0.1212,0.9702,0,-1.0,Celta,Girona,A,3.25,0.4714,Napoli,Monza,D,5.0,0.2572,,,,,
+2024-09-29,3,35.75,0.0687,1.4572,0,-1.0,Celta,Girona,A,3.25,0.4714,Napoli,Monza,D,5.0,0.2572,Angers,Reims,A,2.2,0.5669
+2024-09-30,2,5.61,0.2489,0.3965,1,4.61,Bournemouth,Southampton,H,1.65,0.6513,Parma,Cagliari,A,3.4,0.3822,,,,,
+2024-10-04,2,7.25,0.2154,0.5615,0,-1.0,Verona,Venezia,H,2.5,0.5413,Leganes,Valencia,H,2.9,0.3979,,,,,
+2024-10-05,2,68.75,0.0719,3.9434,0,-1.0,Real Madrid,Villarreal,D,6.25,0.2173,Leverkusen,Holstein Kiel,D,11.0,0.3309,,,,,
+2024-10-05,3,268.125,0.0241,5.4625,0,-1.0,Real Madrid,Villarreal,D,6.25,0.2173,Getafe,Osasuna,A,3.9,0.3352,Leverkusen,Holstein Kiel,D,11.0,0.3309
+2024-10-06,2,10.8,0.1812,0.9567,0,-1.0,Bologna,Parma,H,1.8,0.7703,Stuttgart,Hoffenheim,D,6.0,0.2352,,,,,
+2024-10-06,3,59.4,0.0403,1.3923,0,-1.0,Bologna,Parma,H,1.8,0.7703,Ein Frankfurt,Bayern Munich,H,5.5,0.2223,Stuttgart,Hoffenheim,D,6.0,0.2352
+2024-10-19,2,30.75,0.0738,1.2682,0,-1.0,Bayern Munich,Stuttgart,A,7.5,0.2005,M'gladbach,Heidenheim,A,4.1,0.3679,,,,,
+2024-10-19,3,92.25,0.0351,2.235,0,-1.0,Bayern Munich,Stuttgart,A,7.5,0.2005,M'gladbach,Heidenheim,A,4.1,0.3679,Southampton,Leicester,A,3.0,0.4754
+2024-10-20,2,16.2,0.1322,1.1415,0,-1.0,Empoli,Napoli,H,6.0,0.283,Cagliari,Torino,A,2.7,0.4671,,,,,
+2024-10-20,3,37.26,0.0707,1.6331,0,-1.0,Empoli,Napoli,H,6.0,0.283,Lecce,Fiorentina,A,2.3,0.5346,Cagliari,Torino,A,2.7,0.4671
+2024-10-25,2,7.89,0.2339,0.8453,0,-1.0,Leicester,Nott'm Forest,H,3.0,0.4289,Torino,Como,H,2.63,0.5453,,,,,
+2024-10-26,2,18.375,0.1321,1.4282,0,-1.0,Stuttgart,Holstein Kiel,D,7.5,0.2422,Las Palmas,Girona,A,2.45,0.5456,,,,,
+2024-10-26,3,31.789,0.0894,1.843,0,-1.0,Stuttgart,Holstein Kiel,D,7.5,0.2422,RB Leipzig,Freiburg,H,1.73,0.6768,Las Palmas,Girona,A,2.45,0.5456
+2024-10-27,2,33.25,0.0774,1.5745,0,-1.0,Parma,Empoli,A,3.5,0.4499,Bochum,Bayern Munich,D,9.5,0.1721,,,,,
+2024-10-27,3,71.488,0.0444,2.1749,0,-1.0,Parma,Empoli,A,3.5,0.4499,Monza,Venezia,H,2.15,0.5736,Bochum,Bayern Munich,D,9.5,0.1721
+2024-10-29,2,5.758,0.2366,0.3622,0,-1.0,Milan,Napoli,H,2.45,0.4697,Cagliari,Bologna,A,2.35,0.5037,,,,,
+2024-10-29,3,18.712,0.0834,0.561,0,-1.0,Milan,Napoli,H,2.45,0.4697,Lecce,Verona,A,3.25,0.3526,Cagliari,Bologna,A,2.35,0.5037
+2024-10-30,2,3.71,0.3864,0.4334,0,-1.0,Venezia,Udinese,A,2.65,0.479,Juventus,Parma,H,1.4,0.8066,,,,,
+2024-10-31,2,12.25,0.122,0.494,0,-1.0,Roma,Torino,A,5.0,0.2493,Como,Lazio,A,2.45,0.4892,,,,,
+2024-11-01,2,7.31,0.1842,0.3463,0,-1.0,Alaves,Mallorca,A,3.4,0.3424,Lille,Lyon,H,2.15,0.5379,,,,,
+2024-11-02,2,18.375,0.0926,0.7015,0,-1.0,Bayern Munich,Union Berlin,D,7.5,0.181,Holstein Kiel,Heidenheim,A,2.45,0.5116,,,,,
+2024-11-02,3,55.125,0.0375,1.0673,0,-1.0,Bayern Munich,Union Berlin,D,7.5,0.181,Dortmund,RB Leipzig,A,3.0,0.405,Holstein Kiel,Heidenheim,A,2.45,0.5116
+2024-11-03,2,28.5,0.0555,0.5828,0,-1.0,Freiburg,Mainz,A,4.75,0.2611,Ath Madrid,Las Palmas,D,6.0,0.2127,,,,,
+2024-11-03,3,105.45,0.0179,0.8898,0,-1.0,Napoli,Atalanta,A,3.7,0.3227,Freiburg,Mainz,A,4.75,0.2611,Ath Madrid,Las Palmas,D,6.0,0.2127
+2024-11-04,2,11.691,0.1845,1.1574,1,10.691,Empoli,Como,H,2.7,0.449,Parma,Genoa,A,4.33,0.411,,,,,
+2024-11-04,3,17.537,0.1348,1.3631,1,16.5365,Empoli,Como,H,2.7,0.449,Lazio,Cagliari,H,1.5,0.7302,Parma,Genoa,A,4.33,0.411
+2024-11-09,2,49.0,0.042,1.0602,0,-1.0,Real Madrid,Osasuna,D,7.0,0.2058,St Pauli,Bayern Munich,D,7.0,0.2043,,,,,
+2024-11-09,3,124.95,0.0204,1.5495,0,-1.0,Real Madrid,Osasuna,D,7.0,0.2058,Venezia,Parma,H,2.55,0.4853,St Pauli,Bayern Munich,D,7.0,0.2043
+2024-11-10,2,16.5,0.1208,0.9939,0,-1.0,Getafe,Girona,A,3.0,0.4824,Man United,Leicester,D,5.5,0.2505,,,,,
+2024-11-10,3,42.075,0.0636,1.678,0,-1.0,Getafe,Girona,A,3.0,0.4824,Chelsea,Arsenal,A,2.55,0.5267,Man United,Leicester,D,5.5,0.2505
+2024-11-22,2,65.0,0.0362,1.3529,0,-1.0,Bayern Munich,Augsburg,D,10.0,0.1543,Getafe,Valladolid,A,6.5,0.2346,,,,,
+2024-11-23,2,13.65,0.1218,0.6624,0,-1.0,Hoffenheim,RB Leipzig,A,2.1,0.5715,Leicester,Chelsea,H,6.5,0.2131,,,,,
+2024-11-23,3,35.49,0.055,0.951,0,-1.0,Hoffenheim,RB Leipzig,A,2.1,0.5715,Valencia,Betis,A,2.6,0.4514,Leicester,Chelsea,H,6.5,0.2131
+2024-11-24,2,12.075,0.149,0.7997,0,-1.0,Como,Fiorentina,A,2.3,0.5898,Ipswich,Man United,H,5.25,0.2527,,,,,
+2024-11-24,3,31.757,0.0736,1.3363,0,-1.0,Como,Fiorentina,A,2.3,0.5898,Ipswich,Man United,H,5.25,0.2527,Genoa,Cagliari,H,2.63,0.4936
+2024-11-29,2,21.525,0.0697,0.4998,0,-1.0,St Pauli,Holstein Kiel,A,5.25,0.2427,Cagliari,Verona,A,4.1,0.2871,,,,,
+2024-11-30,2,19.5,0.0977,0.905,0,-1.0,Alaves,Leganes,A,5.0,0.2881,Como,Monza,A,3.9,0.3391,,,,,
+2024-11-30,3,74.1,0.0307,1.2745,0,-1.0,Alaves,Leganes,A,5.0,0.2881,Como,Monza,A,3.9,0.3391,Freiburg,M'gladbach,D,3.8,0.3142
+2024-12-01,2,21.0,0.0928,0.9497,0,-1.0,Torino,Napoli,H,5.0,0.2939,Villarreal,Girona,A,4.2,0.3159,,,,,
+2024-12-01,3,56.7,0.0451,1.5547,0,-1.0,Torino,Napoli,H,5.0,0.2939,Villarreal,Girona,A,4.2,0.3159,Vallecano,Ath Bilbao,A,2.7,0.4853
+2024-12-04,2,3.06,0.3776,0.1555,0,-1.0,Man City,Nott'm Forest,H,1.36,0.7604,Ath Bilbao,Real Madrid,A,2.25,0.4966,,,,,
+2024-12-06,2,8.1,0.1752,0.4194,0,-1.0,Celta,Mallorca,A,4.5,0.2836,Stuttgart,Union Berlin,H,1.8,0.6179,,,,,
+2024-12-06,3,17.415,0.09,0.5674,0,-1.0,Celta,Mallorca,A,4.5,0.2836,Stuttgart,Union Berlin,H,1.8,0.6179,Atalanta,Milan,H,2.15,0.5136
+2024-12-07,2,18.7,0.0983,0.8382,0,-1.0,Bayern Munich,Heidenheim,D,11.0,0.1564,Monaco,Toulouse,H,1.7,0.6285,,,,,
+2024-12-07,3,41.14,0.0476,0.9589,0,-1.0,Bayern Munich,Heidenheim,D,11.0,0.1564,Bochum,Werder Bremen,A,2.2,0.4844,Monaco,Toulouse,H,1.7,0.6285
+2024-12-08,2,21.375,0.0899,0.9221,0,-1.0,Leganes,Sociedad,H,4.75,0.2913,Leicester,Brighton,H,4.5,0.3087,,,,,
+2024-12-08,3,72.675,0.0336,1.4396,0,-1.0,Tottenham,Chelsea,H,3.4,0.3733,Leganes,Sociedad,H,4.75,0.2913,Leicester,Brighton,H,4.5,0.3087
+2024-12-14,2,21.125,0.0949,1.0039,0,-1.0,Mallorca,Girona,A,3.25,0.45,Mainz,Bayern Munich,H,6.5,0.2108,,,,,
+2024-12-14,3,110.906,0.0239,1.6501,0,-1.0,Udinese,Napoli,H,5.25,0.2519,Mallorca,Girona,A,3.25,0.45,Mainz,Bayern Munich,H,6.5,0.2108
+2024-12-15,2,24.0,0.0826,0.9826,0,-1.0,Parma,Verona,A,4.0,0.3422,Paris SG,Lyon,D,6.0,0.2414,,,,,
+2024-12-15,3,144.0,0.0183,1.6313,0,-1.0,Chelsea,Brentford,D,6.0,0.2212,Parma,Verona,A,4.0,0.3422,Paris SG,Lyon,D,6.0,0.2414
+2024-12-21,2,20.475,0.079,0.6175,0,-1.0,Getafe,Mallorca,A,3.9,0.3104,Genoa,Napoli,H,5.25,0.2545,,,,,
+2024-12-21,3,42.997,0.0442,0.9021,0,-1.0,Aston Villa,Man City,A,2.1,0.56,Getafe,Mallorca,A,3.9,0.3104,Genoa,Napoli,H,5.25,0.2545
+2024-12-22,2,10.71,0.1322,0.4154,0,-1.0,Leganes,Villarreal,H,4.2,0.2948,Leicester,Wolves,H,2.55,0.4483,,,,,
+2024-12-22,3,30.845,0.0518,0.5971,0,-1.0,Venezia,Cagliari,A,2.88,0.3918,Leganes,Villarreal,H,4.2,0.2948,Leicester,Wolves,H,2.55,0.4483
+2024-12-26,2,46.8,0.0406,0.9006,0,-1.0,Wolves,Man United,H,3.9,0.3006,Liverpool,Leicester,D,12.0,0.1351,,,,,
+2024-12-26,3,134.784,0.0161,1.1638,0,-1.0,Wolves,Man United,H,3.9,0.3006,Liverpool,Leicester,D,12.0,0.1351,Nott'm Forest,Tottenham,A,2.88,0.3953
+2024-12-28,2,4.32,0.319,0.3781,0,-1.0,Cagliari,Inter,A,1.44,0.7685,Parma,Monza,A,3.0,0.4151,,,,,
+2024-12-29,2,11.25,0.1381,0.5534,0,-1.0,Milan,Roma,H,2.25,0.5666,Tottenham,Wolves,D,5.0,0.2437,,,,,
+2024-12-29,3,17.662,0.0998,0.7623,0,-1.0,Milan,Roma,H,2.25,0.5666,Crystal Palace,Southampton,H,1.57,0.7226,Tottenham,Wolves,D,5.0,0.2437
+2025-01-04,2,8.16,0.2279,0.8601,0,-1.0,Southampton,Brentford,A,2.4,0.5502,Venezia,Empoli,A,3.4,0.4143,,,,,
+2025-01-04,3,31.008,0.0694,1.1509,0,-1.0,Southampton,Brentford,A,2.4,0.5502,Venezia,Empoli,A,3.4,0.4143,Crystal Palace,Chelsea,H,3.8,0.3043
+2025-01-05,2,4.255,0.3911,0.664,0,-1.0,Torino,Parma,H,1.85,0.6507,Angers,Brest,A,2.3,0.601,,,,,
+2025-01-05,3,17.871,0.1092,0.9513,0,-1.0,Torino,Parma,H,1.85,0.6507,Strasbourg,Auxerre,A,4.2,0.2792,Angers,Brest,A,2.3,0.601
+2025-01-10,2,4.655,0.2924,0.3611,0,-1.0,Dortmund,Leverkusen,A,2.45,0.4565,Lazio,Como,H,1.9,0.6405,,,,,
+2025-01-10,3,8.053,0.1801,0.4507,0,-1.0,Nantes,Monaco,A,1.73,0.6161,Dortmund,Leverkusen,A,2.45,0.4565,Lazio,Como,H,1.9,0.6405
+2025-01-11,2,13.75,0.1285,0.7669,0,-1.0,Torino,Juventus,H,5.0,0.2643,Alaves,Girona,A,2.75,0.4862,,,,,
+2025-01-11,3,55.0,0.0409,1.251,0,-1.0,Torino,Juventus,H,5.0,0.2643,Espanol,Leganes,A,4.0,0.3185,Alaves,Girona,A,2.75,0.4862
+2025-01-12,2,5.348,0.2984,0.5959,0,-1.0,Genoa,Parma,H,1.91,0.5908,Bologna,Roma,H,2.8,0.5051,,,,,
+2025-01-12,3,10.696,0.1668,0.7842,0,-1.0,Augsburg,Stuttgart,A,2.0,0.559,Genoa,Parma,H,1.91,0.5908,Bologna,Roma,H,2.8,0.5051
+2025-01-15,2,40.5,0.0513,1.077,0,-1.0,Union Berlin,Augsburg,A,4.5,0.2944,Bayern Munich,Hoffenheim,D,9.0,0.1742,,,,,
+2025-01-15,3,56.7,0.0381,1.1585,0,-1.0,Arsenal,Tottenham,H,1.4,0.7423,Union Berlin,Augsburg,A,4.5,0.2944,Bayern Munich,Hoffenheim,D,9.0,0.1742
+2025-01-18,2,29.25,0.0644,0.8842,0,-1.0,Bayern Munich,Wolfsburg,D,7.5,0.1812,Rennes,Brest,A,3.9,0.3555,,,,,
+2025-01-18,3,58.5,0.0416,1.434,0,-1.0,Bayern Munich,Wolfsburg,D,7.5,0.1812,Rennes,Brest,A,3.9,0.3555,Bochum,RB Leipzig,A,2.0,0.6459
+2025-01-19,2,8.64,0.1889,0.6324,0,-1.0,Union Berlin,Mainz,A,2.88,0.4473,Angers,Auxerre,A,3.0,0.4224,,,,,
+2025-01-19,3,22.464,0.0908,1.0407,0,-1.0,Celta,Ath Bilbao,A,2.6,0.4808,Union Berlin,Mainz,A,2.88,0.4473,Angers,Auxerre,A,3.0,0.4224
+2025-01-20,2,19.55,0.0728,0.4226,0,-1.0,Como,Udinese,A,3.4,0.3306,Chelsea,Wolves,D,5.75,0.2201,,,,,
+2025-01-25,2,24.6,0.0818,1.0112,0,-1.0,Man City,Chelsea,H,2.05,0.6161,Liverpool,Ipswich,D,12.0,0.1327,,,,,
+2025-01-25,3,141.45,0.0176,1.4921,0,-1.0,Man City,Chelsea,H,2.05,0.6161,Liverpool,Ipswich,D,12.0,0.1327,Freiburg,Bayern Munich,D,5.75,0.2155
+2025-01-26,2,6.768,0.2333,0.5787,0,-1.0,Vallecano,Girona,A,2.88,0.4411,Le Havre,Brest,A,2.35,0.5288,,,,,
+2025-01-26,3,14.213,0.1256,0.7846,0,-1.0,Vallecano,Girona,A,2.88,0.4411,Le Havre,Brest,A,2.35,0.5288,Nantes,Lyon,A,2.1,0.5383
+2025-01-31,2,10.56,0.1407,0.4854,0,-1.0,Werder Bremen,Mainz,A,3.2,0.3507,Leganes,Vallecano,H,3.3,0.4011,,,,,
+2025-02-01,2,38.25,0.1337,4.113,0,-1.0,Union Berlin,RB Leipzig,A,2.25,0.5593,Bayern Munich,Holstein Kiel,D,17.0,0.239,,,,,
+2025-02-01,3,72.675,0.0863,5.2718,0,-1.0,Union Berlin,RB Leipzig,A,2.25,0.5593,Bayern Munich,Holstein Kiel,D,17.0,0.239,Bologna,Como,H,1.9,0.6456
+2025-02-02,2,7.74,0.1866,0.4446,0,-1.0,Rennes,Strasbourg,A,3.6,0.3383,Reims,Nantes,H,2.15,0.5517,,,,,
+2025-02-02,3,25.155,0.0667,0.677,0,-1.0,Rennes,Strasbourg,A,3.6,0.3383,Valencia,Celta,A,3.25,0.3572,Reims,Nantes,H,2.15,0.5517
+2025-02-03,2,3.2,0.3542,0.1333,1,2.2,Cagliari,Lazio,A,2.0,0.5421,Girona,Las Palmas,H,1.6,0.6533,,,,,
+2025-02-07,2,34.1,0.0831,1.8354,0,-1.0,Bayern Munich,Werder Bremen,D,11.0,0.1808,Nantes,Brest,A,3.1,0.4599,,,,,
+2025-02-07,3,187.55,0.0203,2.7989,0,-1.0,Bayern Munich,Werder Bremen,D,11.0,0.1808,Paris SG,Monaco,D,5.5,0.2436,Nantes,Brest,A,3.1,0.4599
+2025-02-08,2,12.0,0.1116,0.3389,0,-1.0,Freiburg,Heidenheim,D,3.75,0.3072,Celta,Betis,A,3.2,0.3632,,,,,
+2025-02-08,3,46.8,0.0329,0.542,0,-1.0,Dortmund,Stuttgart,A,3.9,0.2953,Freiburg,Heidenheim,D,3.75,0.3072,Celta,Betis,A,3.2,0.3632
+2025-02-09,2,10.505,0.1831,0.9234,0,-1.0,Lecce,Bologna,A,1.91,0.5831,Valencia,Leganes,A,5.5,0.314,,,,,
+2025-02-14,2,5.4,0.304,0.6417,0,-1.0,Brest,Auxerre,H,2.25,0.5772,Augsburg,RB Leipzig,A,2.4,0.5267,,,,,
+2025-02-14,3,13.23,0.1394,0.8441,0,-1.0,Brest,Auxerre,H,2.25,0.5772,Brighton,Chelsea,A,2.45,0.4585,Augsburg,RB Leipzig,A,2.4,0.5267
+2025-02-15,2,8.99,0.1811,0.6283,0,-1.0,Leverkusen,Bayern Munich,H,2.9,0.4481,Leganes,Alaves,H,3.1,0.4042,,,,,
+2025-02-15,3,17.53,0.1137,0.9924,0,-1.0,Leverkusen,Bayern Munich,H,2.9,0.4481,Leganes,Alaves,H,3.1,0.4042,Man City,Newcastle,H,1.95,0.6275
+2025-02-16,2,4.1,0.4113,0.6865,0,-1.0,Parma,Roma,A,2.05,0.6004,Fiorentina,Como,H,2.0,0.6851,,,,,
+2025-02-16,3,11.07,0.1814,1.0081,0,-1.0,Parma,Roma,A,2.05,0.6004,Rennes,Lille,A,2.7,0.441,Fiorentina,Como,H,2.0,0.6851
+2025-02-22,2,36.75,0.0497,0.827,0,-1.0,Las Palmas,Barcelona,D,7.0,0.1907,Alaves,Espanol,A,5.25,0.2607,,,,,
+2025-02-22,3,70.192,0.0319,1.2418,0,-1.0,Parma,Bologna,A,1.91,0.6424,Las Palmas,Barcelona,D,7.0,0.1907,Alaves,Espanol,A,5.25,0.2607
+2025-02-23,2,40.625,0.0475,0.9308,0,-1.0,Real Madrid,Girona,D,6.25,0.2038,Bayern Munich,Ein Frankfurt,D,6.5,0.2332,,,,,
+2025-02-23,3,91.406,0.0269,1.4575,0,-1.0,Como,Napoli,A,2.25,0.5657,Real Madrid,Girona,D,6.25,0.2038,Bayern Munich,Ein Frankfurt,D,6.5,0.2332
+2025-02-25,2,21.04,0.0818,0.7209,0,-1.0,Chelsea,Southampton,D,8.0,0.1789,Wolves,Fulham,A,2.63,0.4572,,,,,
+2025-02-25,3,51.548,0.0376,0.9399,0,-1.0,Chelsea,Southampton,D,8.0,0.1789,Crystal Palace,Aston Villa,H,2.45,0.4601,Wolves,Fulham,A,2.63,0.4572
+2025-02-26,2,3.9,0.2933,0.1439,0,-1.0,Nott'm Forest,Arsenal,A,1.95,0.5571,Tottenham,Man City,A,2.0,0.5265,,,,,
+2025-02-28,2,8.312,0.1733,0.4405,0,-1.0,Stuttgart,Bayern Munich,H,4.75,0.2604,Fiorentina,Lecce,H,1.75,0.6655,,,,,
+2025-03-01,2,3.96,0.3362,0.3315,0,-1.0,Udinese,Parma,H,1.8,0.6238,Girona,Celta,H,2.2,0.539,,,,,
+2025-03-01,3,6.613,0.2144,0.4182,0,-1.0,St Etienne,Nice,A,1.67,0.6378,Udinese,Parma,H,1.8,0.6238,Girona,Celta,H,2.2,0.539
+2025-03-02,2,8.097,0.1782,0.4426,0,-1.0,Roma,Como,H,1.87,0.6091,Union Berlin,Holstein Kiel,D,4.33,0.2925,,,,,
+2025-03-02,3,18.623,0.0866,0.6119,0,-1.0,Osasuna,Valencia,H,2.3,0.4858,Roma,Como,H,1.87,0.6091,Union Berlin,Holstein Kiel,D,4.33,0.2925
+2025-03-08,2,66.5,0.0437,1.9078,0,-1.0,Bayern Munich,Bochum,D,9.5,0.1917,Celta,Leganes,A,7.0,0.2281,,,,,
+2025-03-08,3,158.27,0.0225,2.5662,0,-1.0,Bayern Munich,Bochum,D,9.5,0.1917,Alaves,Villarreal,A,2.38,0.5153,Celta,Leganes,A,7.0,0.2281
+2025-03-09,2,50.0,0.0415,1.0747,0,-1.0,Napoli,Fiorentina,A,6.25,0.2041,Chelsea,Leicester,D,8.0,0.2033,,,,,
+2025-03-09,3,137.5,0.0187,1.5754,0,-1.0,Napoli,Fiorentina,A,6.25,0.2041,Chelsea,Leicester,D,8.0,0.2033,Nantes,Strasbourg,A,2.75,0.4514
+2025-03-10,2,3.806,0.2914,0.1089,0,-1.0,West Ham,Newcastle,A,2.2,0.4819,Lazio,Udinese,H,1.73,0.6046,,,,,
+2025-03-15,2,7.378,0.2055,0.5165,0,-1.0,Monza,Parma,H,3.1,0.3915,RB Leipzig,Dortmund,H,2.38,0.525,,,,,
+2025-03-15,3,15.863,0.1152,0.8268,0,-1.0,Monza,Parma,H,3.1,0.3915,RB Leipzig,Dortmund,H,2.38,0.525,Nantes,Lille,A,2.15,0.5603
+2025-03-16,2,4.14,0.3223,0.3342,1,3.14,Stuttgart,Leverkusen,A,2.3,0.5063,Arsenal,Chelsea,H,1.8,0.6365,,,,,
+2025-03-16,3,10.35,0.147,0.5216,1,9.35,Stuttgart,Leverkusen,A,2.3,0.5063,Sevilla,Ath Bilbao,A,2.5,0.4562,Arsenal,Chelsea,H,1.8,0.6365
+2025-03-29,2,21.525,0.0763,0.6431,0,-1.0,Alaves,Vallecano,A,4.1,0.3265,Como,Empoli,A,5.25,0.2338,,,,,
+2025-03-29,3,37.669,0.0468,0.7638,0,-1.0,Alaves,Vallecano,A,4.1,0.3265,Venezia,Bologna,A,1.75,0.6134,Como,Empoli,A,5.25,0.2338
+2025-03-30,2,27.5,0.0772,1.1238,0,-1.0,Dortmund,Mainz,A,5.0,0.3271,Cagliari,Monza,A,5.5,0.2361,,,,,
+2025-03-30,3,112.75,0.0234,1.6427,0,-1.0,Toulouse,Brest,A,4.1,0.3035,Dortmund,Mainz,A,5.0,0.3271,Cagliari,Monza,A,5.5,0.2361
+2025-04-01,2,3.404,0.3572,0.2158,1,2.404,Arsenal,Fulham,H,1.48,0.7049,Nott'm Forest,Man United,H,2.3,0.5067,,,,,
+2025-04-04,2,9.0,0.1497,0.3474,0,-1.0,Nice,Nantes,H,1.5,0.6931,Vallecano,Espanol,A,6.0,0.216,,,,,
+2025-04-05,2,21.0,0.0779,0.6369,0,-1.0,Monza,Como,H,5.0,0.2607,Milan,Fiorentina,A,4.2,0.299,,,,,
+2025-04-05,3,45.15,0.0439,0.9825,0,-1.0,Bochum,Stuttgart,A,2.15,0.5633,Monza,Como,H,5.0,0.2607,Milan,Fiorentina,A,4.2,0.299
+2025-04-06,2,6.336,0.2088,0.3227,0,-1.0,Union Berlin,Wolfsburg,A,2.88,0.4027,Sevilla,Ath Madrid,A,2.2,0.5184,,,,,
+2025-04-06,3,17.424,0.0857,0.4935,0,-1.0,Union Berlin,Wolfsburg,A,2.88,0.4027,Sevilla,Ath Madrid,A,2.2,0.5184,St Pauli,M'gladbach,A,2.75,0.4106
+2025-04-12,2,36.0,0.0547,0.9701,1,35.0,Celta,Espanol,A,6.0,0.2483,Brighton,Leicester,D,6.0,0.2204,,,,,
+2025-04-12,3,198.0,0.0123,1.4402,1,197.0,Celta,Espanol,A,6.0,0.2483,Sociedad,Mallorca,A,5.5,0.2252,Brighton,Leicester,D,6.0,0.2204
+2025-04-13,2,12.71,0.1557,0.979,0,-1.0,Como,Torino,A,4.1,0.3621,Wolves,Tottenham,A,3.1,0.43,,,,,
+2025-04-13,3,35.588,0.0698,1.4847,0,-1.0,Como,Torino,A,4.1,0.3621,Lazio,Roma,H,2.8,0.4484,Wolves,Tottenham,A,3.1,0.43
+2025-04-18,2,5.184,0.2606,0.3509,1,4.184,Rennes,Nantes,H,1.8,0.5992,Espanol,Getafe,H,2.88,0.4349,,,,,
+2025-04-19,2,17.15,0.0963,0.652,0,-1.0,Marseille,Montpellier,D,7.0,0.2068,Union Berlin,Stuttgart,A,2.45,0.4658,,,,,
+2025-04-19,3,29.67,0.0629,0.8671,0,-1.0,Marseille,Montpellier,D,7.0,0.2068,Union Berlin,Stuttgart,A,2.45,0.4658,Werder Bremen,Bochum,H,1.73,0.6533
+2025-04-20,2,17.325,0.0886,0.535,0,-1.0,Reims,Toulouse,H,3.3,0.3577,Dortmund,M'gladbach,D,5.25,0.2477,,,,,
+2025-04-20,3,47.644,0.0371,0.7679,0,-1.0,Augsburg,Ein Frankfurt,A,2.75,0.4188,Reims,Toulouse,H,3.3,0.3577,Dortmund,M'gladbach,D,5.25,0.2477
+2025-04-22,2,7.38,0.1805,0.3319,0,-1.0,Valencia,Espanol,A,4.1,0.3007,Man City,Aston Villa,H,1.8,0.6002,,,,,
+2025-04-22,3,10.332,0.1387,0.4332,0,-1.0,Nantes,Paris SG,A,1.4,0.7686,Valencia,Espanol,A,4.1,0.3007,Man City,Aston Villa,H,1.8,0.6002
+2025-04-23,2,6.86,0.2418,0.6589,0,-1.0,Celta,Villarreal,A,2.8,0.4384,Cagliari,Fiorentina,A,2.45,0.5516,,,,,
+2025-04-23,3,23.324,0.0862,1.0107,0,-1.0,Alaves,Sociedad,A,3.4,0.3565,Celta,Villarreal,A,2.8,0.4384,Cagliari,Fiorentina,A,2.45,0.5516
+2025-04-24,2,3.825,0.3092,0.1827,1,2.825,Ath Madrid,Vallecano,H,1.53,0.6989,Osasuna,Sevilla,H,2.5,0.4424,,,,,
+2025-04-26,2,52.5,0.0381,1.0002,0,-1.0,Newcastle,Ipswich,D,7.5,0.1782,Bayern Munich,Mainz,D,7.0,0.2138,,,,,
+2025-04-26,3,227.325,0.0103,1.3506,0,-1.0,Newcastle,Ipswich,D,7.5,0.1782,Bayern Munich,Mainz,D,7.0,0.2138,Hoffenheim,Dortmund,D,4.33,0.2714
+2025-04-27,2,10.98,0.1707,0.8737,0,-1.0,Marseille,Brest,A,6.0,0.2454,Fiorentina,Empoli,H,1.83,0.6954,,,,,
+2025-04-27,3,52.155,0.0448,1.3372,0,-1.0,Marseille,Brest,A,6.0,0.2454,Como,Genoa,A,4.75,0.2626,Fiorentina,Empoli,H,1.83,0.6954
+2025-05-02,2,5.625,0.2979,0.6758,0,-1.0,Heidenheim,Bochum,H,2.25,0.5029,Torino,Venezia,H,2.5,0.5924,,,,,
+2025-05-03,2,14.95,0.1412,1.1112,0,-1.0,Strasbourg,Paris SG,A,2.6,0.575,Dortmund,Wolfsburg,D,5.75,0.2456,,,,,
+2025-05-03,3,30.648,0.0957,1.9331,0,-1.0,Strasbourg,Paris SG,A,2.6,0.575,Arsenal,Bournemouth,H,2.05,0.6777,Dortmund,Wolfsburg,D,5.75,0.2456
+2025-05-04,2,17.05,0.1231,1.0987,0,-1.0,Roma,Fiorentina,A,5.5,0.2599,Chelsea,Liverpool,A,3.1,0.4736,,,,,
+2025-05-04,3,51.15,0.0545,1.7872,0,-1.0,Roma,Fiorentina,A,5.5,0.2599,Chelsea,Liverpool,A,3.1,0.4736,Sociedad,Ath Bilbao,A,3.0,0.4427
+2025-05-10,2,26.6,0.0964,1.564,0,-1.0,Auxerre,Nantes,H,2.8,0.5376,Bayern Munich,M'gladbach,D,9.5,0.1793,,,,,
+2025-05-10,3,119.7,0.0293,2.5018,0,-1.0,Auxerre,Nantes,H,2.8,0.5376,Brest,Lille,H,4.5,0.3035,Bayern Munich,M'gladbach,D,9.5,0.1793
+2025-05-11,2,4.86,0.4105,0.9952,0,-1.0,Ath Bilbao,Alaves,H,1.8,0.6683,Leverkusen,Dortmund,H,2.7,0.6143,,,,,
+2025-05-14,2,5.106,0.2607,0.3311,0,-1.0,Real Madrid,Mallorca,H,1.38,0.7427,Alaves,Valencia,A,3.7,0.351,,,,,
+2025-05-15,2,5.523,0.264,0.4578,0,-1.0,Osasuna,Ath Madrid,A,2.1,0.5448,Getafe,Ath Bilbao,A,2.63,0.4845,,,,,
+2025-05-17,2,39.0,0.094,2.6674,0,-1.0,St Etienne,Toulouse,A,3.25,0.4646,Dortmund,Holstein Kiel,D,12.0,0.2024,,,,,
+2025-05-17,3,117.0,0.0455,4.3261,0,-1.0,St Etienne,Toulouse,A,3.25,0.4646,Dortmund,Holstein Kiel,D,12.0,0.2024,Mainz,Leverkusen,A,3.0,0.4841
+2025-05-18,2,17.48,0.2348,3.1045,0,-1.0,Valencia,Ath Bilbao,A,3.8,0.4996,Lecce,Torino,A,4.6,0.47,,,,,
+2025-05-18,3,87.4,0.0826,6.2198,0,-1.0,Valencia,Ath Bilbao,A,3.8,0.4996,Monza,Empoli,H,5.0,0.3518,Lecce,Torino,A,4.6,0.47
+2025-05-23,2,13.37,0.1069,0.4294,0,-1.0,Napoli,Cagliari,D,7.0,0.1871,Betis,Valencia,H,1.91,0.5714,,,,,
+2025-05-24,2,50.0,0.0644,2.2194,0,-1.0,Vallecano,Mallorca,A,6.25,0.2611,Espanol,Las Palmas,A,8.0,0.2466,,,,,
+2025-05-24,3,205.0,0.0236,3.8402,0,-1.0,Vallecano,Mallorca,A,6.25,0.2611,Getafe,Celta,H,4.1,0.3667,Espanol,Las Palmas,A,8.0,0.2466
+2025-05-25,2,35.7,0.0599,1.14,0,-1.0,Newcastle,Everton,A,8.5,0.1645,Tottenham,Brighton,H,4.2,0.3644,,,,,
+2025-05-25,3,62.475,0.0477,1.9795,0,-1.0,Newcastle,Everton,A,8.5,0.1645,Tottenham,Brighton,H,4.2,0.3644,Atalanta,Parma,H,1.75,0.7956

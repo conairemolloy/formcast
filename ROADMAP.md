@@ -17,10 +17,12 @@ engine.
 | Metric | Value |
 |--------|-------|
 | Matches in database | 8,982 (EPL, La Liga, Bundesliga, Serie A, Ligue 1) |
-| Walk-forward hit rate | 68.8% (non-draw matches) |
-| Walk-forward Brier score | 0.163 |
+| Walk-forward hit rate | 69.5% (non-draw matches, optimised Elo) |
+| Walk-forward Brier score | 0.157 |
 | Dixon-Coles Brier score | 0.179 (3-outcome) |
-| XGBoost Brier score | 0.170 |
+| XGBoost Brier score (full features) | 0.165 (42 features) |
+| Glicko-2 hit rate | 69.7% |
+| Ensemble v2 hit rate | 53.2% (3-outcome holdout) |
 | Baseline (coin flip) Brier | 0.250 |
 
 ---
@@ -31,24 +33,24 @@ engine.
 - [x] Walk-forward backtesting pipeline (strict temporal ordering)
 - [x] Dixon-Coles bivariate Poisson model (temporal decay, tau correction)
 - [x] XGBoost classifier (Elo + form features, 13 features)
-- [ ] Stacking meta-learner (LogisticRegression on OOF predictions, 5-fold TimeSeriesSplit)
-- [ ] Hyperparameter grid search (K, home_advantage, decay, MoV cap)
-- [ ] Glicko-2 uncertainty-aware ratings (RD + volatility)
-- [ ] Bradley-Terry-Luce schedule-adjusted ratings (MLE)
+- [x] Stacking meta-learner (LogisticRegression on OOF predictions, 5-fold TimeSeriesSplit)
+- [x] Hyperparameter grid search (K, home_advantage, decay, MoV cap)
+- [x] Glicko-2 uncertainty-aware ratings (RD + volatility)
+- [x] Bradley-Terry-Luce schedule-adjusted ratings (MLE)
 - [ ] Bayesian hierarchical model (PyMC — partial pooling across leagues)
 
 ---
 
 ## Phase 2 — Feature Engineering
 ### Momentum (8 signals)
-- [ ] Result momentum — EWM(win=3, draw=1, loss=0, λ=0.6), last 5 matches
-- [ ] Score momentum — EWM(scored - conceded, λ=0.6), last 5 matches
-- [ ] Elo momentum — Elo_today minus Elo_28_days_ago
-- [ ] Scoring rate trend — OLS slope of goals scored, last 8 matches
-- [ ] Concession rate trend — OLS slope of goals conceded, last 8 matches
+- [x] Result momentum — EWM(win=3, draw=1, loss=0, λ=0.6), last 5 matches
+- [x] Score momentum — EWM(scored - conceded, λ=0.6), last 5 matches
+- [x] Elo momentum — Elo_today minus Elo_28_days_ago
+- [x] Scoring rate trend — OLS slope of goals scored, last 8 matches
+- [x] Concession rate trend — OLS slope of goals conceded, last 8 matches
 - [ ] First-half momentum — EWM(H1 score_diff), last 5
 - [ ] Second-half momentum — EWM(H2 score_diff), last 5
-- [ ] Winning/losing streak — Bernoulli run length
+- [x] Winning/losing streak — Bernoulli run length
 
 ### Fatigue & Fixture Congestion (8 factors)
 - [ ] Days since last match (< 4 days = -40 Elo penalty)
