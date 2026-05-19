@@ -44,13 +44,15 @@ DC_MAX_GOALS = 8
 RESULT_MAP = {"A": 0, "D": 1, "H": 2}
 RESULT_INV = {0: "A", 1: "D", 2: "H"}
 
-# Full 42-feature set used for XGBoost base model
+# Full 48-feature set used for XGBoost base model
 FEATURE_COLS = [
     "home_elo", "away_elo", "elo_diff", "home_expected",
     "home_g2_rating", "away_g2_rating", "g2_diff", "home_g2_uncertainty",
     "home_form", "away_form", "form_diff",
     "home_goals_scored_avg", "home_goals_conceded_avg",
     "away_goals_scored_avg", "away_goals_conceded_avg",
+    "home_xg_avg", "home_xg_conceded_avg", "away_xg_avg",
+    "away_xg_conceded_avg", "home_xg_diff_avg", "away_xg_diff_avg",
     "home_result_momentum", "away_result_momentum",
     "home_score_momentum", "away_score_momentum",
     "home_elo_momentum", "away_elo_momentum",
@@ -210,6 +212,20 @@ def _team_features(
             break
     unbeaten = min(unbeaten, 15)
 
+    home_xg_hist = [h for h in hist if h.get("is_home") is True  and h.get("xg_scored") is not None]
+    away_xg_hist = [h for h in hist if h.get("is_home") is False and h.get("xg_scored") is not None]
+    all_xg_hist  = [h for h in hist if h.get("xg_scored") is not None]
+
+    fw_hxg     = home_xg_hist[-FORM_WINDOW:]
+    fw_axg     = away_xg_hist[-FORM_WINDOW:]
+    fw_axg_all = all_xg_hist[-FORM_WINDOW:]
+
+    xg_scored_home_avg   = sum(h["xg_scored"]   for h in fw_hxg)     / len(fw_hxg)     if fw_hxg     else 1.3
+    xg_conceded_home_avg = sum(h["xg_conceded"] for h in fw_hxg)     / len(fw_hxg)     if fw_hxg     else 1.3
+    xg_scored_away_avg   = sum(h["xg_scored"]   for h in fw_axg)     / len(fw_axg)     if fw_axg     else 1.3
+    xg_conceded_away_avg = sum(h["xg_conceded"] for h in fw_axg)     / len(fw_axg)     if fw_axg     else 1.3
+    xg_diff_avg          = sum(h["xg_diff"]     for h in fw_axg_all) / len(fw_axg_all) if fw_axg_all else 0.0
+
     return {
         "form": form, "gs_avg": gs_avg, "gc_avg": gc_avg,
         "result_momentum": rm, "score_momentum": sm,
@@ -217,6 +233,11 @@ def _team_features(
         "days_rest": days_rest, "matches_21d": matches_21d,
         "season_pos": season_pos, "is_early": is_early,
         "post_loss": post_loss, "unbeaten_run": unbeaten,
+        "xg_scored_home_avg": xg_scored_home_avg,
+        "xg_conceded_home_avg": xg_conceded_home_avg,
+        "xg_scored_away_avg": xg_scored_away_avg,
+        "xg_conceded_away_avg": xg_conceded_away_avg,
+        "xg_diff_avg": xg_diff_avg,
     }
 
 
@@ -301,10 +322,11 @@ def _dc_probs(lam: float, mu: float) -> tuple[float, float, float]:
 # Unified single-pass feature builder
 # ---------------------------------------------------------------------------
 
-def build_all_features(df: pd.DataFrame) -> pd.DataFrame:
+def build_all_features(df: pd.DataFrame, xg_lookup: dict | None = None) -> pd.DataFrame:
     le = LabelEncoder()
     le.fit(df["league"])
     league_enc = {lg: int(i) for i, lg in enumerate(le.classes_)}
+    xg_lookup = xg_lookup or {}
 
     elo:       dict[str, float] = defaultdict(lambda: STARTING_ELO)
     g2:        dict[str, tuple] = defaultdict(lambda: (0.0, G2_INITIAL_PHI))
@@ -332,6 +354,12 @@ def build_all_features(df: pd.DataFrame) -> pd.DataFrame:
         hg     = int(row["home_goals"])
         ag     = int(row["away_goals"])
         result = row["result"]
+
+        xg_key  = (date.date(), home, away, league)
+        xg_vals = xg_lookup.get(xg_key)
+        h_xg    = xg_vals[0] if xg_vals else None
+        a_xg    = xg_vals[1] if xg_vals else None
+        xg_d    = xg_vals[2] if xg_vals else None
 
         # Pre-match ratings
         home_elo = elo[home]
@@ -387,6 +415,13 @@ def build_all_features(df: pd.DataFrame) -> pd.DataFrame:
             "home_goals_conceded_avg": hf["gc_avg"],
             "away_goals_scored_avg": af["gs_avg"],
             "away_goals_conceded_avg": af["gc_avg"],
+            # xG (from prior matches, no leakage)
+            "home_xg_avg": hf["xg_scored_home_avg"],
+            "home_xg_conceded_avg": hf["xg_conceded_home_avg"],
+            "away_xg_avg": af["xg_scored_away_avg"],
+            "away_xg_conceded_avg": af["xg_conceded_away_avg"],
+            "home_xg_diff_avg": hf["xg_diff_avg"],
+            "away_xg_diff_avg": af["xg_diff_avg"],
             # Momentum
             "home_result_momentum": hf["result_momentum"],
             "away_result_momentum": af["result_momentum"],
@@ -442,11 +477,15 @@ def build_all_features(df: pd.DataFrame) -> pd.DataFrame:
             "date": date, "season": season, "result": home_res,
             "points": pts_map[home_res],
             "goal_diff": hg - ag, "goals_scored": hg, "goals_conceded": ag,
+            "is_home": True, "xg_scored": h_xg, "xg_conceded": a_xg,
+            "xg_diff": xg_d,
         })
         team_hist[away].append({
             "date": date, "season": season, "result": away_res,
             "points": pts_map[away_res],
             "goal_diff": ag - hg, "goals_scored": ag, "goals_conceded": hg,
+            "is_home": False, "xg_scored": a_xg, "xg_conceded": h_xg,
+            "xg_diff": (-xg_d if xg_d is not None else None),
         })
 
         dc_scored[home]   = dc_scored[home][-(DC_WINDOW - 1):] + [hg]
@@ -544,9 +583,26 @@ def main() -> None:
     df = df.dropna(subset=["home_team", "away_team", "home_goals", "away_goals", "result"])
     print(f"Loaded {len(df):,} matches across {df['league'].nunique()} leagues\n")
 
-    print(f"Building features for {len(df):,} matches (42-feature set + rolling DC)...")
-    feat_df = build_all_features(df)
+    xg_lookup: dict = {}
+    xg_path = os.path.normpath(
+        os.path.join(base, "..", "data", "processed", "results_with_xg.csv")
+    )
+    if os.path.exists(xg_path):
+        xg_df = pd.read_csv(xg_path, parse_dates=["match_date"])
+        xg_df = xg_df.dropna(subset=["home_xg", "away_xg", "xg_diff"])
+        for _, r in xg_df.iterrows():
+            key = (r["match_date"].date(), r["home_team"], r["away_team"], r["league"])
+            xg_lookup[key] = (float(r["home_xg"]), float(r["away_xg"]), float(r["xg_diff"]))
+        print(f"Loaded {len(xg_lookup):,} xG records from results_with_xg.csv")
+    else:
+        print("Warning: results_with_xg.csv not found — xG features will use defaults\n")
+
+    print(f"Building features for {len(df):,} matches (48-feature set + rolling DC)...")
+    feat_df = build_all_features(df, xg_lookup)
     print(f"  Processed {len(df):,}/{len(df):,} matches (complete)\n")
+
+    feat_df = feat_df[feat_df["match_date"] >= "2014-08-01"].reset_index(drop=True)
+    print(f"Filtered to xG era: {len(feat_df):,} matches (2014-08-01 onwards)\n")
 
     model_df = feat_df.iloc[COLD_START:].reset_index(drop=True)
     model_df["target"] = model_df["result"].map(RESULT_MAP)
