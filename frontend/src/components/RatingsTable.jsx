@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import axios from 'axios'
+import api from '../api'
 import { Search, Loader2 } from 'lucide-react'
 
 const MEDAL = ['🥇', '🥈', '🥉']
@@ -13,7 +13,7 @@ export default function RatingsTable() {
   const [sortDir, setSortDir] = useState('desc')
 
   useEffect(() => {
-    axios.get('/api/ratings')
+    api.get('/api/ratings')
       .then(r => setData(r.data.data))
       .catch(() => setError('Failed to load ratings'))
       .finally(() => setLoading(false))

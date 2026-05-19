@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import api from '../api'
 import { Loader2 } from 'lucide-react'
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell,
@@ -39,7 +39,7 @@ export default function BacktestReport() {
   const [error, setError]     = useState(null)
 
   useEffect(() => {
-    axios.get('/api/backtest')
+    api.get('/api/backtest')
       .then(r => setData(r.data.data))
       .catch(() => setError('Failed to load backtest data'))
       .finally(() => setLoading(false))

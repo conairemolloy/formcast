@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import axios from 'axios'
+import api from '../api'
 import { Loader2, CheckCircle2, XCircle } from 'lucide-react'
 
 function ProbCell({ value }) {
@@ -18,7 +18,7 @@ export default function Predictions() {
   const [league, setLeague]   = useState('ALL')
 
   useEffect(() => {
-    axios.get('/api/predictions')
+    api.get('/api/predictions')
       .then(r => setData(r.data.data))
       .catch(() => setError('Failed to load predictions'))
       .finally(() => setLoading(false))

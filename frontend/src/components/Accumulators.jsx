@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import axios from 'axios'
+import api from '../api'
 import { Loader2, CheckCircle2, XCircle } from 'lucide-react'
 
 function LegPill({ home, away, outcome, odds }) {
@@ -21,7 +21,7 @@ export default function Accumulators() {
   const [nLegs, setNLegs]     = useState(2)
 
   useEffect(() => {
-    axios.get(`/api/accumulator?n_legs=${nLegs}&limit=20`)
+    api.get(`/api/accumulator?n_legs=${nLegs}&limit=20`)
       .then(r => setData(r.data.data))
       .catch(() => setError('Failed to load accumulators'))
       .finally(() => setLoading(false))

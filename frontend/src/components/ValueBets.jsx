@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import axios from 'axios'
+import api from '../api'
 import { Loader2, CheckCircle2, XCircle } from 'lucide-react'
 
 function StatCard({ label, value, sub }) {
@@ -29,8 +29,8 @@ export default function ValueBets() {
 
   useEffect(() => {
     Promise.all([
-      axios.get('/api/value-bets?limit=100'),
-      axios.get('/api/value-bets/summary'),
+      api.get('/api/value-bets?limit=100'),
+      api.get('/api/value-bets/summary'),
     ])
       .then(([betsRes, sumRes]) => {
         setBets(betsRes.data.data)
