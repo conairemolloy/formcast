@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import api from '../api'
 import { Loader2 } from 'lucide-react'
 
@@ -28,6 +28,12 @@ function PctBadge({ value, highColor, threshold = 50 }) {
   return <span className="text-gray-400 tabular-nums text-xs">{value.toFixed(1)}%</span>
 }
 
+function leftBorderStyle(pos) {
+  if (pos < 4)  return { borderLeft: '3px solid rgba(59, 130, 246, 0.5)' }
+  if (pos < 6)  return { borderLeft: '3px solid rgba(249, 115, 22, 0.5)' }
+  return { borderLeft: '3px solid transparent' }
+}
+
 export default function Tournament() {
   const [rows, setRows]       = useState([])
   const [loading, setLoading] = useState(true)
@@ -43,10 +49,31 @@ export default function Tournament() {
       .finally(() => setLoading(false))
   }, [league])
 
+  const matchStats = useMemo(() => {
+    if (rows.length === 0) return null
+    const teamCount = rows.length
+    const totalMatches = teamCount === 20 ? 380 : 306
+    const totalPts = rows.reduce((s, r) => s + r.current_pts, 0)
+    const played = Math.round(totalPts / 2.65)
+    return { played, remaining: Math.max(0, totalMatches - played) }
+  }, [rows])
+
   return (
     <div className="space-y-5">
-      <h1 className="text-xl font-semibold text-white">Tournament Simulator</h1>
+      {/* Header */}
+      <div>
+        <div className="flex items-baseline gap-3">
+          <h1 className="text-xl font-semibold text-white">Tournament Simulator</h1>
+          <span className="text-sm text-gray-500 font-mono">2025-26</span>
+        </div>
+        {matchStats && (
+          <p className="text-xs text-gray-500 mt-0.5">
+            ~{matchStats.played} matches played · ~{matchStats.remaining} remaining
+          </p>
+        )}
+      </div>
 
+      {/* League selector */}
       <div className="flex gap-2">
         {LEAGUES.map(l => (
           <button
@@ -72,59 +99,78 @@ export default function Tournament() {
       {error && <div className="text-red-400 p-6">{error}</div>}
 
       {!loading && !error && (
-        <div className="rounded-xl border border-gray-800 overflow-hidden">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-gray-900 border-b border-gray-800">
-                <th className="px-4 py-3 text-left text-gray-400 font-medium w-10">Pos</th>
-                <th className="px-4 py-3 text-left text-gray-400 font-medium">Team</th>
-                <th className="px-4 py-3 text-right text-gray-400 font-medium">Pts</th>
-                <th className="px-4 py-3 text-right text-gray-400 font-medium">GD</th>
-                <th className="px-4 py-3 text-right text-gray-400 font-medium">Win%</th>
-                <th className="px-4 py-3 text-right text-gray-400 font-medium">Top 4%</th>
-                <th className="px-4 py-3 text-right text-gray-400 font-medium">Top 6%</th>
-                <th className="px-4 py-3 text-right text-gray-400 font-medium">Relegation%</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((row, i) => {
-                const isChampion   = row.win_pct === 100
-                const isRelegated  = row.relegation_pct === 100
-                const rowBg = isChampion
-                  ? 'bg-yellow-500/5 border-yellow-500/10'
-                  : isRelegated
-                  ? 'bg-red-500/5 border-red-500/10'
-                  : ''
+        <>
+          {/* Legend */}
+          <div className="flex gap-4 text-xs text-gray-500">
+            <span className="flex items-center gap-1.5">
+              <span className="inline-block w-3 h-3 rounded-sm" style={{ background: 'rgba(59,130,246,0.35)' }} />
+              Champions League (top 4)
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="inline-block w-3 h-3 rounded-sm" style={{ background: 'rgba(249,115,22,0.35)' }} />
+              Europa League (5–6)
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="inline-block w-3 h-3 rounded-sm bg-red-500/20" />
+              Relegated
+            </span>
+          </div>
 
-                return (
-                  <tr
-                    key={row.team}
-                    className={`border-b border-gray-800/50 hover:bg-gray-800/40 transition-colors ${rowBg}`}
-                  >
-                    <td className="px-4 py-3 text-gray-500 tabular-nums">{i + 1}</td>
-                    <td className="px-4 py-3 text-white font-medium">{row.team}</td>
-                    <td className="px-4 py-3 text-right text-white font-semibold tabular-nums">{row.current_pts}</td>
-                    <td className="px-4 py-3 text-right text-gray-300 tabular-nums">
-                      {row.current_gd > 0 ? `+${row.current_gd}` : row.current_gd}
-                    </td>
-                    <td className="px-4 py-3 text-right">
-                      <PctBadge value={row.win_pct} highColor="green" />
-                    </td>
-                    <td className="px-4 py-3 text-right">
-                      <PctBadge value={row.top4_pct} highColor="blue" />
-                    </td>
-                    <td className="px-4 py-3 text-right">
-                      <PctBadge value={row.top6_pct} highColor="blue" />
-                    </td>
-                    <td className="px-4 py-3 text-right">
-                      <PctBadge value={row.relegation_pct} highColor="red" />
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        </div>
+          <div className="rounded-xl border border-gray-800 overflow-hidden">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-gray-900 border-b border-gray-800">
+                  <th className="px-4 py-3 text-left text-gray-400 font-medium w-10">Pos</th>
+                  <th className="px-4 py-3 text-left text-gray-400 font-medium">Team</th>
+                  <th className="px-4 py-3 text-right text-gray-400 font-medium">Pts</th>
+                  <th className="px-4 py-3 text-right text-gray-400 font-medium">GD</th>
+                  <th className="px-4 py-3 text-right text-gray-400 font-medium">Win%</th>
+                  <th className="px-4 py-3 text-right text-gray-400 font-medium">Top 4%</th>
+                  <th className="px-4 py-3 text-right text-gray-400 font-medium">Top 6%</th>
+                  <th className="px-4 py-3 text-right text-gray-400 font-medium">Relegation%</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((row, i) => {
+                  const isChampion  = row.win_pct === 100
+                  const isRelegated = row.relegation_pct === 100
+                  const rowBg = isChampion
+                    ? 'bg-yellow-500/5'
+                    : isRelegated
+                    ? 'bg-red-500/5'
+                    : ''
+
+                  return (
+                    <tr
+                      key={row.team}
+                      className={`border-b border-gray-800/50 hover:bg-gray-800/40 transition-colors ${rowBg}`}
+                      style={leftBorderStyle(i)}
+                    >
+                      <td className="px-4 py-3 text-gray-500 tabular-nums">{i + 1}</td>
+                      <td className="px-4 py-3 text-white font-medium">{row.team}</td>
+                      <td className="px-4 py-3 text-right text-white font-semibold tabular-nums">{row.current_pts}</td>
+                      <td className="px-4 py-3 text-right text-gray-300 tabular-nums">
+                        {row.current_gd > 0 ? `+${row.current_gd}` : row.current_gd}
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <PctBadge value={row.win_pct} highColor="green" />
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <PctBadge value={row.top4_pct} highColor="blue" />
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <PctBadge value={row.top6_pct} highColor="blue" />
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <PctBadge value={row.relegation_pct} highColor="red" />
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+        </>
       )}
     </div>
   )

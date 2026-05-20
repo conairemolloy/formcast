@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import api from '../api'
 import { Loader2, CheckCircle2, XCircle } from 'lucide-react'
 
@@ -60,18 +60,25 @@ function AccaCard({ acca }) {
   )
 }
 
+const SORT_OPTIONS = [
+  { value: 'ev',   label: 'EV' },
+  { value: 'odds', label: 'Combined Odds' },
+  { value: 'date', label: 'Date' },
+]
+
 export default function Accumulators() {
-  const [data, setData]       = useState({ 2: [], 3: [] })
-  const [loading, setLoading] = useState({ 2: true, 3: true })
-  const [error, setError]     = useState({ 2: null, 3: null })
-  const [nLegs, setNLegs]     = useState(2)
+  const [data, setData]         = useState({ 2: [], 3: [] })
+  const [loading, setLoading]   = useState({ 2: true, 3: true })
+  const [error, setError]       = useState({ 2: null, 3: null })
+  const [nLegs, setNLegs]       = useState(2)
+  const [wonFilter, setWonFilter] = useState('ALL')
+  const [sortBy, setSortBy]     = useState('ev')
 
   useEffect(() => {
     for (const n of [2, 3]) {
-      api.get(`/api/accumulator?n_legs=${n}&limit=20`)
+      api.get(`/api/accumulator?n_legs=${n}&limit=50`)
         .then(r => {
           const rows = r.data.data ?? []
-          if (rows.length > 0) console.log(`accumulator n_legs=${n} sample:`, rows[0])
           setData(prev => ({ ...prev, [n]: rows }))
         })
         .catch(() => setError(prev => ({ ...prev, [n]: 'Failed to load accumulators' })))
@@ -79,12 +86,26 @@ export default function Accumulators() {
     }
   }, [])
 
+  const rows = data[nLegs]
+
+  const filtered = useMemo(() => {
+    let result = rows
+    if (wonFilter === 'WON')  result = result.filter(a => a.won)
+    if (wonFilter === 'LOST') result = result.filter(a => !a.won)
+    return [...result].sort((a, b) => {
+      if (sortBy === 'ev')   return Number(b.acca_ev) - Number(a.acca_ev)
+      if (sortBy === 'odds') return Number(b.combined_odds) - Number(a.combined_odds)
+      if (sortBy === 'date') return (b.match_date ?? '').localeCompare(a.match_date ?? '')
+      return 0
+    })
+  }, [rows, wonFilter, sortBy])
+
   const isLoading = loading[nLegs]
   const fetchError = error[nLegs]
-  const rows = data[nLegs]
 
   return (
     <div className="space-y-4">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-semibold text-white">Accumulators</h1>
         <div className="flex gap-2">
@@ -104,6 +125,42 @@ export default function Accumulators() {
         </div>
       </div>
 
+      {/* Filters + sort */}
+      <div className="flex flex-wrap gap-3 items-center">
+        {/* Won / Lost filter */}
+        <div className="flex gap-1">
+          {[['ALL', 'All'], ['WON', 'Won'], ['LOST', 'Lost']].map(([val, label]) => (
+            <button
+              key={val}
+              onClick={() => setWonFilter(val)}
+              className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
+                wonFilter === val
+                  ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                  : 'bg-gray-900 text-gray-400 border border-gray-700 hover:text-white'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {/* Sort */}
+        <div className="flex items-center gap-2 ml-auto">
+          <span className="text-xs text-gray-500">Sort</span>
+          <select
+            value={sortBy}
+            onChange={e => setSortBy(e.target.value)}
+            className="bg-gray-900 border border-gray-700 rounded px-2 py-1.5 text-sm text-white focus:outline-none focus:border-emerald-500"
+          >
+            {SORT_OPTIONS.map(o => (
+              <option key={o.value} value={o.value}>{o.label}</option>
+            ))}
+          </select>
+        </div>
+
+        <span className="text-sm text-gray-500">{filtered.length} accumulators</span>
+      </div>
+
       {isLoading && (
         <div className="flex items-center justify-center h-64 gap-3 text-gray-400">
           <Loader2 className="w-6 h-6 animate-spin" />
@@ -117,9 +174,9 @@ export default function Accumulators() {
 
       {!isLoading && !fetchError && (
         <div className="space-y-3">
-          {rows.length === 0
+          {filtered.length === 0
             ? <p className="text-gray-500 text-sm">No accumulators found.</p>
-            : rows.map((acca, i) => <AccaCard key={i} acca={acca} />)
+            : filtered.map((acca, i) => <AccaCard key={i} acca={acca} />)
           }
         </div>
       )}

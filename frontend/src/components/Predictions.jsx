@@ -11,11 +11,24 @@ function ProbCell({ value }) {
   )
 }
 
+function StatCard({ label, value }) {
+  return (
+    <div className="bg-gray-900 border border-gray-800 rounded-xl p-4">
+      <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">{label}</p>
+      <p className="text-2xl font-bold tabular-nums text-white">{value ?? '—'}</p>
+    </div>
+  )
+}
+
 export default function Predictions() {
-  const [data, setData]       = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError]     = useState(null)
-  const [league, setLeague]   = useState('ALL')
+  const [data, setData]                     = useState([])
+  const [loading, setLoading]               = useState(true)
+  const [error, setError]                   = useState(null)
+  const [league, setLeague]                 = useState('ALL')
+  const [dateFrom, setDateFrom]             = useState('')
+  const [dateTo, setDateTo]                 = useState('')
+  const [correctFilter, setCorrectFilter]   = useState('ALL')
+  const [sortDir, setSortDir]               = useState('desc')
 
   useEffect(() => {
     api.get('/api/predictions')
@@ -30,9 +43,28 @@ export default function Predictions() {
   }, [data])
 
   const filtered = useMemo(() => {
-    if (league === 'ALL') return data
-    return data.filter(d => d.league === league)
-  }, [data, league])
+    let rows = data
+    if (league !== 'ALL') rows = rows.filter(d => d.league === league)
+    if (dateFrom) rows = rows.filter(d => d.match_date >= dateFrom)
+    if (dateTo)   rows = rows.filter(d => d.match_date <= dateTo)
+    if (correctFilter === 'CORRECT')   rows = rows.filter(d => d.correct === 1)
+    if (correctFilter === 'INCORRECT') rows = rows.filter(d => d.correct === 0)
+    return [...rows].sort((a, b) =>
+      sortDir === 'desc'
+        ? b.match_date.localeCompare(a.match_date)
+        : a.match_date.localeCompare(b.match_date)
+    )
+  }, [data, league, dateFrom, dateTo, correctFilter, sortDir])
+
+  const stats = useMemo(() => {
+    const withResult = filtered.filter(d => d.correct !== null && d.correct !== undefined)
+    const correct = withResult.filter(d => d.correct === 1).length
+    return {
+      total: filtered.length,
+      correct,
+      hitRate: withResult.length > 0 ? `${(correct / withResult.length * 100).toFixed(1)}%` : null,
+    }
+  }, [filtered])
 
   if (loading) return (
     <div className="flex items-center justify-center h-64 gap-3 text-gray-400">
@@ -44,9 +76,13 @@ export default function Predictions() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-white">Predictions</h1>
-        <span className="text-sm text-gray-500">{filtered.length} matches</span>
+      <h1 className="text-xl font-semibold text-white">Predictions</h1>
+
+      {/* Summary stats */}
+      <div className="grid grid-cols-3 gap-4">
+        <StatCard label="Shown"    value={stats.total} />
+        <StatCard label="Correct"  value={stats.correct} />
+        <StatCard label="Hit Rate" value={stats.hitRate} />
       </div>
 
       {/* League filter */}
@@ -64,6 +100,60 @@ export default function Predictions() {
             {l}
           </button>
         ))}
+      </div>
+
+      {/* Secondary controls */}
+      <div className="flex flex-wrap gap-3 items-center">
+        {/* Date range */}
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-gray-500">From</span>
+          <input
+            type="date"
+            value={dateFrom}
+            onChange={e => setDateFrom(e.target.value)}
+            className="bg-gray-900 border border-gray-700 rounded px-2 py-1.5 text-sm text-white focus:outline-none focus:border-emerald-500 [color-scheme:dark]"
+          />
+          <span className="text-xs text-gray-500">To</span>
+          <input
+            type="date"
+            value={dateTo}
+            onChange={e => setDateTo(e.target.value)}
+            className="bg-gray-900 border border-gray-700 rounded px-2 py-1.5 text-sm text-white focus:outline-none focus:border-emerald-500 [color-scheme:dark]"
+          />
+          {(dateFrom || dateTo) && (
+            <button
+              onClick={() => { setDateFrom(''); setDateTo('') }}
+              className="text-xs text-gray-500 hover:text-white px-1"
+            >
+              ✕
+            </button>
+          )}
+        </div>
+
+        {/* Correct / Incorrect filter */}
+        <div className="flex gap-1">
+          {[['ALL', 'All'], ['CORRECT', 'Correct'], ['INCORRECT', 'Incorrect']].map(([val, label]) => (
+            <button
+              key={val}
+              onClick={() => setCorrectFilter(val)}
+              className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
+                correctFilter === val
+                  ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                  : 'bg-gray-900 text-gray-400 border border-gray-700 hover:text-white'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {/* Sort toggle */}
+        <button
+          onClick={() => setSortDir(d => d === 'desc' ? 'asc' : 'desc')}
+          className="ml-auto px-3 py-1.5 rounded text-sm font-medium bg-gray-900 text-gray-400 border border-gray-700 hover:text-white transition-colors"
+        >
+          Date {sortDir === 'desc' ? '↓ Newest' : '↑ Oldest'}
+        </button>
       </div>
 
       {/* Table */}

@@ -19,6 +19,12 @@ function EdgeBadge({ edge }) {
 }
 
 const OUTCOME_LABELS = { H: 'Home', D: 'Draw', A: 'Away' }
+const SORT_OPTIONS = [
+  { value: 'edge', label: 'Edge' },
+  { value: 'ev',   label: 'EV' },
+  { value: 'odds', label: 'Odds' },
+  { value: 'date', label: 'Date' },
+]
 
 export default function ValueBets() {
   const [bets, setBets]         = useState([])
@@ -26,10 +32,13 @@ export default function ValueBets() {
   const [loading, setLoading]   = useState(true)
   const [error, setError]       = useState(null)
   const [outcome, setOutcome]   = useState('ALL')
+  const [wonFilter, setWonFilter] = useState('ALL')
+  const [sortBy, setSortBy]     = useState('edge')
+  const [minEdge, setMinEdge]   = useState(0.05)
 
   useEffect(() => {
     Promise.all([
-      api.get('/api/value-bets?limit=100'),
+      api.get('/api/value-bets?limit=200'),
       api.get('/api/value-bets/summary'),
     ])
       .then(([betsRes, sumRes]) => {
@@ -41,9 +50,32 @@ export default function ValueBets() {
   }, [])
 
   const filtered = useMemo(() => {
-    if (outcome === 'ALL') return bets
-    return bets.filter(b => b.outcome === outcome)
-  }, [bets, outcome])
+    let rows = bets
+    if (outcome !== 'ALL') rows = rows.filter(b => b.outcome === outcome)
+    if (wonFilter === 'WON')  rows = rows.filter(b => b.won === 1)
+    if (wonFilter === 'LOST') rows = rows.filter(b => b.won !== 1)
+    rows = rows.filter(b => b.edge >= minEdge)
+    return [...rows].sort((a, b) => {
+      if (sortBy === 'edge') return b.edge - a.edge
+      if (sortBy === 'ev')   return b.EV - a.EV
+      if (sortBy === 'odds') return b.odds - a.odds
+      if (sortBy === 'date') return b.match_date.localeCompare(a.match_date)
+      return 0
+    })
+  }, [bets, outcome, wonFilter, sortBy, minEdge])
+
+  const filteredStats = useMemo(() => {
+    const withResult = filtered.filter(b => b.won !== null && b.won !== undefined)
+    const won = withResult.filter(b => b.won === 1).length
+    const meanEdge = filtered.length > 0
+      ? filtered.reduce((s, b) => s + b.edge, 0) / filtered.length
+      : null
+    return {
+      count: filtered.length,
+      winRate: withResult.length > 0 ? (won / withResult.length * 100).toFixed(1) + '%' : null,
+      meanEdge: meanEdge != null ? (meanEdge * 100).toFixed(1) + '%' : null,
+    }
+  }, [filtered])
 
   if (loading) return (
     <div className="flex items-center justify-center h-64 gap-3 text-gray-400">
@@ -57,32 +89,87 @@ export default function ValueBets() {
     <div className="space-y-5">
       <h1 className="text-xl font-semibold text-white">Value Bets</h1>
 
-      {/* Summary cards */}
+      {/* Overall summary */}
       {summary && (
         <div className="grid grid-cols-4 gap-4">
-          <StatCard label="Total Bets"  value={summary.total_bets} />
-          <StatCard label="Win Rate"    value={summary.win_rate != null ? `${(summary.win_rate * 100).toFixed(1)}%` : null} />
-          <StatCard label="ROI / Bet"   value={summary.roi != null ? `${summary.roi > 0 ? '+' : ''}${summary.roi.toFixed(3)}` : null} />
-          <StatCard label="Mean CLV"    value={summary.mean_clv != null ? summary.mean_clv.toFixed(4) : null} sub="Closing line value" />
+          <StatCard label="Total Bets" value={summary.total_bets} />
+          <StatCard label="Win Rate"   value={summary.win_rate != null ? `${(summary.win_rate * 100).toFixed(1)}%` : null} />
+          <StatCard label="ROI / Bet"  value={summary.roi != null ? `${summary.roi > 0 ? '+' : ''}${summary.roi.toFixed(3)}` : null} />
+          <StatCard label="Mean CLV"   value={summary.mean_clv != null ? summary.mean_clv.toFixed(4) : null} sub="Closing line value" />
         </div>
       )}
 
-      {/* Outcome filter */}
-      <div className="flex gap-2">
-        {['ALL', 'H', 'D', 'A'].map(o => (
-          <button
-            key={o}
-            onClick={() => setOutcome(o)}
-            className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
-              outcome === o
-                ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                : 'bg-gray-900 text-gray-400 border border-gray-700 hover:text-white'
-            }`}
+      {/* Filters row */}
+      <div className="flex flex-wrap gap-3 items-center">
+        {/* Outcome filter */}
+        <div className="flex gap-1">
+          {['ALL', 'H', 'D', 'A'].map(o => (
+            <button
+              key={o}
+              onClick={() => setOutcome(o)}
+              className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
+                outcome === o
+                  ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                  : 'bg-gray-900 text-gray-400 border border-gray-700 hover:text-white'
+              }`}
+            >
+              {o === 'ALL' ? 'All' : OUTCOME_LABELS[o]}
+            </button>
+          ))}
+        </div>
+
+        {/* Won / Lost filter */}
+        <div className="flex gap-1">
+          {[['ALL', 'All'], ['WON', 'Won'], ['LOST', 'Lost']].map(([val, label]) => (
+            <button
+              key={val}
+              onClick={() => setWonFilter(val)}
+              className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
+                wonFilter === val
+                  ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                  : 'bg-gray-900 text-gray-400 border border-gray-700 hover:text-white'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {/* Sort by */}
+        <div className="flex items-center gap-2 ml-auto">
+          <span className="text-xs text-gray-500">Sort</span>
+          <select
+            value={sortBy}
+            onChange={e => setSortBy(e.target.value)}
+            className="bg-gray-900 border border-gray-700 rounded px-2 py-1.5 text-sm text-white focus:outline-none focus:border-emerald-500"
           >
-            {o === 'ALL' ? 'All' : OUTCOME_LABELS[o]}
-          </button>
-        ))}
-        <span className="ml-auto text-sm text-gray-500 self-center">{filtered.length} bets</span>
+            {SORT_OPTIONS.map(o => (
+              <option key={o.value} value={o.value}>{o.label}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      {/* Min edge */}
+      <div className="flex items-center gap-3">
+        <span className="text-xs text-gray-500 shrink-0">Min Edge</span>
+        <input
+          type="range"
+          min={0.05}
+          max={0.30}
+          step={0.01}
+          value={minEdge}
+          onChange={e => setMinEdge(parseFloat(e.target.value))}
+          className="w-40 accent-emerald-500"
+        />
+        <span className="text-sm font-mono text-emerald-400 w-12">{(minEdge * 100).toFixed(0)}%</span>
+        <span className="ml-auto text-sm text-gray-500">
+          {filteredStats.count} bets
+          {filteredStats.winRate && <span className="mx-2 text-gray-600">·</span>}
+          {filteredStats.winRate && <span>Win rate: <span className="text-white">{filteredStats.winRate}</span></span>}
+          {filteredStats.meanEdge && <span className="mx-2 text-gray-600">·</span>}
+          {filteredStats.meanEdge && <span>Mean edge: <span className="text-white">{filteredStats.meanEdge}</span></span>}
+        </span>
       </div>
 
       {/* Table */}
