@@ -16,13 +16,13 @@ engine.
 ## Current Results
 | Metric | Value |
 |--------|-------|
-| Matches in database | 8,982 (EPL, La Liga, Bundesliga, Serie A, Ligue 1) |
-| Walk-forward hit rate | 69.5% (non-draw matches, optimised Elo) |
-| Walk-forward Brier score | 0.157 |
-| Dixon-Coles Brier score | 0.179 (3-outcome) |
-| XGBoost Brier score (full features) | 0.165 (42 features) |
-| Glicko-2 hit rate | 69.7% |
-| Ensemble v2 hit rate | 53.2% (3-outcome holdout) |
+| Matches in database | 56,459 (EPL, La Liga, Bundesliga, Serie A, Ligue 1, 1993-2025) |
+| Walk-forward hit rate | 69.5% (non-draw, optimised Elo) |
+| Walk-forward Brier score | 0.156 |
+| Ensemble v2 hit rate | 53.3% (3-outcome, 2023-25 holdout) |
+| Neural network hit rate | 53.1% (feedforward, 2014-25) |
+| Neural network Brier | 0.587 |
+| xG matches integrated | 19,837 (Understat, 2014-25) |
 | Baseline (coin flip) Brier | 0.250 |
 
 ---
@@ -37,7 +37,7 @@ engine.
 - [x] Hyperparameter grid search (K, home_advantage, decay, MoV cap)
 - [x] Glicko-2 uncertainty-aware ratings (RD + volatility)
 - [x] Bradley-Terry-Luce schedule-adjusted ratings (MLE)
-- [ ] Bayesian hierarchical model (PyMC — partial pooling across leagues)
+- [x] Bayesian hierarchical model (PyMC — partial pooling across leagues)
 
 ---
 
