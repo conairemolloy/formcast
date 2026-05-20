@@ -19,7 +19,7 @@ import numpy as np
 import pandas as pd
 
 # ── Configuration ─────────────────────────────────────────────────────────────
-TODAY = "2026-05-20"
+TODAY = "2026-05-21"
 N_SIMS = 100_000
 K = 16          # Elo K-factor
 HOME_ADV = 50   # Home advantage in Elo points
@@ -138,7 +138,7 @@ def print_table(
     row_fmt = "{:<4} {:<22} {:>4}  {:>+5}  {:>6}  {:>6}  {:>6}  {:>7}"
 
     print(f"\n{'─' * width}")
-    print(f"  {league} 2024-25  |  N={N_SIMS:,} Monte Carlo simulations")
+    print(f"  {league} 2025-26  |  N={N_SIMS:,} Monte Carlo simulations")
     print(f"{'─' * width}")
     print(hdr_fmt.format("Pos", "Team", "Pts", "GD", "Win%", "Top4%", "Top6%", "Rel%"))
     print(f"{'─' * width}")
@@ -170,11 +170,11 @@ def main() -> None:
 
     for league in LEAGUES:
         league_size = LEAGUE_SIZES[league]
-        print(f"\n[{league}] Loading 2024-25 season data...", flush=True)
+        print(f"\n[{league}] Loading 2025-26 season data...", flush=True)
         t0 = time.perf_counter()
 
         season_df = results_df[
-            (results_df["season"] == "2024-25") & (results_df["league"] == league)
+            (results_df["season"] == "2025-26") & (results_df["league"] == league)
         ].copy()
 
         # Played = result recorded AND date on or before today
