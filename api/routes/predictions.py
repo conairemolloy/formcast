@@ -43,3 +43,15 @@ def get_prediction_value_bets():
 
     df = df.sort_values("edge", ascending=False)
     return ok(df.to_dict(orient="records"))
+
+
+@predictions_bp.get("/tournament")
+def get_tournament():
+    df = current_app.config["DATA"]["tournament_simulations"].copy()
+
+    league = request.args.get("league")
+    if league:
+        df = df[df["league"].str.lower() == league.lower()]
+
+    df = df.sort_values("current_pts", ascending=False)
+    return ok(df.to_dict(orient="records"))

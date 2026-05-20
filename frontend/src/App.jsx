@@ -5,11 +5,13 @@ import BacktestReport from './components/BacktestReport'
 import ValueBets from './components/ValueBets'
 import Predictions from './components/Predictions'
 import Accumulators from './components/Accumulators'
+import Tournament from './components/Tournament'
 
 const NAV_ITEMS = [
   { id: 'ratings',      label: 'Ratings' },
   { id: 'predictions',  label: 'Predictions' },
   { id: 'backtest',     label: 'Backtest' },
+  { id: 'tournament',   label: 'Tournament' },
   { id: 'value-bets',   label: 'Value Bets' },
   { id: 'accumulators', label: 'Accumulators' },
 ]
@@ -51,6 +53,7 @@ function App() {
         {active === 'ratings'      && <RatingsTable />}
         {active === 'predictions'  && <Predictions />}
         {active === 'backtest'     && <BacktestReport />}
+        {active === 'tournament'   && <Tournament />}
         {active === 'value-bets'   && <ValueBets />}
         {active === 'accumulators' && <Accumulators />}
       </main>

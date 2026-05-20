@@ -28,6 +28,7 @@ def create_app():
         "backtest_predictions":   load_csv("backtest_predictions.csv"),
         "kelly_simulation":       load_csv("kelly_simulation.csv"),
         "accumulator_bets":       load_csv("accumulator_bets.csv"),
+        "tournament_simulations": load_csv("tournament_simulations.csv"),
     }
 
     app.register_blueprint(ratings_bp,     url_prefix="/api")
