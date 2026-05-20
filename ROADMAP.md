@@ -142,7 +142,54 @@ engine.
 
 ---
 
-## Phase 7 — Sport Expansion
+## Phase 7 — UX & Design Polish
+- [ ] Redesign dashboard with proper data visualisation hero section
+- [ ] Elo ratings chart — animated bar chart race (top 20 teams over time)
+- [ ] Calibration curve chart (predicted probability vs actual win rate by decile)
+- [ ] Cumulative P&L chart (flat stake simulation over time)
+- [ ] Brier score trend chart (rolling 90-match window)
+- [ ] SHAP waterfall chart per match (why did the model predict this?)
+- [ ] H2H comparison page (two-team selector, Elo history, head to head record)
+- [ ] League filter on ratings page (show only EPL, only La Liga etc)
+- [ ] Mobile responsive layout
+- [ ] Dark/light mode toggle
+- [ ] Loading skeletons instead of spinners
+- [ ] Match prediction card (upcoming fixtures with probability breakdown)
+- [ ] Tournament simulation visualisation (probability treemap per team)
+- [ ] Value bet history chart (CLV over time, ROI by league)
+- [ ] Accumulator builder UI (interactive leg selector, real-time EV calculation)
+- [ ] Custom domain (formcast.io or similar)
+
+---
+
+## Phase 8 — Mathematics & Methodology Documentation
+- [ ] How It Works page — plain English explanation of each model
+- [ ] Elo explainer (K-factor, home advantage, MoV multiplier, what ratings mean)
+- [ ] Dixon-Coles explainer (bivariate Poisson, tau correction, temporal decay)
+- [ ] Glicko-2 explainer (RD, volatility, inactivity penalty)
+- [ ] Ensemble explainer (how models are stacked, what meta-learner weights mean)
+- [ ] xG explainer (what expected goals measures, why it predicts better than goals)
+- [ ] Interactive probability calculator (enter two team ratings, see win probabilities)
+- [ ] Feature importance visualisation (SHAP beeswarm across all 48 features)
+- [ ] Glossary page (Brier score, CLV, Kelly criterion, EV, overround etc)
+
+---
+
+## Phase 9 — Model Validation & Transparency
+- [ ] Full backtesting results page (hit rate and Brier by league, season, year)
+- [ ] Calibration diagram (reliability plot with confidence intervals)
+- [ ] Model comparison table (all models side by side — Elo, G2, DC, XGB, NN, LSTM, Ensemble)
+- [ ] Walk-forward accuracy chart (how hit rate changed over 32 seasons)
+- [ ] Closing line value history (CLV per bet, cumulative CLV chart)
+- [ ] Prediction log (every prediction ever made, timestamped, SHA256 hashed)
+- [ ] Monthly accuracy report (automated, updated after each round of fixtures)
+- [ ] Diebold-Mariano test results vs naive baseline
+- [ ] Hosmer-Lemeshow calibration test results
+- [ ] Permutation feature importance (which features matter most per league)
+
+---
+
+## Phase 10 — Sport Expansion
 ### Soccer (additional data)
 - [ ] Extend history to 1993 (football-data.co.uk archive)
 - [ ] Understat xG integration (2014-present, top 5 leagues)
@@ -183,7 +230,7 @@ engine.
 
 ---
 
-## Phase 8 — Frontend (React + Vite)
+## Phase 11 — Frontend (React + Vite)
 - [ ] Project scaffold (Vite + Tailwind + Recharts)
 - [ ] Elo ratings table — live, sortable, filterable by league
 - [ ] Calibration curve — predicted prob vs actual win rate
@@ -203,7 +250,7 @@ engine.
 
 ---
 
-## Phase 9 — API & Deployment
+## Phase 12 — API & Deployment
 - [ ] Flask API scaffold
 - [ ] GET /api/ratings — current Elo ratings per league
 - [ ] GET /api/predictions — upcoming match predictions

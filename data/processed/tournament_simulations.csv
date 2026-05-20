@@ -1,0 +1,97 @@
+league,team,current_pts,current_gd,win_pct,top4_pct,top6_pct,relegation_pct,modal_position,mean_position
+EPL,Arsenal,74,35,0.0,100.0,100.0,0.0,2,2.0
+EPL,Aston Villa,66,7,0.0,0.0,100.0,0.0,6,6.0
+EPL,Bournemouth,56,12,0.0,0.0,0.0,0.0,9,9.0
+EPL,Brentford,56,9,0.0,0.0,0.0,0.0,10,10.0
+EPL,Brighton,61,7,0.0,0.0,0.0,0.0,8,8.0
+EPL,Chelsea,69,21,0.0,100.0,100.0,0.0,4,4.0
+EPL,Crystal Palace,53,0,0.0,0.0,0.0,0.0,12,12.0
+EPL,Everton,48,-2,0.0,0.0,0.0,0.0,13,13.0
+EPL,Fulham,54,0,0.0,0.0,0.0,0.0,11,11.0
+EPL,Ipswich,22,-46,0.0,0.0,0.0,100.0,19,19.0
+EPL,Leicester,25,-47,0.0,0.0,0.0,100.0,18,18.0
+EPL,Liverpool,84,45,100.0,100.0,100.0,0.0,1,1.0
+EPL,Man City,71,28,0.0,100.0,100.0,0.0,3,3.0
+EPL,Man United,42,-10,0.0,0.0,0.0,0.0,15,15.0
+EPL,Newcastle,66,21,0.0,0.0,100.0,0.0,5,5.0
+EPL,Nott'm Forest,65,12,0.0,0.0,0.0,0.0,7,7.0
+EPL,Southampton,12,-60,0.0,0.0,0.0,100.0,20,20.0
+EPL,Tottenham,38,-1,0.0,0.0,0.0,0.0,17,17.0
+EPL,West Ham,43,-16,0.0,0.0,0.0,0.0,14,14.0
+EPL,Wolves,42,-15,0.0,0.0,0.0,0.0,16,16.0
+LaLiga,Alaves,42,-10,0.0,0.0,0.0,0.0,14,14.0
+LaLiga,Ath Bilbao,70,25,0.0,100.0,100.0,0.0,4,4.0
+LaLiga,Ath Madrid,76,38,0.0,100.0,100.0,0.0,3,3.0
+LaLiga,Barcelona,88,63,100.0,100.0,100.0,0.0,1,1.0
+LaLiga,Betis,60,7,0.0,0.0,100.0,0.0,6,6.0
+LaLiga,Celta,55,2,0.0,0.0,0.0,0.0,7,7.0
+LaLiga,Espanol,42,-11,0.0,0.0,0.0,0.0,15,15.0
+LaLiga,Getafe,42,-5,0.0,0.0,0.0,0.0,13,13.0
+LaLiga,Girona,41,-16,0.0,0.0,0.0,0.0,17,17.0
+LaLiga,Las Palmas,32,-21,0.0,0.0,0.0,100.0,19,19.0
+LaLiga,Leganes,40,-17,0.0,0.0,0.0,100.0,18,18.0
+LaLiga,Mallorca,48,-9,0.0,0.0,0.0,0.0,10,10.0
+LaLiga,Osasuna,52,-4,0.0,0.0,0.0,0.0,9,9.0
+LaLiga,Real Madrid,84,40,0.0,100.0,100.0,0.0,2,2.0
+LaLiga,Sevilla,41,-13,0.0,0.0,0.0,0.0,16,16.0
+LaLiga,Sociedad,46,-11,0.0,0.0,0.0,0.0,12,12.0
+LaLiga,Valencia,46,-10,0.0,0.0,0.0,0.0,11,11.0
+LaLiga,Valladolid,16,-64,0.0,0.0,0.0,100.0,20,20.0
+LaLiga,Vallecano,52,-4,0.0,0.0,0.0,0.0,8,8.0
+LaLiga,Villarreal,70,20,0.0,0.0,100.0,0.0,5,5.0
+SerieA,Atalanta,74,41,0.0,100.0,100.0,0.0,3,3.0
+SerieA,Bologna,62,10,0.0,0.0,0.0,0.0,9,9.0
+SerieA,Cagliari,36,-16,0.0,0.0,0.0,0.0,16,16.0
+SerieA,Como,49,-3,0.0,0.0,0.0,0.0,10,10.0
+SerieA,Empoli,31,-26,0.0,0.0,0.0,100.0,18,18.0
+SerieA,Fiorentina,65,19,0.0,0.0,100.0,0.0,6,6.0
+SerieA,Genoa,43,-12,0.0,0.0,0.0,0.0,13,13.0
+SerieA,Inter,81,44,0.0,100.0,100.0,0.0,2,2.0
+SerieA,Juventus,70,23,0.0,100.0,100.0,0.0,4,4.0
+SerieA,Lazio,65,12,0.0,0.0,0.0,0.0,7,7.0
+SerieA,Lecce,34,-31,0.0,0.0,0.0,0.0,17,17.0
+SerieA,Milan,63,18,0.0,0.0,0.0,0.0,8,8.0
+SerieA,Monza,18,-41,0.0,0.0,0.0,100.0,20,20.0
+SerieA,Napoli,82,32,100.0,100.0,100.0,0.0,1,1.0
+SerieA,Parma,36,-14,0.0,0.0,0.0,0.0,15,15.0
+SerieA,Roma,69,21,0.0,0.0,100.0,0.0,5,5.0
+SerieA,Torino,44,-6,0.0,0.0,0.0,0.0,11,11.0
+SerieA,Udinese,44,-15,0.0,0.0,0.0,0.0,12,12.0
+SerieA,Venezia,29,-24,0.0,0.0,0.0,100.0,19,19.0
+SerieA,Verona,37,-32,0.0,0.0,0.0,0.0,14,14.0
+Bundesliga,Augsburg,43,-16,0.0,0.0,0.0,0.0,12,12.0
+Bundesliga,Bayern Munich,82,67,100.0,100.0,100.0,0.0,1,1.0
+Bundesliga,Bochum,25,-34,0.0,0.0,0.0,100.0,18,18.0
+Bundesliga,Dortmund,57,20,0.0,100.0,100.0,0.0,4,4.0
+Bundesliga,Ein Frankfurt,60,22,0.0,100.0,100.0,0.0,3,3.0
+Bundesliga,Freiburg,55,-4,0.0,0.0,100.0,0.0,5,5.0
+Bundesliga,Heidenheim,29,-27,0.0,0.0,0.0,100.0,16,16.0
+Bundesliga,Hoffenheim,32,-22,0.0,0.0,0.0,0.0,15,15.0
+Bundesliga,Holstein Kiel,25,-31,0.0,0.0,0.0,100.0,17,17.0
+Bundesliga,Leverkusen,69,29,0.0,100.0,100.0,0.0,2,2.0
+Bundesliga,M'gladbach,45,-2,0.0,0.0,0.0,0.0,10,10.0
+Bundesliga,Mainz,52,12,0.0,0.0,100.0,0.0,6,6.0
+Bundesliga,RB Leipzig,51,5,0.0,0.0,0.0,0.0,7,7.0
+Bundesliga,St Pauli,32,-13,0.0,0.0,0.0,0.0,14,14.0
+Bundesliga,Stuttgart,50,11,0.0,0.0,0.0,0.0,9,9.0
+Bundesliga,Union Berlin,40,-16,0.0,0.0,0.0,0.0,13,13.0
+Bundesliga,Werder Bremen,51,-3,0.0,0.0,0.0,0.0,8,8.0
+Bundesliga,Wolfsburg,43,2,0.0,0.0,0.0,0.0,11,11.0
+Ligue1,Angers,36,-21,0.0,0.0,0.0,0.0,14,14.0
+Ligue1,Auxerre,42,-3,0.0,0.0,0.0,0.0,11,11.0
+Ligue1,Brest,50,-7,0.0,0.0,0.0,0.0,9,9.0
+Ligue1,Le Havre,34,-31,0.0,0.0,0.0,0.0,15,15.0
+Ligue1,Lens,52,3,0.0,0.0,0.0,0.0,8,8.0
+Ligue1,Lille,60,16,0.0,0.0,100.0,0.0,5,5.0
+Ligue1,Lyon,57,19,0.0,0.0,100.0,0.0,6,6.0
+Ligue1,Marseille,65,27,0.0,100.0,100.0,0.0,2,2.0
+Ligue1,Monaco,61,22,0.0,100.0,100.0,0.0,3,3.0
+Ligue1,Montpellier,16,-56,0.0,0.0,0.0,100.0,18,18.0
+Ligue1,Nantes,36,-13,0.0,0.0,0.0,0.0,13,13.0
+Ligue1,Nice,60,25,0.0,100.0,100.0,0.0,4,4.0
+Ligue1,Paris SG,84,57,100.0,100.0,100.0,0.0,1,1.0
+Ligue1,Reims,33,-14,0.0,0.0,0.0,100.0,16,16.0
+Ligue1,Rennes,41,1,0.0,0.0,0.0,0.0,12,12.0
+Ligue1,St Etienne,30,-38,0.0,0.0,0.0,100.0,17,17.0
+Ligue1,Strasbourg,57,12,0.0,0.0,0.0,0.0,7,7.0
+Ligue1,Toulouse,42,1,0.0,0.0,0.0,0.0,10,10.0
