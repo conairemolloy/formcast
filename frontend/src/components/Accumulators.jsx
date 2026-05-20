@@ -1,15 +1,15 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import api from '../api'
 import { Loader2, CheckCircle2, XCircle } from 'lucide-react'
 
 function LegPill({ home, away, outcome, odds }) {
-  if (!home) return null
+  if (!home || !away) return null
   return (
     <span className="inline-flex items-center gap-1 bg-gray-800 rounded px-2 py-0.5 text-xs text-gray-300 mr-1 mb-1">
       <span className="font-medium text-white">{home} vs {away}</span>
       <span className="text-gray-500">·</span>
-      <span className="font-mono text-blue-400">{outcome}</span>
-      <span className="text-gray-600">@{odds}</span>
+      <span className="font-mono text-blue-400">{outcome ?? '—'}</span>
+      <span className="text-gray-600">@{odds ?? '—'}</span>
     </span>
   )
 }
@@ -21,16 +21,13 @@ export default function Accumulators() {
   const [nLegs, setNLegs]     = useState(2)
 
   useEffect(() => {
+    setLoading(true)
+    setError(null)
     api.get(`/api/accumulator?n_legs=${nLegs}&limit=20`)
       .then(r => setData(r.data.data))
       .catch(() => setError('Failed to load accumulators'))
       .finally(() => setLoading(false))
   }, [nLegs])
-
-  const handleLegsChange = (n) => {
-    setLoading(true)
-    setNLegs(n)
-  }
 
   if (loading) return (
     <div className="flex items-center justify-center h-64 gap-3 text-gray-400">
@@ -40,27 +37,9 @@ export default function Accumulators() {
   )
   if (error) return <div className="text-red-400 p-6">{error}</div>
 
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-white">Accumulators</h1>
-        <div className="flex gap-2">
-          {[2, 3].map(n => (
-            <button
-              key={n}
-              onClick={() => handleLegsChange(n)}
-              className={`px-4 py-1.5 rounded text-sm font-medium transition-colors ${
-                nLegs === n
-                  ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                  : 'bg-gray-900 text-gray-400 border border-gray-700 hover:text-white'
-              }`}
-            >
-              {n}-Leg
-            </button>
-          ))}
-        </div>
-      </div>
-
+  let tableContent
+  try {
+    tableContent = (
       <div className="space-y-3">
         {data.map((acca, i) => (
           <div
@@ -86,26 +65,61 @@ export default function Accumulators() {
             <div className="flex gap-6 text-sm">
               <div>
                 <span className="text-gray-500 text-xs">Combined Odds</span>
-                <p className="font-mono font-semibold text-white">{acca.combined_odds}</p>
+                <p className="font-mono font-semibold text-white">{acca.combined_odds ?? '—'}</p>
               </div>
               <div>
                 <span className="text-gray-500 text-xs">Model Prob</span>
-                <p className="font-mono font-semibold text-gray-300">{(acca.combined_p * 100).toFixed(1)}%</p>
+                <p className="font-mono font-semibold text-gray-300">
+                  {acca.combined_p != null ? (acca.combined_p * 100).toFixed(1) + '%' : '—'}
+                </p>
               </div>
               <div>
                 <span className="text-gray-500 text-xs">EV</span>
                 <p className={`font-mono font-semibold ${acca.acca_ev > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                  {acca.acca_ev > 0 ? '+' : ''}{acca.acca_ev.toFixed(3)}
+                  {acca.acca_ev != null
+                    ? (acca.acca_ev > 0 ? '+' : '') + acca.acca_ev.toFixed(3)
+                    : '—'}
                 </p>
               </div>
               <div>
                 <span className="text-gray-500 text-xs">Date</span>
-                <p className="font-mono text-gray-400 text-xs mt-0.5">{acca.match_date}</p>
+                <p className="font-mono text-gray-400 text-xs mt-0.5">{acca.match_date ?? '—'}</p>
               </div>
             </div>
           </div>
         ))}
       </div>
+    )
+  } catch (e) {
+    tableContent = (
+      <div className="text-red-400 p-6 bg-red-500/10 rounded-lg border border-red-500/20">
+        Something went wrong rendering the accumulators. The data may be malformed.
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h1 className="text-xl font-semibold text-white">Accumulators</h1>
+        <div className="flex gap-2">
+          {[2, 3].map(n => (
+            <button
+              key={n}
+              onClick={() => setNLegs(n)}
+              className={`px-4 py-1.5 rounded text-sm font-medium transition-colors ${
+                nLegs === n
+                  ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                  : 'bg-gray-900 text-gray-400 border border-gray-700 hover:text-white'
+              }`}
+            >
+              {n}-Leg
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {tableContent}
     </div>
   )
 }

@@ -94,7 +94,7 @@ engine.
 ---
 
 ## Phase 3 — Neural Network Suite
-- [ ] Feedforward: Input → Dense(256,ReLU) → BN → Dropout(0.3) → Dense(128,ReLU) → Dense(3,Softmax)
+- [x] Feedforward: Input → Dense(256,ReLU) → BN → Dropout(0.3) → Dense(128,ReLU) → Dense(3,Softmax)
 - [ ] LSTM: last 5 match feature vectors → LSTM(128) → Dense(64) → Dense(1,σ)
 - [ ] Graph Neural Network: teams as nodes, matches as edges, GCN propagation
 - [ ] Transformer: self-attention over match history sequence
