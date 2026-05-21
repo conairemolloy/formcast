@@ -71,10 +71,6 @@ def get_matches():
     except ValueError:
         return jsonify({"success": False, "error": "Invalid limit"}), 400
 
-    import sys
-    print(f"DEBUG matches: path={RESULTS_CSV}, exists={os.path.exists(RESULTS_CSV)}", file=sys.stderr, flush=True)
-    print(f"DEBUG data dir contents: {os.listdir(os.path.dirname(RESULTS_CSV)) if os.path.exists(os.path.dirname(RESULTS_CSV)) else 'DIR NOT FOUND'}", file=sys.stderr, flush=True)
-
     all_cols = pd.read_csv(RESULTS_CSV, nrows=0).columns.tolist()
     usecols = [c for c in MATCH_COLS if c in all_cols]
     df = pd.read_csv(RESULTS_CSV, usecols=usecols)
