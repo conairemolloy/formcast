@@ -376,9 +376,9 @@ export default function MatchPreview({ match, onClose }) {
               Match Preview
             </p>
             <div className="flex items-center gap-3">
-              <span className="text-base font-bold text-white truncate">{match.home_team}</span>
+              <span className="text-base font-bold text-white truncate">{data?.home_canon ?? match.home_team}</span>
               <span className="text-gray-500 font-normal shrink-0 text-sm">vs</span>
-              <span className="text-base font-bold text-white truncate">{match.away_team}</span>
+              <span className="text-base font-bold text-white truncate">{data?.away_canon ?? match.away_team}</span>
             </div>
             {match.competition && (
               <p className="text-xs text-gray-500 mt-0.5">{match.competition}</p>
