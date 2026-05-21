@@ -147,13 +147,20 @@ export default function Predictions() {
           ))}
         </div>
 
-        {/* Sort toggle */}
-        <button
-          onClick={() => setSortDir(d => d === 'desc' ? 'asc' : 'desc')}
-          className="ml-auto px-3 py-1.5 rounded text-sm font-medium bg-gray-900 text-gray-400 border border-gray-700 hover:text-white transition-colors"
-        >
-          Date {sortDir === 'desc' ? '↓ Newest' : '↑ Oldest'}
-        </button>
+        <div className="ml-auto flex items-center gap-3">
+          <span className="text-sm text-gray-500 tabular-nums">
+            Showing{' '}
+            <span className="text-white font-medium">{filtered.length}</span>
+            {filtered.length !== data.length && ` of ${data.length}`}
+            {' '}results
+          </span>
+          <button
+            onClick={() => setSortDir(d => d === 'desc' ? 'asc' : 'desc')}
+            className="px-3 py-1.5 rounded text-sm font-medium bg-gray-900 text-gray-400 border border-gray-700 hover:text-white transition-colors"
+          >
+            Date {sortDir === 'desc' ? '↓ Newest' : '↑ Oldest'}
+          </button>
+        </div>
       </div>
 
       {/* Table */}

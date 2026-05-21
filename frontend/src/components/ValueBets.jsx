@@ -164,7 +164,10 @@ export default function ValueBets() {
         />
         <span className="text-sm font-mono text-emerald-400 w-12">{(minEdge * 100).toFixed(0)}%</span>
         <span className="ml-auto text-sm text-gray-500">
-          {filteredStats.count} bets
+          Showing{' '}
+          <span className="text-white font-medium">{filteredStats.count}</span>
+          {filteredStats.count !== bets.length && ` of ${bets.length}`}
+          {' '}bets
           {filteredStats.winRate && <span className="mx-2 text-gray-600">·</span>}
           {filteredStats.winRate && <span>Win rate: <span className="text-white">{filteredStats.winRate}</span></span>}
           {filteredStats.meanEdge && <span className="mx-2 text-gray-600">·</span>}

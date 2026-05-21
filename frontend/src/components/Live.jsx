@@ -171,6 +171,23 @@ function CompSection({ competition, matches, showProbs }) {
 }
 
 // ---------------------------------------------------------------------------
+// Competition filter dropdown
+// ---------------------------------------------------------------------------
+
+function CompFilter({ competitions, value, onChange }) {
+  if (competitions.length <= 2) return null
+  return (
+    <select
+      value={value}
+      onChange={e => onChange(e.target.value)}
+      className="bg-gray-900 border border-gray-700 rounded px-2 py-1.5 text-sm text-white focus:outline-none focus:border-emerald-500"
+    >
+      {competitions.map(c => <option key={c} value={c}>{c}</option>)}
+    </select>
+  )
+}
+
+// ---------------------------------------------------------------------------
 // Tabs
 // ---------------------------------------------------------------------------
 
@@ -217,18 +234,27 @@ function LiveNowPanel({ data, loading, error, lastRefresh, onRefresh }) {
 // Today panel
 // ---------------------------------------------------------------------------
 
-function TodayPanel({ data, loading, error }) {
+function TodayPanel({ data, loading, error, selectedComp, setSelectedComp }) {
   if (loading) return <Spinner />
   if (error)   return <ErrorMsg msg={error} />
   if (!data || data.length === 0) {
     return <div className="text-center text-gray-500 py-16">No matches today.</div>
   }
 
-  const grouped = groupBy(data, 'competition')
+  const competitions = ['ALL', ...Array.from(new Set(data.map(m => m.competition))).sort()]
+  const visible = selectedComp === 'ALL' ? data : data.filter(m => m.competition === selectedComp)
+  const grouped = groupBy(visible, 'competition')
 
   return (
     <div className="flex flex-col gap-6">
-      <p className="text-sm text-gray-500">{data.length} matches today</p>
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-gray-500">
+          <span className="text-white font-medium">{visible.length}</span>
+          {visible.length !== data.length && ` of ${data.length}`}
+          {' '}matches today
+        </p>
+        <CompFilter competitions={competitions} value={selectedComp} onChange={setSelectedComp} />
+      </div>
       {Object.entries(grouped).map(([comp, matches]) => (
         <CompSection key={comp} competition={comp} matches={matches} showProbs />
       ))}
@@ -240,17 +266,27 @@ function TodayPanel({ data, loading, error }) {
 // Upcoming panel — grouped by date then competition
 // ---------------------------------------------------------------------------
 
-function UpcomingPanel({ data, loading, error }) {
+function UpcomingPanel({ data, loading, error, selectedComp, setSelectedComp }) {
   if (loading) return <Spinner />
   if (error)   return <ErrorMsg msg={error} />
   if (!data || data.length === 0) {
     return <div className="text-center text-gray-500 py-16">No upcoming fixtures found.</div>
   }
 
-  const byDate = groupBy(data, 'match_date')
+  const competitions = ['ALL', ...Array.from(new Set(data.map(m => m.competition))).sort()]
+  const visible = selectedComp === 'ALL' ? data : data.filter(m => m.competition === selectedComp)
+  const byDate = groupBy(visible, 'match_date')
 
   return (
     <div className="flex flex-col gap-8">
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-gray-500">
+          <span className="text-white font-medium">{visible.length}</span>
+          {visible.length !== data.length && ` of ${data.length}`}
+          {' '}fixtures
+        </p>
+        <CompFilter competitions={competitions} value={selectedComp} onChange={setSelectedComp} />
+      </div>
       {Object.entries(byDate).sort(([a], [b]) => a.localeCompare(b)).map(([d, dayMatches]) => {
         const byComp = groupBy(dayMatches, 'competition')
         return (
@@ -309,7 +345,8 @@ function RefreshButton({ lastRefresh, onRefresh }) {
 // ---------------------------------------------------------------------------
 
 export default function Live() {
-  const [tab, setTab]       = useState('today')
+  const [tab, setTab]             = useState('today')
+  const [selectedComp, setSelectedComp] = useState('ALL')
 
   const [liveData, setLiveData]       = useState(null)
   const [todayData, setTodayData]     = useState(null)
@@ -364,6 +401,8 @@ export default function Live() {
       setUpcomingLoading(false)
     }
   }, [])
+
+  useEffect(() => { setSelectedComp('ALL') }, [tab])
 
   // Initial fetch per tab
   useEffect(() => {
@@ -427,6 +466,8 @@ export default function Live() {
             data={todayData}
             loading={todayLoading}
             error={todayError}
+            selectedComp={selectedComp}
+            setSelectedComp={setSelectedComp}
           />
         )}
         {tab === 'upcoming' && (
@@ -434,6 +475,8 @@ export default function Live() {
             data={upcomingData}
             loading={upcomingLoading}
             error={upcomingError}
+            selectedComp={selectedComp}
+            setSelectedComp={setSelectedComp}
           />
         )}
       </div>

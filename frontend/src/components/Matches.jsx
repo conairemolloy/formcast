@@ -133,6 +133,15 @@ export default function Matches() {
         />
       </div>
 
+      {!loading && !error && (
+        <p className="text-xs text-gray-500">
+          Showing{' '}
+          <span className="text-white font-medium">{filtered.length}</span>
+          {teamSearch.trim() && filtered.length !== rows.length ? ` of ${rows.length}` : ''}{' '}
+          matches
+        </p>
+      )}
+
       {loading && (
         <div className="flex justify-center py-16 text-gray-500">
           <Loader2 className="animate-spin w-6 h-6" />

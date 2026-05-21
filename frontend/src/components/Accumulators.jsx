@@ -158,7 +158,12 @@ export default function Accumulators() {
           </select>
         </div>
 
-        <span className="text-sm text-gray-500">{filtered.length} accumulators</span>
+        <span className="text-sm text-gray-500">
+          Showing{' '}
+          <span className="text-white font-medium">{filtered.length}</span>
+          {filtered.length !== rows.length && ` of ${rows.length}`}
+          {' '}accumulators
+        </span>
       </div>
 
       {isLoading && (
