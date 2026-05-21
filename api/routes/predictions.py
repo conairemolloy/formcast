@@ -69,7 +69,7 @@ def get_matches():
     season = request.args.get("season")
 
     try:
-        limit = int(request.args.get("limit", 20))
+        limit = int(request.args.get("limit", 50))
     except ValueError:
         return jsonify({"success": False, "error": "Invalid limit"}), 400
 
