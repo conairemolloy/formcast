@@ -5,11 +5,12 @@
 ---
 
 ## What This Is
-A multi-sport prediction platform built on a seven-layer ensemble model with full 
-walk-forward backtesting, live in-play probability updating, and a React dashboard. 
-Starting with soccer (5 leagues, 8,982 matches), expanding to GAA, tennis, golf, 
-and NFL. Includes a value bet screener, accumulator builder, and live win probability 
-engine.
+A multi-model football prediction platform trained on 128,797 matches across 
+14 competitions (1993-2026). Built on a seven-layer ensemble — Elo, Glicko-2, 
+Dixon-Coles, Bradley-Terry, XGBoost, Feedforward NN, and LSTM — with full 
+walk-forward backtesting, a value bet screener, accumulator builder, Kelly 
+criterion stake sizing, Monte Carlo tournament simulator, and match stats 
+including shots, corners and cards. Live at formcast-blush.vercel.app.
 
 ---
 
@@ -98,7 +99,7 @@ engine.
 
 ## Phase 3 — Neural Network Suite
 - [x] Feedforward: Input → Dense(256,ReLU) → BN → Dropout(0.3) → Dense(128,ReLU) → Dense(3,Softmax)
-- [ ] LSTM: last 5 match feature vectors → LSTM(128) → Dense(64) → Dense(1,σ)
+- [x] LSTM: last 5 match feature vectors → LSTM(128) → Dense(64) → Dense(1,σ)
 - [ ] Graph Neural Network: teams as nodes, matches as edges, GCN propagation
 - [ ] Transformer: self-attention over match history sequence
 
@@ -118,9 +119,9 @@ engine.
 ---
 
 ## Phase 5 — Betting Intelligence
-- [ ] Value bet screener (EV = P_model × odds - 1, threshold > 5%)
-- [ ] Kelly criterion stake sizing (half-Kelly)
-- [ ] Accumulator builder — optimal leg selection by EV
+- [x] Value bet screener (EV = P_model × odds - 1, threshold > 5%)
+- [x] Kelly criterion stake sizing (half-Kelly)
+- [x] Accumulator builder — optimal leg selection by EV
 - [ ] Accumulator independence testing (same-league correlation correction)
 - [ ] Accumulator EV matrix UI (best combinations visualised)
 - [ ] Closing line value (CLV) tracking — mean(log(P_model / P_close))
@@ -158,7 +159,7 @@ engine.
 - [ ] Brier score trend chart (rolling 90-match window)
 - [ ] SHAP waterfall chart per match (why did the model predict this?)
 - [ ] H2H comparison page (two-team selector, Elo history, head to head record)
-- [ ] League filter on ratings page (show only EPL, only La Liga etc)
+- [x] League filter on ratings page (show only EPL, only La Liga etc)
 - [ ] Mobile responsive layout
 - [ ] Dark/light mode toggle
 - [ ] Loading skeletons instead of spinners
@@ -240,8 +241,8 @@ engine.
 ---
 
 ## Phase 11 — Frontend (React + Vite)
-- [ ] Project scaffold (Vite + Tailwind + Recharts)
-- [ ] Elo ratings table — live, sortable, filterable by league
+- [x] Project scaffold (Vite + Tailwind + Recharts)
+- [x] Elo ratings table — live, sortable, filterable by league
 - [ ] Calibration curve — predicted prob vs actual win rate
 - [ ] Brier score over time (rolling 90-match window)
 - [ ] Cumulative P&L chart (flat stake simulation)
@@ -249,10 +250,10 @@ engine.
 - [ ] Elo history chart — animated, all teams, 2020-present
 - [ ] H2H Elo trajectory — two-team selector
 - [ ] Score distribution heatmap (actual vs model predicted)
-- [ ] Value bet screener UI (EV > 5%, Kelly stake shown)
-- [ ] Accumulator builder UI (select legs, see combined EV and optimal stake)
+- [x] Value bet screener UI (EV > 5%, Kelly stake shown)
+- [x] Accumulator builder UI (select legs, see combined EV and optimal stake)
 - [ ] Win probability timeline (live match, Supabase Realtime)
-- [ ] Tournament probability evolution (updates after each result)
+- [x] Tournament probability evolution (updates after each result)
 - [ ] Momentum dashboard (8 signals per team)
 - [ ] Smart money tracker (odds movement visualised)
 - [ ] Model ensemble weight evolution chart
@@ -260,17 +261,17 @@ engine.
 ---
 
 ## Phase 12 — API & Deployment
-- [ ] Flask API scaffold
-- [ ] GET /api/ratings — current Elo ratings per league
-- [ ] GET /api/predictions — upcoming match predictions
-- [ ] GET /api/backtest — accuracy report
-- [ ] GET /api/value-bets — positive EV opportunities
+- [x] Flask API scaffold
+- [x] GET /api/ratings — current Elo ratings per league
+- [x] GET /api/predictions — upcoming match predictions
+- [x] GET /api/backtest — accuracy report
+- [x] GET /api/value-bets — positive EV opportunities
 - [ ] GET /api/match/:id — single match deep dive + SHAP values
-- [ ] GET /api/accumulator — optimal accumulator builder
-- [ ] GET /api/tournament/:id — tournament simulation
+- [x] GET /api/accumulator — optimal accumulator builder
+- [x] GET /api/tournament/:id — tournament simulation
 - [ ] WebSocket /live — real-time win probability stream
-- [ ] Deploy frontend to Vercel
-- [ ] Deploy API to Railway
+- [x] Deploy frontend to Vercel
+- [x] Deploy API to Railway
 
 ---
 
