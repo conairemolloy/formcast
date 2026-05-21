@@ -7,10 +7,12 @@ import Predictions from './components/Predictions'
 import Accumulators from './components/Accumulators'
 import Tournament from './components/Tournament'
 import Matches from './components/Matches'
+import Live from './components/Live'
 
 const NAV_ITEMS = [
   { id: 'ratings',      label: 'Ratings' },
   { id: 'matches',      label: 'Matches' },
+  { id: 'live',         label: 'Live' },
   { id: 'predictions',  label: 'Predictions' },
   { id: 'backtest',     label: 'Backtest' },
   { id: 'tournament',   label: 'Tournament' },
@@ -54,6 +56,7 @@ function App() {
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-6">
         {active === 'ratings'      && <RatingsTable />}
         {active === 'matches'      && <Matches />}
+        {active === 'live'         && <Live />}
         {active === 'predictions'  && <Predictions />}
         {active === 'backtest'     && <BacktestReport />}
         {active === 'tournament'   && <Tournament />}

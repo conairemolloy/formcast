@@ -112,8 +112,12 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Event impact quantification (goal +12-25%, red card -8-20%, etc — learned from data)
 - [ ] Next-event prediction (P(goal) vs P(point), P(home scores next))
 - [x] Tournament Monte Carlo simulator (100k simulations, < 5 seconds, 14 competitions)
+- [x] Live win probability engine (football-data.org, 60s cache)
+- [x] Upcoming fixtures with pre-match Elo probabilities
+- [x] /api/live endpoints (now, today, upcoming)
 - [ ] WebSocket live feed (< 1 second end-to-end latency target)
 - [ ] Live data feed integration (The Odds API €15/mo, football-data.org free tier, Betfair Exchange API)
+- [ ] Upgrade to sub-minute live feed (The Odds API €15/mo)
 - [ ] Smart money tracker (odds movement > 10% in < 1hr = sharp money signal)
 
 ---
