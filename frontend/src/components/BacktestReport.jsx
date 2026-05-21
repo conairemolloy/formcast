@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react'
 import api from '../api'
 import { Loader2 } from 'lucide-react'
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell,
+  BarChart, Bar, LineChart, Line,
+  XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, Legend,
 } from 'recharts'
 
 const LEAGUE_COLORS = {
@@ -12,6 +13,17 @@ const LEAGUE_COLORS = {
   SerieA:     '#8b5cf6',
   Ligue1:     '#ef4444',
 }
+
+const MODEL_COMPARISON = [
+  { model: 'Ensemble v2',   hitRate: 49.35, brier: 0.177, predictions: 10099 },
+  { model: 'XGBoost',       hitRate: 49.07, brier: 0.178, predictions: 10099 },
+  { model: 'Elo (baseline)',hitRate: 49.05, brier: 0.162, predictions: 10099 },
+  { model: 'Glicko-2',      hitRate: 47.55, brier: 0.174, predictions: 10099 },
+  { model: 'Dixon-Coles',   hitRate: 46.95, brier: 0.191, predictions: 10099 },
+]
+
+const BEST_HIT_RATE = Math.max(...MODEL_COMPARISON.map(m => m.hitRate))
+const BEST_BRIER    = Math.min(...MODEL_COMPARISON.map(m => m.brier))
 
 function StatCard({ label, value, color, sub }) {
   return (
@@ -23,7 +35,7 @@ function StatCard({ label, value, color, sub }) {
   )
 }
 
-const CustomTooltip = ({ active, payload, label }) => {
+const BarTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null
   return (
     <div className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm">
@@ -33,14 +45,35 @@ const CustomTooltip = ({ active, payload, label }) => {
   )
 }
 
+const CalibTooltip = ({ active, payload }) => {
+  if (!active || !payload?.length) return null
+  const d = payload[0]?.payload
+  if (!d) return null
+  return (
+    <div className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm space-y-0.5">
+      <p className="text-gray-400 font-medium">{d.bin_label}</p>
+      <p className="text-emerald-400">Actual: {d.model?.toFixed(1)}%</p>
+      <p className="text-gray-500">Expected: {d.perfect?.toFixed(1)}%</p>
+      <p className="text-gray-600">{d.count?.toLocaleString()} predictions</p>
+    </div>
+  )
+}
+
 export default function BacktestReport() {
-  const [data, setData]       = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError]     = useState(null)
+  const [data, setData]           = useState(null)
+  const [calibData, setCalibData] = useState(null)
+  const [loading, setLoading]     = useState(true)
+  const [error, setError]         = useState(null)
 
   useEffect(() => {
-    api.get('/api/backtest')
-      .then(r => setData(r.data.data))
+    Promise.all([
+      api.get('/api/backtest'),
+      api.get('/api/backtest/calibration'),
+    ])
+      .then(([backtestRes, calibRes]) => {
+        setData(backtestRes.data.data)
+        setCalibData(calibRes.data.data)
+      })
       .catch(() => setError('Failed to load backtest data'))
       .finally(() => setLoading(false))
   }, [])
@@ -62,6 +95,33 @@ export default function BacktestReport() {
     ...s,
     hit_rate_pct: +(s.hit_rate * 100).toFixed(1),
   }))
+
+  const maxCount = Math.max(...(calibData ?? []).map(d => d.count))
+  const chartData = (calibData ?? []).map(d => ({
+    bin_label: d.bin_label,
+    x:       +(d.mean_predicted * 100).toFixed(1),
+    model:   +(d.actual_rate    * 100).toFixed(1),
+    perfect: +(d.mean_predicted * 100).toFixed(1),
+    count:   d.count,
+  }))
+
+  const ModelDot = (props) => {
+    const { cx, cy, payload } = props
+    if (!payload?.count) return null
+    const r = 3 + (payload.count / maxCount) * 9
+    return (
+      <circle
+        key={`calib-dot-${payload.bin_label}`}
+        cx={cx}
+        cy={cy}
+        r={r}
+        fill="#10b981"
+        fillOpacity={0.75}
+        stroke="#10b981"
+        strokeWidth={1}
+      />
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -108,7 +168,7 @@ export default function BacktestReport() {
               tickLine={false}
               width={40}
             />
-            <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255,255,255,0.03)' }} />
+            <Tooltip content={<BarTooltip />} cursor={{ fill: 'rgba(255,255,255,0.03)' }} />
             <Bar dataKey="hit_rate_pct" radius={[4, 4, 0, 0]}>
               {leagueData.map(entry => (
                 <Cell key={entry.league} fill={LEAGUE_COLORS[entry.league] ?? '#6366f1'} />
@@ -143,10 +203,106 @@ export default function BacktestReport() {
               tickLine={false}
               width={40}
             />
-            <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255,255,255,0.03)' }} />
+            <Tooltip content={<BarTooltip />} cursor={{ fill: 'rgba(255,255,255,0.03)' }} />
             <Bar dataKey="hit_rate_pct" fill="#6366f1" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
+      </div>
+
+      {/* Calibration curve */}
+      {calibData && (
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+          <h2 className="text-base font-semibold text-white mb-1">
+            Calibration Curve — Home Win Predictions
+          </h2>
+          <p className="text-xs text-gray-500 mb-4">
+            A well-calibrated model follows the diagonal. Dot size reflects number of predictions in each bin.
+          </p>
+          <ResponsiveContainer width="100%" height={260}>
+            <LineChart data={chartData} margin={{ top: 8, right: 16, bottom: 8, left: 0 }}>
+              <XAxis
+                dataKey="x"
+                type="number"
+                domain={[0, 100]}
+                tickFormatter={v => `${v}%`}
+                tick={{ fill: '#6b7280', fontSize: 11 }}
+                axisLine={false}
+                tickLine={false}
+                width={40}
+                label={{ value: 'Predicted Probability', position: 'insideBottom', offset: -4, fill: '#6b7280', fontSize: 11 }}
+              />
+              <YAxis
+                domain={[0, 100]}
+                tickFormatter={v => `${v}%`}
+                tick={{ fill: '#6b7280', fontSize: 11 }}
+                axisLine={false}
+                tickLine={false}
+                width={44}
+                label={{ value: 'Actual Win Rate', angle: -90, position: 'insideLeft', offset: 10, fill: '#6b7280', fontSize: 11 }}
+              />
+              <Tooltip content={<CalibTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.08)' }} />
+              <Legend
+                verticalAlign="top"
+                align="right"
+                iconType="plainline"
+                wrapperStyle={{ fontSize: 12, color: '#9ca3af', paddingBottom: 8 }}
+              />
+              <Line
+                name="Perfect"
+                type="linear"
+                dataKey="perfect"
+                stroke="#6b7280"
+                strokeWidth={1.5}
+                strokeDasharray="5 4"
+                dot={false}
+                activeDot={false}
+              />
+              <Line
+                name="Model"
+                type="monotone"
+                dataKey="model"
+                stroke="#10b981"
+                strokeWidth={2}
+                dot={<ModelDot />}
+                activeDot={{ r: 6, fill: '#34d399', stroke: '#10b981' }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      )}
+
+      {/* Model comparison table */}
+      <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+        <h2 className="text-base font-semibold text-white mb-1">Model Comparison</h2>
+        <p className="text-xs text-gray-500 mb-4">
+          Evaluated on 2024–2026 holdout (10,099 matches)
+        </p>
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="text-gray-500 text-xs border-b border-gray-800">
+              <th className="text-left pb-2 font-medium">Model</th>
+              <th className="text-right pb-2 font-medium">Hit Rate</th>
+              <th className="text-right pb-2 font-medium">Brier Score</th>
+              <th className="text-right pb-2 font-medium">Predictions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {MODEL_COMPARISON.map((row, i) => (
+              <tr key={row.model} className={i < MODEL_COMPARISON.length - 1 ? 'border-b border-gray-800/50' : ''}>
+                <td className="py-2.5 text-gray-300">{row.model}</td>
+                <td className={`py-2.5 text-right tabular-nums font-medium ${row.hitRate === BEST_HIT_RATE ? 'text-emerald-400' : 'text-gray-400'}`}>
+                  {row.hitRate.toFixed(2)}%
+                </td>
+                <td className={`py-2.5 text-right tabular-nums font-medium ${row.brier === BEST_BRIER ? 'text-emerald-400' : 'text-gray-400'}`}>
+                  {row.brier.toFixed(3)}
+                </td>
+                <td className="py-2.5 text-right tabular-nums text-gray-500">
+                  {row.predictions.toLocaleString()}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   )
