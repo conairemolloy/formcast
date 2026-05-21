@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import api from '../api'
 import { Loader2 } from 'lucide-react'
+import Tooltip from './Tooltip'
 
 const LEAGUES = [
   { id: 'EPL',        label: 'EPL' },
@@ -49,6 +50,13 @@ export default function Tournament() {
       .finally(() => setLoading(false))
   }, [league])
 
+  const seasonComplete = useMemo(() =>
+    rows.length > 0 && rows.every(r =>
+      r.win_pct === 0 || r.win_pct === 1 ||
+      r.win_pct === null || r.win_pct === undefined
+    )
+  , [rows])
+
   const matchStats = useMemo(() => {
     if (rows.length === 0) return null
     const teamCount = rows.length
@@ -90,6 +98,13 @@ export default function Tournament() {
         ))}
       </div>
 
+      {seasonComplete && !loading && (
+        <div className="flex items-start gap-2 rounded-lg border border-yellow-500/30 bg-yellow-500/10 px-4 py-3 text-sm text-yellow-300">
+          <span className="shrink-0">⚠</span>
+          <span>Season complete — showing final standings. Re-run <code className="font-mono text-yellow-200">tournament_simulator.py</code> to update for next season.</span>
+        </div>
+      )}
+
       {loading && (
         <div className="flex items-center justify-center h-64 gap-3 text-gray-400">
           <Loader2 className="w-6 h-6 animate-spin" />
@@ -124,10 +139,18 @@ export default function Tournament() {
                   <th className="px-4 py-3 text-left text-gray-400 font-medium">Team</th>
                   <th className="px-4 py-3 text-right text-gray-400 font-medium">Pts</th>
                   <th className="px-4 py-3 text-right text-gray-400 font-medium">GD</th>
-                  <th className="px-4 py-3 text-right text-gray-400 font-medium">Win%</th>
-                  <th className="px-4 py-3 text-right text-gray-400 font-medium">Top 4%</th>
-                  <th className="px-4 py-3 text-right text-gray-400 font-medium">Top 6%</th>
-                  <th className="px-4 py-3 text-right text-gray-400 font-medium">Relegation%</th>
+                  <th className="px-4 py-3 text-right text-gray-400 font-medium">
+                    Win%<Tooltip text="Championship probability across 100,000 Monte Carlo simulations" />
+                  </th>
+                  <th className="px-4 py-3 text-right text-gray-400 font-medium">
+                    Top 4%<Tooltip text="Top 4 finish probability — Champions League qualification" />
+                  </th>
+                  <th className="px-4 py-3 text-right text-gray-400 font-medium">
+                    Top 6%<Tooltip text="Top 6 finish probability — European competition places" />
+                  </th>
+                  <th className="px-4 py-3 text-right text-gray-400 font-medium">
+                    Relegation%<Tooltip text="Bottom 3 finish probability — relegation to lower division" />
+                  </th>
                 </tr>
               </thead>
               <tbody>

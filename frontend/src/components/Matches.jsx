@@ -68,18 +68,22 @@ export default function Matches() {
   const [league, setLeague]   = useState(null)
   const [season, setSeason]   = useState(null)
   const [teamSearch, setTeamSearch] = useState('')
+  const [limit, setLimit]     = useState(50)
+
+  // Reset limit when filters change
+  useEffect(() => { setLimit(50) }, [league, season])
 
   useEffect(() => {
     setLoading(true)
     setError(null)
-    const params = new URLSearchParams({ limit: 50 })
+    const params = new URLSearchParams({ limit })
     if (league) params.set('league', league)
     if (season) params.set('season', season)
     api.get(`/api/matches?${params}`)
       .then(res => setRows(Array.isArray(res.data?.data) ? res.data.data : []))
       .catch(() => setError('Failed to load match data'))
       .finally(() => setLoading(false))
-  }, [league, season])
+  }, [league, season, limit])
 
   const filtered = useMemo(() => {
     if (!teamSearch.trim()) return rows
@@ -136,8 +140,10 @@ export default function Matches() {
       {!loading && !error && (
         <p className="text-xs text-gray-500">
           Showing{' '}
-          <span className="text-white font-medium">{filtered.length}</span>
-          {teamSearch.trim() && filtered.length !== rows.length ? ` of ${rows.length}` : ''}{' '}
+          <span className="text-white font-medium">{rows.length}</span>
+          {teamSearch.trim() && filtered.length !== rows.length
+            ? <> (<span className="text-white font-medium">{filtered.length}</span> matching search)</>
+            : ''}{' '}
           matches
         </p>
       )}
@@ -153,7 +159,7 @@ export default function Matches() {
       )}
 
       {!loading && !error && Array.isArray(filtered) && (
-        <div className="overflow-x-auto rounded-lg border border-gray-800">
+        <div className="overflow-x-auto rounded-lg border border-gray-800 mb-2">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-800 bg-gray-900/60">
@@ -221,6 +227,17 @@ export default function Matches() {
               })}
             </tbody>
           </table>
+        </div>
+      )}
+      {!loading && !error && rows.length >= limit && (
+        <div className="flex justify-center pt-2">
+          <button
+            onClick={() => setLimit(l => l + 50)}
+            disabled={loading}
+            className="px-5 py-2 rounded-lg bg-gray-800 border border-gray-700 text-sm text-gray-300 hover:text-white hover:border-emerald-500/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Load 50 more
+          </button>
         </div>
       )}
     </div>
