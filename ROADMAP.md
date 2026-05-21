@@ -133,6 +133,16 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Sharpe ratio + max drawdown on simulated betting strategy
 - [ ] Dutching calculator (stake across multiple outcomes)
 - [ ] Arbitrage detector (Σ(1/odds) < 1 across bookmakers)
+- [ ] Match deep-dive page — click any upcoming fixture to see:
+  - Pre-match win/draw/loss probabilities with model breakdown
+  - Goals markets: over/under 0.5, 1.5, 2.5, 3.5 goals (both teams + individual)
+  - Cards markets: over/under total cards, first card, home/away cards
+  - Corners markets: over/under total corners, first half corners
+  - Player props: shots, saves, goals, assists (requires player-level data source)
+  - Both Teams to Score (BTTS) probability
+  - Correct score probabilities (top 10 most likely scorelines from Dixon-Coles)
+  - Value indicator per market vs bookmaker odds
+  - Historical H2H stats for this fixture
 
 ---
 
@@ -215,6 +225,8 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Kaggle European Soccer Database (25k+ matches)
 - [ ] Referee statistics database
 - [ ] League of Ireland — scrape from Wikipedia season pages (en.wikipedia.org/wiki/{year}_League_of_Ireland_Premier_Division)
+- [ ] Player-level stats API for prop betting (FBref, Opta, or StatsBomb)
+- [ ] Corners and cards historical data (football-data.co.uk has some of this already)
 
 ### Tennis
 - [ ] Jeff Sackmann ATP dataset (500k+ matches, 1968-present)
