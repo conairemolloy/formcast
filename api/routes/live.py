@@ -4,7 +4,7 @@ import time
 from datetime import date, timedelta
 
 import pandas as pd
-import requests
+import httpx
 from flask import Blueprint, jsonify
 
 live_bp = Blueprint("live", __name__)
@@ -277,7 +277,7 @@ def _parse_match(m: dict, inplay: bool) -> dict:
 
 
 def _fetch(url: str, params: dict | None = None) -> dict:
-    resp = requests.get(url, headers=HEADERS, params=params, timeout=10)
+    resp = httpx.get(url, headers=HEADERS, params=params, timeout=10)
     resp.raise_for_status()
     return resp.json()
 
@@ -306,7 +306,7 @@ def live_now():
 
     try:
         data = _fetch(f"{FDATA_BASE}/matches", params={"status": "LIVE,IN_PLAY,PAUSED"})
-    except requests.RequestException as exc:
+    except (httpx.HTTPError, Exception) as exc:
         return _err(f"football-data.org error: {exc}")
 
     records = [_parse_match(m, inplay=True) for m in data.get("matches", [])]
@@ -323,7 +323,7 @@ def live_today():
     today = date.today().isoformat()
     try:
         data = _fetch(f"{FDATA_BASE}/matches", params={"dateFrom": today, "dateTo": today})
-    except requests.RequestException as exc:
+    except (httpx.HTTPError, Exception) as exc:
         return _err(f"football-data.org error: {exc}")
 
     records = []
@@ -349,7 +349,7 @@ def live_upcoming():
             f"{FDATA_BASE}/matches",
             params={"dateFrom": today.isoformat(), "dateTo": date_to, "status": "SCHEDULED,TIMED"},
         )
-    except requests.RequestException as exc:
+    except (httpx.HTTPError, Exception) as exc:
         return _err(f"football-data.org error: {exc}")
 
     records = [_parse_match(m, inplay=False) for m in data.get("matches", [])]
