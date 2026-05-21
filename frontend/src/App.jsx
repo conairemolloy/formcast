@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { BarChart2 } from 'lucide-react'
+import Landing from './components/Landing'
 import RatingsTable from './components/RatingsTable'
 import BacktestReport from './components/BacktestReport'
 import ValueBets from './components/ValueBets'
@@ -21,14 +22,18 @@ const NAV_ITEMS = [
 ]
 
 function App() {
-  const [active, setActive] = useState('ratings')
+  const [active, setActive] = useState(null)
+
+  if (active === null) {
+    return <Landing onNavigate={setActive} />
+  }
 
   return (
     <div className="min-h-screen bg-gray-950 text-white flex flex-col">
       <header className="bg-gray-900 border-b border-gray-800 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 h-14 flex items-center gap-8">
           <button
-            onClick={() => setActive('ratings')}
+            onClick={() => setActive(null)}
             className="flex items-center gap-2 text-white font-bold text-lg tracking-tight hover:text-emerald-400 transition-colors"
           >
             <BarChart2 className="w-5 h-5 text-emerald-400" />
