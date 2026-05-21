@@ -31,15 +31,19 @@ function fmt(val) {
   return val == null ? '—' : val
 }
 
+function isBlank(v) {
+  return v == null || (typeof v === 'number' && isNaN(v))
+}
+
 function pair(h, a) {
-  if (h == null && a == null) return '—'
-  return `${h ?? '?'}-${a ?? '?'}`
+  if (isBlank(h) && isBlank(a)) return '—'
+  return `${isBlank(h) ? '?' : h}-${isBlank(a) ? '?' : a}`
 }
 
 function Cards({ yellows, reds }) {
-  if (yellows == null && reds == null) return <span className="text-gray-600">—</span>
-  const y = yellows ?? 0
-  const r = reds ?? 0
+  if (isBlank(yellows) && isBlank(reds)) return <span className="text-gray-600">—</span>
+  const y = isBlank(yellows) ? 0 : yellows
+  const r = isBlank(reds) ? 0 : reds
   return (
     <span>
       {y > 0 && <span>{y}🟨</span>}
@@ -72,7 +76,7 @@ export default function Matches() {
     if (league) params.set('league', league)
     if (season) params.set('season', season)
     api.get(`/api/matches?${params}`)
-      .then(res => setRows(res.data.data))
+      .then(res => setRows(Array.isArray(res.data?.data) ? res.data.data : []))
       .catch(() => setError('Failed to load match data'))
       .finally(() => setLoading(false))
   }, [league, season])
@@ -87,11 +91,11 @@ export default function Matches() {
   }, [rows, teamSearch])
 
   const hasStats = (r) =>
-    r.home_shots != null || r.away_shots != null ||
-    r.home_shots_target != null || r.away_shots_target != null ||
-    r.home_corners != null || r.away_corners != null ||
-    r.home_yellows != null || r.away_yellows != null ||
-    r.home_reds != null || r.away_reds != null
+    !isBlank(r.home_shots) || !isBlank(r.away_shots) ||
+    !isBlank(r.home_shots_target) || !isBlank(r.away_shots_target) ||
+    !isBlank(r.home_corners) || !isBlank(r.away_corners) ||
+    !isBlank(r.home_yellows) || !isBlank(r.away_yellows) ||
+    !isBlank(r.home_reds) || !isBlank(r.away_reds)
 
   return (
     <div className="space-y-4">
@@ -139,7 +143,7 @@ export default function Matches() {
         <div className="text-red-400 text-sm py-4">{error}</div>
       )}
 
-      {!loading && !error && (
+      {!loading && !error && Array.isArray(filtered) && (
         <div className="overflow-x-auto rounded-lg border border-gray-800">
           <table className="w-full text-sm">
             <thead>
@@ -160,40 +164,52 @@ export default function Matches() {
                   <td colSpan={8} className="text-center py-10 text-gray-500">No matches found</td>
                 </tr>
               )}
-              {filtered.map((r, i) => (
-                <tr
-                  key={i}
-                  style={rowBorderStyle(r.result)}
-                  className="border-b border-gray-800/60 hover:bg-gray-800/30 transition-colors"
-                >
-                  <td className="px-3 py-2.5 text-gray-400 whitespace-nowrap tabular-nums">
-                    {r.match_date ?? '—'}
-                  </td>
-                  <td className="px-3 py-2.5 text-right text-white font-medium">{r.home_team}</td>
-                  <td className="px-3 py-2.5 text-center font-bold text-white tabular-nums whitespace-nowrap">
-                    {r.home_goals != null && r.away_goals != null
-                      ? `${r.home_goals}-${r.away_goals}`
-                      : '—'}
-                  </td>
-                  <td className="px-3 py-2.5 text-left text-white font-medium">{r.away_team}</td>
-                  {hasStats(r) ? (
-                    <>
-                      <td className="px-3 py-2.5 text-center text-gray-300 tabular-nums">{pair(r.home_shots, r.away_shots)}</td>
-                      <td className="px-3 py-2.5 text-center text-gray-300 tabular-nums">{pair(r.home_shots_target, r.away_shots_target)}</td>
-                      <td className="px-3 py-2.5 text-center text-gray-300 tabular-nums">{pair(r.home_corners, r.away_corners)}</td>
-                      <td className="px-3 py-2.5 text-center whitespace-nowrap">
-                        <Cards yellows={r.home_yellows} reds={r.home_reds} />
-                        <span className="text-gray-600 mx-1">-</span>
-                        <Cards yellows={r.away_yellows} reds={r.away_reds} />
+              {filtered.map((r, i) => {
+                try {
+                  return (
+                    <tr
+                      key={i}
+                      style={rowBorderStyle(r.result)}
+                      className="border-b border-gray-800/60 hover:bg-gray-800/30 transition-colors"
+                    >
+                      <td className="px-3 py-2.5 text-gray-400 whitespace-nowrap tabular-nums">
+                        {r.match_date ?? '—'}
                       </td>
-                    </>
-                  ) : (
-                    <td colSpan={4} className="px-3 py-2.5 text-center text-gray-600 text-xs">
-                      No stats available
-                    </td>
-                  )}
-                </tr>
-              ))}
+                      <td className="px-3 py-2.5 text-right text-white font-medium">{r.home_team}</td>
+                      <td className="px-3 py-2.5 text-center font-bold text-white tabular-nums whitespace-nowrap">
+                        {!isBlank(r.home_goals) && !isBlank(r.away_goals)
+                          ? `${r.home_goals}-${r.away_goals}`
+                          : '—'}
+                      </td>
+                      <td className="px-3 py-2.5 text-left text-white font-medium">{r.away_team}</td>
+                      {hasStats(r) ? (
+                        <>
+                          <td className="px-3 py-2.5 text-center text-gray-300 tabular-nums">{pair(r.home_shots, r.away_shots)}</td>
+                          <td className="px-3 py-2.5 text-center text-gray-300 tabular-nums">{pair(r.home_shots_target, r.away_shots_target)}</td>
+                          <td className="px-3 py-2.5 text-center text-gray-300 tabular-nums">{pair(r.home_corners, r.away_corners)}</td>
+                          <td className="px-3 py-2.5 text-center whitespace-nowrap">
+                            <Cards yellows={r.home_yellows} reds={r.home_reds} />
+                            <span className="text-gray-600 mx-1">-</span>
+                            <Cards yellows={r.away_yellows} reds={r.away_reds} />
+                          </td>
+                        </>
+                      ) : (
+                        <td colSpan={4} className="px-3 py-2.5 text-center text-gray-600 text-xs">
+                          No stats available
+                        </td>
+                      )}
+                    </tr>
+                  )
+                } catch {
+                  return (
+                    <tr key={i} className="border-b border-gray-800/60">
+                      <td colSpan={8} className="px-3 py-2.5 text-center text-gray-600 text-xs">
+                        Error rendering row
+                      </td>
+                    </tr>
+                  )
+                }
+              })}
             </tbody>
           </table>
         </div>
