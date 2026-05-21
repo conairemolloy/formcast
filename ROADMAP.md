@@ -16,14 +16,17 @@ engine.
 ## Current Results
 | Metric | Value |
 |--------|-------|
-| Matches in database | 56,459 (EPL, La Liga, Bundesliga, Serie A, Ligue 1, 1993-2025) |
-| Walk-forward hit rate | 69.5% (non-draw, optimised Elo) |
+| Matches in database | 128,797 (14 competitions, 1993-2026) |
+| Competitions | EPL, Championship, La Liga, Segunda, Serie A, Serie B, Bundesliga, Bundesliga 2, Ligue 1, Ligue 2, Scottish Prem, Champions League, Eredivisie, Euro 2024 |
+| Walk-forward hit rate | 68.7% (non-draw, optimised Elo, 128k matches) |
 | Walk-forward Brier score | 0.156 |
 | Ensemble v2 hit rate | 53.3% (3-outcome, 2023-25 holdout) |
 | Neural network hit rate | 53.1% (feedforward, 2014-25) |
-| Neural network Brier | 0.587 |
+| LSTM hit rate | 53.3% (temporal sequences, 2014-25) |
+| Neural network Brier | 0.584 |
 | xG matches integrated | 19,837 (Understat, 2014-25) |
 | Baseline (coin flip) Brier | 0.250 |
+| Top rated team | Bayern Munich (Elo 2051) |
 
 ---
 
@@ -107,7 +110,7 @@ engine.
 - [ ] Bayesian in-game updater (posterior update per event, Supabase Realtime)
 - [ ] Event impact quantification (goal +12-25%, red card -8-20%, etc — learned from data)
 - [ ] Next-event prediction (P(goal) vs P(point), P(home scores next))
-- [ ] Tournament Monte Carlo simulator (100k simulations, < 5 seconds)
+- [x] Tournament Monte Carlo simulator (100k simulations, < 5 seconds, 14 competitions)
 - [ ] WebSocket live feed (< 1 second end-to-end latency target)
 - [ ] Live data feed integration (The Odds API €15/mo, football-data.org free tier, Betfair Exchange API)
 - [ ] Smart money tracker (odds movement > 10% in < 1hr = sharp money signal)
@@ -143,6 +146,11 @@ engine.
 ---
 
 ## Phase 7 — UX & Design Polish
+- [x] Matches page with shot, corner, card stats and league/team filtering
+- [x] Filtering and sorting on all pages (league, date, outcome, edge filters)
+- [ ] Fix remaining duplicate team names (Dortmund/Borussia Dortmund, Lazio/SS Lazio etc)
+- [ ] Add pagination to Matches page (currently limited to 50)
+- [ ] Add team profile page (click team → full history, Elo trend, stats)
 - [ ] Redesign dashboard with proper data visualisation hero section
 - [ ] Elo ratings chart — animated bar chart race (top 20 teams over time)
 - [ ] Calibration curve chart (predicted probability vs actual win rate by decile)
