@@ -95,6 +95,56 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Wind direction advantage (H2 tactical)
 - [ ] Altitude > 1500m
 
+### Referee & Venue Features (6 signals)
+- [ ] Referee tendencies — cards/fouls per game by referee, home bias score (data already in results.csv referee column)
+- [ ] Stadium capacity proxy — crowd noise correlates with home advantage strength
+- [ ] Altitude adjustment — away team performance penalty for high altitude venues (lookup table)
+- [ ] Distance travelled — great-circle km between home grounds, fatigue proxy for midweek games
+- [ ] Derby factor — local rivalry binary flag, form less predictive in derbies
+- [ ] Neutral venue flag — cup finals, European legs at neutral grounds
+
+### Squad & Personnel Features (8 signals)
+- [ ] Manager change bounce — binary flag, teams average +8 Elo in first 5 games under new manager
+- [ ] Key player availability — top scorer / goalkeeper missing (requires injury data source)
+- [ ] Squad rotation signal — detect rotation from historical patterns when cup game preceded league game
+- [ ] Goalkeeper form — saves above expected from xG data (already have xG, just need shot-level data)
+- [ ] Set piece specialist — teams with dead ball specialists score more from corners/free kicks
+- [ ] Top scorer availability impact — single player xG contribution as % of team total
+- [ ] Captain continuity — same captain vs new captain (leadership stability signal)
+- [ ] International break fatigue — players returning from international duty, travel and schedule disruption
+
+### Market Intelligence Features (6 signals)
+- [ ] Opening vs closing line movement — how much did odds move from open to close, direction
+- [ ] Steam move detector — multiple bookmakers move simultaneously = sharp action signal
+- [ ] Public vs sharp money split — bookmakers shade lines away from popular teams
+- [ ] Overround tracker — monitor bookmaker margin changes as signal of confidence
+- [ ] Exchange vs sportsbook divergence — Betfair price vs bookmaker price gap
+- [ ] Sharp money threshold — flag when line moves > 8% in < 2 hours pre-kickoff
+
+### Advanced Contextual Features (10 signals)
+- [ ] Score effect model — teams play differently when winning (sit deep) vs losing (chase game), current models ignore game state
+- [ ] Penalty shootout model — for cup competition knockout stage predictions
+- [ ] Cross-competition Elo continuity — already implemented, unique vs single-league platforms
+- [ ] 33-year historical dominance — psychological dominance from long-term H2H record
+- [ ] Post-European game fatigue — performance drop after Thursday Europa League travel
+- [ ] Congestion index — matches in last 14 days weighted by travel distance
+- [ ] Season phase adjustment — teams perform differently early/mid/late season (motivation, fatigue)
+- [ ] Relegation 6-pointer boost — teams in direct relegation battles show elevated performance
+- [ ] Title decider uplift — teams playing title-deciding matches under increased pressure
+- [ ] VAR decision tendency — some referees overturn more decisions, affects game flow
+
+---
+
+## Phase 2b — Individual Player Modelling
+- [ ] Player-level xG contribution — individual player xG as % of team total (requires shot-level data from FBref/Understat)
+- [ ] Goalkeeper save percentage above expected — shotstopping quality beyond team defence
+- [ ] Player network graph — pass completion rates between specific player pairs (team cohesion signal)
+- [ ] Top scorer absence model — quantify impact of missing striker on team xG
+- [ ] Set piece model — corners/free kicks conversion rate by taker
+- [ ] Player form streaks — individual scoring/assist streaks as momentum signal
+- [ ] Injury probability model — predict injury risk from minutes played, age, fixture congestion
+- [ ] International duty fatigue model — performance drop after long-haul international travel
+
 ---
 
 ## Phase 3 — Neural Network Suite
@@ -227,6 +277,11 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] League of Ireland — scrape from Wikipedia season pages (en.wikipedia.org/wiki/{year}_League_of_Ireland_Premier_Division)
 - [ ] Player-level stats API for prop betting (FBref, Opta, or StatsBomb)
 - [ ] Corners and cards historical data (football-data.co.uk has some of this already)
+- [ ] Referee database — historical cards/fouls/home bias per referee (from results.csv referee column)
+- [ ] Stadium coordinates database — lat/lng for all clubs to calculate travel distances
+- [ ] TransferMarkt integration — injury/suspension data, market values, manager changes
+- [ ] Betfair Exchange API — live exchange prices for line movement tracking
+- [ ] OpenWeatherMap API — weather at kickoff time (wind, rain, temperature)
 
 ### Tennis
 - [ ] Jeff Sackmann ATP dataset (500k+ matches, 1968-present)
@@ -252,10 +307,46 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Foireann API for live fixtures
 - [ ] Dual-sport fatigue model (football + hurling — unique globally)
 - [ ] xP (expected points) shot model
+- [ ] GAA dual sport fatigue model — unique globally, football + hurling within 5 days performance penalty
+- [ ] County team commitment model — intercounty players unavailable for club during championship
+- [ ] GAA referee tendencies — cards and free counts vary significantly by referee
+
+### Basketball
+- [ ] NBA data — nba_api Python package (free, play-by-play, box scores, 1946-present)
+- [ ] Elo ratings for all 30 NBA teams (adapt existing Elo pipeline)
+- [ ] Four Factors model — eFG%, TOV%, ORB%, FT/FGA (Dean Oliver's framework)
+- [ ] Player efficiency model — PER, BPM, VORP from basketball-reference
+- [ ] Home court advantage model — NBA home teams win ~60% vs football ~55%
+- [ ] Back-to-back fatigue model — teams playing second night of back-to-back perform measurably worse
+- [ ] Rest days advantage — teams with more rest days win significantly more
+- [ ] Travel fatigue — coast-to-coast travel within 24 hours
+- [ ] Injury/load management — star player rest (load management) tracking
+- [ ] Pace adjustment — high/low pace teams affect over/under significantly
+- [ ] EuroLeague data — Basketball-Reference covers European competitions
+- [ ] NCAA March Madness simulator — bracket prediction with seed-adjusted Elo
+
+### Horse Racing
+- [ ] Historical results data — Racing API, Timeform, or free Kaggle datasets (UK/Ireland/US)
+- [ ] Speed ratings model — convert finishing times to standardised speed figures adjusted for going and distance
+- [ ] Going adjustment — horses perform differently on Firm, Good, Soft, Heavy ground
+- [ ] Distance preference model — horses have optimal trip ranges, performance degrades outside them
+- [ ] Trainer form — trainer win % by course, distance, going, and season phase
+- [ ] Jockey form — jockey win % by trainer combination, course, and class
+- [ ] Draw bias model — starting stall position significantly affects win probability at certain tracks
+- [ ] Course specialist — horses with multiple wins at the same track outperform
+- [ ] Class drop/rise — horses dropping in class are statistically more likely to win
+- [ ] Days since last run — optimal return windows vary by horse age and trainer
+- [ ] Weight carried — every extra pound reduces speed by approximately 1 length per mile
+- [ ] Sectional times — early pace vs late pace split times (requires premium data)
+- [ ] Market model — Betfair Exchange SP as a benchmark probability (most efficient horse racing market globally)
+- [ ] Each-way value model — identify races where place market offers better EV than win market
+- [ ] Ante-post vs day-of price movement — early movers vs morning movers vs steamer patterns
+- [ ] Irish racing — Horse Racing Ireland results free via HRI website
+- [ ] UK racing — Racing Post historical results (some free via scraping)
+- [ ] US racing — Equibase free past performances for North American racing
 
 ### Other Sports
 - [ ] Rugby (ESPN Scrum, World Rugby API)
-- [ ] NBA basketball (basketball-reference, NBA API)
 - [ ] Cricket T20 ball-by-ball (Cricsheet.org)
 - [ ] Australian Rules (AFL Tables)
 
@@ -296,6 +387,120 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 
 ---
 
+## Phase 13 — Business & Monetisation
+> Note: All phases 13-18 apply across all sports — football, GAA, tennis, golf, NFL, basketball, horse racing, and any future sport additions. Features built for football first, then extended to each sport as data becomes available.
+
+- [ ] Pricing page — free tier vs pro tier clearly explained
+- [ ] User accounts — Supabase Auth, save favourite teams, personalised dashboard
+- [ ] Pro tier features — advanced filters, more predictions, API access, no rate limits
+- [ ] Email notifications — "Arsenal have a value bet this weekend, click to see" (Resend API)
+- [ ] Push notifications — browser push for live value bets and match alerts
+- [ ] Watchlist — users save teams and get notified when they have value bets
+- [ ] API access tier — sell data access to developers, API key management
+- [ ] Affiliate bookmaker links — when showing value bets, deep-link to the bookie (Bet365, Paddy Power, Betfair)
+- [ ] Subscription management — Stripe integration for pro tier billing
+- [ ] Referral program — share FormCast, get a month free
+- [ ] Team/league following — personalised feed based on followed teams
+- [ ] Usage analytics — track which pages/features users engage with most (PostHog or Mixpanel)
+
+---
+
+## Phase 14 — Trust & Accountability
+- [ ] Public prediction log — every prediction published before kickoff, SHA256 stamped, verifiable by anyone
+- [ ] Prediction audit trail — immutable record, timestamped, hash-linked like a blockchain
+- [ ] Monthly accuracy report — auto-generated PDF, emailed to subscribers, shows track record
+- [ ] "About the Model" page — methodology overview, who built it, why trust it, track record
+- [ ] Social sharing cards — share a match preview or value bet card to Twitter/X with OG image
+- [ ] Verified track record badge — independently audited hit rate displayed prominently
+- [ ] Community leaderboard — who has the best prediction record this month
+- [ ] Tipping competition — users submit predictions, ranked by Brier score
+- [ ] Discord/Slack community integration — post value bets automatically to community channels
+- [ ] Press kit — stats, methodology, screenshots for journalists and podcasters
+- [ ] Academic paper — write up the methodology as a preprint (arXiv) for credibility
+
+---
+
+## Phase 15 — Automation & Infrastructure
+- [ ] Automated weekly data ingestion — cron job pulls latest results from football-data.co.uk every Monday
+- [ ] Automated model retraining — monthly trigger after new data ingested, updates all CSVs
+- [ ] Automated tournament simulator refresh — runs after each matchday, pushes updated probabilities
+- [ ] Automated value bet generation — regenerates value_bets.csv daily from latest odds
+- [ ] Scheduled prediction publishing — generate next gameweek predictions automatically on Thursday
+- [ ] Database backup — automated daily Supabase backup to S3
+- [ ] Monitoring & alerting — Sentry for errors, UptimeRobot for uptime, PagerDuty for critical failures
+- [ ] CI/CD pipeline — GitHub Actions run tests before every deploy
+- [ ] Automated test suite — pytest for API, Playwright for frontend E2E tests
+- [ ] Data quality checks — automated validation after each ingestion (row counts, nulls, date ranges)
+- [ ] Railway health checks — /api/health endpoint monitored, auto-restart on failure
+- [ ] Log aggregation — structured logging to Papertrail or Logtail
+- [ ] Cost monitoring — Railway and Vercel spend alerts
+
+---
+
+## Phase 16 — Security & Rate Limiting
+> Note: Security and rate limiting applies to the entire platform regardless of sport. Must be implemented before any paid tier launch.
+
+- [ ] API rate limiting — per-IP rate limits (100 req/min free, 1000 req/min pro) using Flask-Limiter
+- [ ] API key authentication — JWT tokens for pro tier API access
+- [ ] CORS hardening — restrict allowed origins to known domains only
+- [ ] Input validation — sanitise all query parameters, prevent injection attacks
+- [ ] SQL injection protection — parameterised queries everywhere (Supabase handles most of this)
+- [ ] XSS protection — Content Security Policy headers on all responses
+- [ ] HTTPS enforcement — HSTS headers, redirect all HTTP to HTTPS
+- [ ] Secrets management — rotate API keys regularly, never commit secrets to git
+- [ ] Dependency scanning — GitHub Dependabot for vulnerable packages
+- [ ] OWASP Top 10 audit — systematic review of common web vulnerabilities
+- [ ] DDoS protection — Cloudflare in front of Railway API
+- [ ] Bot detection — identify and throttle scraper bots
+- [ ] Abuse prevention — detect and block unusual usage patterns
+- [ ] Privacy compliance — GDPR cookie consent, data deletion requests, privacy policy
+- [ ] Penetration testing — scheduled security audit before any paid tier launch
+- [ ] Two-factor authentication — for admin/superuser accounts
+
+---
+
+## Phase 17 — UX Excellence
+> Note: UX improvements apply platform-wide. Mobile responsive layout is critical given the majority of sports betting happens on mobile devices.
+
+- [ ] Onboarding tour — first-time user walkthrough explaining each page (Shepherd.js or similar)
+- [ ] Global search — find any team, match, or league instantly across the whole site
+- [ ] Keyboard shortcuts — power user navigation (G+R = ratings, G+P = predictions etc)
+- [ ] Notification centre — in-app notification bell for value bets and match alerts
+- [ ] Print/export — download predictions, value bets, or match previews as PDF or CSV
+- [ ] Embed widget — let other sites embed FormCast win probabilities via iframe or JS snippet
+- [ ] Progressive Web App (PWA) — installable on mobile home screen, offline support
+- [ ] Accessibility audit — WCAG 2.1 AA compliance, screen reader support, keyboard navigation
+- [ ] Internationalisation — Spanish, German, French, Italian language support
+- [ ] Performance optimisation — lazy loading, code splitting, sub-2s load time target
+- [ ] Dark/light mode toggle — respect system preference by default
+- [ ] Loading skeletons — replace all spinners with skeleton screens
+- [ ] Error boundaries — graceful degradation when individual components fail
+- [ ] Breadcrumb navigation — clear location context on all pages
+- [ ] Recently viewed — quick access to last 5 teams or matches viewed
+
+---
+
+## Phase 18 — Data Expansion
+- [ ] Europa League historical data — scrape from football-data.co.uk or Kaggle
+- [ ] UEFA Conference League data — 2021-present
+- [ ] World Cup 2018 and 2022 full historical data
+- [ ] MLS data — Major League Soccer 2010-present
+- [ ] Women's football — WSL (England), NWSL (USA), UWCL (Champions League)
+- [ ] Brazilian Série A — largest football market in South America
+- [ ] Argentine Primera División — historical data back to 1990
+- [ ] Portuguese Primeira Liga — already partially covered via football-data.org
+- [ ] Turkish Süper Lig — large market, good odds availability
+- [ ] Greek Super League
+- [ ] Belgian First Division A
+- [ ] Danish Superliga
+- [ ] Norwegian Eliteserien
+- [ ] Swedish Allsvenskan
+- [ ] Japanese J1 League
+- [ ] Chinese Super League
+- [ ] Australian A-League
+
+---
+
 ## Architecture
 | Layer | Technology |
 |-------|-----------|
@@ -326,3 +531,29 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 | football-data.org API | Soccer | Live scores (free tier) | Free |
 | Foireann API | GAA | Fixtures + results | Free |
 | PreGame Edge | GAA | 594 club results (unique) | Internal |
+| Sentry | All | Error monitoring | Free tier |
+| PostHog | All | Product analytics | Free tier |
+| Cloudflare | All | DDoS protection, CDN | Free tier |
+| Stripe | All | Payment processing | % per transaction |
+| Resend | All | Email notifications | Free tier |
+| GitHub Actions | All | CI/CD automation | Free |
+| UptimeRobot | All | Uptime monitoring | Free tier |
+| Racing Post | Horse Racing | UK/Ireland results | Scraping |
+| HRI | Horse Racing | Irish racing free data | Free |
+| Equibase | Horse Racing | US racing past performances | Free |
+| nba_api | Basketball | NBA play-by-play 1946-present | Free |
+| Basketball-Reference | Basketball | EuroLeague, advanced stats | Free scraping |
+
+---
+
+## Long-Term Vision (3-5 Years)
+- [ ] The "Bloomberg Terminal" of sports prediction — one platform covering every major sport with institutional-grade models
+- [ ] Public API with 10,000+ developers building on FormCast data
+- [ ] Proprietary dataset — largest labelled sports prediction dataset in the world, covering 20+ sports and 50+ competitions
+- [ ] Partnership with sports media — provide win probabilities to broadcasters and journalists in real time
+- [ ] Academic citations — methodology cited in sports analytics research papers
+- [ ] White-label product — sell the prediction engine to bookmakers, media companies, and sports organisations
+- [ ] Real-time data advantage — proprietary data collection (stadium sensors, social media sentiment, injury feeds) not available to the public
+- [ ] GAA monopoly — only platform in the world with comprehensive GAA prediction data, unique dataset with no competition
+- [ ] IPO or acquisition — build to a scale that attracts strategic investment or acquisition from a major sports media or betting company
+- [ ] FormCast Pro — institutional tier for professional bettors, trading desks, and media companies
