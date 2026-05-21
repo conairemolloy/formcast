@@ -3,12 +3,28 @@ import api from '../api'
 import { Loader2 } from 'lucide-react'
 
 const LEAGUES = [
-  { id: null,          label: 'ALL' },
-  { id: 'EPL',         label: 'EPL' },
-  { id: 'LaLiga',      label: 'LaLiga' },
-  { id: 'SerieA',      label: 'Serie A' },
-  { id: 'Bundesliga',  label: 'Bundesliga' },
-  { id: 'Ligue1',      label: 'Ligue 1' },
+  { id: null,           label: 'ALL' },
+  { id: 'EPL',          label: 'EPL' },
+  { id: 'Championship', label: 'Championship' },
+  { id: 'LaLiga',       label: 'La Liga' },
+  { id: 'Segunda',      label: 'Segunda' },
+  { id: 'SerieA',       label: 'Serie A' },
+  { id: 'SerieB',       label: 'Serie B' },
+  { id: 'Bundesliga',   label: 'Bundesliga' },
+  { id: 'Bundesliga2',  label: 'Bundesliga 2' },
+  { id: 'Ligue1',       label: 'Ligue 1' },
+  { id: 'Ligue2',       label: 'Ligue 2' },
+  { id: 'ScottishPrem', label: 'Scottish' },
+  { id: 'CL',           label: 'Champions League' },
+  { id: 'DED',          label: 'Eredivisie' },
+  { id: 'EC',           label: 'Euros' },
+]
+
+const SEASONS = [
+  { id: null,      label: 'All' },
+  { id: '2025-26', label: '2025-26' },
+  { id: '2024-25', label: '2024-25' },
+  { id: '2023-24', label: '2023-24' },
 ]
 
 function fmt(val) {
@@ -46,18 +62,20 @@ export default function Matches() {
   const [loading, setLoading] = useState(true)
   const [error, setError]     = useState(null)
   const [league, setLeague]   = useState(null)
+  const [season, setSeason]   = useState(null)
   const [teamSearch, setTeamSearch] = useState('')
 
   useEffect(() => {
     setLoading(true)
     setError(null)
-    const params = new URLSearchParams({ season: '2025-26', limit: 50 })
+    const params = new URLSearchParams({ limit: 50 })
     if (league) params.set('league', league)
+    if (season) params.set('season', season)
     api.get(`/api/matches?${params}`)
       .then(res => setRows(res.data.data))
       .catch(() => setError('Failed to load match data'))
       .finally(() => setLoading(false))
-  }, [league])
+  }, [league, season])
 
   const filtered = useMemo(() => {
     if (!teamSearch.trim()) return rows
@@ -93,6 +111,15 @@ export default function Matches() {
             </button>
           ))}
         </div>
+        <select
+          value={season ?? ''}
+          onChange={e => setSeason(e.target.value || null)}
+          className="bg-gray-800 border border-gray-700 rounded px-3 py-1.5 text-sm text-white focus:outline-none focus:border-emerald-500"
+        >
+          {SEASONS.map(({ id, label }) => (
+            <option key={label} value={id ?? ''}>{label}</option>
+          ))}
+        </select>
         <input
           type="text"
           placeholder="Search team…"
