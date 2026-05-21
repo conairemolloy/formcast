@@ -45,6 +45,53 @@ def get_prediction_value_bets():
     return ok(df.to_dict(orient="records"))
 
 
+STAT_COLS = [
+    "home_shots", "away_shots", "home_shots_target", "away_shots_target",
+    "home_corners", "away_corners", "home_yellows", "away_yellows",
+    "home_reds", "away_reds",
+]
+
+MATCH_RETURN_COLS = [
+    "match_date", "league", "season", "home_team", "away_team",
+    "home_goals", "away_goals", "result",
+    "home_shots", "away_shots", "home_shots_target", "away_shots_target",
+    "home_corners", "away_corners", "home_yellows", "away_yellows",
+    "home_reds", "away_reds",
+]
+
+
+@predictions_bp.get("/matches")
+def get_matches():
+    df = current_app.config["DATA"]["results"].copy()
+
+    league = request.args.get("league")
+    team   = request.args.get("team")
+    season = request.args.get("season", "2025-26")
+
+    try:
+        limit = int(request.args.get("limit", 20))
+    except ValueError:
+        return jsonify({"success": False, "error": "Invalid limit"}), 400
+
+    if season:
+        df = df[df["season"] == season]
+    if league:
+        df = df[df["league"].str.lower() == league.lower()]
+    if team:
+        df = df[(df["home_team"].str.lower() == team.lower()) |
+                (df["away_team"].str.lower() == team.lower())]
+
+    present_stat_cols = [c for c in STAT_COLS if c in df.columns]
+    if present_stat_cols:
+        df = df[df[present_stat_cols].notna().any(axis=1)]
+
+    df = df.sort_values("match_date", ascending=False)
+    df = df.head(limit)
+
+    return_cols = [c for c in MATCH_RETURN_COLS if c in df.columns]
+    return ok(df[return_cols].to_dict(orient="records"))
+
+
 @predictions_bp.get("/tournament")
 def get_tournament():
     df = current_app.config["DATA"]["tournament_simulations"].copy()
