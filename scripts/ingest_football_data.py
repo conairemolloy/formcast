@@ -54,15 +54,28 @@ LEAGUES = [
 BASE_URL = "https://www.football-data.co.uk/mmz4281/{season_code}/{league_code}.csv"
 
 COLUMN_MAP = {
-    "Date": "match_date",
+    "Date":    "match_date",
     "HomeTeam": "home_team",
     "AwayTeam": "away_team",
-    "FTHG": "home_goals",
-    "FTAG": "away_goals",
-    "FTR": "result",
-    "B365H": "home_odds",
-    "B365D": "draw_odds",
-    "B365A": "away_odds",
+    "FTHG":    "home_goals",
+    "FTAG":    "away_goals",
+    "FTR":     "result",
+    "B365H":   "home_odds",
+    "B365D":   "draw_odds",
+    "B365A":   "away_odds",
+    # match stats — available from ~2000 onwards
+    "HS":      "home_shots",
+    "AS":      "away_shots",
+    "HST":     "home_shots_target",
+    "AST":     "away_shots_target",
+    "HC":      "home_corners",
+    "AC":      "away_corners",
+    "HY":      "home_yellows",
+    "AY":      "away_yellows",
+    "HR":      "home_reds",
+    "AR":      "away_reds",
+    "HF":      "home_fouls",
+    "AF":      "away_fouls",
 }
 
 
@@ -88,6 +101,15 @@ def download_season(league_label: str, league_code: str, season_label: str, seas
             df["home_goals"] = pd.to_numeric(df["home_goals"], errors="coerce").fillna(0).astype(int)
         if "away_goals" in df.columns:
             df["away_goals"] = pd.to_numeric(df["away_goals"], errors="coerce").fillna(0).astype(int)
+
+        stat_cols = [
+            "home_shots", "away_shots", "home_shots_target", "away_shots_target",
+            "home_corners", "away_corners", "home_yellows", "away_yellows",
+            "home_reds", "away_reds", "home_fouls", "away_fouls"
+        ]
+        for col in stat_cols:
+            if col in df.columns:
+                df[col] = pd.to_numeric(df[col], errors="coerce").astype("Int64")
 
         if "match_date" in df.columns:
             df["match_date"] = pd.to_datetime(
