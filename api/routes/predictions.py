@@ -1,5 +1,7 @@
+import os
 from datetime import datetime, timezone
 from flask import Blueprint, jsonify, request, current_app
+import pandas as pd
 
 predictions_bp = Blueprint("predictions", __name__)
 
@@ -45,13 +47,11 @@ def get_prediction_value_bets():
     return ok(df.to_dict(orient="records"))
 
 
-STAT_COLS = [
-    "home_shots", "away_shots", "home_shots_target", "away_shots_target",
-    "home_corners", "away_corners", "home_yellows", "away_yellows",
-    "home_reds", "away_reds",
-]
+RESULTS_CSV = os.path.normpath(
+    os.path.join(os.path.dirname(__file__), "..", "..", "data", "processed", "results.csv")
+)
 
-MATCH_RETURN_COLS = [
+MATCH_COLS = [
     "match_date", "league", "season", "home_team", "away_team",
     "home_goals", "away_goals", "result",
     "home_shots", "away_shots", "home_shots_target", "away_shots_target",
@@ -62,8 +62,6 @@ MATCH_RETURN_COLS = [
 
 @predictions_bp.get("/matches")
 def get_matches():
-    df = current_app.config["DATA"]["results"].copy()
-
     league = request.args.get("league")
     team   = request.args.get("team")
     season = request.args.get("season")
@@ -73,6 +71,10 @@ def get_matches():
     except ValueError:
         return jsonify({"success": False, "error": "Invalid limit"}), 400
 
+    all_cols = pd.read_csv(RESULTS_CSV, nrows=0).columns.tolist()
+    usecols = [c for c in MATCH_COLS if c in all_cols]
+    df = pd.read_csv(RESULTS_CSV, usecols=usecols)
+
     if season:
         df = df[df["season"] == season]
     if league:
@@ -81,11 +83,9 @@ def get_matches():
         df = df[(df["home_team"].str.lower() == team.lower()) |
                 (df["away_team"].str.lower() == team.lower())]
 
-    df = df.sort_values("match_date", ascending=False)
-    df = df.head(limit)
+    df = df.sort_values("match_date", ascending=False).head(limit)
 
-    return_cols = [c for c in MATCH_RETURN_COLS if c in df.columns]
-    return ok(df[return_cols].to_dict(orient="records"))
+    return ok(df[usecols].to_dict(orient="records"))
 
 
 @predictions_bp.get("/tournament")
