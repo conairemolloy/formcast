@@ -44,11 +44,18 @@ SEASONS = [
 ]
 
 LEAGUES = [
-    ("EPL",        "E0"),
-    ("LaLiga",     "SP1"),
-    ("Bundesliga", "D1"),
-    ("SerieA",     "I1"),
-    ("Ligue1",     "F1"),
+    # (label, football-data code, first available season code)
+    ("EPL",          "E0",  "9394"),
+    ("LaLiga",       "SP1", "9394"),
+    ("Bundesliga",   "D1",  "9394"),
+    ("SerieA",       "I1",  "9394"),
+    ("Ligue1",       "F1",  "9394"),
+    ("Championship", "E1",  "9394"),
+    ("ScottishPrem", "SC0", "9394"),
+    ("Bundesliga2",  "D2",  "9394"),
+    ("SerieB",       "I2",  "0102"),
+    ("Ligue2",       "F2",  "9394"),
+    ("Segunda",      "SP2", "9394"),
 ]
 
 BASE_URL = "https://www.football-data.co.uk/mmz4281/{season_code}/{league_code}.csv"
@@ -169,16 +176,29 @@ def upsert_to_supabase(df: pd.DataFrame, batch_size: int = 500) -> None:
 
 def main() -> None:
     frames = []
+    league_counts = {}
 
-    for league_label, league_code in LEAGUES:
+    season_codes = [code for _, code in SEASONS]
+
+    for league_label, league_code, from_code in LEAGUES:
         print(f"\n{league_label}:")
-        for season_label, season_code in SEASONS:
+        league_frames = []
+        from_idx = season_codes.index(from_code) if from_code in season_codes else 0
+        for season_label, season_code in SEASONS[from_idx:]:
             df = download_season(league_label, league_code, season_label, season_code)
             if df is not None:
-                frames.append(df)
+                league_frames.append(df)
+        league_total = sum(len(f) for f in league_frames)
+        league_counts[league_label] = league_total
+        frames.extend(league_frames)
 
     combined = pd.concat(frames, ignore_index=True)
-    print(f"\nTotal rows across all leagues: {len(combined)}")
+
+    print("\n--- Rows per competition ---")
+    for label, count in league_counts.items():
+        print(f"  {label:<15} {count:>7,}")
+    print(f"  {'TOTAL':<15} {len(combined):>7,}")
+
 
     out_path = os.path.normpath(
         os.path.join(os.path.dirname(__file__), "..", "data", "processed", "results.csv")
