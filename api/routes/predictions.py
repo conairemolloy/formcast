@@ -89,7 +89,12 @@ def get_matches():
 
     df = df.sort_values("match_date", ascending=False).head(limit)
 
-    return ok(df[usecols].to_dict(orient="records"))
+    import math
+    records = []
+    for row in df[usecols].to_dict(orient="records"):
+        records.append({k: (None if isinstance(v, float) and math.isnan(v) else v) for k, v in row.items()})
+
+    return ok(records)
 
 
 @predictions_bp.get("/tournament")
