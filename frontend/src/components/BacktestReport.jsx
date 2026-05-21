@@ -135,10 +135,10 @@ export default function BacktestReport() {
       {/* Stat cards */}
       <div className="grid grid-cols-3 gap-4">
         <StatCard
-          label="Overall Hit Rate"
+          label="Elo Hit Rate (non-draw)"
           value={`${(data.overall.hit_rate * 100).toFixed(1)}%`}
           color="text-emerald-400"
-          sub="Match outcome accuracy"
+          sub="Binary accuracy — excludes draws"
         />
         <StatCard
           label="Brier Score"
@@ -156,7 +156,8 @@ export default function BacktestReport() {
 
       {/* Hit rate by league */}
       <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
-        <h2 className="text-base font-semibold text-white mb-4">Hit Rate by League</h2>
+        <h2 className="text-base font-semibold text-white mb-1">Elo Walk-Forward Hit Rate by League (non-draw matches)</h2>
+        <p className="text-xs text-gray-500 mb-4">Excludes drawn matches — binary home/away prediction only</p>
         <ResponsiveContainer width="100%" height={220}>
           <BarChart data={leagueData} barCategoryGap="30%">
             <XAxis dataKey="league" tick={{ fill: '#9ca3af', fontSize: 12 }} axisLine={false} tickLine={false} />
@@ -191,7 +192,7 @@ export default function BacktestReport() {
 
       {/* Hit rate by season */}
       <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
-        <h2 className="text-base font-semibold text-white mb-4">Hit Rate by Season</h2>
+        <h2 className="text-base font-semibold text-white mb-4">Elo Walk-Forward Hit Rate by Season (non-draw matches)</h2>
         <ResponsiveContainer width="100%" height={200}>
           <BarChart data={seasonData} barCategoryGap="30%">
             <XAxis dataKey="season" tick={{ fill: '#9ca3af', fontSize: 12 }} axisLine={false} tickLine={false} />
@@ -274,7 +275,10 @@ export default function BacktestReport() {
       {/* Model comparison table */}
       <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
         <h2 className="text-base font-semibold text-white mb-1">Model Comparison</h2>
-        <p className="text-xs text-gray-500 mb-4">
+        <p className="text-xs text-gray-500 mb-1">
+          Hit rates below are 3-outcome (H/D/A) on the ensemble holdout. Elo binary hit rate (non-draw only) is 68.7% — see charts above.
+        </p>
+        <p className="text-xs text-gray-600 mb-4">
           Evaluated on 2024–2026 holdout (10,099 matches)
         </p>
         <table className="w-full text-sm">
