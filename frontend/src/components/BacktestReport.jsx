@@ -67,6 +67,11 @@ export default function BacktestReport() {
     <div className="space-y-6">
       <h1 className="text-xl font-semibold text-white">Backtest Report</h1>
 
+      <div className="flex items-start gap-2 text-xs text-gray-500 bg-gray-900/40 border border-gray-800 rounded-lg px-3 py-2.5">
+        <span className="text-blue-400 shrink-0">ℹ</span>
+        <span>Walk-forward backtest evaluated on predictions from 2019 onwards. Data from 1993–2019 was used for model training and is excluded from these results to avoid lookahead bias.</span>
+      </div>
+
       {/* Stat cards */}
       <div className="grid grid-cols-3 gap-4">
         <StatCard

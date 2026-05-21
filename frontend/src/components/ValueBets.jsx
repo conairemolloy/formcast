@@ -1,11 +1,24 @@
 import { useState, useEffect, useMemo } from 'react'
 import api from '../api'
 import { Loader2, CheckCircle2, XCircle } from 'lucide-react'
+import Tooltip from './Tooltip'
 
-function StatCard({ label, value, sub }) {
+function gcd(a, b) { return b === 0 ? a : gcd(b, a % b) }
+
+function decimalToFractional(decimal) {
+  if (!decimal || decimal <= 1) return '—'
+  const num = Math.round((decimal - 1) * 100)
+  const den = 100
+  const g = gcd(num, den)
+  return `${num / g}/${den / g}`
+}
+
+function StatCard({ label, value, sub, tip }) {
   return (
     <div className="bg-gray-900 border border-gray-800 rounded-xl p-4">
-      <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">{label}</p>
+      <p className="text-xs text-gray-500 uppercase tracking-wider mb-1 flex items-center gap-0.5">
+        {label}{tip && <Tooltip text={tip} />}
+      </p>
       <p className="text-2xl font-bold tabular-nums text-white">{value ?? '—'}</p>
       {sub && <p className="text-xs text-gray-600 mt-0.5">{sub}</p>}
     </div>
@@ -95,7 +108,7 @@ export default function ValueBets() {
           <StatCard label="Total Bets" value={summary.total_bets} />
           <StatCard label="Win Rate"   value={summary.win_rate != null ? `${(summary.win_rate * 100).toFixed(1)}%` : null} />
           <StatCard label="ROI / Bet"  value={summary.roi != null ? `${summary.roi > 0 ? '+' : ''}${summary.roi.toFixed(3)}` : null} />
-          <StatCard label="Mean CLV"   value={summary.mean_clv != null ? summary.mean_clv.toFixed(4) : null} sub="Closing line value" />
+          <StatCard label="Mean CLV"   value={summary.mean_clv != null ? summary.mean_clv.toFixed(4) : null} sub="Closing line value" tip="Closing Line Value — how much better our odds were than the final bookmaker price before kickoff. Positive CLV is the strongest indicator of a profitable betting model." />
         </div>
       )}
 
@@ -183,11 +196,21 @@ export default function ValueBets() {
               <th className="px-4 py-3 text-left text-gray-400 font-medium">Date</th>
               <th className="px-4 py-3 text-left text-gray-400 font-medium">Fixture</th>
               <th className="px-4 py-3 text-center text-gray-400 font-medium">Out</th>
-              <th className="px-4 py-3 text-right text-gray-400 font-medium">Model %</th>
-              <th className="px-4 py-3 text-right text-gray-400 font-medium">Odds</th>
-              <th className="px-4 py-3 text-right text-gray-400 font-medium">Edge</th>
-              <th className="px-4 py-3 text-right text-gray-400 font-medium">EV</th>
-              <th className="px-4 py-3 text-center text-gray-400 font-medium">Result</th>
+              <th className="px-4 py-3 text-right text-gray-400 font-medium">
+                <span className="inline-flex items-center justify-end">Model %<Tooltip text="Model Probability — the ensemble's estimated probability of this outcome" /></span>
+              </th>
+              <th className="px-4 py-3 text-right text-gray-400 font-medium">
+                <span className="inline-flex items-center justify-end">Odds<Tooltip text="Bookmaker Odds — decimal odds offered by the market (e.g. 2.50 = 3/2)" /></span>
+              </th>
+              <th className="px-4 py-3 text-right text-gray-400 font-medium">
+                <span className="inline-flex items-center justify-end">Edge<Tooltip text="Edge — difference between model probability and implied bookmaker probability. Positive edge means the model thinks this outcome is underpriced." /></span>
+              </th>
+              <th className="px-4 py-3 text-right text-gray-400 font-medium">
+                <span className="inline-flex items-center justify-end">EV<Tooltip text="Expected Value — average profit per £1 staked if this edge is real. EV > 0 means positive expectation over many bets." /></span>
+              </th>
+              <th className="px-4 py-3 text-center text-gray-400 font-medium">
+                <span className="inline-flex items-center justify-center">Result<Tooltip text="Whether this bet won or lost" /></span>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -205,7 +228,10 @@ export default function ValueBets() {
                 <td className="px-4 py-3 text-right text-gray-300 tabular-nums">
                   {(b.p_model * 100).toFixed(1)}%
                 </td>
-                <td className="px-4 py-3 text-right text-gray-300 tabular-nums">{b.odds}</td>
+                <td className="px-4 py-3 text-right text-gray-300 tabular-nums">
+                  {Number(b.odds).toFixed(2)}{' '}
+                  <span className="text-gray-600 text-xs">({decimalToFractional(b.odds)})</span>
+                </td>
                 <td className="px-4 py-3 text-right"><EdgeBadge edge={b.edge} /></td>
                 <td className="px-4 py-3 text-right text-gray-300 tabular-nums">
                   {b.EV > 0

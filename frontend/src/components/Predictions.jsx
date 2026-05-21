@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import api from '../api'
 import { Loader2, CheckCircle2, XCircle } from 'lucide-react'
+import Tooltip from './Tooltip'
 
 function ProbCell({ value }) {
   const pct = (value * 100).toFixed(1)
@@ -77,6 +78,11 @@ export default function Predictions() {
   return (
     <div className="space-y-4">
       <h1 className="text-xl font-semibold text-white">Predictions</h1>
+
+      <div className="flex items-start gap-2 text-xs text-gray-500 bg-gray-900/40 border border-gray-800 rounded-lg px-3 py-2.5">
+        <span className="text-blue-400 shrink-0">ℹ</span>
+        <span>Predictions shown from 2019 onwards — earlier data was used to train the models.</span>
+      </div>
 
       {/* Summary stats */}
       <div className="grid grid-cols-3 gap-4">
@@ -172,12 +178,24 @@ export default function Predictions() {
               <th className="px-4 py-3 text-left text-gray-400 font-medium">League</th>
               <th className="px-4 py-3 text-left text-gray-400 font-medium">Home</th>
               <th className="px-4 py-3 text-left text-gray-400 font-medium">Away</th>
-              <th className="px-4 py-3 text-right text-gray-400 font-medium">P(H)</th>
-              <th className="px-4 py-3 text-right text-gray-400 font-medium">P(D)</th>
-              <th className="px-4 py-3 text-right text-gray-400 font-medium">P(A)</th>
-              <th className="px-4 py-3 text-center text-gray-400 font-medium">Pred</th>
-              <th className="px-4 py-3 text-center text-gray-400 font-medium">Actual</th>
-              <th className="px-4 py-3 text-center text-gray-400 font-medium">✓</th>
+              <th className="px-4 py-3 text-right text-gray-400 font-medium">
+                <span className="inline-flex items-center justify-end">P(H)<Tooltip text="Probability of Home Win — model's predicted chance the home team wins (0–100%)" /></span>
+              </th>
+              <th className="px-4 py-3 text-right text-gray-400 font-medium">
+                <span className="inline-flex items-center justify-end">P(D)<Tooltip text="Probability of Draw — model's predicted chance the match ends level" /></span>
+              </th>
+              <th className="px-4 py-3 text-right text-gray-400 font-medium">
+                <span className="inline-flex items-center justify-end">P(A)<Tooltip text="Probability of Away Win — model's predicted chance the away team wins" /></span>
+              </th>
+              <th className="px-4 py-3 text-center text-gray-400 font-medium">
+                <span className="inline-flex items-center justify-center">Pred<Tooltip text="Predicted Result — H=Home Win, D=Draw, A=Away Win based on highest probability" /></span>
+              </th>
+              <th className="px-4 py-3 text-center text-gray-400 font-medium">
+                <span className="inline-flex items-center justify-center">Actual<Tooltip text="Actual Result — what really happened (H/D/A)" /></span>
+              </th>
+              <th className="px-4 py-3 text-center text-gray-400 font-medium">
+                <span className="inline-flex items-center justify-center">✓<Tooltip text="Correct — whether the model's prediction matched the actual result" /></span>
+              </th>
             </tr>
           </thead>
           <tbody>
