@@ -196,6 +196,7 @@ engine.
 - [ ] FBref advanced stats (2017-present)
 - [ ] Kaggle European Soccer Database (25k+ matches)
 - [ ] Referee statistics database
+- [ ] League of Ireland — scrape from Wikipedia season pages (en.wikipedia.org/wiki/{year}_League_of_Ireland_Premier_Division)
 
 ### Tennis
 - [ ] Jeff Sackmann ATP dataset (500k+ matches, 1968-present)

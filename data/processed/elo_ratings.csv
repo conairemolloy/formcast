@@ -1,246 +1,550 @@
 team,elo_rating
-Bayern Munich,1913.03
-Barcelona,1886.44
-Inter,1880.93
-Paris SG,1836.76
-Man City,1834.0
-Arsenal,1831.6
-Real Madrid,1827.4
-Napoli,1769.59
-Dortmund,1765.83
-Juventus,1756.09
-Roma,1747.96
-Leverkusen,1742.81
-Milan,1733.94
-Liverpool,1721.92
-Ath Madrid,1717.47
-Atalanta,1712.3
-Lens,1701.82
-Stuttgart,1699.5
-RB Leipzig,1698.79
-Lille,1694.99
-Man United,1693.7
-Como,1693.64
-Villarreal,1691.66
-Aston Villa,1671.51
-Bournemouth,1671.05
-Lyon,1667.76
-Marseille,1664.78
-Lazio,1663.02
-Betis,1661.1
-Monaco,1660.9
-Bologna,1650.42
-Brighton,1648.34
-Rennes,1645.14
-Chelsea,1642.23
-Strasbourg,1635.63
-Newcastle,1630.34
-Fiorentina,1629.93
-Hoffenheim,1623.7
-Brentford,1622.6
-Ein Frankfurt,1607.34
-Freiburg,1606.04
-Everton,1600.77
-Nott'm Forest,1600.33
-Celta,1595.91
-Mainz,1592.48
-Crystal Palace,1591.08
-Fulham,1589.75
-Vallecano,1586.02
-Ath Bilbao,1585.88
-Udinese,1584.08
-Toulouse,1575.92
-Valencia,1575.41
-Leeds,1568.5
-Genoa,1565.58
-Paris FC,1565.45
-Torino,1564.26
-Sociedad,1564.07
-Augsburg,1560.94
-Sassuolo,1560.73
-Brest,1551.56
-Getafe,1550.04
-M'gladbach,1550.01
-Nice,1548.75
-Osasuna,1547.48
-Lorient,1547.07
-Alaves,1545.96
-Levante,1545.24
-Sunderland,1537.85
-Girona,1536.48
-West Ham,1533.05
-Union Berlin,1531.69
-Auxerre,1531.05
-Sevilla,1529.33
-Parma,1528.25
-Mallorca,1524.84
-Espanol,1523.6
+Bayern Munich,2044.85
+Barcelona,2006.42
+Inter,1985.57
+Man City,1981.96
+Arsenal,1980.07
+Paris SG,1969.68
+Real Madrid,1947.22
+Dortmund,1898.89
+Leverkusen,1875.85
+Napoli,1875.04
+Liverpool,1869.45
+Juventus,1861.99
+Roma,1854.78
+Man United,1841.99
+Milan,1839.95
+Lens,1838.57
+Ath Madrid,1838.02
+Stuttgart,1832.32
+Lille,1831.57
+Aston Villa,1819.94
+Celtic,1818.95
+Bournemouth,1818.73
+Atalanta,1818.58
+Villarreal,1812.75
+RB Leipzig,1805.77
+Como,1804.74
+Lyon,1804.69
+Marseille,1801.47
+Brighton,1797.23
+Monaco,1797.17
+Chelsea,1791.28
+Rennes,1782.4
+Betis,1782.0
+Newcastle,1778.51
+Strasbourg,1772.92
+Brentford,1770.87
+Lazio,1769.87
+Hoffenheim,1757.15
+Bologna,1756.81
+Everton,1749.06
+Nott'm Forest,1748.78
+Rangers,1748.36
+Leeds,1747.65
+Crystal Palace,1739.87
+Freiburg,1739.62
+Ein Frankfurt,1739.35
+Fulham,1738.86
+Fiorentina,1736.77
+Mainz,1726.94
+PSV,1718.99
+Celta,1717.52
+Toulouse,1716.81
+Vallecano,1707.84
+Ath Bilbao,1707.16
+Hearts,1700.37
+Lorient,1699.19
+Paris FC,1698.11
+Valencia,1696.93
+Augsburg,1695.17
+Udinese,1691.72
+Brest,1689.24
+Arsenal FC,1688.46
+Nice,1685.62
+Sociedad,1685.21
+M'gladbach,1684.68
+Sassuolo,1682.18
+West Ham,1680.68
+Genoa,1675.46
+Auxerre,1674.94
+Getafe,1671.82
+Torino,1671.51
+Tottenham,1669.88
+FC Bayern München,1669.59
+Levante,1669.28
+Alaves,1669.09
+Osasuna,1668.93
+Paris Saint-Germain FC,1667.12
+Union Berlin,1666.56
+Girona,1657.63
+Hamburg,1652.08
+Venezia,1651.15
+Sunderland,1651.04
+Sevilla,1650.77
+Parma,1649.21
+Werder Bremen,1648.4
+Mallorca,1646.66
+Espanol,1646.64
+Feyenoord Rotterdam,1643.34
+Elche,1641.39
+Le Havre,1638.48
+Real Madrid CF,1635.46
+Wolfsburg,1630.31
+Frosinone,1628.8
+Cagliari,1626.56
+Hibernian,1617.92
+Santander,1615.15
+FC Twente '65,1614.48
+FC Koln,1613.46
+Angers,1611.84
+FC Barcelona,1609.35
+Coventry,1608.26
+Lecce,1607.32
+Reims,1604.11
+Schalke 04,1601.24
+Paderborn,1598.9
+Wolves,1598.76
+Elversberg,1598.63
+Hannover,1598.52
+Motherwell,1597.85
+La Coruna,1595.51
+Las Palmas,1595.42
+FC Internazionale Milano,1594.59
+Monza,1594.43
+Burnley,1594.11
+Almeria,1593.62
+Heidenheim,1590.75
+Liverpool FC,1588.97
+FC Utrecht,1588.35
+Malaga,1586.3
+Ipswich,1584.85
+Nantes,1584.34
+AFC Ajax,1584.14
+NEC,1583.52
+Club Atlético de Madrid,1581.78
+Cremonese,1581.36
+Oviedo,1581.0
+Eibar,1577.84
+Troyes,1576.86
+Southampton,1575.93
+Palermo,1574.26
+St Pauli,1574.23
+St Etienne,1568.63
+Burgos,1568.11
+Rodez,1567.83
+AZ,1567.58
+Spain,1566.35
+Borussia Dortmund,1564.24
+Aston Villa FC,1561.02
+Manchester City FC,1559.53
+Millwall,1555.15
+Castellon,1554.8
+Siena,1554.64
+Tottenham Hotspur FC,1547.86
+Juventus FC,1545.79
+Le Mans,1541.97
+Verona,1541.65
+Bochum,1540.74
+Metz,1538.61
+SC Heerenveen,1538.18
+Albacete,1538.08
+Sporting Clube de Portugal,1537.0
+Bayer 04 Leverkusen,1536.06
+Newcastle United FC,1535.4
+Lille OSC,1535.03
+England,1533.3
+Andorra,1527.66
+FK Bodø/Glimt,1527.06
+Merida,1526.85
+Montpellier,1526.24
+Murcia,1525.05
+France,1524.81
+Middlesbrough,1524.54
+Hertha,1524.54
+Annecy,1523.32
+FC Porto,1522.93
+Germany,1522.66
+Ciudad de Murcia,1522.41
+Chelsea FC,1522.4
 M'Gladbach,1522.03
-Hamburg,1521.32
-Tottenham,1521.02
-Cagliari,1518.24
-Leganes,1514.97
-Werder Bremen,1514.37
-Sochaux,1512.74
-Carpi,1510.46
-Elche,1507.25
-Perugia,1504.58
-Compostela,1502.2
-Lecce,1499.2
-Catania,1498.54
-Reims,1498.24
-Wigan,1497.23
-Wolfsburg,1496.06
-Le Havre,1494.83
-Ingolstadt,1491.7
-Birmingham,1489.07
-Stoke,1488.77
-Fortuna Dusseldorf,1487.3
-FC Koln,1483.57
-Huesca,1483.19
-Unterhaching,1482.36
-Swansea,1480.92
-Cadiz,1478.98
-Empoli,1478.92
-Blackpool,1478.4
-Xerez,1477.52
-Ajaccio GFCO,1475.99
-Bolton,1475.24
-Bastia,1475.14
-Munich 1860,1472.86
-Spezia,1472.71
-Charlton,1472.35
-Clermont,1472.25
-Nimes,1471.88
-Gueugnon,1470.79
-Siena,1470.55
-Eibar,1469.97
-Modena,1469.32
-Novara,1467.18
-Extremadura,1466.27
-Cremonese,1466.08
-Ulm,1465.88
-Reggina,1465.16
-Angers,1464.63
-Vicenza,1463.39
-Evian Thonon Gaillard,1461.54
-Bielefeld,1461.18
-Frosinone,1459.55
-Hertha,1458.58
-Nancy,1457.72
-St Etienne,1457.38
-Karlsruhe,1457.2
-Piacenza,1456.9
-Heidenheim,1456.36
-Blackburn,1456.08
-Sedan,1455.88
-Amiens,1454.61
-Cottbus,1454.6
-Oviedo,1454.49
-Aachen,1454.42
-Holstein Kiel,1454.38
-Albacete,1452.14
-Sp Gijon,1451.75
-Wolves,1451.21
-Bordeaux,1451.01
-Schalke 04,1450.25
-Bochum,1449.57
-Zaragoza,1448.27
-Tenerife,1448.02
-Villareal,1447.6
-Nantes,1446.59
-Portsmouth,1445.79
-Guingamp,1444.54
-Sheffield Weds,1443.76
-Coventry,1443.29
-Merida,1441.89
-Hull,1441.89
-Istres,1441.08
-Chateauroux,1440.75
-Le Mans,1440.26
-Recreativo,1438.8
-La Coruna,1438.73
-Braunschweig,1438.35
-Foggia,1437.75
-Boulogne,1437.55
-Dusseldorf,1436.31
-Valenciennes,1436.11
-Lerida,1435.99
-Cardiff,1435.77
-Caen,1434.22
-Verona,1434.09
-Luton,1432.72
-Barnsley,1432.06
-Hansa Rostock,1431.94
-Leicester,1431.35
-West Brom,1430.31
-Oldham,1430.26
-Gimnastic,1429.69
-Palermo,1429.54
-Benevento,1429.04
-Ascoli,1428.84
-Kaiserslautern,1428.41
-Las Palmas,1428.07
-Wattenscheid,1426.52
-Reading,1426.29
-Martigues,1425.27
-Venezia,1423.72
-Sampdoria,1421.03
-Crotone,1419.7
-Hercules,1419.38
-Grenoble,1419.23
-Monza,1418.62
-Almeria,1418.62
-Cannes,1416.39
-Middlesbrough,1415.99
-St Pauli,1414.09
-Duisburg,1413.35
-Chievo,1413.18
-Numancia,1412.95
-Malaga,1412.76
-Salernitana,1412.3
-QPR,1411.18
-Santander,1409.62
-Ancona,1409.2
-Brescia,1408.15
-Uerdingen,1406.67
-Bari,1406.62
-Hannover,1406.58
-Ipswich,1405.98
-Wimbledon,1404.92
-Pisa,1403.69
-Granada,1403.44
-Arles,1400.55
-Montpellier,1399.85
-Burnley,1399.1
-Treviso,1398.15
-Bradford,1396.89
-Paderborn,1395.92
-Watford,1394.99
-Spal,1392.94
-Murcia,1389.57
-Swindon,1388.64
-Dijon,1386.44
-Nurnberg,1384.7
-Troyes,1382.97
-Greuther Furth,1382.6
-Padova,1380.56
-Cesena,1378.84
-Salamanca,1378.69
-Cordoba,1377.1
-Metz,1376.21
-Messina,1375.81
-Darmstadt,1374.31
-Dresden,1371.01
-Ajaccio,1369.78
-Livorno,1364.28
-Huddersfield,1363.9
-Leipzig,1363.12
-Sheffield United,1350.43
-Valladolid,1349.5
-Norwich,1349.0
-Pescara,1339.43
-Reggiana,1333.02
-Southampton,1332.05
-Logrones,1318.24
-Derby,1294.53
+Kaiserslautern,1520.33
+Reutlingen,1519.02
+Darmstadt,1518.48
+Bordeaux,1517.96
+Nurnberg,1517.59
+Cordoba,1515.76
+Catanzaro,1515.26
+AC Milan,1515.08
+Holstein Kiel,1514.01
+Arezzo,1513.65
+Switzerland,1512.59
+SS Lazio,1512.5
+Netherlands,1510.76
+Atalanta BC,1510.3
+Turkey,1510.23
+Portugal,1509.2
+Real Sociedad de Fútbol,1507.58
+Wrexham,1506.88
+PAE Olympiakos SFP,1506.71
+Karlsruhe,1504.16
+Austria,1501.69
+Chievo,1501.4
+GNK Dinamo Zagreb,1501.33
+Kilmarnock,1501.29
+Racing Club de Lens,1501.02
+Rouen,1500.85
+Dundee United,1500.62
+Ukraine,1500.37
+FC Groningen,1499.81
+Granada,1498.5
+Ceuta,1498.45
+Piacenza ,1497.15
+Falkirk,1497.12
+Red Star,1496.34
+AS Monaco FC,1496.26
+Pisa,1495.48
+Club Brugge KV,1495.0
+Sp Gijon,1494.48
+Norwich,1493.79
+Galatasaray SK,1492.8
+Belgium,1491.6
+Italy,1491.2
+Paphos FC,1491.05
+Serbia,1490.87
+Catania,1490.21
+Georgia,1490.17
+Olympique de Marseille,1489.82
+Slovakia,1489.67
+Athletic Club,1489.54
+Denmark,1489.49
+Hungary,1489.4
+Royale Union Saint-Gilloise,1488.99
+Magdeburg,1488.56
+Leganes,1488.52
+Slovenia,1488.45
+Stade Brestois 29,1488.36
+Celtic FC,1487.69
+Croatia,1487.05
+Romania,1486.47
+Besancon,1486.27
+Telstar 1963,1486.04
+VfB Stuttgart,1485.75
+Go Ahead Eagles,1485.44
+Charleville,1484.81
+SSC Napoli,1482.9
+Beauvais,1481.7
+Inverness C,1481.68
+Albania,1481.1
+Czechia,1480.39
+Real Madrid B,1480.02
+Sochaux,1478.98
+Bielefeld,1478.36
+Swansea,1477.38
+Trapani,1477.25
+Poland,1476.59
+Sheffield United,1476.44
+Sport Lisboa e Benfica,1476.18
+Fortuna Dusseldorf,1475.64
+Scotland,1475.57
+Bologna FC 1909,1475.17
+Dundee,1475.11
+Hull,1474.6
+FK Shakhtar Donetsk,1474.24
+Aberdeen,1473.48
+Ein Trier,1472.07
+Derby,1471.37
+Manchester United FC,1470.68
+SK Sturm Graz,1470.22
+Guadalajara,1469.07
+Sporting Clube de Braga,1468.6
+Juve Stabia,1468.41
+Ponferradina,1468.15
+Ath Madrid B,1467.52
+FC København,1467.45
+Pontevedra,1467.18
+Dunkerque,1467.16
+Villareal,1466.35
+Amorebieta,1466.06
+UCAM Murcia,1465.32
+Qarabağ Ağdam FK,1465.08
+Sevilla FC,1464.41
+Kaiserslautern ,1464.2
+Modena,1463.91
+Sparta Rotterdam,1463.16
+Grenoble,1462.75
+Perpignan,1462.47
+1. FC Union Berlin,1461.74
+Empoli,1460.93
+Dresden,1460.57
+Gutersloh,1460.08
+Evian Thonon Gaillard,1459.14
+Rimini,1458.61
+Ajaccio,1457.68
+Royal Antwerp FC,1457.62
+Brescia,1455.65
+Greuther Furth,1455.19
+Leonesa,1454.95
+Llagostera,1454.61
+Dijon,1454.59
+Reggina,1454.5
+AC Sparta Praha,1454.03
+Mirandes,1453.97
+Girona FC,1453.89
+Foggia,1453.47
+SK Slavia Praha,1452.97
+Lubeck,1452.95
+St Mirren,1451.78
+Salernitana,1451.67
+Real Union,1451.51
+Erfurt,1451.47
+Sociedad B,1450.85
+Eintracht Frankfurt,1450.49
+Bristol City,1449.94
+Guingamp,1449.64
+Valladolid,1449.6
+Wasquehal,1448.55
+Birmingham,1448.47
+Wuppertaler,1447.83
+Mantova,1447.48
+Quevilly Rouen,1447.11
+Ascoli,1446.54
+Aachen,1445.66
+Aalen,1445.49
+Luton,1443.29
+Numancia,1442.98
+Sabadell,1442.93
+Pau FC,1442.03
+Braunschweig,1441.27
+Avellino,1441.16
+PEC Zwolle,1440.73
+Extremadura UD,1439.88
+Partick,1439.82
+Fortuna Sittard,1439.45
+SBV Excelsior,1439.18
+Eldense,1439.09
+FK Crvena Zvezda,1438.68
+Clermont,1437.79
+Laval,1437.43
+Villarreal CF,1435.91
+Villarreal B,1435.81
+Perugia,1435.47
+Valence,1435.12
+FK Kairat,1434.99
+TB Berlin,1434.91
+Alcorcon,1434.66
+Portsmouth,1434.59
+Ternana,1434.54
+Sampdoria,1434.2
+Poli Ejido,1433.93
+Algeciras,1432.93
+Carrarese,1432.51
+Bastia,1432.35
+Tenerife,1432.25
+Red Star 93,1431.93
+West Brom,1431.9
+Rayo Majadahonda,1431.74
+Toulon,1431.42
+Beziers,1431.29
+Leicester,1431.16
+F Koln,1430.78
+Koblenz,1429.54
+Hercules,1429.49
+Burghausen,1428.89
+Essen,1427.32
+Virtus Lanciano,1427.22
+Salamanca,1426.69
+Chambly,1426.62
+Munich 1860,1426.34
+Benevento,1424.99
+Vannes,1424.77
+Offenbach,1424.67
+Nocerina,1424.34
+Compostela,1424.12
+Wycombe,1423.35
+Spezia,1423.17
+Blackburn,1422.98
+Cesena,1422.08
+Jaen,1421.78
+Pistoiese,1420.91
+Concarneau,1420.58
+Lerida,1420.56
+Duisburg,1420.11
+Ross County,1419.91
+Huesca,1419.65
+Spal,1419.18
+Sudtirol,1418.73
+Saarbrucken,1418.52
+Piacenza,1418.48
+Leipzig,1418.47
+Ulm,1417.95
+Granada 74,1417.77
+ŠK Slovan Bratislava,1417.61
+U.Las Palmas,1417.38
+Bari,1417.03
+Toledo,1416.0
+Notts County,1415.82
+PreuÃen MÃ¼nster,1415.15
+FC Red Bull Salzburg,1414.81
+Novara,1414.72
+Preston,1414.4
+Padova,1414.18
+Sedan,1413.85
+Mallorca B,1412.39
+Extremadura,1412.11
+Cadiz,1411.99
+RW Essen,1410.96
+Siegen,1410.92
+QPR,1410.75
+Unterhaching,1409.5
+Nimes,1409.44
+Stuttgarter K,1409.04
+Badajoz,1408.89
+Ibiza,1407.7
+Cultural Leonesa,1407.54
+Orense,1406.47
+Ancona,1405.82
+Lleida,1405.37
+Terrassa,1405.08
+Oldham,1404.68
+FeralpiSalo,1404.28
+Recreativo,1403.82
+Mannheim,1403.64
+Mulhouse,1402.68
+BSC Young Boys,1402.0
+St Johnstone,1401.41
+Logrones,1400.1
+Boulogne,1399.86
+Uerdingen,1399.82
+CZ Jena,1399.77
+Zaragoza,1398.86
+Gretna,1397.84
+Messina,1397.84
+Alcoyano,1397.72
+Bury,1397.71
+Barcelona B,1397.38
+Frankfurt FSV,1397.27
+Latina,1396.72
+Homburg,1396.37
+Dusseldorf,1396.16
+Cittadella,1395.73
+Gimnastic,1395.72
+Watford,1395.67
+Pro Vercelli,1395.3
+Fuenlabrada,1395.16
+Ecija,1395.03
+Vicenza,1394.8
+Zwickau,1394.26
+Hamilton,1393.7
+Wattenscheid,1393.68
+Wigan,1393.63
+Alessandria,1392.38
+Vecindario,1391.4
+Portogruaro,1391.27
+Oxford,1390.49
+Alicante,1389.88
+Huddersfield,1389.35
+Ravenna,1389.26
+Nancy,1388.69
+Triestina,1388.64
+Sandhausen,1388.56
+Crewe,1388.5
+Plymouth,1388.0
+Gillingham,1387.79
+RKC Waalwijk,1387.53
+Oldenburg,1387.33
+Hansa Rostock,1386.26
+Charlton,1385.32
+Burton,1384.05
+SBV Vitesse,1383.9
+Ajaccio GFCO,1383.79
+Martigues,1383.61
+Creteil,1383.53
+Willem II Tilburg,1381.48
+Crotone,1381.46
+Yeovil,1380.91
+NAC Breda,1380.27
+Stoke,1380.26
+Erzgebirge Aue,1380.26
+Ingolstadt,1378.41
+Ath Bilbao B,1378.18
+Wehen,1378.07
+Walsall,1377.91
+Lugo,1377.9
+Cannes,1377.14
+Cottbus,1376.95
+Gueugnon,1376.68
+Reggiana,1376.18
+Caen,1375.9
+Istres,1375.74
+Bourg Peronnas,1375.69
+Arles,1375.3
+Osnabruck,1375.04
+Colchester,1374.82
+Cosenza,1374.81
+Cardiff,1373.7
+Wurzburger Kickers,1373.28
+Reading,1373.27
+Milton Keynes Dons,1372.63
+Valenciennes,1372.46
+Virtus Entella,1372.19
+Varese,1372.19
+FC Volendam,1371.67
+Libourne,1371.51
+Meppen,1371.16
+Orleans,1370.9
+Almere City FC,1370.53
+St Brieuc,1370.37
+Malaga B,1370.08
+Grosseto,1369.76
+Oberhausen,1368.99
+Pescara,1368.95
+Raith Rvs,1368.91
+Carpi,1367.33
+Schweinfurt,1365.5
+Ferrol,1365.02
+Gubbio,1364.56
+CA Bastia,1363.82
+Regensburg,1363.64
+Treviso,1361.95
+Dunfermline,1361.39
+Blackpool,1358.21
+Gallipoli,1357.81
+Grimsby,1357.51
+Doncaster,1357.29
+Peterboro,1355.22
+Xerez,1354.96
+Sevilla B,1354.72
+Livingston,1352.48
+Scunthorpe,1352.04
+Lorca,1350.94
+Tours,1348.79
+Sete,1346.37
+Ahlen,1346.32
+Niort,1346.23
+Chateauroux,1344.37
+Lecco,1343.97
+Southend,1342.89
+Amiens,1339.37
+Tranmere,1339.31
+Albinoleffe,1339.13
+Cartagena,1339.12
+Swindon,1338.69
+Port Vale,1337.9
+Barnsley,1335.59
+FSV Frankfurt,1330.88
+Babelsberg,1329.49
+Epinal,1327.17
+Ourense,1327.12
+Heracles Almelo,1325.17
+Louhans-Cuis.,1324.8
+Chemnitz,1319.83
+Wimbledon,1315.56
+Bradford,1305.75
+Pordenone,1301.09
+Stockport,1296.05
+Rotherham,1287.86
+Reus Deportiu,1287.75
+Livorno,1287.74
+Bolton,1277.5
+Sheffield Weds,1259.36
