@@ -151,6 +151,11 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 ---
 
 ## Phase 7 — UX & Design Polish
+- [ ] Landing page — hero section with platform explanation, key stats (128k matches, 68.7% accuracy, 14 competitions), and call to action button
+- [ ] Nav reorganisation — group into logical sections: Predictions (Live, Value Bets, Accumulators) / Analysis (Ratings, Matches, Backtest, Tournament)
+- [ ] Dashboard home page — today's top value bets, live matches, and upcoming fixtures all in one view
+- [ ] Accumulator builder flow — select matches from Live/Upcoming page and add directly to accumulator builder
+- [ ] User journey improvement — clear path from landing → value bets → accumulator → stake calculation
 - [x] Matches page with shot, corner, card stats and league/team filtering
 - [x] Filtering and sorting on all pages (league, date, outcome, edge filters)
 - [ ] Fix remaining duplicate team names (Dortmund/Borussia Dortmund, Lazio/SS Lazio etc)
