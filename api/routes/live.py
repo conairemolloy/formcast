@@ -181,13 +181,16 @@ def _sigmoid(x: float) -> float:
 
 
 def _prematch_probs(home_elo: float, away_elo: float) -> tuple[float, float, float]:
-    elo_diff = home_elo - away_elo
-    p_home = 1.0 / (1.0 + 10 ** (-(elo_diff + 50) / 400))
-    # Approximate draw probability using a simple symmetric model
-    p_away_win = 1.0 / (1.0 + 10 ** ((elo_diff + 50) / 400))
-    p_draw = max(0.0, 1.0 - p_home - p_away_win)
-    total = p_home + p_draw + p_away_win
-    return p_home / total, p_draw / total, p_away_win / total
+    elo_diff = home_elo - away_elo + 50  # home advantage
+    p_home_raw = 1.0 / (1.0 + 10 ** (-elo_diff / 400))
+    p_away_raw = 1.0 / (1.0 + 10 ** (elo_diff / 400))
+    # Draw peaks at ~27% for evenly matched teams, shrinks for mismatches
+    closeness = 1.0 - abs(p_home_raw - p_away_raw)
+    p_draw = 0.30 * closeness
+    remainder = 1.0 - p_draw
+    p_home = p_home_raw / (p_home_raw + p_away_raw) * remainder
+    p_away = p_away_raw / (p_home_raw + p_away_raw) * remainder
+    return p_home, p_draw, p_away
 
 
 def _inplay_probs(
