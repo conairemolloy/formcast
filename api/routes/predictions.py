@@ -66,7 +66,7 @@ def get_matches():
 
     league = request.args.get("league")
     team   = request.args.get("team")
-    season = request.args.get("season", "2025-26")
+    season = request.args.get("season")
 
     try:
         limit = int(request.args.get("limit", 20))
@@ -80,10 +80,6 @@ def get_matches():
     if team:
         df = df[(df["home_team"].str.lower() == team.lower()) |
                 (df["away_team"].str.lower() == team.lower())]
-
-    present_stat_cols = [c for c in STAT_COLS if c in df.columns]
-    if present_stat_cols:
-        df = df[df[present_stat_cols].notna().any(axis=1)]
 
     df = df.sort_values("match_date", ascending=False)
     df = df.head(limit)
