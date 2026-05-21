@@ -2,10 +2,11 @@ import os
 import math
 import time
 from datetime import date, timedelta
+from math import exp, factorial
 
 import pandas as pd
 import httpx
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 
 live_bp = Blueprint("live", __name__)
 
@@ -14,6 +15,7 @@ FDATA_BASE = "https://api.football-data.org/v4"
 HEADERS = {"X-Auth-Token": FDATA_API_KEY}
 
 _ELO_RATINGS: dict[str, float] = {}
+_RESULTS_DF: pd.DataFrame | None = None
 
 def _load_elo():
     path = os.path.normpath(
@@ -23,7 +25,17 @@ def _load_elo():
     for _, row in df.iterrows():
         _ELO_RATINGS[row["team"].strip()] = float(row["elo_rating"])
 
+def _load_results():
+    global _RESULTS_DF
+    path = os.path.normpath(
+        os.path.join(os.path.dirname(__file__), "..", "..", "data", "processed", "results.csv")
+    )
+    df = pd.read_csv(path, low_memory=False)
+    df["match_date"] = pd.to_datetime(df["match_date"], errors="coerce")
+    _RESULTS_DF = df
+
 _load_elo()
+_load_results()
 
 # ---------------------------------------------------------------------------
 # Team name normalisation — football-data.org uses long names with suffixes
@@ -276,6 +288,192 @@ def _parse_match(m: dict, inplay: bool) -> dict:
     }
 
 
+# ---------------------------------------------------------------------------
+# Team name → canonical (results.csv / elo_ratings) resolution
+# ---------------------------------------------------------------------------
+
+def _canonical_name(fdo_name: str) -> str:
+    if fdo_name in _FDO_TO_ELO:
+        return _FDO_TO_ELO[fdo_name]
+    if fdo_name in _ELO_RATINGS:
+        return fdo_name
+    stripped = fdo_name
+    for suffix in _STRIP_SUFFIXES:
+        if stripped.endswith(suffix):
+            stripped = stripped[: -len(suffix)].strip()
+            break
+    if stripped in _ELO_RATINGS:
+        return stripped
+    fdo_lower = fdo_name.lower()
+    for elo_team in _ELO_RATINGS:
+        if elo_team.lower() in fdo_lower or fdo_lower in elo_team.lower():
+            return elo_team
+    return fdo_name
+
+
+# ---------------------------------------------------------------------------
+# Recent form — last 5 matches for a team
+# ---------------------------------------------------------------------------
+
+def _last5_stats(team: str) -> dict:
+    df = _RESULTS_DF
+    mask = (df["home_team"] == team) | (df["away_team"] == team)
+    matches = df[mask].sort_values("match_date", ascending=False).head(5)
+
+    if matches.empty:
+        return {
+            "avg_scored": None, "avg_conceded": None,
+            "avg_corners": None, "avg_yellows": None, "avg_reds": None,
+            "form": [],
+        }
+
+    scored, conceded, corners, yellows, reds, form = [], [], [], [], [], []
+
+    for _, row in matches.iterrows():
+        is_home = row["home_team"] == team
+        hg, ag = row.get("home_goals"), row.get("away_goals")
+        if is_home:
+            if pd.notna(hg): scored.append(float(hg))
+            if pd.notna(ag): conceded.append(float(ag))
+            c = row.get("home_corners"); y = row.get("home_yellows"); r = row.get("home_reds")
+            if pd.notna(hg) and pd.notna(ag):
+                form.append("W" if hg > ag else ("D" if hg == ag else "L"))
+        else:
+            if pd.notna(ag): scored.append(float(ag))
+            if pd.notna(hg): conceded.append(float(hg))
+            c = row.get("away_corners"); y = row.get("away_yellows"); r = row.get("away_reds")
+            if pd.notna(hg) and pd.notna(ag):
+                form.append("W" if ag > hg else ("D" if ag == hg else "L"))
+        if pd.notna(c): corners.append(float(c))
+        if pd.notna(y): yellows.append(float(y))
+        if pd.notna(r): reds.append(float(r))
+
+    def _mean(lst):
+        return round(sum(lst) / len(lst), 2) if lst else None
+
+    return {
+        "avg_scored":   _mean(scored),
+        "avg_conceded": _mean(conceded),
+        "avg_corners":  _mean(corners),
+        "avg_yellows":  _mean(yellows),
+        "avg_reds":     _mean(reds),
+        "form":         form,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Head-to-head — last 10 meetings, summary from home-team perspective
+# ---------------------------------------------------------------------------
+
+def _h2h_stats(home: str, away: str) -> dict:
+    df = _RESULTS_DF
+    mask = (
+        ((df["home_team"] == home) & (df["away_team"] == away)) |
+        ((df["home_team"] == away) & (df["away_team"] == home))
+    )
+    h2h = df[mask].sort_values("match_date", ascending=False).head(10)
+
+    if h2h.empty:
+        return {"home_wins": 0, "draws": 0, "away_wins": 0, "avg_goals": None, "matches": []}
+
+    home_wins = draws = away_wins = 0
+    total_goals = []
+    recent = []
+
+    for _, row in h2h.iterrows():
+        hg, ag = row.get("home_goals"), row.get("away_goals")
+        is_home_perspective = row["home_team"] == home
+        date_str = row["match_date"].strftime("%Y-%m-%d") if pd.notna(row["match_date"]) else None
+
+        if pd.notna(hg) and pd.notna(ag):
+            total_goals.append(float(hg) + float(ag))
+            if hg > ag:
+                if is_home_perspective: home_wins += 1
+                else: away_wins += 1
+            elif hg == ag:
+                draws += 1
+            else:
+                if is_home_perspective: away_wins += 1
+                else: home_wins += 1
+
+        if len(recent) < 5:
+            recent.append({
+                "home_team":  row["home_team"],
+                "away_team":  row["away_team"],
+                "home_goals": int(hg) if pd.notna(hg) else None,
+                "away_goals": int(ag) if pd.notna(ag) else None,
+                "date":       date_str,
+            })
+
+    return {
+        "home_wins": home_wins,
+        "draws":     draws,
+        "away_wins": away_wins,
+        "avg_goals": round(sum(total_goals) / len(total_goals), 2) if total_goals else None,
+        "matches":   recent,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Poisson / Dixon-Coles goals model
+# ---------------------------------------------------------------------------
+
+_LEAGUE_AVG_HOME = 1.35
+_LEAGUE_AVG_AWAY = 1.05
+_MAX_GOALS = 5
+
+
+def _poisson_p(lam: float, k: int) -> float:
+    return exp(-lam) * (lam ** k) / factorial(k)
+
+
+def _goals_model(home_form: dict, away_form: dict) -> dict:
+    home_scored   = home_form.get("avg_scored")   or _LEAGUE_AVG_HOME
+    home_conceded = home_form.get("avg_conceded") or _LEAGUE_AVG_AWAY
+    away_scored   = away_form.get("avg_scored")   or _LEAGUE_AVG_AWAY
+    away_conceded = away_form.get("avg_conceded") or _LEAGUE_AVG_HOME
+
+    # Normalise attack × defence against league baseline
+    lam_h = max(0.3, min(4.0, home_scored * away_conceded / _LEAGUE_AVG_AWAY))
+    lam_a = max(0.2, min(3.5, away_scored * home_conceded / _LEAGUE_AVG_HOME))
+
+    # Score probability matrix
+    score_list = []
+    for h in range(_MAX_GOALS + 1):
+        for a in range(_MAX_GOALS + 1):
+            p = _poisson_p(lam_h, h) * _poisson_p(lam_a, a)
+            score_list.append((f"{h}-{a}", round(p, 4)))
+    score_matrix = dict(score_list)
+
+    score_list.sort(key=lambda x: -x[1])
+    top_scores = [{"score": s, "prob": p} for s, p in score_list[:8]]
+
+    # Over / under
+    over_under = {}
+    for t in (0.5, 1.5, 2.5, 3.5):
+        p_over = sum(
+            _poisson_p(lam_h, h) * _poisson_p(lam_a, a)
+            for h in range(_MAX_GOALS + 1)
+            for a in range(_MAX_GOALS + 1)
+            if h + a > t
+        )
+        over_under[str(t)] = {"over": round(p_over, 4), "under": round(1 - p_over, 4)}
+
+    p_h0 = _poisson_p(lam_h, 0)
+    p_a0 = _poisson_p(lam_a, 0)
+
+    return {
+        "lambda_home":    round(lam_h, 3),
+        "lambda_away":    round(lam_a, 3),
+        "score_matrix":   score_matrix,
+        "top_scores":     top_scores,
+        "over_under":     over_under,
+        "btts":           round((1 - p_h0) * (1 - p_a0), 4),
+        "home_to_score":  round(1 - p_h0, 4),
+        "away_to_score":  round(1 - p_a0, 4),
+    }
+
+
 def _fetch(url: str, params: dict | None = None) -> dict:
     resp = httpx.get(url, headers=HEADERS, params=params, timeout=10)
     resp.raise_for_status()
@@ -355,3 +553,43 @@ def live_upcoming():
     records = [_parse_match(m, inplay=False) for m in data.get("matches", [])]
     _cache_set("live_upcoming", records)
     return _ok(records)
+
+
+@live_bp.get("/match/preview")
+def match_preview():
+    home_team = request.args.get("home_team", "").strip()
+    away_team = request.args.get("away_team", "").strip()
+
+    if not home_team or not away_team:
+        return _err("home_team and away_team are required", 400)
+
+    home_canon = _canonical_name(home_team)
+    away_canon = _canonical_name(away_team)
+
+    home_elo = _resolve_elo(home_team)
+    away_elo = _resolve_elo(away_team)
+    p_home, p_draw, p_away = _prematch_probs(home_elo, away_elo)
+
+    home_form = _last5_stats(home_canon)
+    away_form = _last5_stats(away_canon)
+    h2h       = _h2h_stats(home_canon, away_canon)
+    goals     = _goals_model(home_form, away_form)
+
+    return jsonify({
+        "success": True,
+        "data": {
+            "home_team":  home_team,
+            "away_team":  away_team,
+            "home_canon": home_canon,
+            "away_canon": away_canon,
+            "home_elo":   round(home_elo, 1),
+            "away_elo":   round(away_elo, 1),
+            "p_home":     round(p_home, 4),
+            "p_draw":     round(p_draw, 4),
+            "p_away":     round(p_away, 4),
+            "home_form":  home_form,
+            "away_form":  away_form,
+            "h2h":        h2h,
+            "goals":      goals,
+        },
+    }), 200

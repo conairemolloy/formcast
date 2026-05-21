@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import api from '../api'
 import { Loader2, RefreshCw, Zap } from 'lucide-react'
+import MatchPreview from './MatchPreview'
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -80,15 +81,20 @@ function StatusBadge({ status }) {
 // Single match row
 // ---------------------------------------------------------------------------
 
-function MatchRow({ match, showProbs = true }) {
+function MatchRow({ match, showProbs = true, onClick }) {
   const isLive    = ['IN_PLAY', 'PAUSED', 'LIVE'].includes(match.status)
   const isFinished = match.status === 'FINISHED'
   const hasScore  = match.home_goals != null && match.away_goals != null
 
   return (
-    <div className={`flex flex-col gap-2 p-3 rounded-lg border transition-colors ${
-      isLive ? 'border-emerald-800/60 bg-emerald-950/20' : 'border-gray-800 bg-gray-900/50'
-    }`}>
+    <div
+      onClick={() => onClick?.(match)}
+      className={`flex flex-col gap-2 p-3 rounded-lg border transition-colors cursor-pointer ${
+        isLive
+          ? 'border-emerald-800/60 bg-emerald-950/20 hover:bg-emerald-950/30'
+          : 'border-gray-800 bg-gray-900/50 hover:bg-gray-800/60'
+      }`}
+    >
       {/* Top row: teams + score/time */}
       <div className="flex items-center justify-between gap-4">
         {/* Home team */}
@@ -155,7 +161,7 @@ function MatchRow({ match, showProbs = true }) {
 // Competition section
 // ---------------------------------------------------------------------------
 
-function CompSection({ competition, matches, showProbs }) {
+function CompSection({ competition, matches, showProbs, onMatchClick }) {
   return (
     <div>
       <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2 px-1">
@@ -163,7 +169,7 @@ function CompSection({ competition, matches, showProbs }) {
       </h3>
       <div className="flex flex-col gap-2">
         {matches.map(m => (
-          <MatchRow key={m.match_id} match={m} showProbs={showProbs} />
+          <MatchRow key={m.match_id} match={m} showProbs={showProbs} onClick={onMatchClick} />
         ))}
       </div>
     </div>
@@ -201,7 +207,7 @@ const TABS = [
 // Live Now panel
 // ---------------------------------------------------------------------------
 
-function LiveNowPanel({ data, loading, error, lastRefresh, onRefresh }) {
+function LiveNowPanel({ data, loading, error, lastRefresh, onRefresh, onMatchClick }) {
   if (loading) return <Spinner />
   if (error)   return <ErrorMsg msg={error} />
   if (!data || data.length === 0) {
@@ -224,7 +230,7 @@ function LiveNowPanel({ data, loading, error, lastRefresh, onRefresh }) {
         <RefreshButton lastRefresh={lastRefresh} onRefresh={onRefresh} />
       </div>
       {Object.entries(grouped).map(([comp, matches]) => (
-        <CompSection key={comp} competition={comp} matches={matches} showProbs />
+        <CompSection key={comp} competition={comp} matches={matches} showProbs onMatchClick={onMatchClick} />
       ))}
     </div>
   )
@@ -234,7 +240,7 @@ function LiveNowPanel({ data, loading, error, lastRefresh, onRefresh }) {
 // Today panel
 // ---------------------------------------------------------------------------
 
-function TodayPanel({ data, loading, error, selectedComp, setSelectedComp }) {
+function TodayPanel({ data, loading, error, selectedComp, setSelectedComp, onMatchClick }) {
   if (loading) return <Spinner />
   if (error)   return <ErrorMsg msg={error} />
   if (!data || data.length === 0) {
@@ -256,7 +262,7 @@ function TodayPanel({ data, loading, error, selectedComp, setSelectedComp }) {
         <CompFilter competitions={competitions} value={selectedComp} onChange={setSelectedComp} />
       </div>
       {Object.entries(grouped).map(([comp, matches]) => (
-        <CompSection key={comp} competition={comp} matches={matches} showProbs />
+        <CompSection key={comp} competition={comp} matches={matches} showProbs onMatchClick={onMatchClick} />
       ))}
     </div>
   )
@@ -266,7 +272,7 @@ function TodayPanel({ data, loading, error, selectedComp, setSelectedComp }) {
 // Upcoming panel — grouped by date then competition
 // ---------------------------------------------------------------------------
 
-function UpcomingPanel({ data, loading, error, selectedComp, setSelectedComp }) {
+function UpcomingPanel({ data, loading, error, selectedComp, setSelectedComp, onMatchClick }) {
   if (loading) return <Spinner />
   if (error)   return <ErrorMsg msg={error} />
   if (!data || data.length === 0) {
@@ -297,7 +303,7 @@ function UpcomingPanel({ data, loading, error, selectedComp, setSelectedComp }) 
             </h2>
             <div className="flex flex-col gap-4">
               {Object.entries(byComp).map(([comp, matches]) => (
-                <CompSection key={comp} competition={comp} matches={matches} showProbs />
+                <CompSection key={comp} competition={comp} matches={matches} showProbs onMatchClick={onMatchClick} />
               ))}
             </div>
           </div>
@@ -347,6 +353,7 @@ function RefreshButton({ lastRefresh, onRefresh }) {
 export default function Live() {
   const [tab, setTab]             = useState('today')
   const [selectedComp, setSelectedComp] = useState('ALL')
+  const [previewMatch, setPreviewMatch] = useState(null)
 
   const [liveData, setLiveData]       = useState(null)
   const [todayData, setTodayData]     = useState(null)
@@ -459,6 +466,7 @@ export default function Live() {
             error={liveError}
             lastRefresh={liveLastRefresh}
             onRefresh={fetchLive}
+            onMatchClick={setPreviewMatch}
           />
         )}
         {tab === 'today' && (
@@ -468,6 +476,7 @@ export default function Live() {
             error={todayError}
             selectedComp={selectedComp}
             setSelectedComp={setSelectedComp}
+            onMatchClick={setPreviewMatch}
           />
         )}
         {tab === 'upcoming' && (
@@ -477,9 +486,18 @@ export default function Live() {
             error={upcomingError}
             selectedComp={selectedComp}
             setSelectedComp={setSelectedComp}
+            onMatchClick={setPreviewMatch}
           />
         )}
       </div>
+
+      {/* Match preview modal */}
+      {previewMatch && (
+        <MatchPreview
+          match={previewMatch}
+          onClose={() => setPreviewMatch(null)}
+        />
+      )}
     </div>
   )
 }
