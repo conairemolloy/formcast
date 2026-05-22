@@ -1,5 +1,6 @@
 from datetime import datetime, timezone
 from flask import Blueprint, jsonify, request, current_app
+import pandas as pd
 
 ratings_bp = Blueprint("ratings", __name__)
 
@@ -31,6 +32,39 @@ def get_glicko2():
 def get_btl():
     df = current_app.config["DATA"]["btl_ratings"]
     return ok(df.to_dict(orient="records"))
+
+
+@ratings_bp.get("/ratings/history")
+def get_ratings_history():
+    team = request.args.get("team", "").strip()
+    if not team:
+        return jsonify({"success": False, "error": "team parameter required"}), 400
+
+    df = current_app.config["DATA"]["elo_predictions"]
+    team_lower = team.lower()
+    mask = (df["home_team"].str.lower() == team_lower) | (df["away_team"].str.lower() == team_lower)
+    team_df = df[mask].copy()
+
+    if team_df.empty:
+        return jsonify({"success": False, "error": f"Team '{team}' not found"}), 404
+
+    team_df["elo"] = team_df.apply(
+        lambda r: r["home_elo_before"] if r["home_team"].lower() == team_lower else r["away_elo_before"],
+        axis=1,
+    )
+
+    team_df = team_df.dropna(subset=["match_date", "season"]).sort_values("match_date")
+
+    history = (
+        team_df.groupby("season", sort=False)["elo"]
+        .last()
+        .reset_index()
+        .rename(columns={"elo": "elo_rating"})
+        .sort_values("season")
+    )
+    history["elo_rating"] = history["elo_rating"].round(1)
+
+    return ok(history.to_dict(orient="records"))
 
 
 @ratings_bp.get("/ratings/<team>")

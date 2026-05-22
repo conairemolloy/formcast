@@ -6,7 +6,7 @@ const MEDAL = ['🥇', '🥈', '🥉']
 const MAX_RATING = 1900
 const LEAGUE_IDS = ['EPL', 'LaLiga', 'SerieA', 'Bundesliga', 'Ligue1']
 
-export default function RatingsTable() {
+export default function RatingsTable({ onTeamClick }) {
   const [data, setData]               = useState([])
   const [teamLeague, setTeamLeague]   = useState({})
   const [loading, setLoading]         = useState(true)
@@ -44,6 +44,26 @@ export default function RatingsTable() {
   const sortedAll = useMemo(() =>
     [...data].sort((a, b) => b.elo_rating - a.elo_rating),
   [data])
+
+  function getLeagueRank(teamName) {
+    const lg = teamLeague[teamName]
+    if (!lg) return null
+    const ranked = [...data]
+      .filter(t => teamLeague[t.team] === lg)
+      .sort((a, b) => b.elo_rating - a.elo_rating)
+    const idx = ranked.findIndex(t => t.team === teamName)
+    return idx >= 0 ? idx + 1 : null
+  }
+
+  function handleRowClick(team) {
+    if (!onTeamClick) return
+    onTeamClick({
+      name:   team.team,
+      elo:    team.elo_rating,
+      league: teamLeague[team.team] ?? null,
+      rank:   getLeagueRank(team.team),
+    })
+  }
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase()
@@ -127,14 +147,19 @@ export default function RatingsTable() {
               return (
                 <tr
                   key={team.team}
+                  onClick={() => handleRowClick(team)}
                   className={`border-b border-gray-800/50 transition-colors hover:bg-gray-800/50 ${
                     isMedal ? 'bg-gray-900/80' : ''
-                  }`}
+                  } ${onTeamClick ? 'cursor-pointer' : ''}`}
                 >
                   <td className="px-4 py-3 text-gray-500 font-mono">
                     {isMedal ? MEDAL[globalRank] : `#${i + 1}`}
                   </td>
-                  <td className="px-4 py-3 font-medium text-white">{team.team}</td>
+                  <td className="px-4 py-3 font-medium">
+                    <span className={onTeamClick ? 'text-white hover:text-emerald-400 transition-colors' : 'text-white'}>
+                      {team.team}
+                    </span>
+                  </td>
                   <td className="px-4 py-3">
                     {teamLeague[team.team] && (
                       <span className="text-xs bg-gray-800 text-gray-400 px-2 py-0.5 rounded">

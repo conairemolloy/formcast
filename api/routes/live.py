@@ -558,6 +558,108 @@ def live_upcoming():
     return _ok(records)
 
 
+@live_bp.get("/team/profile")
+def team_profile():
+    team = request.args.get("team", "").strip()
+    if not team:
+        return _err("team parameter required", 400)
+
+    df = _RESULTS_DF
+    home_mask = df["home_team"] == team
+    away_mask = df["away_team"] == team
+    team_df = df[home_mask | away_mask].copy()
+
+    if team_df.empty:
+        return _err(f"Team '{team}' not found", 404)
+
+    team_df = team_df.sort_values("match_date", ascending=False)
+
+    # Last 10 matches
+    last_10 = []
+    for _, row in team_df.head(10).iterrows():
+        is_home = row["home_team"] == team
+        opponent = row["away_team"] if is_home else row["home_team"]
+        hg = row.get("home_goals")
+        ag = row.get("away_goals")
+        result = score = None
+        if pd.notna(hg) and pd.notna(ag):
+            hg, ag = int(hg), int(ag)
+            t_g, o_g = (hg, ag) if is_home else (ag, hg)
+            result = "W" if t_g > o_g else ("D" if t_g == o_g else "L")
+            score = f"{t_g}-{o_g}"
+        last_10.append({
+            "date":     row["match_date"].strftime("%Y-%m-%d") if pd.notna(row["match_date"]) else None,
+            "opponent": opponent,
+            "venue":    "H" if is_home else "A",
+            "score":    score,
+            "result":   result,
+            "season":   row.get("season"),
+        })
+
+    # Current season stats
+    current_season = "2025-26"
+    szn = team_df[team_df["season"] == current_season]
+    gf = gc = wins = draws = losses = 0
+    h_s = {"wins": 0, "draws": 0, "losses": 0, "gf": 0, "ga": 0}
+    a_s = {"wins": 0, "draws": 0, "losses": 0, "gf": 0, "ga": 0}
+
+    for _, row in szn.iterrows():
+        is_home = row["home_team"] == team
+        hg = row.get("home_goals")
+        ag = row.get("away_goals")
+        if pd.isna(hg) or pd.isna(ag):
+            continue
+        hg, ag = int(hg), int(ag)
+        t_g, o_g = (hg, ag) if is_home else (ag, hg)
+        w = t_g > o_g; d = t_g == o_g
+        gf += t_g; gc += o_g
+        if w: wins += 1
+        elif d: draws += 1
+        else: losses += 1
+        bucket = h_s if is_home else a_s
+        bucket["gf"] += t_g; bucket["ga"] += o_g
+        if w: bucket["wins"] += 1
+        elif d: bucket["draws"] += 1
+        else: bucket["losses"] += 1
+
+    played = wins + draws + losses
+    stats = {
+        "played": played, "wins": wins, "draws": draws, "losses": losses,
+        "goals_for": gf, "goals_against": gc, "goal_diff": gf - gc,
+        "avg_goals_for": round(gf / played, 2) if played else None,
+        "home": h_s, "away": a_s,
+    }
+
+    # Top 5 H2H opponents by games played
+    team_df = team_df.copy()
+    team_df["opponent"] = team_df.apply(
+        lambda r: r["away_team"] if r["home_team"] == team else r["home_team"], axis=1
+    )
+    top_opps = team_df["opponent"].value_counts().head(5)
+
+    h2h = []
+    for opp, count in top_opps.items():
+        opp_df = team_df[team_df["opponent"] == opp]
+        w = d = l = 0
+        for _, row in opp_df.iterrows():
+            is_home = row["home_team"] == team
+            hg = row.get("home_goals"); ag = row.get("away_goals")
+            if pd.isna(hg) or pd.isna(ag): continue
+            hg, ag = int(hg), int(ag)
+            t_g, o_g = (hg, ag) if is_home else (ag, hg)
+            if t_g > o_g: w += 1
+            elif t_g == o_g: d += 1
+            else: l += 1
+        h2h.append({"opponent": opp, "played": int(count), "wins": w, "draws": d, "losses": l})
+
+    return jsonify({"success": True, "data": {
+        "last_10": last_10,
+        "season":  current_season,
+        "stats":   stats,
+        "h2h":     h2h,
+    }}), 200
+
+
 @live_bp.get("/match/preview")
 def match_preview():
     home_team = request.args.get("home_team", "").strip()

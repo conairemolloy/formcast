@@ -16,6 +16,20 @@ def load_csv(filename):
     path = os.path.join(DATA_DIR, filename)
     return pd.read_csv(path)
 
+def _load_elo_predictions():
+    df = pd.read_csv(
+        os.path.join(DATA_DIR, "elo_predictions.csv"),
+        low_memory=False,
+        parse_dates=["match_date"],
+    )
+    def _season(d):
+        if pd.isna(d):
+            return None
+        y, m = d.year, d.month
+        return f"{y}-{str(y + 1)[-2:]}" if m >= 7 else f"{y - 1}-{str(y)[-2:]}"
+    df["season"] = df["match_date"].apply(_season)
+    return df
+
 def create_app():
     app = Flask(__name__)
     CORS(app)
@@ -30,6 +44,7 @@ def create_app():
         "kelly_simulation":       load_csv("kelly_simulation.csv"),
         "accumulator_bets":       load_csv("accumulator_bets.csv"),
         "tournament_simulations": load_csv("tournament_simulations.csv"),
+        "elo_predictions":        _load_elo_predictions(),
     }
 
     app.register_blueprint(ratings_bp,     url_prefix="/api")
