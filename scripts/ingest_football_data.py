@@ -206,8 +206,11 @@ def main() -> None:
     combined.to_csv(out_path, index=False)
     print(f"Saved to {out_path}")
 
-    print("\nUploading to Supabase...")
-    upsert_to_supabase(combined)
+    if os.environ.get('SKIP_SUPABASE_UPLOAD', '').lower() == 'true':
+        print("Skipping Supabase upload (SKIP_SUPABASE_UPLOAD=true)")
+    else:
+        print("\nUploading to Supabase...")
+        upsert_to_supabase(combined)
 
 
 if __name__ == "__main__":
