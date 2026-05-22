@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import api from '../api'
 import { Loader2 } from 'lucide-react'
 import {
-  BarChart, Bar, LineChart, Line,
+  BarChart, Bar, LineChart, Line, ReferenceLine,
   XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, Legend,
 } from 'recharts'
 
@@ -59,9 +59,24 @@ const CalibTooltip = ({ active, payload }) => {
   )
 }
 
+const PnlTooltip = ({ active, payload }) => {
+  if (!active || !payload?.length) return null
+  const d = payload[0]?.payload
+  if (!d) return null
+  return (
+    <div className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm space-y-0.5">
+      <p className="text-gray-400">Match {d.match_number}</p>
+      <p className={d.cumulative_pnl >= 0 ? 'text-emerald-400' : 'text-red-400'}>
+        £{d.cumulative_pnl >= 0 ? '+' : ''}{d.cumulative_pnl.toFixed(2)}
+      </p>
+    </div>
+  )
+}
+
 export default function BacktestReport() {
   const [data, setData]           = useState(null)
   const [calibData, setCalibData] = useState(null)
+  const [pnlData, setPnlData]     = useState(null)
   const [loading, setLoading]     = useState(true)
   const [error, setError]         = useState(null)
 
@@ -69,10 +84,12 @@ export default function BacktestReport() {
     Promise.all([
       api.get('/api/backtest'),
       api.get('/api/backtest/calibration'),
+      api.get('/api/backtest/pnl'),
     ])
-      .then(([backtestRes, calibRes]) => {
+      .then(([backtestRes, calibRes, pnlRes]) => {
         setData(backtestRes.data.data)
         setCalibData(calibRes.data.data)
+        setPnlData(pnlRes.data.data)
       })
       .catch(() => setError('Failed to load backtest data'))
       .finally(() => setLoading(false))
@@ -308,6 +325,79 @@ export default function BacktestReport() {
           </tbody>
         </table>
       </div>
+
+      {/* Flat Stake P&L */}
+      {pnlData && (() => {
+        const positive = pnlData.final_pnl >= 0
+        const lineColor = positive ? '#10b981' : '#ef4444'
+        return (
+          <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+            <h2 className="text-base font-semibold text-white mb-1">Flat Stake P&amp;L Simulation</h2>
+            <p className="text-xs text-gray-500 mb-4">£1 stake on model's top prediction each match</p>
+
+            <div className="grid grid-cols-4 gap-3 mb-5">
+              <StatCard
+                label="Final P&L"
+                value={`${positive ? '+' : ''}£${pnlData.final_pnl.toFixed(2)}`}
+                color={positive ? 'text-emerald-400' : 'text-red-400'}
+                sub={`on £${pnlData.total_bets.toLocaleString()} staked`}
+              />
+              <StatCard
+                label="Total Bets"
+                value={pnlData.total_bets.toLocaleString()}
+                color="text-gray-300"
+                sub="Flat £1 per match"
+              />
+              <StatCard
+                label="ROI"
+                value={`${pnlData.roi >= 0 ? '+' : ''}${pnlData.roi.toFixed(2)}%`}
+                color={pnlData.roi >= 0 ? 'text-emerald-400' : 'text-red-400'}
+                sub="Return on investment"
+              />
+              <StatCard
+                label="Win Rate"
+                value={`${pnlData.win_rate.toFixed(1)}%`}
+                color="text-blue-400"
+                sub="Correct predictions"
+              />
+            </div>
+
+            <ResponsiveContainer width="100%" height={260}>
+              <LineChart data={pnlData.chart} margin={{ top: 8, right: 16, bottom: 8, left: 0 }}>
+                <XAxis
+                  dataKey="match_number"
+                  tick={{ fill: '#6b7280', fontSize: 11 }}
+                  axisLine={false}
+                  tickLine={false}
+                  tickFormatter={v => v.toLocaleString()}
+                  label={{ value: 'Match number', position: 'insideBottom', offset: -4, fill: '#6b7280', fontSize: 11 }}
+                />
+                <YAxis
+                  tickFormatter={v => `£${v}`}
+                  tick={{ fill: '#6b7280', fontSize: 11 }}
+                  axisLine={false}
+                  tickLine={false}
+                  width={56}
+                />
+                <Tooltip content={<PnlTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.08)' }} />
+                <ReferenceLine y={0} stroke="#4b5563" strokeDasharray="5 4" />
+                <Line
+                  type="monotone"
+                  dataKey="cumulative_pnl"
+                  stroke={lineColor}
+                  strokeWidth={2}
+                  dot={false}
+                  activeDot={{ r: 4, fill: lineColor, stroke: lineColor }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+
+            <p className="mt-3 text-xs text-gray-600 text-center">
+              Historical simulation only — past performance does not guarantee future results
+            </p>
+          </div>
+        )
+      })()}
     </div>
   )
 }

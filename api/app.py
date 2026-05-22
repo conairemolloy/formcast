@@ -41,6 +41,7 @@ def create_app():
         "ensemble_v2_predictions": load_csv("ensemble_v2_predictions.csv"),
         "value_bets":             load_csv("value_bets.csv"),
         "backtest_predictions":   load_csv("backtest_predictions.csv"),
+        "results":                load_csv("results.csv"),
         "kelly_simulation":       load_csv("kelly_simulation.csv"),
         "accumulator_bets":       load_csv("accumulator_bets.csv"),
         "tournament_simulations": load_csv("tournament_simulations.csv"),
