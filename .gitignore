@@ -6,4 +6,4 @@ __pycache__/
 .DS_Store
 node_modules/
 dist/
-.vercel
+.vercel.env
