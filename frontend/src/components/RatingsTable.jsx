@@ -111,7 +111,7 @@ export default function RatingsTable({ onTeamClick }) {
       </div>
 
       {/* Search */}
-      <div className="relative mb-4 max-w-xs">
+      <div className="relative mb-4 w-full sm:max-w-xs">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
         <input
           type="text"
@@ -123,8 +123,8 @@ export default function RatingsTable({ onTeamClick }) {
       </div>
 
       {/* Table */}
-      <div className="rounded-xl border border-gray-800 overflow-hidden">
-        <table className="w-full text-sm">
+      <div className="rounded-xl border border-gray-800 overflow-x-auto">
+        <table className="w-full text-sm min-w-[480px]">
           <thead>
             <tr className="bg-gray-900 border-b border-gray-800">
               <th className="px-4 py-3 text-left text-gray-400 font-medium w-16">Rank</th>
@@ -169,7 +169,7 @@ export default function RatingsTable({ onTeamClick }) {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center justify-end gap-3">
-                      <div className="w-32 h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                      <div className="hidden sm:block w-32 h-1.5 bg-gray-800 rounded-full overflow-hidden">
                         <div
                           className={`h-full rounded-full ${isMedal ? 'bg-emerald-400' : 'bg-emerald-600'}`}
                           style={{ width: `${pct}%` }}

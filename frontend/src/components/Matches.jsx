@@ -133,7 +133,7 @@ export default function Matches() {
           placeholder="Search team…"
           value={teamSearch}
           onChange={e => setTeamSearch(e.target.value)}
-          className="bg-gray-800 border border-gray-700 rounded px-3 py-1.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 w-48"
+          className="bg-gray-800 border border-gray-700 rounded px-3 py-1.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 w-full sm:w-48"
         />
       </div>
 

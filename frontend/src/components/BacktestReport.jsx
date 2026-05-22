@@ -27,9 +27,9 @@ const BEST_BRIER    = Math.min(...MODEL_COMPARISON.map(m => m.brier))
 
 function StatCard({ label, value, color, sub }) {
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
-      <p className="text-sm text-gray-500 mb-1">{label}</p>
-      <p className={`text-3xl font-bold tabular-nums ${color}`}>{value}</p>
+    <div className="bg-gray-900 border border-gray-800 rounded-xl p-3 md:p-5">
+      <p className="text-xs sm:text-sm text-gray-500 mb-1">{label}</p>
+      <p className={`text-2xl md:text-3xl font-bold tabular-nums ${color}`}>{value}</p>
       {sub && <p className="text-xs text-gray-600 mt-1">{sub}</p>}
     </div>
   )
@@ -167,7 +167,7 @@ export default function BacktestReport() {
       </div>
 
       {/* Stat cards */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <StatCard
           label="Elo Hit Rate (non-draw)"
           value={`${(data.overall.hit_rate * 100).toFixed(1)}%`}
@@ -189,7 +189,7 @@ export default function BacktestReport() {
       </div>
 
       {/* Hit rate by league */}
-      <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+      <div className="bg-gray-900 border border-gray-800 rounded-xl p-3 md:p-5">
         <h2 className="text-base font-semibold text-white mb-1">Elo Walk-Forward Hit Rate by League (non-draw matches)</h2>
         <p className="text-xs text-gray-500 mb-4">Excludes drawn matches — binary home/away prediction only</p>
         <ResponsiveContainer width="100%" height={220}>
@@ -225,7 +225,7 @@ export default function BacktestReport() {
       </div>
 
       {/* Hit rate by season */}
-      <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+      <div className="bg-gray-900 border border-gray-800 rounded-xl p-3 md:p-5">
         <h2 className="text-base font-semibold text-white mb-4">Elo Walk-Forward Hit Rate by Season (non-draw matches)</h2>
         <ResponsiveContainer width="100%" height={200}>
           <BarChart data={seasonData} barCategoryGap="30%">
@@ -246,7 +246,7 @@ export default function BacktestReport() {
 
       {/* Calibration curve */}
       {calibData && (
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-3 md:p-5">
           <h2 className="text-base font-semibold text-white mb-1">
             Calibration Curve — Home Win Predictions
           </h2>
@@ -307,7 +307,7 @@ export default function BacktestReport() {
       )}
 
       {/* Model comparison table */}
-      <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+      <div className="bg-gray-900 border border-gray-800 rounded-xl p-3 md:p-5">
         <h2 className="text-base font-semibold text-white mb-1">Model Comparison</h2>
         <p className="text-xs text-gray-500 mb-1">
           Hit rates below are 3-outcome (H/D/A) on the ensemble holdout. Elo binary hit rate (non-draw only) is 68.7% — see charts above.
@@ -315,7 +315,8 @@ export default function BacktestReport() {
         <p className="text-xs text-gray-600 mb-4">
           Evaluated on 2024–2026 holdout (10,099 matches)
         </p>
-        <table className="w-full text-sm">
+        <div className="overflow-x-auto">
+        <table className="w-full text-sm min-w-[380px]">
           <thead>
             <tr className="text-gray-500 text-xs border-b border-gray-800">
               <th className="text-left pb-2 font-medium">Model</th>
@@ -341,6 +342,7 @@ export default function BacktestReport() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
 
       {/* Flat Stake P&L */}
@@ -349,14 +351,14 @@ export default function BacktestReport() {
           clvData.clv_chart[clvData.clv_chart.length - 1].cumulative_clv >= clvData.clv_chart[0].cumulative_clv
         const clvColor = clvTrending ? '#10b981' : '#ef4444'
         return (
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+          <div className="bg-gray-900 border border-gray-800 rounded-xl p-3 md:p-5">
             <h2 className="text-base font-semibold text-white mb-1">Closing Line Value (CLV) Analysis</h2>
             <p className="text-xs text-gray-500 mb-4">
               CLV measures whether our pre-match odds beat the bookmaker's final price.
               Positive CLV is the gold standard indicator of a profitable model.
             </p>
 
-            <div className="grid grid-cols-4 gap-3 mb-5">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
               <StatCard
                 label="Mean CLV"
                 value={`${clvData.mean_clv >= 0 ? '+' : ''}${(clvData.mean_clv * 100).toFixed(2)}%`}
@@ -426,11 +428,11 @@ export default function BacktestReport() {
         const positive = pnlData.final_pnl >= 0
         const lineColor = positive ? '#10b981' : '#ef4444'
         return (
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+          <div className="bg-gray-900 border border-gray-800 rounded-xl p-3 md:p-5">
             <h2 className="text-base font-semibold text-white mb-1">Value Bets P&amp;L Simulation</h2>
             <p className="text-xs text-gray-500 mb-4">£1 flat stake on value bets only (EV &gt; 5%)</p>
 
-            <div className="grid grid-cols-4 gap-3 mb-5">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
               <StatCard
                 label="Final P&L"
                 value={`${positive ? '+' : ''}£${pnlData.final_pnl.toFixed(2)}`}

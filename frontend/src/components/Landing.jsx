@@ -86,7 +86,7 @@ export default function Landing({ onNavigate }) {
 
       {/* ── HERO ── */}
       <section
-        className="relative overflow-hidden pt-24 pb-16 px-6"
+        className="relative overflow-hidden pt-16 sm:pt-24 pb-12 sm:pb-16 px-4 sm:px-6"
         style={{
           backgroundImage: [
             'linear-gradient(rgba(16,185,129,0.025) 1px, transparent 1px)',
@@ -110,7 +110,7 @@ export default function Landing({ onNavigate }) {
 
           <h1
             className="font-black leading-[0.95] tracking-tight mb-6"
-            style={{ fontSize: 'clamp(52px, 9vw, 92px)' }}
+            style={{ fontSize: 'clamp(32px, 8vw, 92px)' }}
           >
             <span className="text-white block">Predict Football.</span>
             <span
@@ -121,7 +121,7 @@ export default function Landing({ onNavigate }) {
             </span>
           </h1>
 
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
+          <p className="text-gray-400 text-base sm:text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
             7-model ensemble trained on{' '}
             <span className="text-white font-semibold">128,797 matches</span>{' '}
             across{' '}
@@ -174,7 +174,7 @@ export default function Landing({ onNavigate }) {
       </section>
 
       {/* ── STATS BAR ── */}
-      <section className="py-14 px-6">
+      <section className="py-10 sm:py-14 px-4 sm:px-6">
         <div className="max-w-5xl mx-auto">
           <div
             className="grid grid-cols-2 md:grid-cols-4 gap-px rounded-xl overflow-hidden"
@@ -183,11 +183,11 @@ export default function Landing({ onNavigate }) {
             {STATS.map(({ value, label, emerald }) => (
               <div
                 key={label}
-                className="flex flex-col items-center justify-center text-center py-10 px-6"
+                className="flex flex-col items-center justify-center text-center py-6 sm:py-10 px-4 sm:px-6"
                 style={{ backgroundColor: '#0a0a0f' }}
               >
                 <div
-                  className="text-4xl md:text-5xl font-black font-mono mb-2 tabular-nums"
+                  className="text-3xl sm:text-4xl md:text-5xl font-black font-mono mb-2 tabular-nums"
                   style={{
                     color: emerald ? '#10b981' : '#3b82f6',
                     textShadow: emerald
@@ -227,11 +227,11 @@ export default function Landing({ onNavigate }) {
             </p>
           </div>
 
-          <div className="grid grid-cols-6 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3">
             {MODELS.map(({ name, desc, metric, top }) => (
               <div
                 key={name}
-                className={`${top ? 'col-span-2' : 'col-span-3'} group rounded-lg p-5 transition-all duration-300 cursor-default`}
+                className={`${top ? 'lg:col-span-2' : 'lg:col-span-3'} group rounded-lg p-4 sm:p-5 transition-all duration-300 cursor-default`}
                 style={{
                   border: '1px solid rgba(255,255,255,0.06)',
                   borderTop: '1px solid rgba(16,185,129,0.14)',
@@ -257,7 +257,7 @@ export default function Landing({ onNavigate }) {
       </section>
 
       {/* ── WHAT YOU GET ── */}
-      <section className="py-20 px-6 border-t border-white/[0.04]">
+      <section className="py-16 sm:py-20 px-4 sm:px-6 border-t border-white/[0.04]">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <div className="text-[9px] font-mono text-gray-700 uppercase tracking-[0.2em] mb-3">Tools</div>
@@ -298,7 +298,7 @@ export default function Landing({ onNavigate }) {
       </section>
 
       {/* ── DATA ── */}
-      <section className="py-20 px-6 border-t border-white/[0.04]">
+      <section className="py-16 sm:py-20 px-4 sm:px-6 border-t border-white/[0.04]">
         <div className="max-w-5xl mx-auto text-center">
           <div className="text-[9px] font-mono text-gray-700 uppercase tracking-[0.2em] mb-3">Training Data</div>
           <h2 className="text-3xl md:text-4xl font-black text-white mb-6">
