@@ -88,52 +88,25 @@ def get_calibration():
 
 @backtest_bp.get("/backtest/pnl")
 def get_pnl():
-    bp = current_app.config["DATA"]["backtest_predictions"].copy()
-    results = current_app.config["DATA"]["results"]
+    df = current_app.config["DATA"]["value_bets"].copy()
+    df = df.sort_values("match_date").reset_index(drop=True)
 
-    bp = bp.merge(
-        results[["match_date", "home_team", "away_team", "league",
-                 "home_odds", "draw_odds", "away_odds"]],
-        on=["match_date", "home_team", "away_team", "league"],
-        how="left",
-    )
+    if df.empty:
+        return jsonify({"success": False, "error": "No value bets data available"}), 404
 
-    has_odds = bp[["home_odds", "draw_odds", "away_odds"]].notna().any(axis=1)
-    bp = bp[has_odds].copy()
+    df["cumulative_pnl"] = df["profit_flat"].cumsum()
+    df["match_number"] = range(1, len(df) + 1)
 
-    if bp.empty:
-        return jsonify({"success": False, "error": "No odds data available"}), 404
-
-    bp = bp.sort_values("match_date").reset_index(drop=True)
-
-    def _predicted_odds(row):
-        if row["predicted_result"] == "H":
-            return row["home_odds"]
-        elif row["predicted_result"] == "D":
-            return row["draw_odds"]
-        return row["away_odds"]
-
-    bp["predicted_odds"] = bp.apply(_predicted_odds, axis=1)
-    bp = bp[bp["predicted_odds"].notna()].copy().reset_index(drop=True)
-
-    bp["profit"] = bp.apply(
-        lambda r: float(r["predicted_odds"]) - 1.0 if r["correct"] == 1.0 else -1.0,
-        axis=1,
-    )
-    bp["cumulative_pnl"] = bp["profit"].cumsum()
-    bp["match_number"] = range(1, len(bp) + 1)
-
-    total_bets = len(bp)
-    final_pnl  = round(float(bp["cumulative_pnl"].iloc[-1]), 2)
+    total_bets = len(df)
+    final_pnl  = round(float(df["cumulative_pnl"].iloc[-1]), 2)
     roi        = round(final_pnl / total_bets * 100, 2) if total_bets else 0.0
-    win_rate   = round(float(bp["correct"].mean() * 100), 2)
+    win_rate   = round(float(df["won"].mean() * 100), 2)
 
-    step = max(50, total_bets // 500)
-    indices = list(range(0, total_bets, step))
+    indices = list(range(0, total_bets, 10))
     if (total_bets - 1) not in indices:
         indices.append(total_bets - 1)
 
-    sampled = bp.iloc[indices][["match_number", "cumulative_pnl", "match_date"]].copy()
+    sampled = df.iloc[indices][["match_number", "cumulative_pnl", "match_date"]].copy()
     sampled["cumulative_pnl"] = sampled["cumulative_pnl"].round(2)
     chart = sampled.rename(columns={"match_date": "date"}).to_dict(orient="records")
 
@@ -145,5 +118,44 @@ def get_pnl():
             "final_pnl":  final_pnl,
             "roi":        roi,
             "win_rate":   win_rate,
+        },
+    })
+
+
+@backtest_bp.get("/backtest/clv")
+def get_clv():
+    df = current_app.config["DATA"]["value_bets"].copy()
+    df = df.sort_values("match_date").reset_index(drop=True)
+
+    if df.empty:
+        return jsonify({"success": False, "error": "No value bets data available"}), 404
+
+    df["cumulative_clv"] = df["clv"].cumsum()
+    df["match_number"]   = range(1, len(df) + 1)
+
+    clv_pos = df[df["clv"] > 0]
+    positive_clv_bets = len(clv_pos)
+    mean_clv  = round(float(df["clv"].mean()), 4)
+    clv_win_rate = round(float(clv_pos["won"].mean() * 100), 2) if positive_clv_bets else 0.0
+    clv_profit   = float(clv_pos["profit_flat"].sum())
+    clv_roi      = round(clv_profit / positive_clv_bets * 100, 2) if positive_clv_bets else 0.0
+
+    total = len(df)
+    indices = list(range(0, total, 10))
+    if (total - 1) not in indices:
+        indices.append(total - 1)
+
+    sampled = df.iloc[indices][["match_number", "cumulative_clv", "match_date"]].copy()
+    sampled["cumulative_clv"] = sampled["cumulative_clv"].round(4)
+    clv_chart = sampled.rename(columns={"match_date": "date"}).to_dict(orient="records")
+
+    return jsonify({
+        "success": True,
+        "data": {
+            "clv_chart":        clv_chart,
+            "positive_clv_bets": positive_clv_bets,
+            "mean_clv":         mean_clv,
+            "clv_win_rate":     clv_win_rate,
+            "clv_roi":          clv_roi,
         },
     })
