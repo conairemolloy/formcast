@@ -10,6 +10,7 @@ import Accumulators from './components/Accumulators'
 import Tournament from './components/Tournament'
 import Matches from './components/Matches'
 import Live from './components/Live'
+import HowItWorks from './components/HowItWorks'
 
 const NAV_ITEMS = [
   { id: 'ratings',      label: 'Ratings' },
@@ -17,6 +18,7 @@ const NAV_ITEMS = [
   { id: 'live',         label: 'Live' },
   { id: 'predictions',  label: 'Predictions' },
   { id: 'backtest',     label: 'Backtest' },
+  { id: 'how-it-works', label: 'How It Works' },
   { id: 'tournament',   label: 'Tournament' },
   { id: 'value-bets',   label: 'Value Bets' },
   { id: 'accumulators', label: 'Accumulators' },
@@ -113,6 +115,7 @@ function App() {
         {active === 'live'         && <Live />}
         {active === 'predictions'  && <Predictions />}
         {active === 'backtest'     && <BacktestReport />}
+        {active === 'how-it-works' && <HowItWorks />}
         {active === 'tournament'   && <Tournament />}
         {active === 'value-bets'   && <ValueBets />}
         {active === 'accumulators' && <Accumulators />}
