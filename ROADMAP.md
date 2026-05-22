@@ -27,7 +27,8 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 | Neural network Brier | 0.584 |
 | xG matches integrated | 19,837 (Understat, 2014-25) |
 | Baseline (coin flip) Brier | 0.250 |
-| Top rated team | Bayern Munich (Elo 2051) |
+| Top rated team | Bayern Munich (Elo 2059) |
+| Automation | GitHub Actions weekly pipeline (Monday 6am UTC) |
 
 ---
 
@@ -183,21 +184,12 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Sharpe ratio + max drawdown on simulated betting strategy
 - [ ] Dutching calculator (stake across multiple outcomes)
 - [ ] Arbitrage detector (Σ(1/odds) < 1 across bookmakers)
-- [ ] Match deep-dive page — click any upcoming fixture to see:
-  - Pre-match win/draw/loss probabilities with model breakdown
-  - Goals markets: over/under 0.5, 1.5, 2.5, 3.5 goals (both teams + individual)
-  - Cards markets: over/under total cards, first card, home/away cards
-  - Corners markets: over/under total corners, first half corners
-  - Player props: shots, saves, goals, assists (requires player-level data source)
-  - Both Teams to Score (BTTS) probability
-  - Correct score probabilities (top 10 most likely scorelines from Dixon-Coles)
-  - Value indicator per market vs bookmaker odds
-  - Historical H2H stats for this fixture
+- [x] Match deep-dive page (correct scores, BTTS, over/under, H2H, form)
 
 ---
 
 ## Phase 6 — Validation & Statistics
-- [ ] Full calibration curve (predicted prob vs empirical win rate per decile)
+- [x] Full calibration curve (predicted prob vs empirical win rate per decile)
 - [ ] Reliability diagram with confidence intervals
 - [ ] Hosmer-Lemeshow goodness of fit test
 - [ ] Diebold-Mariano test vs naive baseline
@@ -211,19 +203,20 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 ---
 
 ## Phase 7 — UX & Design Polish
-- [ ] Landing page — hero section with platform explanation, key stats (128k matches, 68.7% accuracy, 14 competitions), and call to action button
+- [x] Landing page
 - [ ] Nav reorganisation — group into logical sections: Predictions (Live, Value Bets, Accumulators) / Analysis (Ratings, Matches, Backtest, Tournament)
 - [ ] Dashboard home page — today's top value bets, live matches, and upcoming fixtures all in one view
 - [ ] Accumulator builder flow — select matches from Live/Upcoming page and add directly to accumulator builder
 - [ ] User journey improvement — clear path from landing → value bets → accumulator → stake calculation
 - [x] Matches page with shot, corner, card stats and league/team filtering
 - [x] Filtering and sorting on all pages (league, date, outcome, edge filters)
-- [ ] Fix remaining duplicate team names (Dortmund/Borussia Dortmund, Lazio/SS Lazio etc)
-- [ ] Add pagination to Matches page (currently limited to 50)
+- [x] Fix remaining duplicate team names (2,718 cells fixed)
+- [x] Add pagination to Matches page
 - [ ] Add team profile page (click team → full history, Elo trend, stats)
 - [ ] Redesign dashboard with proper data visualisation hero section
 - [ ] Elo ratings chart — animated bar chart race (top 20 teams over time)
-- [ ] Calibration curve chart (predicted probability vs actual win rate by decile)
+- [x] Calibration curve chart
+- [x] Tournament tooltips and season complete warning
 - [ ] Cumulative P&L chart (flat stake simulation over time)
 - [ ] Brier score trend chart (rolling 90-match window)
 - [ ] SHAP waterfall chart per match (why did the model predict this?)
@@ -256,7 +249,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 ## Phase 9 — Model Validation & Transparency
 - [ ] Full backtesting results page (hit rate and Brier by league, season, year)
 - [ ] Calibration diagram (reliability plot with confidence intervals)
-- [ ] Model comparison table (all models side by side — Elo, G2, DC, XGB, NN, LSTM, Ensemble)
+- [x] Model comparison table (all models side by side)
 - [ ] Walk-forward accuracy chart (how hit rate changed over 32 seasons)
 - [ ] Closing line value history (CLV per bet, cumulative CLV chart)
 - [ ] Prediction log (every prediction ever made, timestamped, SHA256 hashed)
@@ -421,14 +414,14 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 ---
 
 ## Phase 15 — Automation & Infrastructure
-- [ ] Automated weekly data ingestion — cron job pulls latest results from football-data.co.uk every Monday
-- [ ] Automated model retraining — monthly trigger after new data ingested, updates all CSVs
-- [ ] Automated tournament simulator refresh — runs after each matchday, pushes updated probabilities
+- [x] Automated weekly data ingestion — GitHub Actions, runs every Monday 6am UTC
+- [x] Automated model retraining — Elo, tournament, value bets, backtest all automated
+- [x] Automated tournament simulator refresh
 - [ ] Automated value bet generation — regenerates value_bets.csv daily from latest odds
 - [ ] Scheduled prediction publishing — generate next gameweek predictions automatically on Thursday
 - [ ] Database backup — automated daily Supabase backup to S3
 - [ ] Monitoring & alerting — Sentry for errors, UptimeRobot for uptime, PagerDuty for critical failures
-- [ ] CI/CD pipeline — GitHub Actions run tests before every deploy
+- [x] CI/CD pipeline — GitHub Actions
 - [ ] Automated test suite — pytest for API, Playwright for frontend E2E tests
 - [ ] Data quality checks — automated validation after each ingestion (row counts, nulls, date ranges)
 - [ ] Railway health checks — /api/health endpoint monitored, auto-restart on failure
