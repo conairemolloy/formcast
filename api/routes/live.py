@@ -418,6 +418,69 @@ def _h2h_stats(home: str, away: str) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Season corners / cards markets
+# ---------------------------------------------------------------------------
+
+_CURRENT_SEASON   = "2025-26"
+_MIN_DATA_MATCHES = 5
+
+
+def _poisson_over(lam: float, threshold: float) -> float:
+    """P(X > threshold) where X ~ Poisson(lam). threshold is a half-line like 8.5."""
+    floor_n = int(threshold)
+    p_under_eq = sum(_poisson_p(lam, k) for k in range(floor_n + 1))
+    return round(max(0.0, 1.0 - p_under_eq), 4)
+
+
+def _team_season_avg(team: str, col_home: str, col_away: str) -> float | None:
+    """Avg (col_home + col_away) per game for team in current season. None if < MIN_DATA_MATCHES."""
+    df = _RESULTS_DF
+    mask = (
+        ((df["home_team"] == team) | (df["away_team"] == team)) &
+        (df["season"] == _CURRENT_SEASON)
+    )
+    season_df = df[mask]
+    valid = season_df[season_df[col_home].notna() & season_df[col_away].notna()]
+    if len(valid) < _MIN_DATA_MATCHES:
+        return None
+    return round(float((valid[col_home] + valid[col_away]).mean()), 2)
+
+
+def _corners_markets(home_canon: str, away_canon: str) -> dict:
+    home_avg = _team_season_avg(home_canon, "home_corners", "away_corners")
+    away_avg = _team_season_avg(away_canon, "home_corners", "away_corners")
+    if home_avg is None or away_avg is None:
+        return {"home_avg": home_avg, "away_avg": away_avg, "total_avg": None,
+                "over_8_5": None, "over_9_5": None, "over_10_5": None}
+    total_avg = round((home_avg + away_avg) / 2, 2)
+    return {
+        "home_avg":   home_avg,
+        "away_avg":   away_avg,
+        "total_avg":  total_avg,
+        "over_8_5":   _poisson_over(total_avg, 8.5),
+        "over_9_5":   _poisson_over(total_avg, 9.5),
+        "over_10_5":  _poisson_over(total_avg, 10.5),
+    }
+
+
+def _cards_markets(home_canon: str, away_canon: str) -> dict:
+    home_avg = _team_season_avg(home_canon, "home_yellows", "away_yellows")
+    away_avg = _team_season_avg(away_canon, "home_yellows", "away_yellows")
+    if home_avg is None or away_avg is None:
+        return {"home_avg": home_avg, "away_avg": away_avg, "total_avg": None,
+                "over_2_5": None, "over_3_5": None, "over_4_5": None}
+    total_avg = round((home_avg + away_avg) / 2, 2)
+    return {
+        "home_avg":  home_avg,
+        "away_avg":  away_avg,
+        "total_avg": total_avg,
+        "over_2_5":  _poisson_over(total_avg, 2.5),
+        "over_3_5":  _poisson_over(total_avg, 3.5),
+        "over_4_5":  _poisson_over(total_avg, 4.5),
+    }
+
+
+# ---------------------------------------------------------------------------
 # Poisson / Dixon-Coles goals model
 # ---------------------------------------------------------------------------
 
@@ -702,6 +765,8 @@ def match_preview():
     away_form = _last5_stats(away_canon)
     h2h       = _h2h_stats(home_canon, away_canon)
     goals     = _goals_model(home_form, away_form)
+    corners   = _corners_markets(home_canon, away_canon)
+    cards     = _cards_markets(home_canon, away_canon)
 
     return jsonify({
         "success": True,
@@ -719,5 +784,7 @@ def match_preview():
             "away_form":  away_form,
             "h2h":        h2h,
             "goals":      goals,
+            "corners":    corners,
+            "cards":      cards,
         },
     }), 200

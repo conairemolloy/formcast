@@ -222,7 +222,114 @@ function CorrectScoreSection({ goals }) {
 }
 
 // ---------------------------------------------------------------------------
-// Section 4 — Recent form
+// Section 4 — Corners markets
+// ---------------------------------------------------------------------------
+
+function MarketsTable({ rows }) {
+  return (
+    <table className="w-full text-xs">
+      <thead>
+        <tr className="text-gray-500">
+          <th className="text-left font-normal pb-1.5">Line</th>
+          <th className="text-right font-normal pb-1.5">Over</th>
+          <th className="text-right font-normal pb-1.5">Under</th>
+        </tr>
+      </thead>
+      <tbody className="divide-y divide-gray-800">
+        {rows.map(({ label, over }) => (
+          <tr key={label}>
+            <td className="py-1.5 text-gray-400">{label}</td>
+            <td className="py-1.5 text-right text-emerald-400 font-medium tabular-nums">
+              {over != null ? pct(over) : '—'}
+            </td>
+            <td className="py-1.5 text-right text-red-400 font-medium tabular-nums">
+              {over != null ? pct(1 - over) : '—'}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )
+}
+
+function TeamAvgRow({ homeTeam, awayTeam, homeAvg, awayAvg, totalAvg }) {
+  return (
+    <div className="grid grid-cols-3 gap-2 mb-4">
+      <div className="bg-gray-800/50 rounded-lg p-2.5 text-center">
+        <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1 truncate">{homeTeam}</p>
+        <p className="text-sm font-semibold text-white tabular-nums">{homeAvg ?? '—'}</p>
+        <p className="text-[10px] text-gray-600">avg / game</p>
+      </div>
+      <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-2.5 text-center">
+        <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Expected</p>
+        <p className="text-sm font-bold text-emerald-400 tabular-nums">{totalAvg ?? '—'}</p>
+        <p className="text-[10px] text-gray-600">total</p>
+      </div>
+      <div className="bg-gray-800/50 rounded-lg p-2.5 text-center">
+        <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1 truncate">{awayTeam}</p>
+        <p className="text-sm font-semibold text-white tabular-nums">{awayAvg ?? '—'}</p>
+        <p className="text-[10px] text-gray-600">avg / game</p>
+      </div>
+    </div>
+  )
+}
+
+function CornersSection({ corners, homeTeam, awayTeam }) {
+  const hasData = corners?.total_avg != null
+
+  return (
+    <div>
+      <SectionHeader icon="⚑" title="Corners Markets" />
+      {!hasData ? (
+        <p className="text-xs text-gray-600">Insufficient data for current season.</p>
+      ) : (
+        <>
+          <TeamAvgRow
+            homeTeam={homeTeam} awayTeam={awayTeam}
+            homeAvg={corners.home_avg} awayAvg={corners.away_avg} totalAvg={corners.total_avg}
+          />
+          <MarketsTable rows={[
+            { label: '8.5 corners',  over: corners.over_8_5 },
+            { label: '9.5 corners',  over: corners.over_9_5 },
+            { label: '10.5 corners', over: corners.over_10_5 },
+          ]} />
+        </>
+      )}
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Section 5 — Cards markets
+// ---------------------------------------------------------------------------
+
+function CardsSection({ cards, homeTeam, awayTeam }) {
+  const hasData = cards?.total_avg != null
+
+  return (
+    <div>
+      <SectionHeader icon="🟨" title="Cards Markets" />
+      {!hasData ? (
+        <p className="text-xs text-gray-600">Insufficient data for current season.</p>
+      ) : (
+        <>
+          <TeamAvgRow
+            homeTeam={homeTeam} awayTeam={awayTeam}
+            homeAvg={cards.home_avg} awayAvg={cards.away_avg} totalAvg={cards.total_avg}
+          />
+          <MarketsTable rows={[
+            { label: '2.5 cards', over: cards.over_2_5 },
+            { label: '3.5 cards', over: cards.over_3_5 },
+            { label: '4.5 cards', over: cards.over_4_5 },
+          ]} />
+        </>
+      )}
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Section 6 — Recent form
 // ---------------------------------------------------------------------------
 
 function FormColumn({ teamName, form }) {
@@ -414,6 +521,18 @@ export default function MatchPreview({ match, onClose }) {
               <GoalsSection goals={data.goals} />
               <Divider />
               <CorrectScoreSection goals={data.goals} />
+              <Divider />
+              <CornersSection
+                corners={data.corners}
+                homeTeam={data.home_canon ?? data.home_team}
+                awayTeam={data.away_canon ?? data.away_team}
+              />
+              <Divider />
+              <CardsSection
+                cards={data.cards}
+                homeTeam={data.home_canon ?? data.home_team}
+                awayTeam={data.away_canon ?? data.away_team}
+              />
               <Divider />
               <RecentFormSection
                 homeTeam={data.home_canon ?? data.home_team}
