@@ -4,6 +4,23 @@
 
 ---
 
+## Currently Live
+- Dashboard with live value bets, upcoming fixtures, top ratings
+- Live match tracker with real-time probabilities (football-data.org)
+- Match deep dive: win probs, correct scores, BTTS, goals, corners, cards
+- Elo ratings for 500+ teams across 14 competitions (1993-2026)
+- Team profile pages: Elo history, form, season stats, H2H
+- H2H comparison tool
+- Tournament simulator (Monte Carlo, 100k simulations)
+- Value Bets: live upcoming + historical track record (3,525 bets)
+- Accumulators: historical tracker (708 accas)
+- Backtest: 68.7% hit rate, Brier 0.156, CLV +0.19
+- How It Works: methodology, models, glossary
+- GitHub Actions weekly automation (Monday 6am UTC)
+- Mobile responsive
+
+---
+
 ## What This Is
 A multi-model football prediction platform trained on 128,797 matches across 
 14 competitions (1993-2026). Built on a seven-layer ensemble — Elo, Glicko-2, 
@@ -29,6 +46,8 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 | Baseline (coin flip) Brier | 0.250 |
 | Top rated team | Bayern Munich (Elo 2059) |
 | Automation | GitHub Actions weekly pipeline (Monday 6am UTC) |
+| Live Value Bets | Odds API integration, 6 leagues, weekly refresh |
+| Match Deep Dive | corners, cards, goals, correct scores, BTTS markets |
 
 ---
 
@@ -184,7 +203,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Sharpe ratio + max drawdown on simulated betting strategy
 - [ ] Dutching calculator (stake across multiple outcomes)
 - [ ] Arbitrage detector (Σ(1/odds) < 1 across bookmakers)
-- [x] Match deep-dive page (correct scores, BTTS, over/under, H2H, form)
+- [x] Match deep-dive page — win/draw/loss probabilities, goals markets, correct scores, BTTS, corners markets, cards markets, H2H stats
 
 ---
 
@@ -203,16 +222,16 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 ---
 
 ## Phase 7 — UX & Design Polish
-- [x] Landing page
-- [ ] Nav reorganisation — group into logical sections: Predictions (Live, Value Bets, Accumulators) / Analysis (Ratings, Matches, Backtest, Tournament)
-- [ ] Dashboard home page — today's top value bets, live matches, and upcoming fixtures all in one view
+- [x] Landing page redesigned — hero, three use cases, model steps
+- [x] Nav reorganisation — grouped nav with Dashboard as default
+- [x] Dashboard home page — live value bets, upcoming fixtures, top ratings, model performance
 - [ ] Accumulator builder flow — select matches from Live/Upcoming page and add directly to accumulator builder
 - [ ] User journey improvement — clear path from landing → value bets → accumulator → stake calculation
 - [x] Matches page with shot, corner, card stats and league/team filtering
 - [x] Filtering and sorting on all pages (league, date, outcome, edge filters)
 - [x] Fix remaining duplicate team names (2,718 cells fixed)
-- [x] Add pagination to Matches page
-- [ ] Add team profile page (click team → full history, Elo trend, stats)
+- [x] Matches page with filtering and pagination
+- [x] Team profile page — Elo history, form, season stats, H2H
 - [ ] Redesign dashboard with proper data visualisation hero section
 - [ ] Elo ratings chart — animated bar chart race (top 20 teams over time)
 - [x] Calibration curve chart
@@ -220,9 +239,9 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Cumulative P&L chart (flat stake simulation over time)
 - [ ] Brier score trend chart (rolling 90-match window)
 - [ ] SHAP waterfall chart per match (why did the model predict this?)
-- [ ] H2H comparison page (two-team selector, Elo history, head to head record)
+- [x] H2H comparison page
 - [x] League filter on ratings page (show only EPL, only La Liga etc)
-- [ ] Mobile responsive layout
+- [x] Mobile responsive layout
 - [ ] Dark/light mode toggle
 - [ ] Loading skeletons instead of spinners
 - [ ] Match prediction card (upcoming fixtures with probability breakdown)
@@ -234,7 +253,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 ---
 
 ## Phase 8 — Mathematics & Methodology Documentation
-- [ ] How It Works page — plain English explanation of each model
+- [x] How It Works page — model explanations, ensemble flow, glossary, data sources
 - [ ] Elo explainer (K-factor, home advantage, MoV multiplier, what ratings mean)
 - [ ] Dixon-Coles explainer (bivariate Poisson, tau correction, temporal decay)
 - [ ] Glicko-2 explainer (RD, volatility, inactivity penalty)
@@ -417,7 +436,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [x] Automated weekly data ingestion — GitHub Actions, runs every Monday 6am UTC
 - [x] Automated model retraining — Elo, tournament, value bets, backtest all automated
 - [x] Automated tournament simulator refresh
-- [ ] Automated value bet generation — regenerates value_bets.csv daily from latest odds
+- [x] Automated value bet generation — live odds via The Odds API
 - [ ] Scheduled prediction publishing — generate next gameweek predictions automatically on Thursday
 - [ ] Database backup — automated daily Supabase backup to S3
 - [ ] Monitoring & alerting — Sentry for errors, UptimeRobot for uptime, PagerDuty for critical failures
