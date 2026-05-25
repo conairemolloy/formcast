@@ -1,133 +1,132 @@
 team,elo_rating
 Bayern Munich,2053.2
-Barcelona,2006.42
-Inter,1985.57
-Man City,1981.96
-Arsenal,1980.07
+Barcelona,1987.12
+Arsenal,1985.29
+Inter,1981.79
 Paris SG,1969.68
-Real Madrid,1947.22
+Man City,1965.89
+Real Madrid,1950.97
 Dortmund,1907.03
 Leverkusen,1883.31
-Napoli,1875.04
-Liverpool,1869.45
-Juventus,1861.99
-Roma,1854.78
-Man United,1841.99
+Napoli,1879.35
+Liverpool,1866.23
+Roma,1859.04
+Juventus,1858.92
+Man United,1855.0
 Stuttgart,1840.75
-Milan,1839.95
 RB Leipzig,1839.8
 Lens,1838.57
-Ath Madrid,1838.02
+Aston Villa,1836.01
 Lille,1831.57
-Aston Villa,1819.94
+Ath Madrid,1825.39
+Villarreal,1825.38
+Milan,1822.89
 Celtic,1818.95
-Bournemouth,1818.73
-Atalanta,1818.58
-Villarreal,1812.75
-Como,1804.74
+Bournemouth,1818.27
+Atalanta,1817.85
+Como,1811.65
 Lyon,1804.69
 Marseille,1801.47
-Brighton,1797.23
 Monaco,1797.17
-Chelsea,1791.28
+Betis,1787.86
+Brighton,1784.22
 Rennes,1782.4
-Betis,1782.0
-Newcastle,1778.51
+Chelsea,1778.23
+Brentford,1774.1
 Strasbourg,1772.92
-Brentford,1770.87
-Lazio,1769.87
+Lazio,1772.65
+Newcastle,1767.05
 Hoffenheim,1765.69
-Bologna,1756.81
-Everton,1749.06
-Nott'm Forest,1748.78
+Bologna,1760.6
+Fulham,1750.33
+Nott'm Forest,1749.24
 Ein Frankfurt,1748.49
 Rangers,1748.36
 Freiburg,1747.73
-Leeds,1747.65
-Crystal Palace,1739.87
-Fulham,1738.86
-Fiorentina,1736.77
+Everton,1737.78
+Fiorentina,1737.5
+Crystal Palace,1734.65
 Mainz,1734.53
-Celta,1717.52
+Leeds,1734.21
+Celta,1724.56
+Vallecano,1718.58
 Toulouse,1716.81
-Vallecano,1707.84
-Ath Bilbao,1707.16
+Valencia,1716.23
+Ath Bilbao,1703.42
 Augsburg,1702.85
 Hearts,1700.37
 Lorient,1699.19
 Paris FC,1698.11
-Valencia,1696.93
+West Ham,1694.12
 M'gladbach,1692.22
-Udinese,1691.72
 Brest,1689.24
+Udinese,1687.41
 Nice,1685.62
-Sociedad,1685.21
-Sassuolo,1682.18
-West Ham,1680.68
-Genoa,1675.46
+Sociedad,1685.47
+Tottenham,1681.16
+Getafe,1680.66
 Auxerre,1674.94
+Torino,1674.57
 Union Berlin,1673.45
-Getafe,1671.82
-Torino,1671.51
-Tottenham,1669.88
-Levante,1669.28
-Alaves,1669.09
-Osasuna,1668.93
-Girona,1657.63
+Sassuolo,1672.28
+Genoa,1664.51
+Sunderland,1664.09
+Levante,1663.42
+Osasuna,1660.09
+Parma,1659.11
+Alaves,1658.34
 Hamburg,1657.63
 Werder Bremen,1656.39
+Girona,1656.13
+Mallorca,1655.36
 Venezia,1651.15
-Sunderland,1651.04
-Sevilla,1650.77
-Parma,1649.21
-Mallorca,1646.66
-Espanol,1646.64
-Elche,1641.39
+Espanol,1646.38
+Sevilla,1643.74
+Cagliari,1643.63
+Elche,1642.9
 Le Havre,1638.48
 Wolfsburg,1638.0
 Frosinone,1628.8
-Cagliari,1626.56
 FC Koln,1619.15
+Lecce,1618.27
 Hibernian,1617.92
-Santander,1615.15
+Santander,1615.64
 Angers,1611.84
 Coventry,1608.26
-Lecce,1607.32
+La Coruna,1604.15
 Reims,1604.11
 Schalke 04,1601.65
+Wolves,1599.8
 Paderborn,1599.29
 Elversberg,1599.0
 Hannover,1598.91
-Wolves,1598.76
 Motherwell,1597.85
 Heidenheim,1597.62
-La Coruna,1595.51
-Las Palmas,1595.42
 Monza,1594.43
-Burnley,1594.11
-Almeria,1593.62
-Malaga,1586.3
+Burnley,1593.07
+Las Palmas,1590.54
+Eibar,1585.97
+Malaga,1585.81
 Ipswich,1584.85
 Nantes,1584.34
-Cremonese,1581.36
-Oviedo,1581.0
 St Pauli,1580.5
-Eibar,1577.84
+Almeria,1580.14
 Troyes,1576.86
+Burgos,1576.29
 Southampton,1575.93
+Cremonese,1574.46
 Palermo,1574.26
+Oviedo,1572.3
 St Etienne,1568.63
-Burgos,1568.11
 Rodez,1567.83
+Castellon,1562.71
 Millwall,1555.15
-Castellon,1554.8
 Siena,1554.64
+Albacete,1545.46
 Bochum,1542.42
 Le Mans,1541.97
-Verona,1541.65
 Metz,1538.61
-Albacete,1538.08
-Andorra,1527.66
+Verona,1537.39
 Merida,1526.85
 Montpellier,1526.24
 Murcia,1525.05
@@ -142,26 +141,26 @@ Darmstadt,1519.0
 Nurnberg,1517.96
 Bordeaux,1517.96
 Holstein Kiel,1515.91
-Cordoba,1515.76
 Catanzaro,1515.26
 Arezzo,1513.65
+Andorra,1513.19
+Ceuta,1512.91
+Sp Gijon,1507.95
+Cordoba,1507.63
 Wrexham,1506.88
 Karlsruhe,1504.56
 Chievo,1501.4
 Kilmarnock,1501.29
 Rouen,1500.85
 Dundee United,1500.62
-Granada,1498.5
-Ceuta,1498.45
 Piacenza ,1497.15
 Falkirk,1497.12
 Red Star,1496.34
-Pisa,1495.48
-Sp Gijon,1494.48
 Norwich,1493.79
+Pisa,1492.69
 Catania,1490.21
 Magdeburg,1488.98
-Leganes,1488.52
+Granada,1486.87
 Besancon,1486.27
 Charleville,1484.81
 Beauvais,1481.7
@@ -174,6 +173,7 @@ Trapani,1477.25
 Sheffield United,1476.44
 Fortuna Dusseldorf,1476.04
 Dundee,1475.11
+Leganes,1474.73
 Hull,1474.6
 Aberdeen,1473.48
 Ein Trier,1472.07
@@ -186,6 +186,7 @@ Pontevedra,1467.18
 Dunkerque,1467.16
 Villareal,1466.35
 Amorebieta,1466.06
+Mirandes,1465.6
 UCAM Murcia,1465.32
 Kaiserslautern ,1464.2
 Modena,1463.91
@@ -203,17 +204,14 @@ Leonesa,1454.95
 Llagostera,1454.61
 Dijon,1454.59
 Reggina,1454.5
-Mirandes,1453.97
 Foggia,1453.47
 Lubeck,1452.95
 St Mirren,1451.78
 Salernitana,1451.67
 Real Union,1451.51
 Erfurt,1451.47
-Sociedad B,1450.85
 Bristol City,1449.94
 Guingamp,1449.64
-Valladolid,1449.6
 Wasquehal,1448.55
 Birmingham,1448.47
 Wuppertaler,1447.83
@@ -222,12 +220,14 @@ Quevilly Rouen,1447.11
 Ascoli,1446.54
 Aachen,1445.66
 Aalen,1445.49
+Sociedad B,1443.47
 Luton,1443.29
 Numancia,1442.98
 Sabadell,1442.93
 Pau FC,1442.03
 Braunschweig,1441.66
 Avellino,1441.16
+Valladolid,1440.97
 Extremadura UD,1439.88
 Partick,1439.82
 Eldense,1439.09
@@ -261,6 +261,7 @@ Virtus Lanciano,1427.22
 Salamanca,1426.69
 Chambly,1426.62
 Munich 1860,1426.34
+Cadiz,1425.78
 Benevento,1424.99
 Vannes,1424.77
 Offenbach,1424.67
@@ -276,7 +277,6 @@ Concarneau,1420.58
 Lerida,1420.56
 Duisburg,1420.11
 Ross County,1419.91
-Huesca,1419.65
 Spal,1419.18
 Sudtirol,1418.73
 Saarbrucken,1418.52
@@ -295,7 +295,7 @@ Padova,1414.18
 Sedan,1413.85
 Mallorca B,1412.39
 Extremadura,1412.11
-Cadiz,1411.99
+Huesca,1411.74
 RW Essen,1410.96
 Siegen,1410.92
 QPR,1410.75
@@ -304,7 +304,6 @@ Nimes,1409.44
 Stuttgarter K,1409.04
 Badajoz,1408.89
 Ibiza,1407.7
-Cultural Leonesa,1407.54
 Orense,1406.47
 Ancona,1405.82
 Lleida,1405.37
@@ -312,6 +311,7 @@ Terrassa,1405.08
 Oldham,1404.68
 FeralpiSalo,1404.28
 Recreativo,1403.82
+Zaragoza,1403.75
 Mannheim,1403.64
 Mulhouse,1402.68
 St Johnstone,1401.41
@@ -319,7 +319,7 @@ Logrones,1400.1
 Boulogne,1399.86
 Uerdingen,1399.82
 CZ Jena,1399.77
-Zaragoza,1398.86
+Cultural Leonesa,1399.36
 Gretna,1397.84
 Messina,1397.84
 Alcoyano,1397.72
