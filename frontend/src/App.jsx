@@ -1,5 +1,5 @@
-import { useState, Fragment } from 'react'
-import { BarChart2, Menu, X, LayoutDashboard } from 'lucide-react'
+import { useState, useRef, useEffect } from 'react'
+import { BarChart2, Menu, X, LayoutDashboard, ChevronDown } from 'lucide-react'
 import Landing from './components/Landing'
 import Dashboard from './components/Dashboard'
 import RatingsTable from './components/RatingsTable'
@@ -13,14 +13,11 @@ import Matches from './components/Matches'
 import Live from './components/Live'
 import HowItWorks from './components/HowItWorks'
 import H2H from './components/H2H'
+import PredictionLog from './components/PredictionLog'
 
 const NAV_GROUPS = [
   {
-    label: null,
-    items: [{ id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard }],
-  },
-  {
-    label: 'ANALYSIS',
+    label: 'Analysis',
     items: [
       { id: 'ratings', label: 'Ratings' },
       { id: 'matches', label: 'Matches' },
@@ -28,7 +25,7 @@ const NAV_GROUPS = [
     ],
   },
   {
-    label: 'PREDICTIONS',
+    label: 'Predictions',
     items: [
       { id: 'live',        label: 'Live' },
       { id: 'predictions', label: 'Predictions' },
@@ -36,7 +33,7 @@ const NAV_GROUPS = [
     ],
   },
   {
-    label: 'BETTING',
+    label: 'Betting',
     items: [
       { id: 'value-bets',   label: 'Value Bets' },
       { id: 'accumulators', label: 'Accumulators' },
@@ -44,10 +41,70 @@ const NAV_GROUPS = [
     ],
   },
   {
-    label: 'LEARN',
-    items: [{ id: 'how-it-works', label: 'How It Works' }],
+    label: 'Learn',
+    items: [
+      { id: 'how-it-works',   label: 'How It Works' },
+      { id: 'prediction-log', label: 'Prediction Log' },
+    ],
   },
 ]
+
+function NavDropdown({ group, active, onNav }) {
+  const [open, setOpen] = useState(false)
+  const closeTimer      = useRef(null)
+  const isActive        = group.items.some(item => item.id === active)
+
+  useEffect(() => () => clearTimeout(closeTimer.current), [])
+
+  function enter() {
+    clearTimeout(closeTimer.current)
+    setOpen(true)
+  }
+
+  function leave() {
+    closeTimer.current = setTimeout(() => setOpen(false), 120)
+  }
+
+  function pick(id) {
+    setOpen(false)
+    onNav(id)
+  }
+
+  return (
+    <div className="relative" onMouseEnter={enter} onMouseLeave={leave}>
+      <button
+        className={`flex items-center gap-1 px-3 py-1.5 rounded text-sm font-medium transition-colors ${
+          isActive
+            ? 'text-emerald-400'
+            : 'text-gray-400 hover:text-white'
+        }`}
+      >
+        {group.label}
+        <ChevronDown
+          className={`w-3.5 h-3.5 transition-transform duration-150 ${open ? 'rotate-180' : ''}`}
+        />
+      </button>
+
+      {open && (
+        <div className="absolute top-full left-0 mt-1.5 bg-gray-900 border border-gray-800 rounded-xl shadow-xl z-50 min-w-[168px] py-1.5 overflow-hidden">
+          {group.items.map(item => (
+            <button
+              key={item.id}
+              onClick={() => pick(item.id)}
+              className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
+                active === item.id
+                  ? 'text-emerald-400 bg-emerald-500/10'
+                  : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+              }`}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
 
 function App() {
   const [active, setActive]             = useState('dashboard')
@@ -64,6 +121,7 @@ function App() {
     <div className="min-h-screen bg-gray-950 text-white flex flex-col">
       <header className="bg-gray-900 border-b border-gray-800 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between gap-4">
+          {/* Logo */}
           <button
             onClick={() => handleNav('dashboard')}
             className="flex items-center gap-2 text-white font-bold text-lg tracking-tight hover:text-emerald-400 transition-colors shrink-0"
@@ -72,30 +130,27 @@ function App() {
             FormCast
           </button>
 
-          {/* Desktop nav — grouped */}
-          <nav className="hidden md:flex items-center gap-0.5 overflow-x-auto">
-            {NAV_GROUPS.map((group, gi) => (
-              <Fragment key={gi}>
-                {gi > 0 && (
-                  <span className="mx-1.5 shrink-0 text-[9px] font-mono text-gray-700 uppercase tracking-[0.15em] select-none">
-                    {group.label}
-                  </span>
-                )}
-                {group.items.map(({ id, label, icon: Icon }) => (
-                  <button
-                    key={id}
-                    onClick={() => handleNav(id)}
-                    className={`shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium transition-colors ${
-                      active === id
-                        ? 'bg-emerald-500/20 text-emerald-400'
-                        : 'text-gray-400 hover:text-white hover:bg-gray-800'
-                    }`}
-                  >
-                    {Icon && <Icon className="w-3.5 h-3.5" />}
-                    {label}
-                  </button>
-                ))}
-              </Fragment>
+          {/* Desktop nav */}
+          <nav className="hidden md:flex items-center gap-1">
+            <button
+              onClick={() => handleNav('dashboard')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-sm font-medium transition-colors ${
+                active === 'dashboard'
+                  ? 'text-emerald-400'
+                  : 'text-gray-400 hover:text-white'
+              }`}
+            >
+              <LayoutDashboard className="w-3.5 h-3.5" />
+              Dashboard
+            </button>
+
+            {NAV_GROUPS.map(group => (
+              <NavDropdown
+                key={group.label}
+                group={group}
+                active={active}
+                onNav={handleNav}
+              />
             ))}
           </nav>
 
@@ -109,27 +164,36 @@ function App() {
           </button>
         </div>
 
-        {/* Mobile dropdown — grouped */}
+        {/* Mobile menu */}
         {menuOpen && (
           <div className="md:hidden border-t border-gray-800 bg-gray-900 px-2 py-2 space-y-0.5">
-            {NAV_GROUPS.map((group, gi) => (
-              <div key={gi}>
-                {group.label && (
-                  <p className="px-4 pt-2.5 pb-1 text-[9px] font-mono text-gray-600 uppercase tracking-[0.18em] select-none">
-                    {group.label}
-                  </p>
-                )}
-                {group.items.map(({ id, label, icon: Icon }) => (
+            <button
+              onClick={() => handleNav('dashboard')}
+              className={`w-full text-left flex items-center gap-2.5 px-4 py-2.5 rounded text-sm font-medium transition-colors ${
+                active === 'dashboard'
+                  ? 'bg-emerald-500/20 text-emerald-400'
+                  : 'text-gray-400 hover:text-white hover:bg-gray-800'
+              }`}
+            >
+              <LayoutDashboard className="w-4 h-4" />
+              Dashboard
+            </button>
+
+            {NAV_GROUPS.map(group => (
+              <div key={group.label}>
+                <p className="px-4 pt-3 pb-1 text-[9px] font-mono text-gray-600 uppercase tracking-[0.18em] select-none">
+                  {group.label}
+                </p>
+                {group.items.map(({ id, label }) => (
                   <button
                     key={id}
                     onClick={() => handleNav(id)}
-                    className={`w-full text-left flex items-center gap-2.5 px-4 py-2.5 rounded text-sm font-medium transition-colors ${
+                    className={`w-full text-left flex items-center px-6 py-2.5 rounded text-sm font-medium transition-colors ${
                       active === id
                         ? 'bg-emerald-500/20 text-emerald-400'
                         : 'text-gray-400 hover:text-white hover:bg-gray-800'
                     }`}
                   >
-                    {Icon && <Icon className="w-4 h-4" />}
                     {label}
                   </button>
                 ))}
@@ -140,10 +204,10 @@ function App() {
       </header>
 
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-6">
-        {active === 'landing'      && <Landing onNavigate={handleNav} />}
-        {active === 'dashboard'    && <Dashboard onNavigate={handleNav} />}
-        {active === 'ratings'      && !selectedTeam && <RatingsTable onTeamClick={setSelectedTeam} />}
-        {active === 'ratings'      && selectedTeam && (
+        {active === 'landing'        && <Landing onNavigate={handleNav} />}
+        {active === 'dashboard'      && <Dashboard onNavigate={handleNav} />}
+        {active === 'ratings'        && !selectedTeam && <RatingsTable onTeamClick={setSelectedTeam} />}
+        {active === 'ratings'        && selectedTeam && (
           <TeamProfile
             team={selectedTeam.name}
             eloRating={selectedTeam.elo}
@@ -152,15 +216,16 @@ function App() {
             onBack={() => setSelectedTeam(null)}
           />
         )}
-        {active === 'matches'      && <Matches />}
-        {active === 'live'         && <Live />}
-        {active === 'predictions'  && <Predictions />}
-        {active === 'backtest'     && <BacktestReport />}
-        {active === 'how-it-works' && <HowItWorks />}
-        {active === 'h2h'          && <H2H />}
-        {active === 'tournament'   && <Tournament />}
-        {active === 'value-bets'   && <ValueBets />}
-        {active === 'accumulators' && <Accumulators />}
+        {active === 'matches'        && <Matches />}
+        {active === 'live'           && <Live />}
+        {active === 'predictions'    && <Predictions />}
+        {active === 'backtest'       && <BacktestReport />}
+        {active === 'how-it-works'   && <HowItWorks />}
+        {active === 'prediction-log' && <PredictionLog />}
+        {active === 'h2h'            && <H2H />}
+        {active === 'tournament'     && <Tournament />}
+        {active === 'value-bets'     && <ValueBets />}
+        {active === 'accumulators'   && <Accumulators />}
       </main>
     </div>
   )

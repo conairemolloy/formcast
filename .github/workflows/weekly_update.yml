@@ -35,6 +35,9 @@ jobs:
       - name: Fix team names
         run: python scripts/fix_team_names.py
 
+      - name: Publish predictions (pre-retrain)
+        run: python scripts/publish_predictions.py
+
       - name: Run ELO model
         run: python scripts/elo_model.py
 
@@ -51,6 +54,9 @@ jobs:
 
       - name: Run backtest
         run: python scripts/backtest.py
+
+      - name: Settle predictions
+        run: python scripts/settle_predictions.py
 
       - name: Commit and push updated CSVs
         run: |

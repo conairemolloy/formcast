@@ -1,3 +1,4 @@
+import math
 import os
 from datetime import datetime, timezone
 from flask import Blueprint, jsonify, request, current_app
@@ -91,6 +92,54 @@ def get_matches():
         records.append({k: (None if isinstance(v, float) and math.isnan(v) else v) for k, v in row.items()})
 
     return ok(records)
+
+
+PREDICTION_LOG_CSV = os.path.normpath(
+    os.path.join(os.path.dirname(__file__), "..", "..", "data", "processed", "prediction_log.csv")
+)
+
+
+@predictions_bp.get("/predictions/log")
+def get_prediction_log():
+    if not os.path.exists(PREDICTION_LOG_CSV):
+        return jsonify({
+            "success": True,
+            "data": [],
+            "summary": {"total": 0, "correct": 0, "hit_rate": None, "leagues": [], "date_from": None, "date_to": None},
+            "meta": {"count": 0, "generated_at": datetime.now(timezone.utc).isoformat()},
+        })
+
+    df = pd.read_csv(PREDICTION_LOG_CSV, dtype=str).fillna("")
+    df = df.sort_values("match_date", ascending=False)
+
+    settled = df[df["correct"].isin(["0", "1"])]
+    total     = len(df)
+    correct   = int((settled["correct"] == "1").sum())
+    n_settled = len(settled)
+    hit_rate  = round(correct / n_settled, 4) if n_settled > 0 else None
+    leagues   = sorted(df["league"].replace("", pd.NA).dropna().unique().tolist())
+    dates     = df["match_date"].replace("", pd.NA).dropna()
+    date_from = str(dates.min()) if len(dates) else None
+    date_to   = str(dates.max()) if len(dates) else None
+
+    records = []
+    for row in df.to_dict(orient="records"):
+        records.append({k: (None if v == "" else v) for k, v in row.items()})
+
+    return jsonify({
+        "success": True,
+        "data": records,
+        "summary": {
+            "total":    total,
+            "correct":  correct,
+            "settled":  n_settled,
+            "hit_rate": hit_rate,
+            "leagues":  leagues,
+            "date_from": date_from,
+            "date_to":   date_to,
+        },
+        "meta": {"count": total, "generated_at": datetime.now(timezone.utc).isoformat()},
+    })
 
 
 @predictions_bp.get("/tournament")
