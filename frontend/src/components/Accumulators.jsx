@@ -125,6 +125,18 @@ export default function Accumulators() {
         </div>
       </div>
 
+      <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg px-4 py-3 flex items-start gap-3">
+        <span className="text-blue-400 text-sm mt-0.5">ℹ</span>
+        <div>
+          <p className="text-sm font-medium text-blue-300">Historical Accumulator Tracker</p>
+          <p className="text-xs text-gray-400 mt-0.5">
+            Historical accumulators built from value bets identified by the model.
+            Each acca combines 2 or 3 legs with positive expected value. Results
+            shown are actual outcomes. Live accumulators require odds API integration (coming soon).
+          </p>
+        </div>
+      </div>
+
       {/* Filters + sort */}
       <div className="flex flex-wrap gap-3 items-center">
         {/* Won / Lost filter */}

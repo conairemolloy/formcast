@@ -1,7 +1,17 @@
+import math
 from datetime import datetime, timezone
 from flask import Blueprint, jsonify, request, current_app
 
 accumulator_bp = Blueprint("accumulator", __name__)
+
+
+def _clean(records):
+    """Replace float NaN with None so jsonify serialises as null, not NaN."""
+    return [
+        {k: None if isinstance(v, float) and math.isnan(v) else v for k, v in row.items()}
+        for row in records
+    ]
+
 
 def ok(data):
     return jsonify({
@@ -26,11 +36,11 @@ def get_accumulators():
 
     df = df[df["n_legs"] == n_legs]
     df = df.sort_values("acca_ev", ascending=False).head(limit)
-    return ok(df.to_dict(orient="records"))
+    return ok(_clean(df.to_dict(orient="records")))
 
 
 @accumulator_bp.get("/accumulator/best")
 def get_best_accumulators():
     df = current_app.config["DATA"]["accumulator_bets"].copy()
     df = df.sort_values("acca_ev", ascending=False).head(10)
-    return ok(df.to_dict(orient="records"))
+    return ok(_clean(df.to_dict(orient="records")))

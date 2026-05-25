@@ -102,6 +102,19 @@ export default function ValueBets() {
     <div className="space-y-5">
       <h1 className="text-xl font-semibold text-white">Value Bets</h1>
 
+      <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg px-4 py-3 flex items-start gap-3">
+        <span className="text-blue-400 text-sm mt-0.5">ℹ</span>
+        <div>
+          <p className="text-sm font-medium text-blue-300">Historical Value Bet Tracker</p>
+          <p className="text-xs text-gray-400 mt-0.5">
+            These are historical bets identified by the model where our probability
+            exceeded the implied odds probability by 5%+. Results shown are actual
+            outcomes — this is the model's track record. Live upcoming value bets
+            require odds API integration (coming soon).
+          </p>
+        </div>
+      </div>
+
       {/* Overall summary */}
       {summary && (
         <div className="grid grid-cols-4 gap-4">

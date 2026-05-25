@@ -384,10 +384,13 @@ export default function Dashboard({ onNavigate }) {
 
       {/* Section 2 — Value Bets (full width) */}
       <Section
-        title="Top Value Bets"
+        title="Top Historical Value Bets"
         action={() => onNavigate('value-bets')}
         actionLabel="View all"
       >
+        {!staticLoading && (
+          <p className="text-xs text-gray-600 px-4 pb-2">Highest edge bets from model backtest — track record only</p>
+        )}
         {staticLoading ? (
           <div className="flex justify-center py-8">
             <Loader2 className="w-5 h-5 text-gray-600 animate-spin" />
