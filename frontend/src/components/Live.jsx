@@ -198,9 +198,9 @@ function CompFilter({ competitions, value, onChange }) {
 // ---------------------------------------------------------------------------
 
 const TABS = [
+  { id: 'upcoming', label: 'Upcoming' },
   { id: 'today',    label: 'Today' },
   { id: 'live',     label: 'Live Now' },
-  { id: 'upcoming', label: 'Upcoming' },
 ]
 
 // ---------------------------------------------------------------------------
@@ -351,7 +351,7 @@ function RefreshButton({ lastRefresh, onRefresh }) {
 // ---------------------------------------------------------------------------
 
 export default function Live() {
-  const [tab, setTab]             = useState('today')
+  const [tab, setTab]             = useState('upcoming')
   const [selectedComp, setSelectedComp] = useState('ALL')
   const [previewMatch, setPreviewMatch] = useState(null)
 

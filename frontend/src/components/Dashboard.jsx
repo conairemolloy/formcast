@@ -167,16 +167,17 @@ function ValueBetCard({ bet }) {
           </p>
           <p className="text-[10px] text-gray-600 mt-0.5">
             {LEAGUE_SHORT[bet.league] ?? bet.league} · {bet.match_date}
+            {bet.match_time ? ` · ${bet.match_time}` : ''}
           </p>
         </div>
         <span className="shrink-0 text-xs font-bold px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/20">
-          {OUTCOME_LABEL[bet.outcome] ?? bet.outcome}
+          {OUTCOME_LABEL[bet.value_outcome] ?? bet.value_outcome}
         </span>
       </div>
       <div className="flex gap-4 text-[11px] tabular-nums">
-        <span className="text-gray-500">Model <span className="text-gray-300">{pct(bet.p_model)}</span></span>
-        <span className="text-gray-500">Odds <span className="text-gray-300">{bet.odds?.toFixed(2)}</span></span>
-        <span className="text-gray-500">Edge <span className="text-emerald-400 font-semibold">{pct(bet.edge)}</span></span>
+        <span className="text-gray-500">Model <span className="text-gray-300">{pct(bet.value_p_model)}</span></span>
+        <span className="text-gray-500">Odds <span className="text-gray-300">{bet.value_odds?.toFixed(2)}</span></span>
+        <span className="text-gray-500">Edge <span className="text-emerald-400 font-semibold">{pct(bet.value_edge)}</span></span>
       </div>
     </div>
   )
@@ -186,16 +187,24 @@ function ValueBetCard({ bet }) {
 // Section 3 — Upcoming Fixtures
 // ---------------------------------------------------------------------------
 
+function stripSuffix(name) {
+  return (name ?? '').replace(/ (United FC|FC|AFC|CF|SC|BC)$/i, '').trim()
+}
+
 function UpcomingRow({ match, onClick }) {
+  const homeDisplay = stripSuffix(match.home_team)
+  const awayDisplay = stripSuffix(match.away_team)
+  const cleanMatch  = { ...match, home_team: homeDisplay, away_team: awayDisplay }
+
   return (
     <button
-      onClick={() => onClick(match)}
+      onClick={() => onClick(cleanMatch)}
       className="w-full text-left px-4 py-3 border-b border-gray-800/60 last:border-0 hover:bg-gray-800/40 transition-colors"
     >
       <div className="flex items-center justify-between gap-2 mb-1.5">
         <div className="min-w-0 flex-1">
           <p className="text-xs text-gray-300 font-medium truncate">
-            {match.home_team} <span className="text-gray-600">vs</span> {match.away_team}
+            {homeDisplay} <span className="text-gray-600">vs</span> {awayDisplay}
           </p>
           <p className="text-[10px] text-gray-600 mt-0.5">
             {match.competition} · {fmtDate(match.match_date)} {fmtTime(match.match_time) && `· ${fmtTime(match.match_time)}`}
@@ -303,7 +312,7 @@ export default function Dashboard({ onNavigate }) {
   // Load static data once
   useEffect(() => {
     Promise.all([
-      api.get('/api/value-bets?limit=3&min_edge=0.05'),
+      api.get('/api/live/value-bets'),
       api.get('/api/value-bets/summary'),
       api.get('/api/live/upcoming'),
       api.get('/api/ratings'),
@@ -382,15 +391,12 @@ export default function Dashboard({ onNavigate }) {
         />
       </Section>
 
-      {/* Section 2 — Value Bets (full width) */}
+      {/* Section 2 — Live Value Bets (full width) */}
       <Section
-        title="Top Historical Value Bets"
+        title="Live Value Bets"
         action={() => onNavigate('value-bets')}
         actionLabel="View all"
       >
-        {!staticLoading && (
-          <p className="text-xs text-gray-600 px-4 pb-2">Highest edge bets from model backtest — track record only</p>
-        )}
         {staticLoading ? (
           <div className="flex justify-center py-8">
             <Loader2 className="w-5 h-5 text-gray-600 animate-spin" />
@@ -400,7 +406,9 @@ export default function Dashboard({ onNavigate }) {
             {valueBets.map((bet, i) => <ValueBetCard key={i} bet={bet} />)}
           </div>
         ) : (
-          <p className="px-4 py-6 text-sm text-center text-gray-600">No value bets available</p>
+          <p className="px-4 py-6 text-sm text-center text-gray-600">
+            No value bets this week — refreshes Monday 6am UTC
+          </p>
         )}
       </Section>
 
