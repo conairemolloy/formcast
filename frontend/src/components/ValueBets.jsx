@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import api from '../api'
-import { Loader2, CheckCircle2, XCircle } from 'lucide-react'
+import { Loader2, CheckCircle2, XCircle, Zap } from 'lucide-react'
 import Tooltip from './Tooltip'
 
 function gcd(a, b) { return b === 0 ? a : gcd(b, a % b) }
@@ -32,6 +32,11 @@ function EdgeBadge({ edge }) {
 }
 
 const OUTCOME_LABELS = { H: 'Home', D: 'Draw', A: 'Away' }
+const OUTCOME_COLORS = {
+  H: 'bg-blue-500/20 text-blue-300 border border-blue-500/30',
+  D: 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30',
+  A: 'bg-purple-500/20 text-purple-300 border border-purple-500/30',
+}
 const SORT_OPTIONS = [
   { value: 'edge', label: 'Edge' },
   { value: 'ev',   label: 'EV' },
@@ -39,15 +44,79 @@ const SORT_OPTIONS = [
   { value: 'date', label: 'Date' },
 ]
 
+function LiveBetCard({ bet }) {
+  const outcome = bet.value_outcome
+  const edge    = bet.value_edge
+  const implied = bet.value_odds ? 1 / bet.value_odds : null
+
+  return (
+    <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 flex flex-col gap-3 hover:border-emerald-500/30 transition-colors">
+      {/* Header row */}
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-semibold text-white truncate">
+            {bet.home_team} <span className="text-gray-500 font-normal">vs</span> {bet.away_team}
+          </p>
+          <p className="text-xs text-gray-500 mt-0.5">
+            {bet.league}
+            {bet.match_date && (
+              <span className="mx-1.5 text-gray-700">·</span>
+            )}
+            {bet.match_date && (
+              <span className="font-mono">{bet.match_date}{bet.match_time ? ` ${bet.match_time}` : ''}</span>
+            )}
+          </p>
+        </div>
+        <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-semibold shrink-0">
+          <Zap className="w-3 h-3" />
+          LIVE
+        </span>
+      </div>
+
+      {/* Outcome badge */}
+      <div>
+        <span className={`inline-block px-2.5 py-1 rounded text-xs font-semibold ${OUTCOME_COLORS[outcome] ?? 'bg-gray-700 text-gray-300'}`}>
+          {OUTCOME_LABELS[outcome] ?? outcome} win
+        </span>
+      </div>
+
+      {/* Stats row */}
+      <div className="grid grid-cols-3 gap-2 pt-1 border-t border-gray-800">
+        <div>
+          <p className="text-xs text-gray-600 mb-0.5">Model</p>
+          <p className="text-sm font-semibold text-white tabular-nums">
+            {bet.value_p_model != null ? `${(bet.value_p_model * 100).toFixed(1)}%` : '—'}
+          </p>
+        </div>
+        <div>
+          <p className="text-xs text-gray-600 mb-0.5">Best odds</p>
+          <p className="text-sm font-semibold text-white tabular-nums">
+            {bet.value_odds != null ? Number(bet.value_odds).toFixed(2) : '—'}
+          </p>
+          {implied && (
+            <p className="text-xs text-gray-600 tabular-nums">{(implied * 100).toFixed(1)}% imp.</p>
+          )}
+        </div>
+        <div className="text-right">
+          <p className="text-xs text-gray-600 mb-0.5">Edge</p>
+          {edge != null ? <EdgeBadge edge={edge} /> : <span className="text-gray-500 text-sm">—</span>}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function ValueBets() {
-  const [bets, setBets]         = useState([])
-  const [summary, setSummary]   = useState(null)
-  const [loading, setLoading]   = useState(true)
-  const [error, setError]       = useState(null)
-  const [outcome, setOutcome]   = useState('ALL')
+  const [bets, setBets]           = useState([])
+  const [liveBets, setLiveBets]   = useState([])
+  const [summary, setSummary]     = useState(null)
+  const [loading, setLoading]     = useState(true)
+  const [liveLoading, setLiveLoading] = useState(true)
+  const [error, setError]         = useState(null)
+  const [outcome, setOutcome]     = useState('ALL')
   const [wonFilter, setWonFilter] = useState('ALL')
-  const [sortBy, setSortBy]     = useState('edge')
-  const [minEdge, setMinEdge]   = useState(0.05)
+  const [sortBy, setSortBy]       = useState('edge')
+  const [minEdge, setMinEdge]     = useState(0.05)
 
   useEffect(() => {
     Promise.all([
@@ -60,6 +129,13 @@ export default function ValueBets() {
       })
       .catch(() => setError('Failed to load value bets'))
       .finally(() => setLoading(false))
+  }, [])
+
+  useEffect(() => {
+    api.get('/api/live/value-bets')
+      .then(res => setLiveBets(res.data.data ?? []))
+      .catch(() => setLiveBets([]))
+      .finally(() => setLiveLoading(false))
   }, [])
 
   const filtered = useMemo(() => {
@@ -102,15 +178,47 @@ export default function ValueBets() {
     <div className="space-y-5">
       <h1 className="text-xl font-semibold text-white">Value Bets</h1>
 
+      {/* ── Live value bets ──────────────────────────────────── */}
+      <section className="space-y-3">
+        <div className="flex items-center gap-2">
+          <h2 className="text-base font-semibold text-white">Live Value Bets</h2>
+          <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-semibold">
+            <Zap className="w-3 h-3" />
+            LIVE
+          </span>
+        </div>
+
+        {liveLoading ? (
+          <div className="flex items-center gap-2 text-gray-500 text-sm py-4">
+            <Loader2 className="w-4 h-4 animate-spin" />
+            Checking current fixtures…
+          </div>
+        ) : liveBets.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {liveBets.map((bet, i) => (
+              <LiveBetCard key={i} bet={bet} />
+            ))}
+          </div>
+        ) : (
+          <div className="bg-gray-900 border border-gray-800 rounded-xl px-4 py-5 text-center">
+            <p className="text-gray-400 text-sm">No value bets identified in current fixtures</p>
+          </div>
+        )}
+
+        <p className="text-xs text-gray-600">
+          Updated weekly — next refresh Monday 6am UTC
+        </p>
+      </section>
+
+      {/* ── Historical tracker ───────────────────────────────── */}
       <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg px-4 py-3 flex items-start gap-3">
         <span className="text-blue-400 text-sm mt-0.5">ℹ</span>
         <div>
-          <p className="text-sm font-medium text-blue-300">Historical Value Bet Tracker</p>
+          <p className="text-sm font-medium text-blue-300">Historical Track Record</p>
           <p className="text-xs text-gray-400 mt-0.5">
             These are historical bets identified by the model where our probability
             exceeded the implied odds probability by 5%+. Results shown are actual
-            outcomes — this is the model's track record. Live upcoming value bets
-            require odds API integration (coming soon).
+            outcomes — this is the model's track record.
           </p>
         </div>
       </div>
@@ -127,7 +235,6 @@ export default function ValueBets() {
 
       {/* Filters row */}
       <div className="flex flex-wrap gap-3 items-center">
-        {/* Outcome filter */}
         <div className="flex gap-1">
           {['ALL', 'H', 'D', 'A'].map(o => (
             <button
@@ -144,7 +251,6 @@ export default function ValueBets() {
           ))}
         </div>
 
-        {/* Won / Lost filter */}
         <div className="flex gap-1">
           {[['ALL', 'All'], ['WON', 'Won'], ['LOST', 'Lost']].map(([val, label]) => (
             <button
@@ -161,7 +267,6 @@ export default function ValueBets() {
           ))}
         </div>
 
-        {/* Sort by */}
         <div className="flex items-center gap-2 ml-auto">
           <span className="text-xs text-gray-500">Sort</span>
           <select
