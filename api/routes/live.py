@@ -660,6 +660,29 @@ def team_profile():
     }}), 200
 
 
+@live_bp.get("/live/value-bets")
+def live_value_bets():
+    from flask import current_app
+    df = current_app.config["DATA"].get("live_value_bets")
+    if df is None or df.empty:
+        return _ok([])
+
+    value_df = df[df["value_outcome"].notna()].copy()
+    if value_df.empty:
+        return _ok([])
+
+    value_df = value_df.sort_values("value_edge", ascending=False)
+
+    cols = [
+        "match_date", "match_time", "league", "home_team", "away_team",
+        "home_elo", "away_elo", "p_home", "p_draw", "p_away",
+        "value_outcome", "value_edge", "value_odds", "value_p_model",
+    ]
+    available = [c for c in cols if c in value_df.columns]
+    records = value_df[available].where(value_df[available].notna(), None).to_dict(orient="records")
+    return _ok(records)
+
+
 @live_bp.get("/match/preview")
 def match_preview():
     home_team = request.args.get("home_team", "").strip()

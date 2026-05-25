@@ -38,6 +38,11 @@ jobs:
       - name: Run ELO model
         run: python scripts/elo_model.py
 
+      - name: Fetch live odds and value bets
+        run: python scripts/fetch_live_odds.py
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+
       - name: Run tournament simulator
         run: python scripts/tournament_simulator.py
 
