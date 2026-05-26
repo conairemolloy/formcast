@@ -18,6 +18,16 @@
 - How It Works: methodology, models, glossary
 - GitHub Actions weekly automation (Monday 6am UTC)
 - Mobile responsive
+- Ensemble predictions pipeline — XGBoost + meta-learner saved, predict_upcoming.py ready for August
+- SHA256 prediction log — 27 predictions published, auto-settles after each gameweek
+- Dropdown navigation — 4 groups with hover dropdowns (Analysis, Predictions, Betting, Learn)
+
+---
+
+## Off-Season Status (May–July 2026)
+European leagues finished. Pipeline fully built and tested.
+Next live value bets: August 2026 when EPL/La Liga/Serie A/Bundesliga/Ligue 1 restart.
+Ensemble predictions will power value bets from August — 7-model stack vs Elo-only currently.
 
 ---
 
@@ -48,6 +58,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 | Automation | GitHub Actions weekly pipeline (Monday 6am UTC) |
 | Live Value Bets | Odds API integration, 6 leagues, weekly refresh |
 | Match Deep Dive | corners, cards, goals, correct scores, BTTS markets |
+| Ensemble models saved | XGBoost + meta-learner + league encoder persisted to models/ |
 
 ---
 
@@ -170,6 +181,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 ## Phase 3 — Neural Network Suite
 - [x] Feedforward: Input → Dense(256,ReLU) → BN → Dropout(0.3) → Dense(128,ReLU) → Dense(3,Softmax)
 - [x] LSTM: last 5 match feature vectors → LSTM(128) → Dense(64) → Dense(1,σ)
+
 - [ ] Graph Neural Network: teams as nodes, matches as edges, GCN propagation
 - [ ] Transformer: self-attention over match history sequence
 
@@ -198,7 +210,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [x] Accumulator builder — optimal leg selection by EV
 - [ ] Accumulator independence testing (same-league correlation correction)
 - [ ] Accumulator EV matrix UI (best combinations visualised)
-- [ ] Closing line value (CLV) tracking — mean(log(P_model / P_close))
+- [x] Closing line value (CLV) tracking — mean(log(P_model / P_close))
 - [ ] SHA256 prediction accountability ledger (hash-stamped pre-match)
 - [ ] Sharpe ratio + max drawdown on simulated betting strategy
 - [ ] Dutching calculator (stake across multiple outcomes)
@@ -267,11 +279,11 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 
 ## Phase 9 — Model Validation & Transparency
 - [ ] Full backtesting results page (hit rate and Brier by league, season, year)
-- [ ] Calibration diagram (reliability plot with confidence intervals)
+- [x] Calibration diagram (reliability plot with confidence intervals)
 - [x] Model comparison table (all models side by side)
 - [ ] Walk-forward accuracy chart (how hit rate changed over 32 seasons)
-- [ ] Closing line value history (CLV per bet, cumulative CLV chart)
-- [ ] Prediction log (every prediction ever made, timestamped, SHA256 hashed)
+- [x] Closing line value history (CLV per bet, cumulative CLV chart)
+- [x] Prediction log (every prediction ever made, timestamped, SHA256 hashed)
 - [ ] Monthly accuracy report (automated, updated after each round of fixtures)
 - [ ] Diebold-Mariano test results vs naive baseline
 - [ ] Hosmer-Lemeshow calibration test results
@@ -418,10 +430,10 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 ---
 
 ## Phase 14 — Trust & Accountability
-- [ ] Public prediction log — every prediction published before kickoff, SHA256 stamped, verifiable by anyone
-- [ ] Prediction audit trail — immutable record, timestamped, hash-linked like a blockchain
+- [x] Public prediction log — every prediction published before kickoff, SHA256 stamped, verifiable by anyone
+- [x] Prediction audit trail — immutable record, timestamped, hash-linked like a blockchain
 - [ ] Monthly accuracy report — auto-generated PDF, emailed to subscribers, shows track record
-- [ ] "About the Model" page — methodology overview, who built it, why trust it, track record
+- [x] "About the Model" page — methodology overview, who built it, why trust it, track record
 - [ ] Social sharing cards — share a match preview or value bet card to Twitter/X with OG image
 - [ ] Verified track record badge — independently audited hit rate displayed prominently
 - [ ] Community leaderboard — who has the best prediction record this month
@@ -437,7 +449,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [x] Automated model retraining — Elo, tournament, value bets, backtest all automated
 - [x] Automated tournament simulator refresh
 - [x] Automated value bet generation — live odds via The Odds API
-- [ ] Scheduled prediction publishing — generate next gameweek predictions automatically on Thursday
+- [x] Scheduled prediction publishing — publish_predictions.py runs Monday via GitHub Actions
 - [ ] Database backup — automated daily Supabase backup to S3
 - [ ] Monitoring & alerting — Sentry for errors, UptimeRobot for uptime, PagerDuty for critical failures
 - [x] CI/CD pipeline — GitHub Actions
