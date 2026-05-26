@@ -9,11 +9,13 @@ Stack inputs (12 features):
 
 Meta-learner: LogisticRegression in a StandardScaler Pipeline.
 """
+import json
 import math
 import os
 from collections import defaultdict
 from datetime import timedelta
 
+import joblib
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
@@ -647,6 +649,21 @@ def main() -> None:
         ("lr", LogisticRegression(C=1.0, max_iter=1000, random_state=42)),
     ])
     meta.fit(train_stack, y_train)
+
+    # ------------------------------------------------------------------
+    # Save models
+    # ------------------------------------------------------------------
+    models_dir = os.path.join(os.path.dirname(__file__), '..', 'models')
+    os.makedirs(models_dir, exist_ok=True)
+    joblib.dump(xgb_full, os.path.join(models_dir, 'xgb_ensemble.pkl'))
+    print(f"Saved XGBoost model to models/xgb_ensemble.pkl")
+    joblib.dump(meta, os.path.join(models_dir, 'meta_learner.pkl'))
+    print(f"Saved meta-learner to models/meta_learner.pkl")
+    with open(os.path.join(models_dir, 'feature_cols.json'), 'w') as f:
+        json.dump(FEATURE_COLS, f)
+    league_encoder = LabelEncoder()
+    league_encoder.fit(df["league"])
+    joblib.dump(league_encoder, os.path.join(models_dir, 'league_encoder.pkl'))
 
     # ------------------------------------------------------------------
     # Step 4: Holdout evaluation

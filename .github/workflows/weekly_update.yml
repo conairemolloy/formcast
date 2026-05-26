@@ -41,6 +41,9 @@ jobs:
       - name: Run ELO model
         run: python scripts/elo_model.py
 
+      - name: Generate ensemble predictions for upcoming fixtures
+        run: python scripts/predict_upcoming.py
+
       - name: Fetch live odds and value bets
         run: python scripts/fetch_live_odds.py
         env:

@@ -1,0 +1,28 @@
+match_date,match_time,league,home_team,away_team,p_home_elo,p_draw_elo,p_away_elo,p_home_ensemble,p_draw_ensemble,p_away_ensemble,predicted_outcome
+2026-05-26,22:00,Copa Libertadores,CA Lanús,Mirassol,0.4245,0.2571,0.3184,0.4107,0.3207,0.2686,H
+2026-05-26,22:00,Copa Libertadores,LDU de Quito,Club Always Ready,0.4245,0.2571,0.3184,0.4107,0.3207,0.2686,H
+2026-05-27,00:30,Copa Libertadores,Estudiantes de La Plata,CD Independiente Medellín,0.4245,0.2571,0.3184,0.4107,0.3207,0.2686,H
+2026-05-27,00:30,Copa Libertadores,Club Universitario de Deportes,CD Tolima,0.4245,0.2571,0.3184,0.4107,0.3207,0.2686,H
+2026-05-27,00:30,Copa Libertadores,Club Nacional de Football,CD Coquimbo Unido,0.4245,0.2571,0.3184,0.4107,0.3207,0.2686,H
+2026-05-27,00:30,Copa Libertadores,CR Flamengo,Cusco,0.4245,0.2571,0.3184,0.4107,0.3207,0.2686,H
+2026-05-27,22:00,Copa Libertadores,Club Libertad Asuncion,Universidad Central de Venezuela,0.4245,0.2571,0.3184,0.4107,0.3207,0.2686,H
+2026-05-27,22:00,Copa Libertadores,CAR Independiente del Valle,CA Rosario Central,0.4245,0.2571,0.3184,0.4107,0.3207,0.2686,H
+2026-05-28,00:30,Copa Libertadores,SC Corinthians Paulista,CA Platense,0.4245,0.2571,0.3184,0.4107,0.3207,0.2686,H
+2026-05-28,00:30,Copa Libertadores,Club Bolívar,CS Independiente Rivadavia,0.4245,0.2571,0.3184,0.4107,0.3207,0.2686,H
+2026-05-28,00:30,Copa Libertadores,CA Peñarol,Independiente Santa Fe,0.4245,0.2571,0.3184,0.4107,0.3207,0.2686,H
+2026-05-28,00:30,Copa Libertadores,Fluminense,Deportivo La Guaira,0.4245,0.2571,0.3184,0.4107,0.3207,0.2686,H
+2026-05-28,22:00,Copa Libertadores,Club Cerro Porteño,CS Cristal,0.4245,0.2571,0.3184,0.4107,0.3207,0.2686,H
+2026-05-28,22:00,Copa Libertadores,SE Palmeiras,CDP Junior,0.4245,0.2571,0.3184,0.4107,0.3207,0.2686,H
+2026-05-29,00:30,Copa Libertadores,Cruzeiro EC,Barcelona,0.0714,0.0448,0.8838,0.0593,0.1507,0.79,A
+2026-05-29,00:30,Copa Libertadores,CA Boca Juniors,CD Universidad Católica,0.4245,0.2571,0.3184,0.4107,0.3207,0.2686,H
+2026-05-30,16:00,UEFA Champions League,Paris Saint-Germain,Arsenal,0.072,0.0453,0.8827,0.0613,0.1748,0.7639,A
+2026-05-30,19:00,Campeonato Brasileiro Série A,CA Paranaense,Mirassol,0.4245,0.2571,0.3184,0.4107,0.3207,0.2686,H
+2026-05-30,19:00,Campeonato Brasileiro Série A,CR Flamengo,Coritiba FBC,0.4245,0.2571,0.3184,0.4107,0.3207,0.2686,H
+2026-05-30,20:30,Campeonato Brasileiro Série A,Grêmio FBPA,SC Corinthians Paulista,0.4245,0.2571,0.3184,0.4107,0.3207,0.2686,H
+2026-05-30,20:30,Campeonato Brasileiro Série A,EC Bahia,Botafogo FR,0.4245,0.2571,0.3184,0.4107,0.3207,0.2686,H
+2026-05-31,00:00,Campeonato Brasileiro Série A,Santos,EC Vitória,0.4245,0.2571,0.3184,0.4107,0.3207,0.2686,H
+2026-05-31,14:00,Campeonato Brasileiro Série A,RB Bragantino,Inter,0.0733,0.0461,0.8805,0.0622,0.1619,0.776,A
+2026-05-31,19:00,Campeonato Brasileiro Série A,SE Palmeiras,Chapecoense AF,0.4245,0.2571,0.3184,0.4107,0.3207,0.2686,H
+2026-05-31,19:00,Campeonato Brasileiro Série A,CR Vasco da Gama,CA Mineiro,0.4245,0.2571,0.3184,0.4107,0.3207,0.2686,H
+2026-05-31,23:30,Campeonato Brasileiro Série A,Clube do Remo,São Paulo,0.4245,0.2571,0.3184,0.4107,0.3207,0.2686,H
+2026-05-31,23:30,Campeonato Brasileiro Série A,Cruzeiro EC,Fluminense,0.4245,0.2571,0.3184,0.4107,0.3207,0.2686,H
