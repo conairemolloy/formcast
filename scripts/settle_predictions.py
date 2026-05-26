@@ -47,7 +47,8 @@ def main() -> None:
     results_index: dict[str, str] = {}
     for _, row in results.iterrows():
         key = f"{row['match_date'].strip()}|{row['home_team'].strip()}|{row['away_team'].strip()}"
-        results_index[key] = row["result"].strip()
+        if pd.notna(row["result"]):
+            results_index[key] = str(row["result"]).strip()
 
     unsettled_mask = log["actual_result"] == ""
     settled_count  = 0
