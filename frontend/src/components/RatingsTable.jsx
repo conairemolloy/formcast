@@ -1,12 +1,12 @@
 import { useState, useEffect, useMemo } from 'react'
 import api from '../api'
-import { Search, Loader2 } from 'lucide-react'
+import { Search, Loader2, Bookmark } from 'lucide-react'
 
 const MEDAL = ['🥇', '🥈', '🥉']
 const MAX_RATING = 1900
 const LEAGUE_IDS = ['EPL', 'LaLiga', 'SerieA', 'Bundesliga', 'Ligue1']
 
-export default function RatingsTable({ onTeamClick }) {
+export default function RatingsTable({ onTeamClick, user, onWatchlistUpdate, onShowAuth }) {
   const [data, setData]               = useState([])
   const [teamLeague, setTeamLeague]   = useState({})
   const [loading, setLoading]         = useState(true)
@@ -14,6 +14,9 @@ export default function RatingsTable({ onTeamClick }) {
   const [search, setSearch]           = useState('')
   const [sortDir, setSortDir]         = useState('desc')
   const [league, setLeague]           = useState('ALL')
+  const [pending, setPending]         = useState(null)
+
+  const watchlist = user?.watchlist || []
 
   useEffect(() => {
     Promise.all([
@@ -63,6 +66,26 @@ export default function RatingsTable({ onTeamClick }) {
       league: teamLeague[team.team] ?? null,
       rank:   getLeagueRank(team.team),
     })
+  }
+
+  async function toggleWatchlist(e, teamName) {
+    e.stopPropagation()
+    if (!user) {
+      onShowAuth?.()
+      return
+    }
+    if (pending === teamName) return
+    setPending(teamName)
+    try {
+      const inList = watchlist.includes(teamName)
+      const endpoint = inList ? '/api/auth/watchlist/remove' : '/api/auth/watchlist/add'
+      const res = await api.post(endpoint, { team_name: teamName })
+      onWatchlistUpdate?.(res.data.watchlist)
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setPending(null)
+    }
   }
 
   const filtered = useMemo(() => {
@@ -124,9 +147,10 @@ export default function RatingsTable({ onTeamClick }) {
 
       {/* Table */}
       <div className="rounded-xl border border-gray-800 overflow-x-auto">
-        <table className="w-full text-sm min-w-[480px]">
+        <table className="w-full text-sm min-w-[520px]">
           <thead>
             <tr className="bg-gray-900 border-b border-gray-800">
+              <th className="px-3 py-3 w-10" aria-label="Save" />
               <th className="px-4 py-3 text-left text-gray-400 font-medium w-16">Rank</th>
               <th className="px-4 py-3 text-left text-gray-400 font-medium">Team</th>
               <th className="px-4 py-3 text-left text-gray-400 font-medium">League</th>
@@ -141,8 +165,9 @@ export default function RatingsTable({ onTeamClick }) {
           <tbody>
             {filtered.map((team, i) => {
               const globalRank = sortedAll.findIndex(t => t.team === team.team)
-              const pct = Math.min((team.elo_rating / MAX_RATING) * 100, 100)
-              const isMedal = globalRank < 3 && !search && league === 'ALL'
+              const pct        = Math.min((team.elo_rating / MAX_RATING) * 100, 100)
+              const isMedal    = globalRank < 3 && !search && league === 'ALL'
+              const saved      = watchlist.includes(team.team)
 
               return (
                 <tr
@@ -152,6 +177,31 @@ export default function RatingsTable({ onTeamClick }) {
                     isMedal ? 'bg-gray-900/80' : ''
                   } ${onTeamClick ? 'cursor-pointer' : ''}`}
                 >
+                  {/* Bookmark */}
+                  <td className="px-3 py-3 text-center" onClick={e => e.stopPropagation()}>
+                    <button
+                      onClick={e => toggleWatchlist(e, team.team)}
+                      className={`p-1 rounded transition-colors ${
+                        saved
+                          ? 'text-emerald-400 hover:text-emerald-300'
+                          : 'text-gray-600 hover:text-gray-400'
+                      } ${pending === team.team ? 'opacity-50 cursor-not-allowed' : ''}`}
+                      title={
+                        !user
+                          ? 'Sign in to save teams'
+                          : saved
+                          ? 'Remove from watchlist'
+                          : 'Add to watchlist'
+                      }
+                      disabled={pending === team.team}
+                    >
+                      <Bookmark
+                        className="w-4 h-4"
+                        fill={saved ? 'currentColor' : 'none'}
+                      />
+                    </button>
+                  </td>
+
                   <td className="px-4 py-3 text-gray-500 font-mono">
                     {isMedal ? MEDAL[globalRank] : `#${i + 1}`}
                   </td>

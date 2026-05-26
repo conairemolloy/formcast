@@ -9,6 +9,7 @@ from routes.backtest import backtest_bp
 from routes.value_bets import value_bets_bp
 from routes.accumulator import accumulator_bp
 from routes.live import live_bp
+from routes.auth import auth_bp
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "processed")
 
@@ -61,6 +62,7 @@ def create_app():
     app.register_blueprint(value_bets_bp,  url_prefix="/api")
     app.register_blueprint(accumulator_bp, url_prefix="/api")
     app.register_blueprint(live_bp,        url_prefix="/api")
+    app.register_blueprint(auth_bp,        url_prefix="/api")
 
     @app.get("/api/health")
     def health():

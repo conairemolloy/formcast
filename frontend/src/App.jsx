@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
-import { BarChart2, Menu, X, LayoutDashboard, ChevronDown } from 'lucide-react'
+import { BarChart2, Menu, X, LayoutDashboard, ChevronDown, LogIn } from 'lucide-react'
+import api from './api'
+import { clearAuthToken } from './api'
 import Landing from './components/Landing'
 import Dashboard from './components/Dashboard'
 import RatingsTable from './components/RatingsTable'
@@ -14,6 +16,10 @@ import Live from './components/Live'
 import HowItWorks from './components/HowItWorks'
 import H2H from './components/H2H'
 import PredictionLog from './components/PredictionLog'
+import Auth from './components/Auth'
+import UserMenu from './components/UserMenu'
+import WatchlistPage from './components/WatchlistPage'
+import SettingsPage from './components/SettingsPage'
 
 const NAV_GROUPS = [
   {
@@ -107,14 +113,68 @@ function NavDropdown({ group, active, onNav }) {
 }
 
 function App() {
-  const [active, setActive]             = useState('dashboard')
+  const [active, setActive]         = useState('dashboard')
   const [selectedTeam, setSelectedTeam] = useState(null)
-  const [menuOpen, setMenuOpen]         = useState(false)
+  const [menuOpen, setMenuOpen]     = useState(false)
+  const [user, setUser]             = useState(null)
+  const [showAuth, setShowAuth]     = useState(false)
+  const [sessionChecked, setSessionChecked] = useState(false)
+
+  // Restore session from localStorage
+  useEffect(() => {
+    const stored = localStorage.getItem('auth_user')
+    const token  = localStorage.getItem('auth_token')
+    if (stored && token) {
+      try {
+        const cached = JSON.parse(stored)
+        setUser(cached)
+        // Verify token is still valid in background
+        api.get('/api/auth/profile')
+          .then(res => setUser(u => ({ ...u, ...res.data.profile, access_token: token })))
+          .catch(() => {
+            clearAuthToken()
+            setUser(null)
+          })
+      } catch (_) {
+        clearAuthToken()
+      }
+    }
+    setSessionChecked(true)
+  }, [])
 
   function handleNav(id) {
     setActive(id)
     setSelectedTeam(null)
     setMenuOpen(false)
+  }
+
+  function handleLogin(profile) {
+    setUser(profile)
+  }
+
+  function handleLogout() {
+    setUser(null)
+    if (['watchlist', 'settings'].includes(active)) {
+      setActive('dashboard')
+    }
+  }
+
+  function handleWatchlistUpdate(newWatchlist) {
+    setUser(u => {
+      if (!u) return u
+      const updated = { ...u, watchlist: newWatchlist }
+      localStorage.setItem('auth_user', JSON.stringify(updated))
+      return updated
+    })
+  }
+
+  function handleUserUpdate(profile) {
+    setUser(u => {
+      if (!u) return u
+      const updated = { ...u, ...profile }
+      localStorage.setItem('auth_user', JSON.stringify(updated))
+      return updated
+    })
   }
 
   return (
@@ -154,14 +214,35 @@ function App() {
             ))}
           </nav>
 
-          {/* Hamburger */}
-          <button
-            className="md:hidden p-2 text-gray-400 hover:text-white transition-colors"
-            onClick={() => setMenuOpen(o => !o)}
-            aria-label="Toggle menu"
-          >
-            {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
+          {/* Right side: auth */}
+          <div className="flex items-center gap-3 shrink-0">
+            {sessionChecked && (
+              user ? (
+                <UserMenu
+                  user={user}
+                  onLogout={handleLogout}
+                  onNavigate={handleNav}
+                />
+              ) : (
+                <button
+                  onClick={() => setShowAuth(true)}
+                  className="hidden md:flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-400 hover:text-white border border-gray-700 hover:border-gray-600 rounded-lg transition-colors"
+                >
+                  <LogIn className="w-4 h-4" />
+                  Sign In
+                </button>
+              )
+            )}
+
+            {/* Hamburger */}
+            <button
+              className="md:hidden p-2 text-gray-400 hover:text-white transition-colors"
+              onClick={() => setMenuOpen(o => !o)}
+              aria-label="Toggle menu"
+            >
+              {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile menu */}
@@ -199,6 +280,34 @@ function App() {
                 ))}
               </div>
             ))}
+
+            {/* Mobile auth */}
+            <div className="border-t border-gray-800 mt-2 pt-2">
+              {user ? (
+                <>
+                  <button
+                    onClick={() => handleNav('watchlist')}
+                    className="w-full text-left px-4 py-2.5 text-sm text-gray-400 hover:text-white hover:bg-gray-800 rounded transition-colors"
+                  >
+                    My Watchlist
+                  </button>
+                  <button
+                    onClick={() => handleNav('settings')}
+                    className="w-full text-left px-4 py-2.5 text-sm text-gray-400 hover:text-white hover:bg-gray-800 rounded transition-colors"
+                  >
+                    Settings
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => { setMenuOpen(false); setShowAuth(true) }}
+                  className="w-full text-left flex items-center gap-2 px-4 py-2.5 text-sm text-emerald-400 font-medium"
+                >
+                  <LogIn className="w-4 h-4" />
+                  Sign In
+                </button>
+              )}
+            </div>
           </div>
         )}
       </header>
@@ -206,7 +315,14 @@ function App() {
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-6">
         {active === 'landing'        && <Landing onNavigate={handleNav} />}
         {active === 'dashboard'      && <Dashboard onNavigate={handleNav} />}
-        {active === 'ratings'        && !selectedTeam && <RatingsTable onTeamClick={setSelectedTeam} />}
+        {active === 'ratings'        && !selectedTeam && (
+          <RatingsTable
+            onTeamClick={setSelectedTeam}
+            user={user}
+            onWatchlistUpdate={handleWatchlistUpdate}
+            onShowAuth={() => setShowAuth(true)}
+          />
+        )}
         {active === 'ratings'        && selectedTeam && (
           <TeamProfile
             team={selectedTeam.name}
@@ -214,6 +330,9 @@ function App() {
             league={selectedTeam.league}
             eloRank={selectedTeam.rank}
             onBack={() => setSelectedTeam(null)}
+            user={user}
+            onWatchlistUpdate={handleWatchlistUpdate}
+            onShowAuth={() => setShowAuth(true)}
           />
         )}
         {active === 'matches'        && <Matches />}
@@ -226,7 +345,27 @@ function App() {
         {active === 'tournament'     && <Tournament />}
         {active === 'value-bets'     && <ValueBets />}
         {active === 'accumulators'   && <Accumulators />}
+        {active === 'watchlist'      && user && (
+          <WatchlistPage
+            user={user}
+            onWatchlistUpdate={handleWatchlistUpdate}
+          />
+        )}
+        {active === 'settings'       && user && (
+          <SettingsPage
+            user={user}
+            onUserUpdate={handleUserUpdate}
+          />
+        )}
       </main>
+
+      {/* Auth modal */}
+      {showAuth && (
+        <Auth
+          onClose={() => setShowAuth(false)}
+          onLogin={handleLogin}
+        />
+      )}
     </div>
   )
 }

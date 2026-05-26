@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import api from '../api'
-import { Loader2, ArrowLeft } from 'lucide-react'
+import { Loader2, ArrowLeft, Bookmark } from 'lucide-react'
 import {
   LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceDot,
 } from 'recharts'
@@ -41,11 +41,18 @@ const HistoryTooltip = ({ active, payload }) => {
   )
 }
 
-export default function TeamProfile({ team, eloRating, league, eloRank, onBack }) {
+export default function TeamProfile({
+  team, eloRating, league, eloRank, onBack,
+  user, onWatchlistUpdate, onShowAuth,
+}) {
   const [history, setHistory] = useState([])
   const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError]     = useState(null)
+  const [saving, setSaving]   = useState(false)
+
+  const watchlist = user?.watchlist || []
+  const saved     = watchlist.includes(team)
 
   useEffect(() => {
     setLoading(true)
@@ -61,6 +68,24 @@ export default function TeamProfile({ team, eloRating, league, eloRank, onBack }
       .catch(() => setError('Failed to load team data'))
       .finally(() => setLoading(false))
   }, [team])
+
+  async function toggleWatchlist() {
+    if (!user) {
+      onShowAuth?.()
+      return
+    }
+    if (saving) return
+    setSaving(true)
+    try {
+      const endpoint = saved ? '/api/auth/watchlist/remove' : '/api/auth/watchlist/add'
+      const res = await api.post(endpoint, { team_name: team })
+      onWatchlistUpdate?.(res.data.watchlist)
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setSaving(false)
+    }
+  }
 
   const lastPoint  = history.length > 0 ? history[history.length - 1] : null
   const formStreak = (profile?.last_10 ?? []).map(m => m.result).filter(Boolean)
@@ -79,7 +104,7 @@ export default function TeamProfile({ team, eloRating, league, eloRank, onBack }
       {/* Header */}
       <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
         <div className="flex items-start justify-between gap-4">
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center gap-2 mb-2">
               {league && (
                 <span className="text-xs bg-gray-800 border border-gray-700 text-gray-400 px-2 py-0.5 rounded font-medium">
@@ -91,7 +116,26 @@ export default function TeamProfile({ team, eloRating, league, eloRank, onBack }
               )}
             </div>
             <h1 className="text-3xl font-bold text-white">{team}</h1>
+
+            {/* Save button */}
+            <button
+              onClick={toggleWatchlist}
+              disabled={saving}
+              className={`mt-3 flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors border ${
+                saved
+                  ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30 hover:bg-emerald-500/20'
+                  : 'text-gray-400 bg-gray-800 border-gray-700 hover:text-white hover:border-gray-600'
+              } ${saving ? 'opacity-50 cursor-not-allowed' : ''}`}
+              title={!user ? 'Sign in to save teams' : undefined}
+            >
+              <Bookmark
+                className="w-4 h-4"
+                fill={saved ? 'currentColor' : 'none'}
+              />
+              {saved ? 'Saved' : 'Save Team'}
+            </button>
           </div>
+
           <div className="text-right shrink-0">
             <p className="text-xs text-gray-500 mb-0.5">Elo Rating</p>
             <p className="text-4xl font-bold text-emerald-400 tabular-nums">
