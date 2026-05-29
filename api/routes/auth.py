@@ -6,14 +6,21 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-_URL = os.getenv("SUPABASE_URL", "")
-_KEY = os.getenv("SUPABASE_KEY", "")
-_SVC = os.getenv("SUPABASE_SERVICE_KEY", _KEY)
-
-supabase = create_client(_URL, _KEY)
-admin_sb = create_client(_URL, _SVC)
-
 auth_bp = Blueprint("auth", __name__)
+
+_supabase = None
+_admin_sb = None
+
+
+def _get_clients():
+    global _supabase, _admin_sb
+    if _supabase is None:
+        url = os.environ.get("SUPABASE_URL", "")
+        key = os.environ.get("SUPABASE_KEY", "")
+        svc = os.environ.get("SUPABASE_SERVICE_KEY", key)
+        _supabase = create_client(url, key)
+        _admin_sb = create_client(url, svc)
+    return _supabase, _admin_sb
 
 
 def _now() -> str:
@@ -27,14 +34,16 @@ def _token() -> str | None:
 
 
 def _get_user(token: str):
+    sb, _ = _get_clients()
     try:
-        return supabase.auth.get_user(token).user
+        return sb.auth.get_user(token).user
     except Exception:
         return None
 
 
 def _profile_row(user_id: str) -> dict:
-    rows = admin_sb.table("profiles").select("*").eq("id", user_id).execute()
+    _, admin = _get_clients()
+    rows = admin.table("profiles").select("*").eq("id", user_id).execute()
     return rows.data[0] if rows.data else {}
 
 
@@ -59,8 +68,9 @@ def signup():
     if not email or not password:
         return jsonify({"error": "email and password required"}), 400
 
+    sb, admin = _get_clients()
     try:
-        resp = supabase.auth.sign_up({"email": email, "password": password})
+        resp = sb.auth.sign_up({"email": email, "password": password})
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
@@ -71,7 +81,7 @@ def signup():
         return jsonify({"error": "Signup failed — check your email for a confirmation link"}), 400
 
     try:
-        admin_sb.table("profiles").insert({
+        admin.table("profiles").insert({
             "id":    user.id,
             "email": email,
             "name":  name,
@@ -102,8 +112,9 @@ def login():
     if not email or not password:
         return jsonify({"error": "email and password required"}), 400
 
+    sb, _ = _get_clients()
     try:
-        resp = supabase.auth.sign_in_with_password({"email": email, "password": password})
+        resp = sb.auth.sign_in_with_password({"email": email, "password": password})
     except Exception:
         return jsonify({"error": "Invalid email or password"}), 401
 
@@ -158,7 +169,8 @@ def update_profile():
     if "email_alerts" in body:
         updates["email_alerts"] = bool(body["email_alerts"])
 
-    admin_sb.table("profiles").update(updates).eq("id", user.id).execute()
+    _, admin = _get_clients()
+    admin.table("profiles").update(updates).eq("id", user.id).execute()
 
     row = _profile_row(user.id)
     return jsonify({"profile": _shape_profile(row)})
@@ -182,7 +194,8 @@ def watchlist_add():
     current = list(row.get("watchlist") or [])
     if team_name not in current:
         current.append(team_name)
-        admin_sb.table("profiles").update({
+        _, admin = _get_clients()
+        admin.table("profiles").update({
             "watchlist":  current,
             "updated_at": _now(),
         }).eq("id", user.id).execute()
@@ -206,7 +219,8 @@ def watchlist_remove():
 
     row     = _profile_row(user.id)
     current = [t for t in (row.get("watchlist") or []) if t != team_name]
-    admin_sb.table("profiles").update({
+    _, admin = _get_clients()
+    admin.table("profiles").update({
         "watchlist":  current,
         "updated_at": _now(),
     }).eq("id", user.id).execute()
