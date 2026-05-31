@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import api from '../api'
-import { X, Loader2 } from 'lucide-react'
+import { X, Loader2, TrendingUp, TrendingDown, Minus } from 'lucide-react'
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -436,6 +436,159 @@ function H2HSection({ homeTeam, awayTeam, h2h }) {
 }
 
 // ---------------------------------------------------------------------------
+// Section 7 — Team Profiles (disciplinary + fatigue)
+// ---------------------------------------------------------------------------
+
+function aggrColorClass(v) {
+  if (v == null) return 'text-gray-400'
+  if (v > 0.5) return 'text-red-400'
+  if (v > 0.3) return 'text-amber-400'
+  return 'text-emerald-400'
+}
+
+function aggrBarClass(v) {
+  if (v == null) return 'bg-gray-600'
+  if (v > 0.5) return 'bg-red-500'
+  if (v > 0.3) return 'bg-amber-500'
+  return 'bg-emerald-500'
+}
+
+function fatigueColorClass(days) {
+  if (days == null) return 'text-gray-400'
+  if (days < 4) return 'text-red-400'
+  if (days <= 6) return 'text-amber-400'
+  return 'text-emerald-400'
+}
+
+function congestionColorClass(n) {
+  if (n == null) return 'text-gray-400'
+  if (n > 5) return 'text-red-400'
+  if (n >= 3) return 'text-amber-400'
+  return 'text-emerald-400'
+}
+
+function TrendIcon({ value }) {
+  if (value == null || value === 0) return <Minus className="w-3 h-3 text-gray-400 inline" />
+  if (value > 0) return <TrendingUp className="w-3 h-3 text-red-400 inline" />
+  return <TrendingDown className="w-3 h-3 text-emerald-400 inline" />
+}
+
+function TendencyCol({ teamName, t, side }) {
+  if (!t) {
+    return (
+      <div className="flex-1 min-w-0">
+        <p className="text-[11px] font-semibold text-gray-300 truncate mb-3">{teamName}</p>
+        <p className="text-xs text-gray-600">No profile data</p>
+      </div>
+    )
+  }
+
+  const cardAvg = side === 'home' ? t.home_yellow_avg : t.away_yellow_avg
+  const cardLabel = side === 'home' ? 'Home yellows' : 'Away yellows'
+  const showPremiumBadge = side === 'away' && (t.away_card_premium ?? 0) > 0.3
+
+  return (
+    <div className="flex-1 min-w-0">
+      <p className="text-[11px] font-semibold text-gray-300 truncate mb-3">{teamName}</p>
+
+      {/* Aggression bar */}
+      <div className="mb-3">
+        <div className="flex justify-between text-[10px] mb-1">
+          <span className="text-gray-500 uppercase tracking-wider">Aggression</span>
+          <span className={`font-semibold tabular-nums ${aggrColorClass(t.aggression_index)}`}>
+            {t.aggression_index != null ? t.aggression_index.toFixed(2) : '—'}
+          </span>
+        </div>
+        <div className="h-1.5 bg-gray-800 rounded-full overflow-hidden">
+          <div
+            className={`h-full rounded-full transition-all ${aggrBarClass(t.aggression_index)}`}
+            style={{ width: `${Math.round((t.aggression_index ?? 0) * 100)}%` }}
+          />
+        </div>
+      </div>
+
+      {/* Disciplinary stats */}
+      <div className="flex flex-col gap-1.5 text-xs">
+        <div className="flex justify-between">
+          <span className="text-gray-500">Avg yellows</span>
+          <span className="text-white tabular-nums">
+            {t.avg_yellows_per_game != null ? t.avg_yellows_per_game.toFixed(1) : '—'}/game
+          </span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-gray-500">Avg fouls</span>
+          <span className="text-white tabular-nums">
+            {t.avg_fouls_per_game != null ? t.avg_fouls_per_game.toFixed(1) : '—'}/game
+          </span>
+        </div>
+        <div className="flex justify-between items-center">
+          <span className="text-gray-500">{cardLabel}</span>
+          <span className="flex items-center gap-1.5 tabular-nums text-white">
+            {cardAvg != null ? cardAvg.toFixed(2) : '—'}
+            {showPremiumBadge && (
+              <span className="text-[9px] bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded px-1 font-semibold leading-tight">
+                +{t.away_card_premium.toFixed(2)}
+              </span>
+            )}
+          </span>
+        </div>
+        <div className="flex justify-between items-center">
+          <span className="text-gray-500">Yellow trend</span>
+          <span className="flex items-center gap-1">
+            <TrendIcon value={t.yellow_trend} />
+            <span className={
+              t.yellow_trend > 0 ? 'text-red-400' :
+              t.yellow_trend < 0 ? 'text-emerald-400' : 'text-gray-400'
+            }>
+              {t.yellow_trend > 0 ? 'Rising' : t.yellow_trend < 0 ? 'Falling' : 'Stable'}
+            </span>
+          </span>
+        </div>
+      </div>
+
+      {/* Fatigue */}
+      <div className="mt-3 pt-3 border-t border-gray-800/60">
+        <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-1.5">Fatigue</p>
+        <div className="flex flex-col gap-1 text-xs">
+          <div className="flex justify-between">
+            <span className="text-gray-500">Last match</span>
+            <span className={`tabular-nums ${fatigueColorClass(t.days_since_last)}`}>
+              {t.days_since_last != null ? `${t.days_since_last}d ago` : '—'}
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-gray-500">Last 21 days</span>
+            <span className={`tabular-nums ${congestionColorClass(t.matches_last_21d)}`}>
+              {t.matches_last_21d != null ? `${t.matches_last_21d} matches` : '—'}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function TeamProfilesSection({ homeTeam, awayTeam, homeTendency, awayTendency, loading }) {
+  return (
+    <div>
+      <SectionHeader icon="🧬" title="Team Profiles" />
+      {loading ? (
+        <div className="flex items-center gap-2 py-4">
+          <Loader2 className="w-4 h-4 text-emerald-400 animate-spin" />
+          <span className="text-xs text-gray-500">Loading profiles…</span>
+        </div>
+      ) : (
+        <div className="flex gap-4">
+          <TendencyCol teamName={homeTeam} t={homeTendency} side="home" />
+          <div className="w-px bg-gray-800 self-stretch" />
+          <TendencyCol teamName={awayTeam} t={awayTendency} side="away" />
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
 // Main modal
 // ---------------------------------------------------------------------------
 
@@ -443,6 +596,9 @@ export default function MatchPreview({ match, onClose }) {
   const [data, setData]       = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError]     = useState(null)
+
+  const [tendencies, setTendencies]             = useState({ home: null, away: null })
+  const [tendenciesLoading, setTendenciesLoading] = useState(false)
 
   useEffect(() => {
     if (!match) return
@@ -455,6 +611,23 @@ export default function MatchPreview({ match, onClose }) {
       .then(res => setData(res.data.data))
       .catch(e => setError(e?.response?.data?.error ?? 'Failed to load preview'))
       .finally(() => setLoading(false))
+  }, [match?.home_team, match?.away_team])
+
+  useEffect(() => {
+    if (!match) return
+    setTendencies({ home: null, away: null })
+    setTendenciesLoading(true)
+    Promise.all([
+      api.get('/api/team/tendencies', { params: { team: match.home_team } }).catch(() => null),
+      api.get('/api/team/tendencies', { params: { team: match.away_team } }).catch(() => null),
+    ])
+      .then(([homeRes, awayRes]) => {
+        setTendencies({
+          home: homeRes?.data?.data ?? null,
+          away: awayRes?.data?.data ?? null,
+        })
+      })
+      .finally(() => setTendenciesLoading(false))
   }, [match?.home_team, match?.away_team])
 
   // Close on Escape
@@ -545,6 +718,14 @@ export default function MatchPreview({ match, onClose }) {
                 homeTeam={data.home_canon ?? data.home_team}
                 awayTeam={data.away_canon ?? data.away_team}
                 h2h={data.h2h}
+              />
+              <Divider />
+              <TeamProfilesSection
+                homeTeam={data.home_canon ?? data.home_team}
+                awayTeam={data.away_canon ?? data.away_team}
+                homeTendency={tendencies.home}
+                awayTendency={tendencies.away}
+                loading={tendenciesLoading}
               />
             </>
           )}
