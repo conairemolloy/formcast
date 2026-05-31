@@ -67,6 +67,28 @@ def get_ratings_history():
     return ok(history.to_dict(orient="records"))
 
 
+@ratings_bp.get("/team/tendencies")
+def get_team_tendencies():
+    team = request.args.get("team", "").strip()
+    if not team:
+        return jsonify({"success": False, "error": "team parameter required"}), 400
+
+    df = current_app.config["DATA"].get("team_tendencies")
+    if df is None or df.empty:
+        return jsonify({"success": False, "error": "team_tendencies data not available"}), 503
+
+    row = df[df["team"].str.lower() == team.lower()]
+    if row.empty:
+        return jsonify({"success": False, "error": f"Team '{team}' not found"}), 404
+
+    record = row.iloc[0].where(pd.notna(row.iloc[0]), other=None).to_dict()
+    return jsonify({
+        "success": True,
+        "data": record,
+        "meta": {"generated_at": datetime.now(timezone.utc).isoformat()},
+    })
+
+
 @ratings_bp.get("/ratings/<team>")
 def get_team_ratings(team):
     elo = current_app.config["DATA"]["elo_ratings"]

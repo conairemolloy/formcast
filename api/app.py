@@ -17,6 +17,13 @@ def load_csv(filename):
     path = os.path.join(DATA_DIR, filename)
     return pd.read_csv(path)
 
+def _load_team_tendencies():
+    path = os.path.join(DATA_DIR, "team_tendencies.csv")
+    if not os.path.exists(path):
+        return pd.DataFrame()
+    return pd.read_csv(path)
+
+
 def _load_live_value_bets():
     path = os.path.join(DATA_DIR, "live_value_bets.csv")
     if not os.path.exists(path):
@@ -54,6 +61,7 @@ def create_app():
         "tournament_simulations": load_csv("tournament_simulations.csv"),
         "elo_predictions":        _load_elo_predictions(),
         "live_value_bets":        _load_live_value_bets(),
+        "team_tendencies":        _load_team_tendencies(),
     }
 
     app.register_blueprint(ratings_bp,     url_prefix="/api")
