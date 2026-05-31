@@ -21,6 +21,10 @@
 - Ensemble predictions pipeline — XGBoost + meta-learner saved, predict_upcoming.py ready for August
 - SHA256 prediction log — 27 predictions published, auto-settles after each gameweek
 - Dropdown navigation — 4 groups with hover dropdowns (Analysis, Predictions, Betting, Learn)
+- User accounts — Supabase Auth, signup/login/logout, FREE tier badge
+- Watchlist — save favourite teams, bookmark icon on ratings page, form dots on watchlist cards
+- Settings page — name editor, email alerts toggle
+- Session persistence — stays logged in on refresh, token revalidated against Supabase on mount
 
 ---
 
@@ -59,6 +63,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 | Live Value Bets | Odds API integration, 6 leagues, weekly refresh |
 | Match Deep Dive | corners, cards, goals, correct scores, BTTS markets |
 | Ensemble models saved | XGBoost + meta-learner + league encoder persisted to models/ |
+| Users | Supabase Auth live, profiles table, watchlist, tier system ready for monetisation |
 
 ---
 
@@ -255,7 +260,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [x] League filter on ratings page (show only EPL, only La Liga etc)
 - [x] Mobile responsive layout
 - [ ] Dark/light mode toggle
-- [ ] Loading skeletons instead of spinners
+- [x] Loading skeletons instead of spinners (partially — auth loading states done, full skeleton screens pending)
 - [ ] Match prediction card (upcoming fixtures with probability breakdown)
 - [ ] Tournament simulation visualisation (probability treemap per team)
 - [ ] Value bet history chart (CLV over time, ROI by league)
@@ -415,7 +420,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 > Note: All phases 13-18 apply across all sports — football, GAA, tennis, golf, NFL, basketball, horse racing, and any future sport additions. Features built for football first, then extended to each sport as data becomes available.
 
 - [ ] Pricing page — free tier vs pro tier clearly explained
-- [ ] User accounts — Supabase Auth, save favourite teams, personalised dashboard
+- [x] User accounts — Supabase Auth, save favourite teams, personalised dashboard
 - [ ] Pro tier features — advanced filters, more predictions, API access, no rate limits
 - [ ] Email notifications — "Arsenal have a value bet this weekend, click to see" (Resend API)
 - [ ] Push notifications — browser push for live value bets and match alerts
