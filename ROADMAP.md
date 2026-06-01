@@ -25,6 +25,9 @@
 - Watchlist — save favourite teams, bookmark icon on ratings page, form dots on watchlist cards
 - Settings page — name editor, email alerts toggle
 - Session persistence — stays logged in on refresh, token revalidated against Supabase on mount
+- Match Research — pick any two teams, full match analysis with win probs, H2H, form, team profiles
+- Team Profiles — disciplinary index, aggression score, fatigue, away card premium for all 442 teams
+- Referee & Fatigue Features — team_tendencies.csv with 15 features per team
 
 ---
 
@@ -93,11 +96,11 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [x] Winning/losing streak — Bernoulli run length
 
 ### Fatigue & Fixture Congestion (8 factors)
-- [ ] Days since last match (< 4 days = -40 Elo penalty)
-- [ ] Matches in last 21 days (3+ = -20 Elo additional)
+- [x] Rest asymmetry (home vs away rest days differential)
+- [x] Days since last match — computed in team_tendencies.csv
+- [x] Matches in last 21 days — computed in team_tendencies.csv
 - [ ] Travel km in last 14 days
 - [ ] Cup + league dual burden (-15 Elo)
-- [ ] Rest asymmetry (home vs away rest days differential)
 - [ ] GAA dual code — football + hurling within 5 days (-25 Elo)
 - [ ] County team commitments during intercounty season (-10 Elo)
 - [ ] Altitude adjustment for away venue
@@ -113,13 +116,13 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 ### Psychological & Situational (10 factors)
 - [ ] Manager change (binary, last 60 days, +15 Elo)
 - [ ] Cup final pressure (-5% scoring rate)
-- [ ] Revenge factor (+5 Elo vs opponent who beat them last)
+- [x] Revenge factor (+5 Elo vs opponent who beat them last) — in ensemble
 - [ ] Title-deciding match (+3% uplift)
 - [ ] Relegation pressure (+10 Elo survival instinct)
-- [ ] Post-loss bounce (+8 Elo)
+- [x] Post-loss bounce (+8 Elo) — in ensemble
 - [ ] Season-opener variance (widen CI 20%)
 - [ ] Referee tendency (historical cards/frees per referee)
-- [ ] H2H psychological dominance
+- [x] H2H psychological dominance — in ensemble
 - [ ] Championship vs league priority (-10 Elo squad rotation)
 
 ### Weather (7 conditions — OpenWeatherMap API)
@@ -169,6 +172,33 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Title decider uplift — teams playing title-deciding matches under increased pressure
 - [ ] VAR decision tendency — some referees overturn more decisions, affects game flow
 
+### Current Form & Momentum Display
+- [ ] Current form bar — visual last 5 results with goals on dashboard and match preview
+- [ ] Home/away form split — show separately on team profile and match preview
+- [ ] Goal scoring form — goals scored/conceded trend last 5 matches
+- [ ] Season phase adjustment — early season wider uncertainty, late season motivation shifts
+- [ ] Relegation 6-pointer boost — teams fighting relegation show elevated performance
+- [ ] Title decider uplift — teams in title races perform differently under pressure
+- [ ] Post-European game fatigue — performance drop after Thursday Europa League travel
+- [ ] Congestion index — matches in last 14 days weighted by travel distance
+- [ ] Revenge factor — team lost last meeting, elevated motivation signal
+- [ ] Post-loss bounce — teams statistically perform better after heavy defeats
+
+### Environmental Features
+- [ ] Weather at kickoff — OpenWeatherMap API (wind speed, rain mm/hr, temperature, affects goals and cards)
+- [ ] Distance travelled — stadium coordinates database + great circle km calculation
+- [ ] Altitude adjustment — away team performance penalty for high altitude venues
+- [ ] Pitch condition proxy — rain in last 48hrs affects goal scoring rates
+
+### Disciplinary & Referee Features
+- [x] Team aggression index — normalised composite of fouls + cards (team_tendencies.csv)
+- [x] Away card premium — teams get more cards away, quantified per team
+- [x] Yellow trend — is team getting more or less disciplined recently
+- [x] Fatigue score — days rest + fixture congestion per team
+- [ ] Referee tendencies — cards/fouls per game per referee (need referee column in results.csv)
+- [ ] Home bias score — referees who favour home teams statistically
+- [ ] VAR tendency — referees who overturn more decisions
+
 ---
 
 ## Phase 2b — Individual Player Modelling
@@ -214,12 +244,12 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [x] Kelly criterion stake sizing (half-Kelly)
 - [x] Accumulator builder — optimal leg selection by EV
 - [ ] Accumulator independence testing (same-league correlation correction)
-- [ ] Accumulator EV matrix UI (best combinations visualised)
+- [ ] Accumulator EV matrix UI — best combinations visualised as grid
 - [x] Closing line value (CLV) tracking — mean(log(P_model / P_close))
 - [ ] SHA256 prediction accountability ledger (hash-stamped pre-match)
-- [ ] Sharpe ratio + max drawdown on simulated betting strategy
-- [ ] Dutching calculator (stake across multiple outcomes)
-- [ ] Arbitrage detector (Σ(1/odds) < 1 across bookmakers)
+- [ ] Sharpe ratio + max drawdown on simulated flat-stake strategy
+- [ ] Dutching calculator — optimal stake distribution across multiple outcomes
+- [ ] Arbitrage detector — Σ(1/odds) < 1 across bookmakers, flag instantly
 - [x] Match deep-dive page — win/draw/loss probabilities, goals markets, correct scores, BTTS, corners markets, cards markets, H2H stats
 
 ---
@@ -265,6 +295,20 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Tournament simulation visualisation (probability treemap per team)
 - [ ] Value bet history chart (CLV over time, ROI by league)
 - [ ] Accumulator builder UI (interactive leg selector, real-time EV calculation)
+- [ ] Weather display on match preview — wind, rain, temp for upcoming fixtures with impact assessment
+- [ ] Home/away form split on match preview — last 5 home results vs last 5 away results
+- [ ] Current form visualization — last 5 results dots with goals scored/conceded
+- [ ] SHAP waterfall chart per match — why did the model predict this outcome
+- [ ] Cumulative P&L chart — flat stake simulation over time with drawdown shading
+- [ ] Brier score trend chart — rolling 90-match window showing model improvement
+- [ ] Match prediction card — shareable upcoming fixture card for social media
+- [ ] Tournament probability treemap — visual probability distribution per team
+- [ ] Value bet history chart — CLV over time, ROI by league breakdown
+- [ ] Animated Elo bar chart race — top 20 teams over 33 seasons
+- [ ] Global search — find any team, match, or league instantly across the whole site
+- [ ] Loading skeletons everywhere — replace all remaining spinners
+- [ ] PWA support — installable on mobile home screen, offline support
+- [ ] Onboarding tour — first-time user walkthrough (Shepherd.js)
 - [ ] Custom domain (formcast.io or similar)
 
 ---
@@ -311,6 +355,20 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] TransferMarkt integration — injury/suspension data, market values, manager changes
 - [ ] Betfair Exchange API — live exchange prices for line movement tracking
 - [ ] OpenWeatherMap API — weather at kickoff time (wind, rain, temperature)
+- [ ] Squad rotation detection — cup game before league game pattern detection
+- [ ] International break fatigue — performance drop after international duty
+- [ ] Manager change tracking — manual or TransferMarkt, +8 Elo bounce signal
+- [ ] Distance travelled database — stadium lat/lng for all 442 clubs, travel km calculator
+- [ ] Europa League historical data
+- [ ] UEFA Conference League data 2021-present
+- [ ] World Cup 2018 and 2022 full data
+- [ ] MLS data — Major League Soccer 2010-present
+- [ ] Women's football — WSL, NWSL, UWCL
+- [ ] Brazilian Série A
+- [ ] Argentine Primera División
+- [ ] Portuguese Primeira Liga
+- [ ] Turkish Süper Lig
+- [ ] 8 more European leagues (Greek, Belgian, Danish, Norwegian, Swedish, Japanese, Chinese, Australian)
 
 ### Tennis
 - [ ] Jeff Sackmann ATP dataset (500k+ matches, 1968-present)
@@ -419,18 +477,18 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 ## Phase 13 — Business & Monetisation
 > Note: All phases 13-18 apply across all sports — football, GAA, tennis, golf, NFL, basketball, horse racing, and any future sport additions. Features built for football first, then extended to each sport as data becomes available.
 
-- [ ] Pricing page — free tier vs pro tier clearly explained
+- [ ] Pricing page — Free vs Pro vs Elite tiers clearly explained with feature comparison table
 - [x] User accounts — Supabase Auth, save favourite teams, personalised dashboard
 - [ ] Pro tier features — advanced filters, more predictions, API access, no rate limits
-- [ ] Email notifications — "Arsenal have a value bet this weekend, click to see" (Resend API)
+- [ ] Email alerts — Resend API, weekly digest + instant alerts for watchlist teams (free tier = 3k emails/month)
 - [ ] Push notifications — browser push for live value bets and match alerts
 - [ ] Watchlist — users save teams and get notified when they have value bets
-- [ ] API access tier — sell data access to developers, API key management
-- [ ] Affiliate bookmaker links — when showing value bets, deep-link to the bookie (Bet365, Paddy Power, Betfair)
-- [ ] Subscription management — Stripe integration for pro tier billing
+- [ ] API access tier — sell data access to developers with key management
+- [ ] Affiliate bookmaker links — deep-link to Bet365, Paddy Power, Betfair on value bet cards
+- [ ] Stripe subscriptions — Pro tier billing, webhook handling, subscription management
 - [ ] Referral program — share FormCast, get a month free
 - [ ] Team/league following — personalised feed based on followed teams
-- [ ] Usage analytics — track which pages/features users engage with most (PostHog or Mixpanel)
+- [ ] PostHog analytics — track which pages and features users actually use
 
 ---
 
@@ -457,6 +515,9 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [x] Scheduled prediction publishing — publish_predictions.py runs Monday via GitHub Actions
 - [ ] Database backup — automated daily Supabase backup to S3
 - [ ] Monitoring & alerting — Sentry for errors, UptimeRobot for uptime, PagerDuty for critical failures
+- [ ] Sentry error monitoring — free tier, catch Railway API errors automatically
+- [ ] UptimeRobot monitoring — ping /api/health every 5 minutes, alert on downtime
+- [ ] referee_fatigue_features.py in weekly pipeline — regenerate team_tendencies.csv every Monday
 - [x] CI/CD pipeline — GitHub Actions
 - [ ] Automated test suite — pytest for API, Playwright for frontend E2E tests
 - [ ] Data quality checks — automated validation after each ingestion (row counts, nulls, date ranges)
@@ -527,6 +588,31 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Japanese J1 League
 - [ ] Chinese Super League
 - [ ] Australian A-League
+
+---
+
+## Phase 19 — Match Intelligence
+- [ ] Weather-adjusted predictions — incorporate OpenWeatherMap data into Elo probability adjustments
+- [ ] Distance fatigue model — penalise away teams based on travel distance for midweek games
+- [ ] Home/away Elo split — maintain separate home and away Elo ratings per team
+- [ ] Form-weighted predictions — increase weight of last 5 matches vs career average in late season
+- [ ] Pre-match news sentiment — scan team news for injury/suspension signals
+- [ ] Live odds movement tracker — detect line movement pre-kickoff as sharp money signal
+- [ ] Match importance index — weight predictions by how much the match matters (title, relegation, cup final)
+- [ ] Upset probability model — when does Elo underestimate upset probability
+- [ ] Score timeline model — predict when goals are most likely in a match (minute distribution)
+- [ ] Referee impact model — quantify how specific referee assignment affects match outcome probability
+
+---
+
+## Phase 20 — Community & Social
+- [ ] Public prediction leaderboard — rank users by Brier score on their predictions
+- [ ] Tipping competition — weekly competition, users submit predictions, ranked by accuracy
+- [ ] Discord/Slack bot — post value bets and predictions automatically
+- [ ] Social sharing — one-click share match preview or value bet to Twitter/X
+- [ ] Embed widget — let other sites embed FormCast win probabilities via iframe
+- [ ] Press kit — stats, methodology screenshots for journalists and podcasters
+- [ ] Academic paper — arXiv preprint of the methodology for credibility
 
 ---
 
