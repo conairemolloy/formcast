@@ -137,11 +137,16 @@ export default function MatchResearch() {
   const [previewMatch, setPreviewMatch] = useState(null)
 
   useEffect(() => {
-    api.get('/api/ratings')
-      .then(res => {
-        const sorted = (res.data.data ?? [])
-          .filter(r => r.team && r.league)
-          .map(r => ({ team: r.team, league: r.league }))
+    Promise.all([api.get('/api/ratings'), api.get('/api/predictions')])
+      .then(([ratingsRes, predictionsRes]) => {
+        const leagueMap = {}
+        for (const row of (predictionsRes.data.data ?? [])) {
+          if (row.home_team) leagueMap[row.home_team] = row.league
+          if (row.away_team) leagueMap[row.away_team] = row.league
+        }
+        const sorted = (ratingsRes.data.data ?? [])
+          .filter(r => r.team)
+          .map(r => ({ team: r.team, league: leagueMap[r.team] || 'Other', elo_rating: r.elo_rating }))
           .sort((a, b) => a.league.localeCompare(b.league) || a.team.localeCompare(b.team))
         setTeams(sorted)
       })
