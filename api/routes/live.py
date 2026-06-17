@@ -15,6 +15,7 @@ FDATA_BASE = "https://api.football-data.org/v4"
 HEADERS = {"X-Auth-Token": FDATA_API_KEY}
 
 _ELO_RATINGS: dict[str, float] = {}
+_INTL_ELO_RATINGS: dict[str, float] = {}
 _RESULTS_DF: pd.DataFrame | None = None
 
 def _load_elo():
@@ -24,6 +25,16 @@ def _load_elo():
     df = pd.read_csv(path)
     for _, row in df.iterrows():
         _ELO_RATINGS[row["team"].strip()] = float(row["elo_rating"])
+
+def _load_international_elo():
+    path = os.path.normpath(
+        os.path.join(os.path.dirname(__file__), "..", "..", "data", "processed", "international_elo_ratings.csv")
+    )
+    if not os.path.exists(path):
+        return
+    df = pd.read_csv(path)
+    for _, row in df.iterrows():
+        _INTL_ELO_RATINGS[row["team"].strip()] = float(row["elo_rating"])
 
 def _load_results():
     global _RESULTS_DF
@@ -35,6 +46,7 @@ def _load_results():
     _RESULTS_DF = df
 
 _load_elo()
+_load_international_elo()
 _load_results()
 
 # ---------------------------------------------------------------------------
@@ -168,6 +180,77 @@ def _resolve_elo(fdo_name: str) -> float:
 
 
 # ---------------------------------------------------------------------------
+# International competition detection and Elo resolution
+# ---------------------------------------------------------------------------
+
+INTL_NAME_ALIASES: dict[str, str] = {
+    "Czechia":            "Czech Republic",
+    "Bosnia-Herzegovina": "Bosnia and Herzegovina",
+}
+
+HOST_NATIONS: dict[str, set[str]] = {
+    "FIFA World Cup": {"United States", "Mexico", "Canada"},
+}
+
+INTERNATIONAL_COMPETITIONS = frozenset({
+    "FIFA World Cup",
+    "UEFA European Championship",
+    "Copa América",
+    "African Cup of Nations",
+    "AFC Asian Cup",
+    "UEFA Nations League",
+    "CONCACAF Gold Cup",
+    "CONCACAF Nations League",
+    "OFC Nations Cup",
+})
+
+_INTL_KEYWORDS = (
+    "world cup",
+    "european championship",
+    "copa america",
+    "copa américa",
+    "african cup",
+    "asian cup",
+    "nations league",
+    "concacaf",
+    "ofc nations",
+)
+
+
+def is_international_competition(competition: str) -> bool:
+    if not competition:
+        return False
+    comp_lower = competition.lower()
+    for kw in _INTL_KEYWORDS:
+        if kw in comp_lower:
+            return True
+    return False
+
+
+def is_tournament_finals(competition: str) -> bool:
+    """True for tournament finals proper; False for qualification rounds."""
+    if not competition:
+        return False
+    if "qualification" in competition.lower():
+        return False
+    return competition in INTERNATIONAL_COMPETITIONS
+
+
+def _resolve_international_elo(name: str) -> float | None:
+    """Look up a national team in _INTL_ELO_RATINGS. Returns None if not found."""
+    canonical = INTL_NAME_ALIASES.get(name, name)
+    if canonical in _INTL_ELO_RATINGS:
+        return _INTL_ELO_RATINGS[canonical]
+    if name in _INTL_ELO_RATINGS:
+        return _INTL_ELO_RATINGS[name]
+    name_lower = name.lower()
+    for team, rating in _INTL_ELO_RATINGS.items():
+        if team.lower() == name_lower:
+            return rating
+    return None
+
+
+# ---------------------------------------------------------------------------
 # Probability maths
 # ---------------------------------------------------------------------------
 
@@ -180,8 +263,13 @@ def _sigmoid(x: float) -> float:
     return 1.0 / (1.0 + math.exp(-x))
 
 
-def _prematch_probs(home_elo: float, away_elo: float) -> tuple[float, float, float]:
-    elo_diff = home_elo - away_elo + 50  # home advantage
+def _prematch_probs(
+    home_elo: float,
+    away_elo: float,
+    apply_home_advantage: bool = True,
+) -> tuple[float, float, float]:
+    ha = 50 if apply_home_advantage else 0
+    elo_diff = home_elo - away_elo + ha
     p_home_raw = 1.0 / (1.0 + 10 ** (-elo_diff / 400))
     p_away_raw = 1.0 / (1.0 + 10 ** (elo_diff / 400))
     # Draw peaks at ~27% for evenly matched teams, shrinks for mismatches
@@ -252,13 +340,26 @@ def _parse_match(m: dict, inplay: bool) -> dict:
 
     home_name = home.get("name", "")
     away_name = away.get("name", "")
+    comp_name = comp.get("name", "")
     home_goals = full.get("home")
     away_goals = full.get("away")
     minute_raw = m.get("minute")
     minute = int(minute_raw) if minute_raw is not None else None
 
-    home_elo = _resolve_elo(home_name)
-    away_elo = _resolve_elo(away_name)
+    # Elo resolution — use international ratings for national-team competitions
+    if is_international_competition(comp_name):
+        home_elo_intl = _resolve_international_elo(home_name)
+        away_elo_intl = _resolve_international_elo(away_name)
+        home_elo = home_elo_intl if home_elo_intl is not None else _resolve_elo(home_name)
+        away_elo = away_elo_intl if away_elo_intl is not None else _resolve_elo(away_name)
+        if is_tournament_finals(comp_name):
+            apply_ha = home_name in HOST_NATIONS.get(comp_name, set())
+        else:
+            apply_ha = True  # qualifiers and friendlies are genuine home/away
+    else:
+        home_elo = _resolve_elo(home_name)
+        away_elo = _resolve_elo(away_name)
+        apply_ha = True
 
     # Parse date / time
     utc_date = m.get("utcDate", "")
@@ -270,11 +371,11 @@ def _parse_match(m: dict, inplay: bool) -> dict:
             home_elo, away_elo, int(home_goals), int(away_goals), minute
         )
     else:
-        p_home, p_draw, p_away = _prematch_probs(home_elo, away_elo)
+        p_home, p_draw, p_away = _prematch_probs(home_elo, away_elo, apply_ha)
 
     return {
         "match_id":   m.get("id"),
-        "competition": comp.get("name", ""),
+        "competition": comp_name,
         "home_team":  home_name,
         "away_team":  away_name,
         "home_goals": home_goals,
@@ -757,8 +858,10 @@ def match_preview():
     home_canon = _canonical_name(home_team)
     away_canon = _canonical_name(away_team)
 
-    home_elo = _resolve_elo(home_team)
-    away_elo = _resolve_elo(away_team)
+    home_elo_intl = _resolve_international_elo(home_team)
+    away_elo_intl = _resolve_international_elo(away_team)
+    home_elo = home_elo_intl if home_elo_intl is not None else _resolve_elo(home_team)
+    away_elo = away_elo_intl if away_elo_intl is not None else _resolve_elo(away_team)
     p_home, p_draw, p_away = _prematch_probs(home_elo, away_elo)
 
     home_form = _last5_stats(home_canon)
