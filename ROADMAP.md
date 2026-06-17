@@ -18,6 +18,7 @@
 - How It Works: methodology, models, glossary
 - GitHub Actions weekly automation (Monday 6am UTC)
 - Mobile responsive
+- Known issue: World Cup/international fixtures show placeholder Elo 1500 predictions (no real signal yet) — Phase 21 in progress
 - Ensemble predictions pipeline — XGBoost + meta-learner saved, predict_upcoming.py ready for August
 - SHA256 prediction log — 27 predictions published, auto-settles after each gameweek
 - Dropdown navigation — 4 groups with hover dropdowns (Analysis, Predictions, Betting, Learn)
@@ -613,6 +614,38 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Embed widget — let other sites embed FormCast win probabilities via iframe
 - [ ] Press kit — stats, methodology screenshots for journalists and podcasters
 - [ ] Academic paper — arXiv preprint of the methodology for credibility
+
+---
+
+## Phase 21 — International Football
+> The World Cup (June-July 2026) exposed a real gap: national teams
+> default to Elo 1500 with no signal, since our dataset is club
+> football only. This phase builds a proper international football
+> module — separate rating space, tournament-aware modelling, and
+> fixes the live feed showing meaningless confident-looking predictions.
+
+### Data Pipeline
+- [ ] International results dataset — Kaggle "International football results from 1872 to present", ~45,000+ matches, all FIFA-recognised nations, friendlies included
+- [ ] World Cup historical results 1930-2022 — tagged by stage (group/R16/QF/SF/Final), knockout dynamics differ from friendlies
+- [ ] Confederation mapping — every nation tagged UEFA/CONMEBOL/CONCACAF/CAF/AFC/OFC
+- [ ] Euros, Copa América, AFCON, Asian Cup historical results
+- [ ] World Cup 2026 fixture list and group stage data
+- [ ] Squad-based club strength proxy — count of players per national team from "big 5 league" clubs, using existing club Elo data as a novel cross-dataset signal no competitor has
+
+### Modelling
+- [ ] Separate international Elo space — distinct K-factor and home advantage calibration from club Elo (neutral-venue tournaments have no home team for ~90% of World Cup matches)
+- [ ] Match importance weighting — friendly vs qualifier vs tournament knockout, K-factor scales with stakes (same approach as eloratings.net)
+- [ ] Confederation strength adjustment — historical cross-confederation gap correction (AFC/CAF vs UEFA/CONMEBOL)
+- [ ] Squad depth feature — big-5-league player count per national team as input to win probability model
+- [ ] Tournament bracket Monte Carlo simulator — extend existing 100k-sim engine to 48-team group + knockout structure for World Cup 2026
+- [ ] Group qualification probability model — live-updating odds of finishing top 2 in group, updated after every match
+
+### Product & Bug Fixes
+- [ ] Fix live feed — stop showing fake-confident predictions for teams with Elo 1500 default (no real signal), suppress or label clearly until international Elo ships
+- [ ] Fix team-name resolution bug — "Belgium vs Mirandes" type errors, club teams incorrectly appearing as national team fixtures in the football-data.org live feed during tournament windows
+- [ ] International ratings page — separate table from club ratings, sortable by confederation
+- [ ] World Cup Hub page — live group tables, qualification probabilities, Round of 16 bracket prediction tree, "path to the final" probability per team
+- [ ] International team profile pages — extend existing TeamProfile component to work for national teams (different stats shape than club)
 
 ---
 
