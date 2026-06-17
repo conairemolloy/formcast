@@ -69,6 +69,95 @@ def _strip_suffix(name: str) -> str:
     return _SUFFIX_RE.sub("", name or "").strip()
 
 
+INTERNATIONAL_COMPETITIONS = frozenset({
+    "FIFA World Cup",
+    "UEFA European Championship",
+    "Copa América",
+    "African Cup of Nations",
+    "AFC Asian Cup",
+    "UEFA Nations League",
+    "CONCACAF Gold Cup",
+    "CONCACAF Nations League",
+    "OFC Nations Cup",
+})
+
+INTL_NAME_ALIASES: dict[str, str] = {
+    "Czechia":             "Czech Republic",
+    "Bosnia-Herzegovina":  "Bosnia and Herzegovina",
+}
+
+# Teams that receive genuine home advantage at a tournament finals
+# (i.e. they are the host nation — all other teams play at neutral venues)
+HOST_NATIONS: dict[str, set[str]] = {
+    "FIFA World Cup": {"United States", "Mexico", "Canada"},
+}
+
+_INTL_KEYWORDS = (
+    "world cup",
+    "european championship",
+    "copa america",
+    "copa américa",
+    "african cup",
+    "asian cup",
+    "nations league",
+    "concacaf",
+    "ofc nations",
+)
+
+
+def is_international_competition(competition: str) -> bool:
+    """Return True only for confirmed national-team competitions.
+
+    Conservative: anything already in COMP_TO_LEAGUE is club by definition.
+    Only flag things we're confident are international; default to club otherwise.
+    """
+    if not competition:
+        return False
+    if competition in COMP_TO_LEAGUE:
+        return False
+    comp_lower = competition.lower()
+    for kw in _INTL_KEYWORDS:
+        if kw in comp_lower:
+            return True
+    return False
+
+
+def is_tournament_finals(competition: str) -> bool:
+    """Return True for tournament finals proper (not qualification rounds).
+
+    Distinguishes "FIFA World Cup" (neutral-venue finals) from
+    "FIFA World Cup qualification" (genuine home/away matches).
+    """
+    if not competition:
+        return False
+    if "qualification" in competition.lower():
+        return False
+    return competition in INTERNATIONAL_COMPETITIONS
+
+
+def _resolve_intl_team(name: str, intl_elo: dict[str, float]) -> tuple[str, float]:
+    """Look up a national team in the international Elo dict.
+
+    Returns (canonical_name, elo_rating). Falls back to 1500 with a printed
+    warning if the team isn't found anywhere in the international ratings.
+    """
+    # Check known naming mismatches between football-data.org and the dataset
+    canonical = INTL_NAME_ALIASES.get(name, name)
+    if canonical in intl_elo:
+        return canonical, intl_elo[canonical]
+    if name in intl_elo:
+        return name, intl_elo[name]
+    name_lower = name.lower()
+    for team, rating in intl_elo.items():
+        if team.lower() == name_lower:
+            return team, rating
+    for team, rating in intl_elo.items():
+        if team.lower() in name_lower or name_lower in team.lower():
+            return team, rating
+    print(f"  WARNING: no international Elo for '{name}', using 1500 default")
+    return name, STARTING_ELO
+
+
 def _current_season(date: datetime) -> str:
     """Return season string like '2025-26' for a given match date."""
     y = date.year
@@ -78,8 +167,13 @@ def _current_season(date: datetime) -> str:
 
 
 # ─── Elo probability (same formula as fetch_live_odds.py) ────────────────────
-def _prematch_probs(home_elo: float, away_elo: float) -> tuple[float, float, float]:
-    elo_diff   = home_elo - away_elo + ELO_HA
+def _prematch_probs(
+    home_elo: float,
+    away_elo: float,
+    apply_home_advantage: bool = True,
+) -> tuple[float, float, float]:
+    ha         = ELO_HA if apply_home_advantage else 0
+    elo_diff   = home_elo - away_elo + ha
     p_home_raw = 1.0 / (1.0 + 10 ** (-elo_diff / 400))
     p_away_raw = 1.0 / (1.0 + 10 ** (elo_diff / 400))
     closeness  = 1.0 - abs(p_home_raw - p_away_raw)
@@ -350,6 +444,16 @@ def main() -> None:
     else:
         print("Warning: results_with_xg.csv not found — xG features will use defaults\n")
 
+    # Load international Elo ratings — separate from club state, never merged
+    international_elo: dict[str, float] = {}
+    intl_ratings_path = os.path.join(DATA_DIR, "international_elo_ratings.csv")
+    if os.path.exists(intl_ratings_path):
+        intl_df = pd.read_csv(intl_ratings_path)
+        international_elo = {row["team"]: float(row["elo_rating"]) for _, row in intl_df.iterrows()}
+        print(f"Loaded {len(international_elo):,} international Elo ratings\n")
+    else:
+        print("Warning: international_elo_ratings.csv not found — international fixtures will use 1500 default\n")
+
     # Replay history to build current state
     results_path = os.path.join(DATA_DIR, "results.csv")
     state = _replay_history(results_path, xg_lookup)
@@ -391,7 +495,7 @@ def main() -> None:
             "match_date", "match_time", "league", "home_team", "away_team",
             "p_home_elo", "p_draw_elo", "p_away_elo",
             "p_home_ensemble", "p_draw_ensemble", "p_away_ensemble",
-            "predicted_outcome",
+            "predicted_outcome", "is_international",
         ]).to_csv(out_path, index=False)
         return
 
@@ -412,77 +516,135 @@ def main() -> None:
         except ValueError:
             continue
 
-        league_code = COMP_TO_LEAGUE.get(competition, DEFAULT_LEAGUE)
-        season      = _current_season(match_date)
+        is_intl = is_international_competition(competition)
 
-        home = _resolve_team(_strip_suffix(home_raw), known_teams)
-        away = _resolve_team(_strip_suffix(away_raw), known_teams)
+        if is_intl:
+            # International fixture — use international Elo dict, skip the ensemble
+            home_display, home_elo_val = _resolve_intl_team(home_raw, international_elo)
+            away_display, away_elo_val = _resolve_intl_team(away_raw, international_elo)
 
-        # Elo probabilities
-        home_elo_val = state["elo"].get(home, STARTING_ELO)
-        away_elo_val = state["elo"].get(away, STARTING_ELO)
-        p_home_elo, p_draw_elo, p_away_elo = _prematch_probs(home_elo_val, away_elo_val)
+            # Neutral-venue correction: at tournament finals only the host nation(s)
+            # get genuine home advantage — every other fixture is neutral
+            if is_tournament_finals(competition):
+                apply_ha = home_display in HOST_NATIONS.get(competition, set())
+            else:
+                apply_ha = True  # qualifiers, Nations League, friendlies are real home/away
 
-        # 48-feature vector
-        feat = _build_fixture_features(
-            home, away, match_date, league_code, season, state, league_encoder
-        )
+            p_home_elo, p_draw_elo, p_away_elo = _prematch_probs(home_elo_val, away_elo_val, apply_ha)
+            probs = {"H": p_home_elo, "D": p_draw_elo, "A": p_away_elo}
+            rows.append({
+                "match_date":        match_date_str,
+                "match_time":        match_time,
+                "league":            competition,
+                "home_team":         home_display,
+                "away_team":         away_display,
+                "p_home_elo":        round(p_home_elo, 4),
+                "p_draw_elo":        round(p_draw_elo, 4),
+                "p_away_elo":        round(p_away_elo, 4),
+                "p_home_ensemble":   round(p_home_elo, 4),
+                "p_draw_ensemble":   round(p_draw_elo, 4),
+                "p_away_ensemble":   round(p_away_elo, 4),
+                "predicted_outcome": max(probs, key=probs.get),
+                "is_international":  True,
+            })
+        else:
+            # Club fixture — existing logic completely unchanged
+            league_code = COMP_TO_LEAGUE.get(competition, DEFAULT_LEAGUE)
+            season      = _current_season(match_date)
 
-        # XGBoost prediction — columns: [P(A)=0, P(D)=1, P(H)=2]
-        X = np.array([[feat[c] for c in feature_cols]])
-        xgb_proba = xgb_model.predict_proba(X)
+            home = _resolve_team(_strip_suffix(home_raw), known_teams)
+            away = _resolve_team(_strip_suffix(away_raw), known_teams)
 
-        # Assemble 12-feature stack for meta-learner
-        p_home_g2 = float(_sigmoid(np.array([feat["g2_diff"]]) / G2_SCALE * 1.6)[0])
-        stack_row = np.array([[
-            feat["home_expected"],
-            p_home_g2,
-            feat["p_home_dc"], feat["p_draw_dc"], feat["p_away_dc"],
-            xgb_proba[0, 2], xgb_proba[0, 1], xgb_proba[0, 0],   # H, D, A
-            feat["elo_diff"],
-            feat["h2h_goal_diff_avg"],
-            feat["h2h_home_win_rate"],
-            feat["momentum_diff"],
-        ]])
+            # Elo probabilities
+            home_elo_val = state["elo"].get(home, STARTING_ELO)
+            away_elo_val = state["elo"].get(away, STARTING_ELO)
+            p_home_elo, p_draw_elo, p_away_elo = _prematch_probs(home_elo_val, away_elo_val)
 
-        # Meta-learner prediction — columns: [P(A)=0, P(D)=1, P(H)=2]
-        meta_proba = meta_model.predict_proba(stack_row)
-        meta_pred  = int(np.argmax(meta_proba[0]))
+            # 48-feature vector
+            feat = _build_fixture_features(
+                home, away, match_date, league_code, season, state, league_encoder
+            )
 
-        rows.append({
-            "match_date":       match_date_str,
-            "match_time":       match_time,
-            "league":           competition,
-            "home_team":        home,
-            "away_team":        away,
-            "p_home_elo":       round(p_home_elo, 4),
-            "p_draw_elo":       round(p_draw_elo, 4),
-            "p_away_elo":       round(p_away_elo, 4),
-            "p_home_ensemble":  round(float(meta_proba[0, 2]), 4),
-            "p_draw_ensemble":  round(float(meta_proba[0, 1]), 4),
-            "p_away_ensemble":  round(float(meta_proba[0, 0]), 4),
-            "predicted_outcome": RESULT_INV[meta_pred],
-        })
+            # XGBoost prediction — columns: [P(A)=0, P(D)=1, P(H)=2]
+            X = np.array([[feat[c] for c in feature_cols]])
+            xgb_proba = xgb_model.predict_proba(X)
+
+            # Assemble 12-feature stack for meta-learner
+            p_home_g2 = float(_sigmoid(np.array([feat["g2_diff"]]) / G2_SCALE * 1.6)[0])
+            stack_row = np.array([[
+                feat["home_expected"],
+                p_home_g2,
+                feat["p_home_dc"], feat["p_draw_dc"], feat["p_away_dc"],
+                xgb_proba[0, 2], xgb_proba[0, 1], xgb_proba[0, 0],   # H, D, A
+                feat["elo_diff"],
+                feat["h2h_goal_diff_avg"],
+                feat["h2h_home_win_rate"],
+                feat["momentum_diff"],
+            ]])
+
+            # Meta-learner prediction — columns: [P(A)=0, P(D)=1, P(H)=2]
+            meta_proba = meta_model.predict_proba(stack_row)
+            meta_pred  = int(np.argmax(meta_proba[0]))
+
+            rows.append({
+                "match_date":        match_date_str,
+                "match_time":        match_time,
+                "league":            competition,
+                "home_team":         home,
+                "away_team":         away,
+                "p_home_elo":        round(p_home_elo, 4),
+                "p_draw_elo":        round(p_draw_elo, 4),
+                "p_away_elo":        round(p_away_elo, 4),
+                "p_home_ensemble":   round(float(meta_proba[0, 2]), 4),
+                "p_draw_ensemble":   round(float(meta_proba[0, 1]), 4),
+                "p_away_ensemble":   round(float(meta_proba[0, 0]), 4),
+                "predicted_outcome": RESULT_INV[meta_pred],
+                "is_international":  False,
+            })
 
     out_df = pd.DataFrame(rows)
     out_df.to_csv(out_path, index=False)
     print(f"Saved {len(out_df)} predictions to {out_path}")
 
-    # Print summary
+    # Print summary grouped by international vs club
     print(f"\n{'='*70}")
     print(f"UPCOMING PREDICTIONS  ({len(out_df)} fixtures)")
     print(f"{'='*70}")
-    for _, row in out_df.sort_values(["match_date", "match_time"]).iterrows():
-        label = {"H": "Home", "D": "Draw", "A": "Away"}.get(row["predicted_outcome"], "?")
-        print(
-            f"  {row['league']:18s}  {row['home_team']} vs {row['away_team']}\n"
-            f"    Predicted: {label:4s}  "
-            f"ensemble=[H:{row['p_home_ensemble']:.1%} "
-            f"D:{row['p_draw_ensemble']:.1%} "
-            f"A:{row['p_away_ensemble']:.1%}]  "
-            f"elo=H:{row['p_home_elo']:.1%}  "
-            f"[{row['match_date']} {row['match_time']}]"
-        )
+
+    intl_out = out_df[out_df["is_international"]]
+    club_out  = out_df[~out_df["is_international"]]
+
+    if not intl_out.empty:
+        print(f"\n  --- International ({len(intl_out)}) — Elo-only, no ensemble ---")
+        for _, row in intl_out.sort_values(["match_date", "match_time"]).iterrows():
+            label = {"H": "Home", "D": "Draw", "A": "Away"}.get(row["predicted_outcome"], "?")
+            is_neutral = (
+                is_tournament_finals(row["league"])
+                and row["home_team"] not in HOST_NATIONS.get(row["league"], set())
+            )
+            venue_tag = "  [neutral venue]" if is_neutral else ""
+            print(
+                f"  {row['league']:30s}  {row['home_team']} vs {row['away_team']}{venue_tag}\n"
+                f"    Predicted: {label:4s}  "
+                f"elo=[H:{row['p_home_elo']:.1%} "
+                f"D:{row['p_draw_elo']:.1%} "
+                f"A:{row['p_away_elo']:.1%}]  "
+                f"[{row['match_date']} {row['match_time']}]"
+            )
+
+    if not club_out.empty:
+        print(f"\n  --- Club ({len(club_out)}) ---")
+        for _, row in club_out.sort_values(["match_date", "match_time"]).iterrows():
+            label = {"H": "Home", "D": "Draw", "A": "Away"}.get(row["predicted_outcome"], "?")
+            print(
+                f"  {row['league']:18s}  {row['home_team']} vs {row['away_team']}\n"
+                f"    Predicted: {label:4s}  "
+                f"ensemble=[H:{row['p_home_ensemble']:.1%} "
+                f"D:{row['p_draw_ensemble']:.1%} "
+                f"A:{row['p_away_ensemble']:.1%}]  "
+                f"elo=H:{row['p_home_elo']:.1%}  "
+                f"[{row['match_date']} {row['match_time']}]"
+            )
 
 
 if __name__ == "__main__":
