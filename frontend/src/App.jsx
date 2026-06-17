@@ -21,6 +21,7 @@ import UserMenu from './components/UserMenu'
 import WatchlistPage from './components/WatchlistPage'
 import SettingsPage from './components/SettingsPage'
 import MatchResearch from './components/MatchResearch'
+import InternationalRatings from './components/InternationalRatings'
 
 const NAV_GROUPS = [
   {
@@ -29,7 +30,8 @@ const NAV_GROUPS = [
       { id: 'ratings',   label: 'Ratings' },
       { id: 'matches',   label: 'Matches' },
       { id: 'h2h',       label: 'H2H' },
-      { id: 'research',  label: 'Research' },
+      { id: 'research',       label: 'Research' },
+      { id: 'international',  label: 'International' },
     ],
   },
   {
@@ -345,6 +347,7 @@ function App() {
         {active === 'prediction-log' && <PredictionLog />}
         {active === 'h2h'            && <H2H />}
         {active === 'research'       && <MatchResearch />}
+        {active === 'international'  && <InternationalRatings />}
         {active === 'tournament'     && <Tournament />}
         {active === 'value-bets'     && <ValueBets />}
         {active === 'accumulators'   && <Accumulators />}
