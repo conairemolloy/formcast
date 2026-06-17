@@ -10,6 +10,7 @@ from routes.value_bets import value_bets_bp
 from routes.accumulator import accumulator_bp
 from routes.live import live_bp
 from routes.auth import auth_bp
+from routes.international import international_bp
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "processed")
 
@@ -62,6 +63,7 @@ def create_app():
         "elo_predictions":        _load_elo_predictions(),
         "live_value_bets":        _load_live_value_bets(),
         "team_tendencies":        _load_team_tendencies(),
+        "international_elo_ratings": load_csv("international_elo_ratings.csv"),
     }
 
     app.register_blueprint(ratings_bp,     url_prefix="/api")
@@ -71,6 +73,7 @@ def create_app():
     app.register_blueprint(accumulator_bp, url_prefix="/api")
     app.register_blueprint(live_bp,        url_prefix="/api")
     app.register_blueprint(auth_bp,        url_prefix="/api")
+    app.register_blueprint(international_bp, url_prefix="/api/international")
 
     @app.get("/api/health")
     def health():
