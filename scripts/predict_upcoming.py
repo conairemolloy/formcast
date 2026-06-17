@@ -18,6 +18,7 @@ import math
 import os
 import re
 import sys
+import time
 from collections import defaultdict
 from datetime import datetime, timedelta
 
@@ -354,16 +355,33 @@ def main() -> None:
     state = _replay_history(results_path, xg_lookup)
     known_teams = set(state["team_hist"].keys()) | set(state["elo"].keys())
 
-    # Fetch upcoming fixtures
+    # Fetch upcoming fixtures with retry / exponential backoff
     print(f"Fetching upcoming fixtures from {UPCOMING_URL}...")
-    try:
-        resp = httpx.get(UPCOMING_URL, timeout=30)
-        resp.raise_for_status()
-        matches = resp.json().get("data", [])
-        print(f"  {len(matches)} fixtures returned\n")
-    except Exception as exc:
-        print(f"  ERROR fetching fixtures: {exc}", file=sys.stderr)
-        sys.exit(1)
+    _retry_delays = [5, 15, 30]
+    matches = None
+    for _attempt in range(len(_retry_delays) + 1):
+        try:
+            resp = httpx.get(UPCOMING_URL, timeout=30)
+            resp.raise_for_status()
+            matches = resp.json().get("data", [])
+            print(f"  {len(matches)} fixtures returned\n")
+            break
+        except Exception as exc:
+            if _attempt < len(_retry_delays):
+                _wait = _retry_delays[_attempt]
+                print(
+                    f"  ERROR fetching fixtures: {exc}",
+                    file=sys.stderr,
+                )
+                print(
+                    f"  Retry {_attempt + 1}/{len(_retry_delays)} after {_wait}s...",
+                    file=sys.stderr,
+                )
+                time.sleep(_wait)
+            else:
+                print(f"  ERROR fetching fixtures: {exc}", file=sys.stderr)
+                print("  All retries exhausted — giving up.", file=sys.stderr)
+                sys.exit(1)
 
     out_path = os.path.join(DATA_DIR, "upcoming_predictions.csv")
 
