@@ -529,7 +529,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Data quality checks — automated validation after each ingestion (row counts, nulls, date ranges)
 - [ ] Log aggregation — structured logging to Papertrail or Logtail
 - [ ] Cost monitoring — Railway and Vercel spend alerts
-- [ ] Premier League and Championship sport keys returning 404 from The Odds API in fetch_live_odds.py — needs investigation, currently silent failure rather than zero results, club value bets for these 2 leagues may be missing
+- [x] Premier League and Championship sport keys fixed — were using wrong key names (soccer_england_premier_league, soccer_england_championship) instead of correct soccer_epl and soccer_efl_champ, confirmed against The Odds API's own /v4/sports endpoint. Recovered Premier League value bets that had been silently 404ing.
 
 ---
 
