@@ -22,22 +22,22 @@ HOME_ADV     = 50    # same as elo_model.py
 VALUE_EDGE   = 0.05  # 5% minimum edge
 
 SPORTS = [
-    "soccer_england_premier_league",
+    "soccer_epl",
     "soccer_spain_la_liga",
     "soccer_italy_serie_a",
     "soccer_germany_bundesliga",
     "soccer_france_ligue_one",
-    "soccer_england_championship",
+    "soccer_efl_champ",
     "soccer_fifa_world_cup",
 ]
 
 LEAGUE_LABELS = {
-    "soccer_england_premier_league": "Premier League",
+    "soccer_epl":                    "Premier League",
     "soccer_spain_la_liga":          "La Liga",
     "soccer_italy_serie_a":          "Serie A",
     "soccer_germany_bundesliga":     "Bundesliga",
     "soccer_france_ligue_one":       "Ligue 1",
-    "soccer_england_championship":   "Championship",
+    "soccer_efl_champ":              "Championship",
     "soccer_fifa_world_cup":         "FIFA World Cup",
 }
 
