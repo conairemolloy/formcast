@@ -1,6 +1,6 @@
 # FormCast — Sports Prediction Platform
 ### Elo + Glicko-2 + Dixon-Coles + BTL + XGBoost + Neural Ensemble
-*Last updated: May 2026*
+*Last updated: June 2026*
 
 ---
 
@@ -18,7 +18,6 @@
 - How It Works: methodology, models, glossary
 - GitHub Actions weekly automation (Monday 6am UTC)
 - Mobile responsive
-- Known issue: World Cup/international fixtures show placeholder Elo 1500 predictions (no real signal yet) — Phase 21 in progress
 - Ensemble predictions pipeline — XGBoost + meta-learner saved, predict_upcoming.py ready for August
 - SHA256 prediction log — 27 predictions published, auto-settles after each gameweek
 - Dropdown navigation — 4 groups with hover dropdowns (Analysis, Predictions, Betting, Learn)
@@ -29,6 +28,10 @@
 - Match Research — pick any two teams, full match analysis with win probs, H2H, form, team profiles
 - Team Profiles — disciplinary index, aggression score, fatigue, away card premium for all 442 teams
 - Referee & Fatigue Features — team_tendencies.csv with 15 features per team
+- International football module — separate Elo rating space, 49,425 matches (1872-2026), tournament-importance K-factor weighting, neutral-venue/host-nation home advantage handling
+- International Ratings page — confederation filtering (UEFA/CONMEBOL/CONCACAF/CAF/AFC/OFC), 336 teams, top-level nav dropdown
+- World Cup value bets — live odds via The Odds API (soccer_fifa_world_cup), real international Elo-based edges, free tier usage (~30 credits/month)
+- CI/CD pipeline fully healthy — fixed 3-week silent failure (missing joblib/xgboost in requirements.txt), added retry logic with exponential backoff for live fixture fetching
 
 ---
 
@@ -520,11 +523,13 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] UptimeRobot monitoring — ping /api/health every 5 minutes, alert on downtime
 - [ ] referee_fatigue_features.py in weekly pipeline — regenerate team_tendencies.csv every Monday
 - [x] CI/CD pipeline — GitHub Actions
+- [x] Railway health checks — /api/health endpoint verified healthy, manual full pipeline health check performed this session
+- [x] Retry logic with exponential backoff — predict_upcoming.py fixture fetch now retries 3x (5s/15s/30s) on transient failures instead of immediately failing the whole pipeline
 - [ ] Automated test suite — pytest for API, Playwright for frontend E2E tests
 - [ ] Data quality checks — automated validation after each ingestion (row counts, nulls, date ranges)
-- [ ] Railway health checks — /api/health endpoint monitored, auto-restart on failure
 - [ ] Log aggregation — structured logging to Papertrail or Logtail
 - [ ] Cost monitoring — Railway and Vercel spend alerts
+- [ ] Premier League and Championship sport keys returning 404 from The Odds API in fetch_live_odds.py — needs investigation, currently silent failure rather than zero results, club value bets for these 2 leagues may be missing
 
 ---
 
@@ -625,27 +630,33 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 > fixes the live feed showing meaningless confident-looking predictions.
 
 ### Data Pipeline
-- [ ] International results dataset — Kaggle "International football results from 1872 to present", ~45,000+ matches, all FIFA-recognised nations, friendlies included
+- [x] International results dataset — Kaggle/GitHub martj42 dataset, 49,425 played matches (1872-2026), confirmed and filtered to exclude future placeholder fixtures
 - [ ] World Cup historical results 1930-2022 — tagged by stage (group/R16/QF/SF/Final), knockout dynamics differ from friendlies
-- [ ] Confederation mapping — every nation tagged UEFA/CONMEBOL/CONCACAF/CAF/AFC/OFC
+- [x] Confederation mapping — every nation tagged UEFA/CONMEBOL/CONCACAF/CAF/AFC/OFC/Other-Non-FIFA (211 FIFA members + 118 non-FIFA entities across 336 total teams)
 - [ ] Euros, Copa América, AFCON, Asian Cup historical results
-- [ ] World Cup 2026 fixture list and group stage data
+- [x] World Cup 2026 fixture list and group stage data — live via football-data.org, cross-referenced against international Elo
 - [ ] Squad-based club strength proxy — count of players per national team from "big 5 league" clubs, using existing club Elo data as a novel cross-dataset signal no competitor has
 
 ### Modelling
-- [ ] Separate international Elo space — distinct K-factor and home advantage calibration from club Elo (neutral-venue tournaments have no home team for ~90% of World Cup matches)
-- [ ] Match importance weighting — friendly vs qualifier vs tournament knockout, K-factor scales with stakes (same approach as eloratings.net)
+- [x] Separate international Elo space — distinct K-factor (20/25/40/50 by tournament importance) and home advantage calibration from club Elo
+- [x] Match importance weighting — friendly/qualifier/continental championship/World Cup K-factor tiers implemented in international_elo_model.py
 - [ ] Confederation strength adjustment — historical cross-confederation gap correction (AFC/CAF vs UEFA/CONMEBOL)
 - [ ] Squad depth feature — big-5-league player count per national team as input to win probability model
 - [ ] Tournament bracket Monte Carlo simulator — extend existing 100k-sim engine to 48-team group + knockout structure for World Cup 2026
 - [ ] Group qualification probability model — live-updating odds of finishing top 2 in group, updated after every match
 
 ### Product & Bug Fixes
-- [ ] Fix live feed — stop showing fake-confident predictions for teams with Elo 1500 default (no real signal), suppress or label clearly until international Elo ships
+- [x] Fix live feed — real international Elo now powering /api/live/upcoming, predict_upcoming.py, and fetch_live_odds.py (all three independently fixed for neutral-venue/host-nation home advantage handling)
 - [ ] Fix team-name resolution bug — "Belgium vs Mirandes" type errors, club teams incorrectly appearing as national team fixtures in the football-data.org live feed during tournament windows
-- [ ] International ratings page — separate table from club ratings, sortable by confederation
+- [x] International ratings page — live at /international, confederation filtering, min_matches toggle for non-FIFA entities
 - [ ] World Cup Hub page — live group tables, qualification probabilities, Round of 16 bracket prediction tree, "path to the final" probability per team
 - [ ] International team profile pages — extend existing TeamProfile component to work for national teams (different stats shape than club)
+
+### Known Bugs Fixed This Session
+- [x] Three independent files (predict_upcoming.py, api/routes/live.py, scripts/fetch_live_odds.py) each had duplicate, independently-broken home-advantage logic that incorrectly applied home advantage to neutral-venue World Cup matches — all three fixed with identical HOST_NATIONS/is_tournament_finals pattern
+- [x] Team name alias mismatches between live data sources and international_elo_ratings.csv — fixed Czechia/Czech Republic, Bosnia-Herzegovina/Bosnia and Herzegovina, USA/United States, Bosnia & Herzegovina (ampersand variant)
+- [x] requirements.txt missing joblib and xgboost — caused 3 weeks of silent GitHub Actions failures (June 1, 8, 15), root-caused via clean-venv reproduction and fixed
+- [ ] "Belgium vs Mirandes" — Mirandes is a Spanish club incorrectly appearing as a World Cup fixture in the football-data.org live feed; flagged but not yet investigated/fixed
 
 ---
 
