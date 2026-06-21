@@ -27,11 +27,16 @@ const NAV_GROUPS = [
   {
     label: 'Analysis',
     items: [
-      { id: 'ratings',   label: 'Ratings' },
-      { id: 'matches',   label: 'Matches' },
-      { id: 'h2h',       label: 'H2H' },
-      { id: 'research',       label: 'Research' },
-      { id: 'international',  label: 'International' },
+      { id: 'ratings',  label: 'Ratings' },
+      { id: 'matches',  label: 'Matches' },
+      { id: 'h2h',      label: 'H2H' },
+      { id: 'research', label: 'Research' },
+    ],
+  },
+  {
+    label: 'International',
+    items: [
+      { id: 'international', label: 'Ratings' },
     ],
   },
   {
