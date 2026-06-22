@@ -1,11 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import api from '../api'
 import { Loader2 } from 'lucide-react'
 
 const MEDAL = ['🥇', '🥈', '🥉']
 const MAX_RATING = 2200
 
-const CONF_TABS = ['All', 'UEFA', 'CONMEBOL', 'CONCACAF', 'CAF', 'AFC', 'OFC']
+const WC_2026_TEAMS = new Set(['Algeria','Argentina','Australia','Austria','Belgium','Bosnia and Herzegovina','Brazil','Canada','Cape Verde','Curaçao','Czech Republic','Ecuador','Egypt','France','Germany','Haiti','Iran','Iraq','Ivory Coast','Japan','Jordan','Mexico','Morocco','Netherlands','New Zealand','Norway','Paraguay','Qatar','Saudi Arabia','Scotland','Senegal','South Africa','South Korea','Spain','Sweden','Switzerland','Tunisia','Turkey','United States','Uruguay'])
+
+const CONF_TABS = ['WC 2026', 'All', 'UEFA', 'CONMEBOL', 'CONCACAF', 'CAF', 'AFC', 'OFC']
 
 const WC_CONFS = new Set(['UEFA', 'CONMEBOL', 'CONCACAF', 'CAF', 'AFC'])
 
@@ -27,6 +29,7 @@ export default function InternationalRatings() {
   const [activeConf, setActiveConf] = useState('All')
   const [showAll, setShowAll]     = useState(false)
   const [wcData, setWcData]       = useState([])
+  const ratingsRef                = useRef(null)
 
   // Confederation counts for tab labels — fetch once, no min_matches applied
   useEffect(() => {
@@ -61,10 +64,14 @@ export default function InternationalRatings() {
 
   const wcTop8 = wcData.filter(t => WC_CONFS.has(t.confederation)).slice(0, 8)
 
+  const displayData = activeConf === 'WC 2026'
+    ? data.filter(t => WC_2026_TEAMS.has(t.team))
+    : data
+
   const tabCount = conf =>
-    conf === 'All'
-      ? Object.values(confCounts).reduce((s, n) => s + n, 0) || null
-      : confCounts[conf] ?? null
+    conf === 'WC 2026' ? 40 :
+    conf === 'All'     ? Object.values(confCounts).reduce((s, n) => s + n, 0) || null :
+                         confCounts[conf] ?? null
 
   return (
     <div>
@@ -94,7 +101,7 @@ export default function InternationalRatings() {
               </p>
             </div>
             <button
-              onClick={() => setActiveConf('All')}
+              onClick={() => { setActiveConf('WC 2026'); ratingsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}
               className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors whitespace-nowrap mt-0.5 cursor-pointer underline underline-offset-2"
             >
               View full rankings →
@@ -142,7 +149,7 @@ export default function InternationalRatings() {
       )}
 
       {/* Confederation tabs */}
-      <div className="flex gap-2 flex-wrap mb-4">
+      <div ref={ratingsRef} className="flex gap-2 flex-wrap mb-4">
         {CONF_TABS.map(conf => {
           const count = tabCount(conf)
           return (
@@ -150,12 +157,14 @@ export default function InternationalRatings() {
               key={conf}
               onClick={() => setActiveConf(conf)}
               className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
-                activeConf === conf
+                activeConf === conf && conf === 'WC 2026'
+                  ? 'bg-amber-500/20 text-amber-400 border border-amber-400/40'
+                  : activeConf === conf
                   ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
                   : 'bg-gray-900 text-gray-400 border border-gray-700 hover:text-white'
               }`}
             >
-              {conf}
+              {conf === 'WC 2026' ? '🏆 WC 2026' : conf}
               {count != null && (
                 <span className="ml-1.5 text-xs opacity-60">({count})</span>
               )}
@@ -167,7 +176,7 @@ export default function InternationalRatings() {
       {/* Sub-controls */}
       <div className="flex items-center justify-between mb-4">
         <span className="text-sm text-gray-500">
-          {loading ? '…' : `${data.length} teams`}
+          {loading ? '…' : `${displayData.length} teams`}
         </span>
         <label className="flex items-center gap-2 cursor-pointer select-none">
           <input
@@ -194,12 +203,12 @@ export default function InternationalRatings() {
       )}
 
       {/* Empty */}
-      {!loading && !error && data.length === 0 && (
+      {!loading && !error && displayData.length === 0 && (
         <div className="text-center py-20 text-gray-500">No teams found</div>
       )}
 
       {/* Table */}
-      {!loading && !error && data.length > 0 && (
+      {!loading && !error && displayData.length > 0 && (
         <div className="rounded-xl border border-gray-800 overflow-x-auto">
           <table className="w-full text-sm min-w-[640px]">
             <thead>
@@ -213,7 +222,7 @@ export default function InternationalRatings() {
               </tr>
             </thead>
             <tbody>
-              {data.map((team, i) => {
+              {displayData.map((team, i) => {
                 const pct       = Math.min((team.elo_rating / MAX_RATING) * 100, 100)
                 const isMedal   = i < 3 && activeConf === 'All'
                 const confStyle = CONF_STYLE[team.confederation] ?? 'bg-gray-800 text-gray-500'
