@@ -7,7 +7,7 @@ from sentry_sdk.integrations.flask import FlaskIntegration
 
 try:
     sentry_sdk.init(
-        dsn="https://09ddb43847d98e33846d7f9ddb865f09e0o4511077614223360.ingest.de.sentry.io/4511611061141584",
+        dsn="https://09ddb43847d98e33846d7f9ddb865f09@o4511077614223360.ingest.de.sentry.io/4511611061141584",
         integrations=[FlaskIntegration()],
         traces_sample_rate=0.1,
         send_default_pii=False,
