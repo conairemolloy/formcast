@@ -41,8 +41,8 @@
 > revenue, and polish before expanding to new sports.
 
 ### Now (this week)
-- [ ] Sentry error monitoring — free tier, catches Railway crashes automatically. Tonight a production 500 sat undetected for 8 hours
-- [ ] UptimeRobot uptime monitoring — pings /api/health every 5 minutes, emails on downtime. Free tier, 5 minute setup
+- [x] Sentry error monitoring — free tier, catches Railway crashes automatically
+- [x] UptimeRobot uptime monitoring — pings /api/health every 5 minutes, emails on downtime. Free tier, 5 minute setup
 - [ ] World Cup Hub page — group tables, bracket, qualification probabilities. Time-sensitive: tournament ends mid-July 2026
 
 ### Next (this month)
