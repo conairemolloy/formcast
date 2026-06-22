@@ -7,6 +7,8 @@ const MAX_RATING = 2200
 
 const CONF_TABS = ['All', 'UEFA', 'CONMEBOL', 'CONCACAF', 'CAF', 'AFC', 'OFC']
 
+const WC_CONFS = new Set(['UEFA', 'CONMEBOL', 'CONCACAF', 'CAF', 'AFC'])
+
 const CONF_STYLE = {
   'UEFA':             'bg-blue-500/20 text-blue-400',
   'CONMEBOL':         'bg-yellow-500/20 text-yellow-500',
@@ -24,6 +26,7 @@ export default function InternationalRatings() {
   const [error, setError]         = useState(null)
   const [activeConf, setActiveConf] = useState('All')
   const [showAll, setShowAll]     = useState(false)
+  const [wcData, setWcData]       = useState([])
 
   // Confederation counts for tab labels — fetch once, no min_matches applied
   useEffect(() => {
@@ -50,6 +53,14 @@ export default function InternationalRatings() {
       .finally(() => setLoading(false))
   }, [activeConf, showAll])
 
+  // Cache the full All-confederation data for the World Cup Hub so it persists
+  // even when the user switches to a per-confederation tab
+  useEffect(() => {
+    if (activeConf === 'All' && data.length > 0) setWcData(data)
+  }, [data, activeConf])
+
+  const wcTop8 = wcData.filter(t => WC_CONFS.has(t.confederation)).slice(0, 8)
+
   const tabCount = conf =>
     conf === 'All'
       ? Object.values(confCounts).reduce((s, n) => s + n, 0) || null
@@ -65,6 +76,70 @@ export default function InternationalRatings() {
           tournament-importance weighting and neutral-venue adjustment
         </p>
       </div>
+
+      {/* World Cup Hub */}
+      {wcTop8.length > 0 && (
+        <div
+          className="mb-6 rounded-xl overflow-hidden border border-gray-800"
+          style={{ borderTop: '2px solid rgba(245, 158, 11, 0.35)' }}
+        >
+          {/* Hub header */}
+          <div className="bg-gray-900 px-4 py-3 flex items-start justify-between border-b border-gray-800">
+            <div>
+              <h2 className="text-sm font-semibold text-white">
+                🏆 2026 FIFA World Cup
+              </h2>
+              <p className="mt-0.5 text-xs text-gray-500">
+                Elo-based power rankings for the 48-team tournament
+              </p>
+            </div>
+            <button
+              onClick={() => setActiveConf('All')}
+              className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors whitespace-nowrap mt-0.5"
+            >
+              View full rankings →
+            </button>
+          </div>
+
+          {/* Top-8 cards */}
+          <div className="bg-gray-900/50 p-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {wcTop8.map((team, i) => {
+              const pct        = Math.min((team.elo_rating / MAX_RATING) * 100, 100)
+              const confStyle  = CONF_STYLE[team.confederation] ?? 'bg-gray-800 text-gray-500'
+              const leftBorder =
+                i === 0 ? 'border-l-yellow-400' :
+                i === 1 ? 'border-l-gray-400'   :
+                i === 2 ? 'border-l-orange-500' :
+                          'border-l-gray-700/50'
+              const barColor   = i === 0 ? 'bg-yellow-400' : 'bg-emerald-600'
+              const rankLabel  = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i + 1}`
+
+              return (
+                <div
+                  key={team.team}
+                  className={`flex items-center gap-3 px-3 py-2 rounded-lg bg-gray-800/60 border-l-2 ${leftBorder}`}
+                >
+                  <span className="w-6 text-center font-mono text-xs text-gray-500 shrink-0">
+                    {rankLabel}
+                  </span>
+                  <span className="flex-1 text-sm font-medium text-white truncate">{team.team}</span>
+                  <span className={`text-xs px-1.5 py-0.5 rounded font-medium shrink-0 ${confStyle}`}>
+                    {team.confederation}
+                  </span>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <div className="hidden sm:block w-14 h-1 bg-gray-700 rounded-full overflow-hidden">
+                      <div className={`h-full rounded-full ${barColor}`} style={{ width: `${pct}%` }} />
+                    </div>
+                    <span className="font-mono text-xs tabular-nums text-gray-300">
+                      {team.elo_rating.toFixed(0)}
+                    </span>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Confederation tabs */}
       <div className="flex gap-2 flex-wrap mb-4">
