@@ -113,6 +113,7 @@ export default function ValueBets() {
   const [loading, setLoading]     = useState(true)
   const [liveLoading, setLiveLoading] = useState(true)
   const [error, setError]         = useState(null)
+  const [league, setLeague]       = useState('ALL')
   const [outcome, setOutcome]     = useState('ALL')
   const [wonFilter, setWonFilter] = useState('ALL')
   const [sortBy, setSortBy]       = useState('edge')
@@ -138,8 +139,14 @@ export default function ValueBets() {
       .finally(() => setLiveLoading(false))
   }, [])
 
+  const leagues = useMemo(() => {
+    const s = new Set(bets.map(b => b.league).filter(Boolean))
+    return ['ALL', ...Array.from(s).sort()]
+  }, [bets])
+
   const filtered = useMemo(() => {
     let rows = bets
+    if (league !== 'ALL')  rows = rows.filter(b => b.league === league)
     if (outcome !== 'ALL') rows = rows.filter(b => b.outcome === outcome)
     if (wonFilter === 'WON')  rows = rows.filter(b => b.won === 1)
     if (wonFilter === 'LOST') rows = rows.filter(b => b.won !== 1)
@@ -151,7 +158,7 @@ export default function ValueBets() {
       if (sortBy === 'date') return b.match_date.localeCompare(a.match_date)
       return 0
     })
-  }, [bets, outcome, wonFilter, sortBy, minEdge])
+  }, [bets, league, outcome, wonFilter, sortBy, minEdge])
 
   const filteredStats = useMemo(() => {
     const withResult = filtered.filter(b => b.won !== null && b.won !== undefined)
@@ -232,6 +239,23 @@ export default function ValueBets() {
           <StatCard label="Mean CLV"   value={summary.mean_clv != null ? summary.mean_clv.toFixed(4) : null} sub="Closing line value" tip="Closing Line Value — how much better our odds were than the final bookmaker price before kickoff. Positive CLV is the strongest indicator of a profitable betting model." />
         </div>
       )}
+
+      {/* League filter */}
+      <div className="flex gap-2 flex-wrap">
+        {leagues.map(l => (
+          <button
+            key={l}
+            onClick={() => setLeague(l)}
+            className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
+              league === l
+                ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                : 'bg-gray-900 text-gray-400 border border-gray-700 hover:text-white'
+            }`}
+          >
+            {l}
+          </button>
+        ))}
+      </div>
 
       {/* Filters row */}
       <div className="flex flex-wrap gap-3 items-center">

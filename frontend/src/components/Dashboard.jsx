@@ -150,23 +150,21 @@ function LiveSection({ data, loading, error, lastRefresh, onRefresh, onMatchClic
 // Section 2 — Value Bets
 // ---------------------------------------------------------------------------
 
-const OUTCOME_LABEL = { H: 'Home', D: 'Draw', A: 'Away' }
-const LEAGUE_SHORT  = {
-  EPL: 'EPL', LaLiga: 'La Liga', SerieA: 'Serie A',
-  Bundesliga: 'Bundesliga', Ligue1: 'Ligue 1',
-  Championship: 'Champ.', SerieB: 'Serie B',
-}
+const OUTCOME_LABEL       = { H: 'Home', D: 'Draw', A: 'Away' }
+const INTERNATIONAL_LEAGUES = new Set(['FIFA World Cup'])
 
 function ValueBetCard({ bet }) {
+  const isIntl = INTERNATIONAL_LEAGUES.has(bet.league)
   return (
-    <div className="px-4 py-3 border-b border-gray-800/60 last:border-0">
+    <div className={`px-4 py-3 border-b border-gray-800/60 last:border-0 border-l-2 ${isIntl ? 'border-l-blue-400/50' : 'border-l-transparent'}`}>
       <div className="flex items-start justify-between gap-2 mb-1.5">
         <div className="min-w-0">
           <p className="text-xs text-gray-300 font-medium truncate">
             {bet.home_team} <span className="text-gray-600">vs</span> {bet.away_team}
           </p>
           <p className="text-[10px] text-gray-600 mt-0.5">
-            {LEAGUE_SHORT[bet.league] ?? bet.league} · {bet.match_date}
+            {isIntl && <span className="text-blue-400 mr-1">🌍</span>}
+            {bet.league} · {bet.match_date}
             {bet.match_time ? ` · ${bet.match_time}` : ''}
           </p>
         </div>
