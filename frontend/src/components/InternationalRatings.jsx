@@ -95,7 +95,7 @@ export default function InternationalRatings() {
             </div>
             <button
               onClick={() => setActiveConf('All')}
-              className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors whitespace-nowrap mt-0.5"
+              className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors whitespace-nowrap mt-0.5 cursor-pointer underline underline-offset-2"
             >
               View full rankings →
             </button>
