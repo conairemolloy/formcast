@@ -238,6 +238,8 @@ def is_tournament_finals(competition: str) -> bool:
 
 def _resolve_international_elo(name: str) -> float | None:
     """Look up a national team in _INTL_ELO_RATINGS. Returns None if not found."""
+    if not name:
+        return None
     canonical = INTL_NAME_ALIASES.get(name, name)
     if canonical in _INTL_ELO_RATINGS:
         return _INTL_ELO_RATINGS[canonical]
@@ -340,6 +342,8 @@ def _parse_match(m: dict, inplay: bool) -> dict:
 
     home_name = home.get("name", "")
     away_name = away.get("name", "")
+    if not home_name or not away_name:
+        return None
     comp_name = comp.get("name", "")
     home_goals = full.get("home")
     away_goals = full.get("away")
@@ -674,7 +678,7 @@ def live_now():
     except (httpx.HTTPError, Exception) as exc:
         return _err(f"football-data.org error: {exc}")
 
-    records = [_parse_match(m, inplay=True) for m in data.get("matches", [])]
+    records = [r for r in (_parse_match(m, inplay=True) for m in data.get("matches", [])) if r is not None]
     _cache_set("live_now", records)
     return _ok(records)
 
@@ -695,7 +699,9 @@ def live_today():
     for m in data.get("matches", []):
         status = m.get("status", "")
         inplay = status in ("IN_PLAY", "PAUSED", "LIVE")
-        records.append(_parse_match(m, inplay=inplay))
+        parsed = _parse_match(m, inplay=inplay)
+        if parsed is not None:
+            records.append(parsed)
 
     _cache_set("live_today", records)
     return _ok(records)
@@ -717,7 +723,7 @@ def live_upcoming():
     except (httpx.HTTPError, Exception) as exc:
         return _err(f"football-data.org error: {exc}")
 
-    records = [_parse_match(m, inplay=False) for m in data.get("matches", [])]
+    records = [r for r in (_parse_match(m, inplay=False) for m in data.get("matches", [])) if r is not None]
     _cache_set("live_upcoming", records)
     return _ok(records)
 
