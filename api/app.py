@@ -5,12 +5,15 @@ from flask_cors import CORS
 import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
 
-sentry_sdk.init(
-    dsn="https://09ddb43847d98e33846d7f9ddb865f09e0o4511077614223360.ingest.de.sentry.io/4511611061141584",
-    integrations=[FlaskIntegration()],
-    traces_sample_rate=0.1,
-    send_default_pii=False,
-)
+try:
+    sentry_sdk.init(
+        dsn="https://09ddb43847d98e33846d7f9ddb865f09e0o4511077614223360.ingest.de.sentry.io/4511611061141584",
+        integrations=[FlaskIntegration()],
+        traces_sample_rate=0.1,
+        send_default_pii=False,
+    )
+except Exception as e:
+    print(f"Sentry init failed, continuing without error monitoring: {e}")
 
 from routes.ratings import ratings_bp
 from routes.predictions import predictions_bp
