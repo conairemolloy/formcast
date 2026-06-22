@@ -35,6 +35,34 @@
 
 ---
 
+## Current Build Priorities (June 2026)
+> Honest sequencing based on what moves the needle most right now.
+> Core platform is live and functional — focus is on monitoring,
+> revenue, and polish before expanding to new sports.
+
+### Now (this week)
+- [ ] Sentry error monitoring — free tier, catches Railway crashes automatically. Tonight a production 500 sat undetected for 8 hours
+- [ ] UptimeRobot uptime monitoring — pings /api/health every 5 minutes, emails on downtime. Free tier, 5 minute setup
+- [ ] World Cup Hub page — group tables, bracket, qualification probabilities. Time-sensitive: tournament ends mid-July 2026
+
+### Next (this month)
+- [ ] Email alerts (Resend) — watchlist notifications + weekly digest. Free tier (3k emails/month). Core retention mechanic — currently the watchlist exists but does nothing to bring users back
+- [ ] Pricing page + Stripe — there is currently no way to pay for FormCast. Tier system exists in DB but is completely unconnected to billing. This is the only phase that generates revenue
+- [ ] Design overhaul (Phase 22) — site reads as a developer tool, needs to look like a premium product before charging money
+
+### Before paid tier launch
+- [ ] Security & rate limiting (Phase 16) — Flask-Limiter, JWT, CORS hardening. Must be done before any public paid tier launch
+- [ ] Custom domain — formcast-blush.vercel.app is not a product URL. ~€12/year, disproportionate credibility impact
+
+### Hold until core product is solid
+- Phase 2b (Player modelling) — needs external data sources
+- Phase 10/18 (Sport/Data expansion) — wrong order before core is solid
+- Phase 16 (Security) — blocked on Phase 13 monetisation anyway
+- Phase 17/20 (Community/Social) — premature without user base
+- Phase 19 (Match Intelligence) — needs weather API + Betfair exchange
+
+---
+
 ## Off-Season Status (May–July 2026)
 European leagues finished. Pipeline fully built and tested.
 Next live value bets: August 2026 when EPL/La Liga/Serie A/Bundesliga/Ligue 1 restart.
@@ -203,6 +231,13 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Home bias score — referees who favour home teams statistically
 - [ ] VAR tendency — referees who overturn more decisions
 
+### High-Priority Model Gaps
+- [ ] Referee tendencies — wire up referee column already in results.csv into XGBoost features (cards/fouls per referee per game, home bias score). Data already exists, just not wired in
+- [ ] Home/away Elo split — maintain separate home and away Elo ratings per team, beyond the flat +50 home advantage adjustment. Real signal, especially for teams with strong home/weak away records
+- [ ] Manager change signal — +8 Elo bounce in first 5 games under new manager, well-documented in literature. TransferMarkt has manager change dates free
+- [ ] Form-weighted predictions — late season form should outweigh career average more than it currently does, increase EWM weight of last 5 matches in final 10 gameweeks of season
+- [ ] Weather integration — OpenWeatherMap free tier API, wind/rain/temperature at kickoff affects goals and cards markets specifically, integrate into match preview and as XGBoost feature
+
 ---
 
 ## Phase 2b — Individual Player Modelling
@@ -314,6 +349,13 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] PWA support — installable on mobile home screen, offline support
 - [ ] Onboarding tour — first-time user walkthrough (Shepherd.js)
 - [ ] Custom domain (formcast.io or similar)
+- [ ] Design overhaul — site currently reads as a developer tool, needs to look like a premium product. Priority: dashboard hero, value bet cards, team profile pages, landing page conversion
+- [ ] Dashboard hero section — big focal-point number or chart immediately communicating scale and sophistication (e.g. animated counter for value bets identified, live Elo chart)
+- [ ] Value bet cards redesign — currently text-heavy rows, should look like trading cards with visual probability bars, odds highlighted, edge displayed prominently with color coding
+- [ ] Landing page conversion optimisation — headline, social proof numbers (3,829 value bets, 128k matches, 68.7% hit rate) displayed large and front-and-center, single clear CTA above fold
+- [ ] Typography and spacing overhaul — more whitespace, larger headings, consistent type scale, premium feel without changing functionality
+- [ ] Team profile page visual hierarchy — breathing room, better section structure, Elo chart more prominent
+- [ ] Color-coded probability displays — win/draw/loss shown with green/grey/red visual bars throughout, not just numbers
 
 ---
 
@@ -481,7 +523,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 ## Phase 13 — Business & Monetisation
 > Note: All phases 13-18 apply across all sports — football, GAA, tennis, golf, NFL, basketball, horse racing, and any future sport additions. Features built for football first, then extended to each sport as data becomes available.
 
-- [ ] Pricing page — Free vs Pro vs Elite tiers clearly explained with feature comparison table
+- [ ] Pricing page — Free vs Pro vs Elite tiers clearly explained with feature comparison table (PRIORITY — blocks revenue)
 - [x] User accounts — Supabase Auth, save favourite teams, personalised dashboard
 - [ ] Pro tier features — advanced filters, more predictions, API access, no rate limits
 - [ ] Email alerts — Resend API, weekly digest + instant alerts for watchlist teams (free tier = 3k emails/month)
@@ -489,7 +531,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Watchlist — users save teams and get notified when they have value bets
 - [ ] API access tier — sell data access to developers with key management
 - [ ] Affiliate bookmaker links — deep-link to Bet365, Paddy Power, Betfair on value bet cards
-- [ ] Stripe subscriptions — Pro tier billing, webhook handling, subscription management
+- [ ] Stripe subscriptions — Pro tier billing, webhook handling, subscription management (PRIORITY — blocks revenue)
 - [ ] Referral program — share FormCast, get a month free
 - [ ] Team/league following — personalised feed based on followed teams
 - [ ] PostHog analytics — track which pages and features users actually use
@@ -519,8 +561,8 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [x] Scheduled prediction publishing — publish_predictions.py runs Monday via GitHub Actions
 - [ ] Database backup — automated daily Supabase backup to S3
 - [ ] Monitoring & alerting — Sentry for errors, UptimeRobot for uptime, PagerDuty for critical failures
-- [ ] Sentry error monitoring — free tier, catch Railway API errors automatically
-- [ ] UptimeRobot monitoring — ping /api/health every 5 minutes, alert on downtime
+- [ ] Sentry error monitoring — free tier, catch Railway API errors automatically (PRIORITY — do this week)
+- [ ] UptimeRobot monitoring — ping /api/health every 5 minutes, alert on downtime (PRIORITY — do this week)
 - [ ] referee_fatigue_features.py in weekly pipeline — regenerate team_tendencies.csv every Monday
 - [x] CI/CD pipeline — GitHub Actions
 - [x] Railway health checks — /api/health endpoint verified healthy, manual full pipeline health check performed this session
@@ -530,6 +572,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Log aggregation — structured logging to Papertrail or Logtail
 - [ ] Cost monitoring — Railway and Vercel spend alerts
 - [x] Premier League and Championship sport keys fixed — were using wrong key names (soccer_england_premier_league, soccer_england_championship) instead of correct soccer_epl and soccer_efl_champ, confirmed against The Odds API's own /v4/sports endpoint. Recovered Premier League value bets that had been silently 404ing.
+- [ ] Ensemble auto-retraining in weekly pipeline — XGBoost/NN/LSTM currently only retrain manually, Elo is the only model updating automatically every Monday. Critical gap before August league restart — without this the ensemble predictions will stale out
 
 ---
 
@@ -577,9 +620,10 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 ---
 
 ## Phase 18 — Data Expansion
-- [ ] Europa League historical data — scrape from football-data.co.uk or Kaggle
+- [ ] Europa League historical data — football-data.co.uk has this free, needed for cross-competition Elo continuity and Champions League qualification modelling
+- [ ] Champions League historical data — group stage + knockout, needed to improve tournament simulator accuracy
 - [ ] UEFA Conference League data — 2021-present
-- [ ] World Cup 2018 and 2022 full historical data
+- [ ] World Cup 2018 and 2022 match-level data with stage tags (group/R16/QF/SF/Final) — needed for international model knockout-stage calibration
 - [ ] MLS data — Major League Soccer 2010-present
 - [ ] Women's football — WSL (England), NWSL (USA), UWCL (Champions League)
 - [ ] Brazilian Série A — largest football market in South America
@@ -649,7 +693,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [x] Fix live feed — real international Elo now powering /api/live/upcoming, predict_upcoming.py, and fetch_live_odds.py (all three independently fixed for neutral-venue/host-nation home advantage handling)
 - [ ] Fix team-name resolution bug — "Belgium vs Mirandes" type errors, club teams incorrectly appearing as national team fixtures in the football-data.org live feed during tournament windows
 - [x] International ratings page — live at /international, confederation filtering, min_matches toggle for non-FIFA entities
-- [ ] World Cup Hub page — live group tables, qualification probabilities, Round of 16 bracket prediction tree, "path to the final" probability per team
+- [ ] World Cup Hub page — live group tables, qualification probabilities, Round of 16 bracket prediction tree, "path to the final" probability per team (TIME-SENSITIVE — tournament ends mid-July 2026)
 - [ ] International team profile pages — extend existing TeamProfile component to work for national teams (different stats shape than club)
 
 ### Known Bugs Fixed This Session
@@ -657,6 +701,28 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [x] Team name alias mismatches between live data sources and international_elo_ratings.csv — fixed Czechia/Czech Republic, Bosnia-Herzegovina/Bosnia and Herzegovina, USA/United States, Bosnia & Herzegovina (ampersand variant)
 - [x] requirements.txt missing joblib and xgboost — caused 3 weeks of silent GitHub Actions failures (June 1, 8, 15), root-caused via clean-venv reproduction and fixed
 - [ ] "Belgium vs Mirandes" — Mirandes is a Spanish club incorrectly appearing as a World Cup fixture in the football-data.org live feed; flagged but not yet investigated/fixed
+
+---
+
+## Phase 22 — Design & Product Polish
+> The platform is technically impressive but reads like a developer tool. This phase makes it look and feel like a premium product that justifies charging money.
+
+### Visual Design
+- [ ] Design system — establish consistent color palette, type scale, spacing tokens. Emerald green as primary, slate as background, clear hierarchy between primary/secondary/muted text
+- [ ] Component library audit — standardise cards, badges, tables, filters across all pages so nothing looks inconsistent
+- [ ] Micro-animations — subtle transitions on data loading, card hover states, probability bar fills on page load
+- [ ] Icon consistency — single icon library throughout (lucide-react already imported, ensure nothing uses ad-hoc alternatives)
+
+### Key Page Redesigns
+- [ ] Dashboard redesign — hero metric strip (value bets identified, hit rate, CLV) → live value bets → upcoming fixtures → ratings snapshot. Each section visually distinct with clear heading
+- [ ] Value Bets page redesign — card layout instead of table rows, visual edge meter, bookmaker logo/name prominent, Kelly stake displayed clearly
+- [ ] Landing page redesign — above-fold must convert. Large headline, 3 key stats displayed huge, single Sign Up CTA, below-fold: how it works, sample value bets, track record
+- [ ] International / World Cup Hub — showcase page that would make someone immediately understand what FormCast does for the World Cup
+
+### Trust Signals
+- [ ] Track record section on landing — show the prediction log numbers, CLV, hit rate prominently as social proof
+- [ ] "As featured in" / methodology credibility section
+- [ ] Live counter — value bets identified today, updating in real time
 
 ---
 
