@@ -96,7 +96,7 @@ const CONF_STYLE = {
   'Other / Non-FIFA': 'bg-gray-800 text-gray-500',
 }
 
-export default function InternationalRatings() {
+export default function InternationalRatings({ onTeamClick }) {
   const [data, setData]           = useState([])
   const [confCounts, setConfCounts] = useState({})
   const [loading, setLoading]     = useState(true)
@@ -200,7 +200,8 @@ export default function InternationalRatings() {
               return (
                 <div
                   key={team.team}
-                  className={`flex items-center gap-3 px-3 py-2 rounded-lg bg-gray-800/60 border-l-2 ${leftBorder}`}
+                  onClick={() => onTeamClick?.({ name: team.team, elo: team.elo_rating, confederation: team.confederation, rank: i + 1 })}
+                  className={`flex items-center gap-3 px-3 py-2 rounded-lg bg-gray-800/60 border-l-2 ${leftBorder} cursor-pointer hover:bg-gray-700/60 transition-colors`}
                 >
                   <span className="w-6 text-center font-mono text-xs text-gray-500 shrink-0">
                     {rankLabel}
@@ -350,7 +351,8 @@ export default function InternationalRatings() {
                 return (
                   <tr
                     key={team.team}
-                    className={`border-b border-gray-800/50 transition-colors hover:bg-gray-800/50 ${
+                    onClick={() => onTeamClick?.({ name: team.team, elo: team.elo_rating, confederation: team.confederation, rank: i + 1 })}
+                    className={`border-b border-gray-800/50 transition-colors hover:bg-gray-800/50 cursor-pointer ${
                       isMedal ? 'bg-gray-900/80' : ''
                     }`}
                   >

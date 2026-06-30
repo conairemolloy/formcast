@@ -22,6 +22,7 @@ import WatchlistPage from './components/WatchlistPage'
 import SettingsPage from './components/SettingsPage'
 import MatchResearch from './components/MatchResearch'
 import InternationalRatings from './components/InternationalRatings'
+import InternationalTeamProfile from './components/InternationalTeamProfile'
 
 const NAV_GROUPS = [
   {
@@ -124,6 +125,7 @@ function NavDropdown({ group, active, onNav }) {
 function App() {
   const [active, setActive]         = useState('dashboard')
   const [selectedTeam, setSelectedTeam] = useState(null)
+  const [selectedNationalTeam, setSelectedNationalTeam] = useState(null)
   const [menuOpen, setMenuOpen]     = useState(false)
   const [user, setUser]             = useState(null)
   const [showAuth, setShowAuth]     = useState(false)
@@ -154,6 +156,7 @@ function App() {
   function handleNav(id) {
     setActive(id)
     setSelectedTeam(null)
+    setSelectedNationalTeam(null)
     setMenuOpen(false)
   }
 
@@ -352,7 +355,18 @@ function App() {
         {active === 'prediction-log' && <PredictionLog />}
         {active === 'h2h'            && <H2H />}
         {active === 'research'       && <MatchResearch />}
-        {active === 'international'  && <InternationalRatings />}
+        {active === 'international'  && !selectedNationalTeam && (
+          <InternationalRatings onTeamClick={setSelectedNationalTeam} />
+        )}
+        {active === 'international'  && selectedNationalTeam && (
+          <InternationalTeamProfile
+            team={selectedNationalTeam.name}
+            eloRating={selectedNationalTeam.elo}
+            confederation={selectedNationalTeam.confederation}
+            eloRank={selectedNationalTeam.rank}
+            onBack={() => setSelectedNationalTeam(null)}
+          />
+        )}
         {active === 'tournament'     && <Tournament />}
         {active === 'value-bets'     && <ValueBets />}
         {active === 'accumulators'   && <Accumulators />}
