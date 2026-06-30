@@ -76,6 +76,7 @@ def create_app():
         "live_value_bets":        _load_live_value_bets(),
         "team_tendencies":        _load_team_tendencies(),
         "international_elo_ratings": load_csv("international_elo_ratings.csv"),
+        "international_results":     load_csv("international_results.csv"),
     }
 
     app.register_blueprint(ratings_bp,     url_prefix="/api")
