@@ -123,7 +123,7 @@ export default function InternationalRatings() {
     setLoading(true)
     setError(null)
     const params = new URLSearchParams()
-    if (activeConf !== 'All') params.set('confederation', activeConf)
+    if (activeConf !== 'All' && activeConf !== 'WC 2026') params.set('confederation', activeConf)
     if (!showAll) params.set('min_matches', '20')
 
     api.get(`/api/international/ratings?${params}`)
@@ -139,8 +139,6 @@ export default function InternationalRatings() {
   }, [data, activeConf])
 
   const wcTop8 = wcData.filter(t => WC_CONFS.has(t.confederation)).slice(0, 8)
-
-  console.log('[WC debug] first 10 team names from API:', data.slice(0, 10).map(t => t.team))
 
   const displayData = activeConf === 'WC 2026'
     ? data.filter(t => WC_2026_TEAMS.has(t.team))
