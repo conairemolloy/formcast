@@ -1,11 +1,86 @@
 import { useState, useEffect, useRef } from 'react'
 import api from '../api'
-import { Loader2 } from 'lucide-react'
+import { Loader2, ChevronDown } from 'lucide-react'
 
 const MEDAL = ['🥇', '🥈', '🥉']
 const MAX_RATING = 2200
 
 const WC_2026_TEAMS = new Set(['Algeria','Argentina','Australia','Austria','Belgium','Bosnia and Herzegovina','Brazil','Canada','Cape Verde','Curaçao','Czech Republic','Ecuador','Egypt','France','Germany','Haiti','Iran','Iraq','Ivory Coast','Japan','Jordan','Mexico','Morocco','Netherlands','New Zealand','Norway','Paraguay','Qatar','Saudi Arabia','Scotland','Senegal','South Africa','South Korea','Spain','Sweden','Switzerland','Tunisia','Turkey','United States','Uruguay'])
+
+const WC_2026_GROUPS = {
+  A: [
+    { team: 'Mexico', pts: 9, gd: 6, status: 'winner' },
+    { team: 'South Africa', pts: 4, gd: -1, status: 'runner-up' },
+    { team: 'South Korea', pts: 3, gd: -1, status: 'eliminated' },
+    { team: 'Czech Republic', pts: 1, gd: -4, status: 'eliminated' },
+  ],
+  B: [
+    { team: 'Switzerland', pts: 7, gd: 4, status: 'winner' },
+    { team: 'Canada', pts: 4, gd: 5, status: 'runner-up' },
+    { team: 'Bosnia and Herzegovina', pts: 4, gd: -1, status: 'advanced' },
+    { team: 'Qatar', pts: 1, gd: -8, status: 'eliminated' },
+  ],
+  C: [
+    { team: 'Brazil', pts: 7, gd: 6, status: 'winner' },
+    { team: 'Morocco', pts: 7, gd: 3, status: 'runner-up' },
+    { team: 'Scotland', pts: 3, gd: -3, status: 'eliminated' },
+    { team: 'Haiti', pts: 0, gd: -6, status: 'eliminated' },
+  ],
+  D: [
+    { team: 'United States', pts: 6, gd: 4, status: 'winner' },
+    { team: 'Australia', pts: 4, gd: 0, status: 'runner-up' },
+    { team: 'Paraguay', pts: 4, gd: -2, status: 'advanced' },
+    { team: 'Turkey', pts: 3, gd: -2, status: 'eliminated' },
+  ],
+  E: [
+    { team: 'Germany', pts: 6, gd: 6, status: 'winner' },
+    { team: 'Ivory Coast', pts: 6, gd: 2, status: 'runner-up' },
+    { team: 'Ecuador', pts: 4, gd: 0, status: 'advanced' },
+    { team: 'Curaçao', pts: 1, gd: -8, status: 'eliminated' },
+  ],
+  F: [
+    { team: 'Netherlands', pts: 7, gd: 6, status: 'winner' },
+    { team: 'Japan', pts: 5, gd: 4, status: 'runner-up' },
+    { team: 'Sweden', pts: 4, gd: 0, status: 'advanced' },
+    { team: 'Tunisia', pts: 0, gd: -10, status: 'eliminated' },
+  ],
+  G: [
+    { team: 'Belgium', pts: 5, gd: 3, status: 'winner' },
+    { team: 'Egypt', pts: 5, gd: 2, status: 'runner-up' },
+    { team: 'Iran', pts: 3, gd: 0, status: 'eliminated' },
+    { team: 'New Zealand', pts: 1, gd: -5, status: 'eliminated' },
+  ],
+  H: [
+    { team: 'Spain', pts: 7, gd: 5, status: 'winner' },
+    { team: 'Cape Verde', pts: 3, gd: 0, status: 'runner-up' },
+    { team: 'Uruguay', pts: 2, gd: -1, status: 'eliminated' },
+    { team: 'Saudi Arabia', pts: 1, gd: -4, status: 'eliminated' },
+  ],
+  I: [
+    { team: 'France', pts: 9, gd: 8, status: 'winner' },
+    { team: 'Norway', pts: 6, gd: 1, status: 'runner-up' },
+    { team: 'Senegal', pts: 0, gd: -3, status: 'advanced' },
+    { team: 'Iraq', pts: 0, gd: -6, status: 'eliminated' },
+  ],
+  J: [
+    { team: 'Argentina', pts: 9, gd: 7, status: 'winner' },
+    { team: 'Austria', pts: 4, gd: 0, status: 'runner-up' },
+    { team: 'Algeria', pts: 4, gd: -2, status: 'advanced' },
+    { team: 'Jordan', pts: 0, gd: -5, status: 'eliminated' },
+  ],
+  K: [
+    { team: 'Colombia', pts: 6, gd: 3, status: 'winner' },
+    { team: 'Portugal', pts: 4, gd: 5, status: 'runner-up' },
+    { team: 'DR Congo', pts: 4, gd: 1, status: 'advanced' },
+    { team: 'Uzbekistan', pts: 0, gd: -7, status: 'eliminated' },
+  ],
+  L: [
+    { team: 'England', pts: 7, gd: 4, status: 'winner' },
+    { team: 'Croatia', pts: 6, gd: 0, status: 'runner-up' },
+    { team: 'Ghana', pts: 4, gd: 0, status: 'advanced' },
+    { team: 'Panama', pts: 0, gd: -4, status: 'eliminated' },
+  ],
+}
 
 const CONF_TABS = ['WC 2026', 'All', 'UEFA', 'CONMEBOL', 'CONCACAF', 'CAF', 'AFC', 'OFC']
 
@@ -29,6 +104,7 @@ export default function InternationalRatings() {
   const [activeConf, setActiveConf] = useState('All')
   const [showAll, setShowAll]     = useState(false)
   const [wcData, setWcData]       = useState([])
+  const [showGroups, setShowGroups] = useState(false)
   const ratingsRef                = useRef(null)
 
   // Confederation counts for tab labels — fetch once, no min_matches applied
@@ -145,6 +221,50 @@ export default function InternationalRatings() {
               )
             })}
           </div>
+
+          {/* Group Stage toggle */}
+          <div className="border-t border-gray-800">
+            <button
+              onClick={() => setShowGroups(g => !g)}
+              className="flex items-center gap-1.5 w-full px-3 py-2 text-xs text-gray-400 hover:text-white transition-colors cursor-pointer"
+            >
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showGroups ? 'rotate-180' : ''}`} />
+              {showGroups ? 'Hide group stage standings' : 'Show group stage standings'}
+            </button>
+          </div>
+
+          {showGroups && (
+            <div className="bg-gray-900/50 border-t border-gray-800 px-3 pb-4">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pt-3 mb-3 gap-1">
+                <h3 className="text-xs font-semibold text-white uppercase tracking-wider">Group Stage — Final Standings</h3>
+                <span className="text-xs text-gray-500">Group stage complete. Knockout stage in progress through July 19.</span>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                {Object.entries(WC_2026_GROUPS).map(([letter, teams]) => (
+                  <div key={letter} className="rounded-lg bg-gray-800/60 p-2.5">
+                    <div className="text-xs font-semibold text-gray-400 mb-2">Group {letter}</div>
+                    {teams.map((t, i) => {
+                      const textClass =
+                        t.status === 'winner'    ? 'text-emerald-400' :
+                        t.status === 'runner-up' ? 'text-blue-400'    :
+                        t.status === 'advanced'  ? 'text-amber-400'   :
+                                                   'text-gray-500 opacity-60'
+                      return (
+                        <div key={t.team} className={`flex items-center gap-2 py-0.5 text-xs ${textClass}`}>
+                          <span className="w-3 text-gray-600 font-mono">{i + 1}</span>
+                          <span className="flex-1 truncate">{t.team}</span>
+                          <span className="font-mono tabular-nums w-8 text-right">{t.pts}pt</span>
+                          <span className="font-mono tabular-nums w-8 text-right">
+                            {t.gd > 0 ? `+${t.gd}` : t.gd}
+                          </span>
+                        </div>
+                      )
+                    })}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
