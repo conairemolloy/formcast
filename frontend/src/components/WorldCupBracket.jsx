@@ -455,57 +455,13 @@ export default function WorldCupBracket({ onTeamClick }) {
         ))}
       </div>
 
-      {/* Bracket tree */}
+      {/* Bracket tree — data probe: render Title Odds to confirm pipeline works */}
       {view === 'bracket' && (
-        <div className="space-y-6">
-          {/* Legend */}
-          <div className="flex flex-wrap gap-4 text-xs text-gray-500">
-            <span><span className="text-gray-300">%</span> = Elo win probability (knockout, no draws)</span>
-            <span><span className="text-emerald-400">✓</span> = Confirmed result</span>
-            <span className="text-amber-400">Gold border</span> = SF/Final tie
-          </div>
-
-          {/* Left half */}
-          <div>
-            <div className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">
-              Left Half — Semi-Final 1 side
-            </div>
-            <div className="overflow-x-auto pb-2">
-              <BracketHalf
-                ties={leftTies}
-                sims={teamPaths}
-                half="left"
-                onTeamClick={onTeamClick}
-              />
-            </div>
-          </div>
-
-          {/* Final connector */}
-          <div className="flex items-center gap-3 px-2">
-            <div className="flex-1 border-t border-gray-700/40" />
-            <ProjectedMatchCard
-              label="Final — July 19"
-              teams={buildProjectedMatch(r32, simMap, 'final_pct')}
-              accent="yellow"
-              onTeamClick={onTeamClick}
-            />
-            <div className="flex-1 border-t border-gray-700/40" />
-          </div>
-
-          {/* Right half */}
-          <div>
-            <div className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">
-              Right Half — Semi-Final 2 side
-            </div>
-            <div className="overflow-x-auto pb-2">
-              <BracketHalf
-                ties={rightTies}
-                sims={teamPaths}
-                half="right"
-                onTeamClick={onTeamClick}
-              />
-            </div>
-          </div>
+        <div className="space-y-4">
+          <p className="text-xs text-amber-400">
+            Bracket tree layout under investigation — showing Title Odds data probe instead.
+          </p>
+          <TitleOdds teamPaths={teamPaths} />
         </div>
       )}
 
