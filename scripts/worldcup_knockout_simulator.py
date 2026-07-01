@@ -27,7 +27,8 @@ DEFAULT_ELO = 1500
 # Right half (ties 9-16, slots 16-31): semifinal 2 side.
 
 BRACKET = [
-    # ── Left half (ties 1-8) ──
+    # ── Left half — SF1 side (matches 73-80) ──
+    # Adjacent pairs meet in R16: (1,2)→M89, (3,4)→M90, then QF M97, then SF M101
     {"id": 1,  "team1": "Germany",              "team2": "Paraguay",               "date": "2026-06-29"},
     {"id": 2,  "team1": "France",               "team2": "Sweden",                 "date": "2026-07-01"},
     {"id": 3,  "team1": "South Africa",         "team2": "Canada",                 "date": "2026-06-28"},
@@ -36,7 +37,8 @@ BRACKET = [
     {"id": 6,  "team1": "Spain",                "team2": "Austria",                "date": "2026-07-02"},
     {"id": 7,  "team1": "United States",        "team2": "Bosnia and Herzegovina", "date": "2026-07-01"},
     {"id": 8,  "team1": "Belgium",              "team2": "Senegal",                "date": "2026-07-01"},
-    # ── Right half (ties 9-16) ──
+    # ── Right half — SF2 side (matches 81-88) ──
+    # Adjacent pairs meet in R16: (9,10)→M91, (11,12)→M92, then QF M99, then SF M102
     {"id": 9,  "team1": "Brazil",               "team2": "Japan",                  "date": "2026-06-29"},
     {"id": 10, "team1": "Ivory Coast",          "team2": "Norway",                 "date": "2026-06-30"},
     {"id": 11, "team1": "Mexico",               "team2": "Ecuador",                "date": "2026-06-30"},
