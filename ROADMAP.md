@@ -43,7 +43,7 @@
 ### Now (this week)
 - [x] Sentry error monitoring — free tier, catches Railway crashes automatically
 - [x] UptimeRobot uptime monitoring — pings /api/health every 5 minutes, emails on downtime. Free tier, 5 minute setup
-- [ ] World Cup Hub page — group tables, bracket, qualification probabilities. Time-sensitive: tournament ends mid-July 2026
+- [x] World Cup Hub page — group tables, bracket, qualification probabilities. Time-sensitive: tournament ends mid-July 2026
 
 ### Next (this month)
 - [ ] Email alerts (Resend) — watchlist notifications + weekly digest. Free tier (3k emails/month). Core retention mechanic — currently the watchlist exists but does nothing to bring users back
@@ -691,16 +691,29 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 
 ### Product & Bug Fixes
 - [x] Fix live feed — real international Elo now powering /api/live/upcoming, predict_upcoming.py, and fetch_live_odds.py (all three independently fixed for neutral-venue/host-nation home advantage handling)
-- [ ] Fix team-name resolution bug — "Belgium vs Mirandes" type errors, club teams incorrectly appearing as national team fixtures in the football-data.org live feed during tournament windows
+- [x] Fix team-name resolution bug — "Belgium vs Mirandes" type errors, club teams incorrectly appearing as national team fixtures in the football-data.org live feed during tournament windows
 - [x] International ratings page — live at /international, confederation filtering, min_matches toggle for non-FIFA entities
-- [ ] World Cup Hub page — live group tables, qualification probabilities, Round of 16 bracket prediction tree, "path to the final" probability per team (TIME-SENSITIVE — tournament ends mid-July 2026)
-- [ ] International team profile pages — extend existing TeamProfile component to work for national teams (different stats shape than club)
+- [x] World Cup Hub page — live group tables, qualification probabilities, Round of 16 bracket prediction tree, "path to the final" probability per team (TIME-SENSITIVE — tournament ends mid-July 2026)
+- [x] International team profile pages — extend existing TeamProfile component to work for national teams (different stats shape than club)
 
 ### Known Bugs Fixed This Session
 - [x] Three independent files (predict_upcoming.py, api/routes/live.py, scripts/fetch_live_odds.py) each had duplicate, independently-broken home-advantage logic that incorrectly applied home advantage to neutral-venue World Cup matches — all three fixed with identical HOST_NATIONS/is_tournament_finals pattern
 - [x] Team name alias mismatches between live data sources and international_elo_ratings.csv — fixed Czechia/Czech Republic, Bosnia-Herzegovina/Bosnia and Herzegovina, USA/United States, Bosnia & Herzegovina (ampersand variant)
 - [x] requirements.txt missing joblib and xgboost — caused 3 weeks of silent GitHub Actions failures (June 1, 8, 15), root-caused via clean-venv reproduction and fixed
-- [ ] "Belgium vs Mirandes" — Mirandes is a Spanish club incorrectly appearing as a World Cup fixture in the football-data.org live feed; flagged but not yet investigated/fixed
+- [x] "Belgium vs Mirandes" — Mirandes is a Spanish club incorrectly appearing as a World Cup fixture in the football-data.org live feed; flagged but not yet investigated/fixed
+
+### World Cup Knockout Intelligence — BUILT
+- [x] Round of 32 bracket data structure — all 16 ties hardcoded with real results auto-detected from international_results.csv + shootouts
+- [x] Elo-based win probability for every R32 tie
+- [x] Monte Carlo bracket simulator — 100k sims, single-elimination 32-team structure, settled ties use real results
+- [x] Per-team path-to-final probabilities (R16/QF/SF/Final/Champion %)
+- [x] Title odds leaderboard — all 32 teams ranked by simulated championship probability
+- [x] Bracket tree visualisation — R32→R16→QF→SF→Final columns with win % labels
+- [x] Draw side analysis — left vs right half aggregate Elo comparison
+- [x] GET /api/international/worldcup/bracket endpoint
+- [x] GET /api/international/worldcup/team-path endpoint
+- [x] Dedicated World Cup 2026 page under International nav
+- [x] Daily automated bracket refresh via GitHub Actions
 
 ---
 
