@@ -1,8 +1,32 @@
 from datetime import datetime, timezone
+import importlib.util
+from pathlib import Path
+import time
+
 from flask import Blueprint, jsonify, request, current_app
 import numpy as np
+import pandas as pd
 
 international_bp = Blueprint("international", __name__)
+
+# ── Simulator import ──────────────────────────────────────────────────────────
+_SIM_PATH = Path(__file__).resolve().parent.parent.parent / "scripts" / "worldcup_knockout_simulator.py"
+_spec = importlib.util.spec_from_file_location("worldcup_knockout_simulator", _SIM_PATH)
+_wc_sim = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_wc_sim)
+
+BRACKET              = _wc_sim.BRACKET
+N_SIMS               = _wc_sim.N_SIMS
+DEFAULT_ELO          = _wc_sim.DEFAULT_ELO
+resolve_settled_ties = _wc_sim.resolve_settled_ties
+simulate             = _wc_sim.simulate
+compute_r32_probs    = _wc_sim.compute_r32_probs
+draw_side_analysis   = _wc_sim.draw_side_analysis
+
+# ── Bracket simulation cache (1-hour TTL) ─────────────────────────────────────
+_bracket_cache: dict | None = None
+_bracket_cache_ts: float = 0.0
+_CACHE_TTL = 3600
 
 # Bracket definition mirrored from worldcup_knockout_simulator.py.
 # Tie order determines the bracket tree: adjacent pairs meet in each successive round.
@@ -122,25 +146,31 @@ def get_international_team_profile():
 
 @international_bp.get("/worldcup/bracket")
 def get_worldcup_bracket():
-    data = current_app.config["DATA"]
-    sims_df  = data.get("worldcup_bracket_sims")
-    probs_df = data.get("worldcup_match_probs")
-    elo_df   = data["international_elo_ratings"]
+    global _bracket_cache, _bracket_cache_ts
 
-    if sims_df is None or sims_df.empty or probs_df is None or probs_df.empty:
-        return jsonify({"success": False, "error": "Bracket simulation data not yet generated"}), 503
+    now = time.time()
+    if _bracket_cache is not None and (now - _bracket_cache_ts) < _CACHE_TTL:
+        return jsonify(_bracket_cache)
+
+    data_dir     = Path(__file__).resolve().parent.parent.parent / "data" / "processed"
+    elo_df       = pd.read_csv(data_dir / "international_elo_ratings.csv")
+    results_df   = pd.read_csv(data_dir / "international_results.csv")
+    shootouts_df = pd.read_csv(data_dir / "international_shootouts.csv")
 
     elo_lookup  = dict(zip(elo_df["team"], elo_df["elo_rating"].astype(float)))
     conf_lookup = dict(zip(elo_df["team"], elo_df["confederation"]))
 
-    # Build R32 tie list
-    probs_by_id = {int(r["tie_id"]): r for r in probs_df.replace({np.nan: None}).to_dict(orient="records")}
+    settled    = resolve_settled_ties(BRACKET, results_df, shootouts_df)
+    match_rows = compute_r32_probs(BRACKET, elo_lookup, settled)
+    adv_counts, team_names = simulate(BRACKET, elo_lookup, settled, N_SIMS)
+
+    # R32 tie list
+    probs_by_id = {r["tie_id"]: r for r in match_rows}
     r32 = []
-    for tie in _BRACKET:
-        p = probs_by_id.get(tie["id"], {})
+    for tie in BRACKET:
+        p      = probs_by_id.get(tie["id"], {})
         winner = p.get("winner") or None
         score  = p.get("score")  or None
-        # Normalise score to winner-first display ("0-1" for Canada → "1-0")
         display_score = None
         if winner and score and "pens" not in str(score):
             parts = str(score).split("-")
@@ -151,67 +181,65 @@ def get_worldcup_bracket():
             display_score = score
 
         r32.append({
-            "tie_id":          tie["id"],
-            "team1":           tie["team1"],
-            "team2":           tie["team2"],
-            "team1_elo":       round(elo_lookup.get(tie["team1"], 1500), 1),
-            "team2_elo":       round(elo_lookup.get(tie["team2"], 1500), 1),
-            "team1_conf":      conf_lookup.get(tie["team1"], ""),
-            "team2_conf":      conf_lookup.get(tie["team2"], ""),
-            "team1_win_pct":   float(p.get("team1_win_pct", 50.0)),
-            "team2_win_pct":   float(p.get("team2_win_pct", 50.0)),
-            "settled":         bool(p.get("settled", False)),
-            "winner":          winner,
-            "score":           display_score,
-            "date":            tie["date"],
-            "bracket_half":    "left" if tie["id"] <= 8 else "right",
+            "tie_id":        tie["id"],
+            "team1":         tie["team1"],
+            "team2":         tie["team2"],
+            "team1_elo":     round(elo_lookup.get(tie["team1"], 1500), 1),
+            "team2_elo":     round(elo_lookup.get(tie["team2"], 1500), 1),
+            "team1_conf":    conf_lookup.get(tie["team1"], ""),
+            "team2_conf":    conf_lookup.get(tie["team2"], ""),
+            "team1_win_pct": float(p.get("team1_win_pct", 50.0)),
+            "team2_win_pct": float(p.get("team2_win_pct", 50.0)),
+            "settled":       bool(p.get("settled", False)),
+            "winner":        winner,
+            "score":         display_score,
+            "date":          tie["date"],
+            "bracket_half":  "left" if tie["id"] <= 8 else "right",
         })
 
-    # Team paths (sorted by champion probability)
-    team_paths = sims_df.sort_values("champion_pct", ascending=False).replace({np.nan: None}).to_dict(orient="records")
+    # Team advancement paths
+    team_paths = []
+    for i, team in enumerate(team_names):
+        counts = adv_counts[i]
+        team_paths.append({
+            "team":          team,
+            "elo":           round(elo_lookup.get(team, DEFAULT_ELO), 2),
+            "confederation": conf_lookup.get(team, ""),
+            "r32_pct":       round(counts[0] / N_SIMS * 100, 2),
+            "r16_pct":       round(counts[1] / N_SIMS * 100, 2),
+            "qf_pct":        round(counts[2] / N_SIMS * 100, 2),
+            "sf_pct":        round(counts[3] / N_SIMS * 100, 2),
+            "final_pct":     round(counts[4] / N_SIMS * 100, 2),
+            "champion_pct":  round(counts[5] / N_SIMS * 100, 2),
+        })
+    team_paths.sort(key=lambda x: -x["champion_pct"])
 
-    # Draw-side analysis: remaining teams (not yet eliminated) in each half
-    settled_winners = {
-        r["tie_id"]: r["winner"]
-        for r in probs_df.to_dict(orient="records")
-        if r.get("settled") and r.get("winner")
-    }
-    eliminated = set()
-    for tie in _BRACKET:
-        w = settled_winners.get(tie["id"])
-        if w:
-            loser = tie["team2"] if w == tie["team1"] else tie["team1"]
-            eliminated.add(loser)
-
-    halves = {"left": [], "right": []}
-    for tie in _BRACKET:
-        half = "left" if tie["id"] <= 8 else "right"
-        for team in (tie["team1"], tie["team2"]):
-            if team not in eliminated:
-                halves[half].append({
-                    "team": team,
-                    "elo":  round(elo_lookup.get(team, 1500), 1),
-                    "confederation": conf_lookup.get(team, ""),
-                })
-
+    # Draw-side analysis
+    raw_analysis = draw_side_analysis(BRACKET, elo_lookup, settled)
     draw_analysis = {}
-    for half, teams in halves.items():
-        elos = [t["elo"] for t in teams]
+    for half, side_data in raw_analysis.items():
+        teams = [
+            {**t, "confederation": conf_lookup.get(t["team"], "")}
+            for t in side_data["teams"]
+        ]
         draw_analysis[half] = {
-            "teams":    sorted(teams, key=lambda x: -x["elo"]),
-            "avg_elo":  round(sum(elos) / len(elos), 1) if elos else 0,
-            "count":    len(teams),
+            "teams":   teams,
+            "avg_elo": side_data["avg_elo"],
+            "count":   side_data["count"],
         }
 
-    return jsonify({
+    generated_at = datetime.now(timezone.utc).isoformat()
+    _bracket_cache = {
         "success": True,
         "data": {
-            "r32":          r32,
-            "team_paths":   team_paths,
+            "r32":           r32,
+            "team_paths":    team_paths,
             "draw_analysis": draw_analysis,
         },
-        "meta": {"generated_at": datetime.now(timezone.utc).isoformat()},
-    })
+        "meta": {"generated_at": generated_at},
+    }
+    _bracket_cache_ts = now
+    return jsonify(_bracket_cache)
 
 
 @international_bp.get("/worldcup/team-path")
