@@ -422,6 +422,8 @@ export default function WorldCupBracket({ onTeamClick }) {
     return <div className="text-red-400 p-4 text-sm">{error}</div>
   }
 
+  if (!data) return null
+
   const { r32, team_paths: teamPaths, draw_analysis: drawAnalysis } = data
   const leftTies  = r32.filter(t => t.bracket_half === 'left')
   const rightTies = r32.filter(t => t.bracket_half === 'right')
