@@ -7,8 +7,8 @@ Settled ties use real results; unsettled ties simulate forward using
 Elo-based win probabilities (no draws — knockout goes to ET/pens).
 
 Outputs:
-  data/processed/worldcup_bracket_sims.csv  — per-team advancement %
-  data/processed/worldcup_match_probs.csv   — per-tie win probabilities
+  data/processed/worldcup_bracket_sims_v2.csv  — per-team advancement %
+  data/processed/worldcup_match_probs_v2.csv   — per-tie win probabilities
 """
 
 import time
@@ -262,7 +262,7 @@ def main():
     # Per-tie R32 win probabilities
     match_rows = compute_r32_probs(BRACKET, elo_lookup, settled)
     match_df = pd.DataFrame(match_rows)
-    match_path = base / "data/processed/worldcup_match_probs.csv"
+    match_path = base / "data/processed/worldcup_match_probs_v2.csv"
     match_df.to_csv(match_path, index=False)
     print(f"Match probabilities saved → {match_path}")
 
@@ -287,7 +287,7 @@ def main():
         })
 
     sim_df = pd.DataFrame(sim_rows).sort_values("champion_pct", ascending=False)
-    sim_path = base / "data/processed/worldcup_bracket_sims.csv"
+    sim_path = base / "data/processed/worldcup_bracket_sims_v2.csv"
     sim_df.to_csv(sim_path, index=False)
     print(f"Bracket simulations saved → {sim_path}")
 

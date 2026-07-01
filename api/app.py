@@ -83,8 +83,8 @@ def create_app():
         "team_tendencies":        _load_team_tendencies(),
         "international_elo_ratings": load_csv("international_elo_ratings.csv"),
         "international_results":     load_csv("international_results.csv"),
-        "worldcup_bracket_sims":     _load_optional_csv("worldcup_bracket_sims.csv"),
-        "worldcup_match_probs":      _load_optional_csv("worldcup_match_probs.csv"),
+        "worldcup_bracket_sims":     _load_optional_csv("worldcup_bracket_sims_v2.csv"),
+        "worldcup_match_probs":      _load_optional_csv("worldcup_match_probs_v2.csv"),
     }
 
     app.register_blueprint(ratings_bp,     url_prefix="/api")
