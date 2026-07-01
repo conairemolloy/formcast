@@ -124,6 +124,9 @@ function BracketHalf({ ties, sims, half, onTeamClick }) {
   const simMap = {}
   for (const row of sims) simMap[row.team] = row
 
+  // Guard: bracket is only meaningful with a full set of 8 R32 ties
+  if (!ties || ties.length < 8) return null
+
   // Final and SF labels
   const sfLabel = half === 'left' ? 'Semi-Final 1' : 'Semi-Final 2'
 
@@ -136,7 +139,7 @@ function BracketHalf({ ties, sims, half, onTeamClick }) {
   ]
 
   return (
-    <div className="flex items-stretch gap-0">
+    <div className="flex items-start gap-0" style={{ minWidth: 900 }}>
       {/* R32 column */}
       <div className="flex flex-col justify-around gap-2 py-2">
         {ties.map((tie) => (
