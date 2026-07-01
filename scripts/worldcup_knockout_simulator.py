@@ -27,40 +27,24 @@ DEFAULT_ELO = 1500
 # Right half (ties 9-16, slots 16-31): semifinal 2 side.
 
 BRACKET = [
-    # ── Left half ──
-    # Tie 1
-    {"id": 1,  "team1": "Canada",               "team2": "South Africa",         "date": "2026-06-28"},
-    # Tie 2
-    {"id": 2,  "team1": "Mexico",               "team2": "Bosnia and Herzegovina","date": "2026-06-30"},
-    # Tie 3
-    {"id": 3,  "team1": "Brazil",               "team2": "Japan",                "date": "2026-06-29"},
-    # Tie 4
-    {"id": 4,  "team1": "Morocco",              "team2": "Netherlands",          "date": "2026-06-29"},
-    # Tie 5
-    {"id": 5,  "team1": "Paraguay",             "team2": "Germany",              "date": "2026-06-29"},
-    # Tie 6
-    {"id": 6,  "team1": "United States",        "team2": "Ecuador",              "date": "2026-07-01"},
-    # Tie 7
-    {"id": 7,  "team1": "Australia",            "team2": "Ivory Coast",          "date": "2026-07-01"},
-    # Tie 8
-    {"id": 8,  "team1": "Switzerland",          "team2": "Sweden",               "date": "2026-07-02"},
-    # ── Right half ──
-    # Tie 9
-    {"id": 9,  "team1": "Belgium",              "team2": "Cape Verde",           "date": "2026-07-02"},
-    # Tie 10
-    {"id": 10, "team1": "Spain",                "team2": "Egypt",                "date": "2026-07-03"},
-    # Tie 11
-    {"id": 11, "team1": "France",               "team2": "Austria",              "date": "2026-07-03"},
-    # Tie 12
-    {"id": 12, "team1": "Argentina",            "team2": "Norway",               "date": "2026-07-04"},
-    # Tie 13
-    {"id": 13, "team1": "Senegal",              "team2": "Algeria",              "date": "2026-07-04"},
-    # Tie 14
-    {"id": 14, "team1": "England",              "team2": "Portugal",             "date": "2026-07-05"},
-    # Tie 15
-    {"id": 15, "team1": "Colombia",             "team2": "Croatia",              "date": "2026-07-05"},
-    # Tie 16
-    {"id": 16, "team1": "Ghana",                "team2": "DR Congo",             "date": "2026-07-06"},
+    # ── Left half (ties 1-8) ──
+    {"id": 1,  "team1": "Germany",              "team2": "Paraguay",               "date": "2026-06-29"},
+    {"id": 2,  "team1": "France",               "team2": "Sweden",                 "date": "2026-07-01"},
+    {"id": 3,  "team1": "South Africa",         "team2": "Canada",                 "date": "2026-06-28"},
+    {"id": 4,  "team1": "Netherlands",          "team2": "Morocco",                "date": "2026-06-29"},
+    {"id": 5,  "team1": "Portugal",             "team2": "Croatia",                "date": "2026-07-02"},
+    {"id": 6,  "team1": "Spain",                "team2": "Austria",                "date": "2026-07-02"},
+    {"id": 7,  "team1": "United States",        "team2": "Bosnia and Herzegovina", "date": "2026-07-01"},
+    {"id": 8,  "team1": "Belgium",              "team2": "Senegal",                "date": "2026-07-01"},
+    # ── Right half (ties 9-16) ──
+    {"id": 9,  "team1": "Brazil",               "team2": "Japan",                  "date": "2026-06-29"},
+    {"id": 10, "team1": "Ivory Coast",          "team2": "Norway",                 "date": "2026-06-30"},
+    {"id": 11, "team1": "Mexico",               "team2": "Ecuador",                "date": "2026-06-30"},
+    {"id": 12, "team1": "England",              "team2": "DR Congo",               "date": "2026-07-01"},
+    {"id": 13, "team1": "Argentina",            "team2": "Cape Verde",             "date": "2026-07-03"},
+    {"id": 14, "team1": "Australia",            "team2": "Egypt",                  "date": "2026-07-03"},
+    {"id": 15, "team1": "Switzerland",          "team2": "Algeria",                "date": "2026-07-02"},
+    {"id": 16, "team1": "Colombia",             "team2": "Ghana",                  "date": "2026-07-03"},
 ]
 
 # Round labels in progression order
