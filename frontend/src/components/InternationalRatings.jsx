@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import api from '../api'
 import { Loader2, ChevronDown } from 'lucide-react'
+import WorldCupBracket from './WorldCupBracket'
 
 const MEDAL = ['🥇', '🥈', '🥉']
 const MAX_RATING = 2200
@@ -104,8 +105,9 @@ export default function InternationalRatings({ onTeamClick }) {
   const [activeConf, setActiveConf] = useState('All')
   const [showAll, setShowAll]     = useState(false)
   const [wcData, setWcData]       = useState([])
-  const [showGroups, setShowGroups] = useState(false)
-  const ratingsRef                = useRef(null)
+  const [showGroups, setShowGroups]   = useState(false)
+  const [showBracket, setShowBracket] = useState(false)
+  const ratingsRef                    = useRef(null)
 
   // Confederation counts for tab labels — fetch once, no min_matches applied
   useEffect(() => {
@@ -264,6 +266,23 @@ export default function InternationalRatings({ onTeamClick }) {
                   </div>
                 ))}
               </div>
+            </div>
+          )}
+
+          {/* Knockout Bracket toggle */}
+          <div className="border-t border-gray-800">
+            <button
+              onClick={() => setShowBracket(b => !b)}
+              className="flex items-center gap-1.5 w-full px-3 py-2 text-xs text-gray-400 hover:text-white transition-colors cursor-pointer"
+            >
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showBracket ? 'rotate-180' : ''}`} />
+              {showBracket ? 'Hide knockout bracket' : 'Show knockout bracket & title odds'}
+            </button>
+          </div>
+
+          {showBracket && (
+            <div className="bg-gray-900/50 border-t border-gray-800 px-3 pb-4 pt-3">
+              <WorldCupBracket onTeamClick={name => onTeamClick?.({ name })} />
             </div>
           )}
         </div>

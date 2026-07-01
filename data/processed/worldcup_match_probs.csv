@@ -1,0 +1,17 @@
+round,tie_id,team1,team2,team1_elo,team2_elo,team1_win_pct,team2_win_pct,settled,winner,score,date,bracket_half
+r32,1,Canada,South Africa,1835.51,1676.1,71.46,28.54,True,Canada,0-1,2026-06-28,left
+r32,2,Mexico,Bosnia and Herzegovina,1952.33,1661.9,84.18,15.82,False,,,2026-06-30,left
+r32,3,Brazil,Japan,2055.2,1916.74,68.93,31.07,True,Brazil,2-1,2026-06-29,left
+r32,4,Morocco,Netherlands,1979.59,1992.89,48.09,51.91,True,Morocco,1-1 (pens),2026-06-29,left
+r32,5,Paraguay,Germany,1842.53,1949.67,35.05,64.95,True,Paraguay,1-1 (pens),2026-06-29,left
+r32,6,United States,Ecuador,1835.86,1923.27,37.68,62.32,False,,,2026-07-01,left
+r32,7,Australia,Ivory Coast,1842.65,1834.34,51.2,48.8,False,,,2026-07-01,left
+r32,8,Switzerland,Sweden,1934.45,1780.4,70.82,29.18,False,,,2026-07-02,left
+r32,9,Belgium,Cape Verde,1919.62,1670.98,80.71,19.29,False,,,2026-07-02,right
+r32,10,Spain,Egypt,2140.52,1827.26,85.85,14.15,False,,,2026-07-03,right
+r32,11,France,Austria,2111.17,1869.77,80.05,19.95,False,,,2026-07-03,right
+r32,12,Argentina,Norway,2160.58,1907.7,81.09,18.91,False,,,2026-07-04,right
+r32,13,Senegal,Algeria,1859.12,1857.13,50.29,49.71,False,,,2026-07-04,right
+r32,14,England,Portugal,2024.93,1994.62,54.35,45.65,False,,,2026-07-05,right
+r32,15,Colombia,Croatia,2021.11,1924.06,63.61,36.39,False,,,2026-07-05,right
+r32,16,Ghana,DR Congo,1645.99,1749.27,35.56,64.44,False,,,2026-07-06,right

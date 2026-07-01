@@ -43,6 +43,12 @@ def _load_live_value_bets():
         return pd.DataFrame()
     return pd.read_csv(path)
 
+def _load_optional_csv(filename):
+    path = os.path.join(DATA_DIR, filename)
+    if not os.path.exists(path):
+        return pd.DataFrame()
+    return pd.read_csv(path)
+
 def _load_elo_predictions():
     df = pd.read_csv(
         os.path.join(DATA_DIR, "elo_predictions.csv"),
@@ -77,6 +83,8 @@ def create_app():
         "team_tendencies":        _load_team_tendencies(),
         "international_elo_ratings": load_csv("international_elo_ratings.csv"),
         "international_results":     load_csv("international_results.csv"),
+        "worldcup_bracket_sims":     _load_optional_csv("worldcup_bracket_sims.csv"),
+        "worldcup_match_probs":      _load_optional_csv("worldcup_match_probs.csv"),
     }
 
     app.register_blueprint(ratings_bp,     url_prefix="/api")
