@@ -103,131 +103,6 @@ function TieCard({ tie, onTeamClick, isHighlighted }) {
   )
 }
 
-// ── Connector lines between rounds ────────────────────────────────────────────
-
-function Connector({ count }) {
-  const lines = []
-  for (let i = 0; i < count; i++) {
-    lines.push(
-      <div key={i} className="flex-1 flex items-center">
-        <div className="w-full border-t border-gray-700/60" />
-      </div>
-    )
-  }
-  return <div className="flex flex-col w-4 shrink-0">{lines}</div>
-}
-
-// ── Half-bracket (8 ties → R16 → QF → SF) ───────────────────────────────────
-
-function BracketHalf({ ties, sims, half, onTeamClick }) {
-  // Map team → sim row for probability lookups
-  const simMap = {}
-  for (const row of sims) simMap[row.team] = row
-
-  // Guard: bracket is only meaningful with a full set of 8 R32 ties
-  if (!ties || ties.length < 8) return null
-
-  // Final and SF labels
-  const sfLabel = half === 'left' ? 'Semi-Final 1' : 'Semi-Final 2'
-
-  // For R16 projected matchup labels, we show which pair of R32 ties feeds each match
-  const r16Pairs = [
-    [ties[0], ties[1]],
-    [ties[2], ties[3]],
-    [ties[4], ties[5]],
-    [ties[6], ties[7]],
-  ]
-
-  return (
-    <div className="flex items-start gap-0" style={{ minWidth: 900 }}>
-      {/* R32 column */}
-      <div className="flex flex-col justify-around gap-2 py-2">
-        {ties.map((tie) => (
-          <TieCard
-            key={tie.tie_id}
-            tie={tie}
-            onTeamClick={onTeamClick}
-          />
-        ))}
-      </div>
-
-      {/* Connector R32→R16 */}
-      <div className="flex flex-col justify-around py-2 w-4 shrink-0">
-        {r16Pairs.map((pair, i) => (
-          <div key={i} className="flex-1 flex flex-col">
-            <div className="flex-1 border-r border-t border-gray-700/50 rounded-tr" />
-            <div className="flex-1 border-r border-b border-gray-700/50 rounded-br" />
-          </div>
-        ))}
-      </div>
-
-      {/* R16 column */}
-      <div className="flex flex-col justify-around gap-6 py-2">
-        {r16Pairs.map((pair, i) => {
-          const qfSims = buildProjectedMatch(pair, simMap, 'r16_pct')
-          return (
-            <ProjectedMatchCard
-              key={i}
-              label="R16"
-              teams={qfSims}
-              onTeamClick={onTeamClick}
-            />
-          )
-        })}
-      </div>
-
-      {/* Connector R16→QF */}
-      <div className="flex flex-col justify-around py-2 w-4 shrink-0">
-        {[[0, 1], [2, 3]].map((_, i) => (
-          <div key={i} className="flex-1 flex flex-col">
-            <div className="flex-1 border-r border-t border-gray-700/50 rounded-tr" />
-            <div className="flex-1 border-r border-b border-gray-700/50 rounded-br" />
-          </div>
-        ))}
-      </div>
-
-      {/* QF column */}
-      <div className="flex flex-col justify-around gap-10 py-2">
-        {[[r16Pairs[0], r16Pairs[1]], [r16Pairs[2], r16Pairs[3]]].map((qfPairs, i) => {
-          const sfSims = buildProjectedMatch(qfPairs.flat(), simMap, 'qf_pct')
-          return (
-            <ProjectedMatchCard
-              key={i}
-              label="QF"
-              teams={sfSims}
-              style="border-gray-700"
-              onTeamClick={onTeamClick}
-            />
-          )
-        })}
-      </div>
-
-      {/* Connector QF→SF */}
-      <div className="flex flex-col justify-around py-2 w-4 shrink-0">
-        <div className="flex-1 flex flex-col">
-          <div className="flex-1 border-r border-t border-gray-700/50 rounded-tr" />
-          <div className="flex-1 border-r border-b border-gray-700/50 rounded-br" />
-        </div>
-      </div>
-
-      {/* SF column */}
-      <div className="flex flex-col justify-center py-2">
-        {(() => {
-          const sfSims = buildProjectedMatch(ties.map(t => t), simMap, 'sf_pct')
-          return (
-            <ProjectedMatchCard
-              label={sfLabel}
-              teams={sfSims}
-              accent="amber"
-              onTeamClick={onTeamClick}
-            />
-          )
-        })()}
-      </div>
-    </div>
-  )
-}
-
 // ── Projected match card (R16 / QF / SF / Final) ─────────────────────────────
 
 function buildProjectedMatch(sourceTies, simMap, probKey) {
@@ -293,6 +168,112 @@ function ProjectedMatchCard({ label, teams, accent, onTeamClick }) {
           </div>
         </div>
       ))}
+    </div>
+  )
+}
+
+// ── Final card (gold-bordered, slightly larger) ───────────────────────────────
+
+function FinalColumn({ teams, onTeamClick }) {
+  return (
+    <div
+      className="rounded-lg border border-yellow-400/50 ring-1 ring-yellow-400/20 overflow-hidden text-xs shrink-0"
+      style={{ minWidth: 220, maxWidth: 250 }}
+    >
+      <div className="px-2 py-1 bg-gray-900/80 border-b border-gray-800 text-[10px] font-semibold uppercase tracking-wider text-yellow-400 text-center">
+        Final — July 19
+      </div>
+      {teams.length === 0 && (
+        <div className="px-3 py-2 text-gray-600 italic">TBD</div>
+      )}
+      {teams.map((t) => (
+        <div
+          key={t.name}
+          onClick={() => onTeamClick?.(t.name)}
+          className="flex items-center gap-2 px-3 py-2 bg-gray-900/60 hover:bg-gray-800/60 cursor-pointer transition-colors border-b border-gray-800/40 last:border-0"
+        >
+          <span className="flex-1 font-medium text-gray-200 truncate">{t.name}</span>
+          <div className="flex items-center gap-1 shrink-0">
+            <div className="w-14 h-1.5 bg-gray-800 rounded-full overflow-hidden">
+              <div className="h-full bg-yellow-400 rounded-full" style={{ width: `${Math.min(t.prob, 100)}%` }} />
+            </div>
+            <span className="tabular-nums text-gray-400 text-[10px] w-9 text-right">{t.prob.toFixed(1)}%</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// ── Horizontal single-strip bracket ──────────────────────────────────────────
+
+function HorizontalBracket({ leftTies, rightTies, teamPaths, onTeamClick }) {
+  const simMap = Object.fromEntries(teamPaths.map(t => [t.team, t]))
+  const allTies = [...leftTies, ...rightTies]
+
+  const leftR16  = [[leftTies[0], leftTies[1]], [leftTies[2], leftTies[3]], [leftTies[4], leftTies[5]], [leftTies[6], leftTies[7]]]
+  const leftQF   = [leftTies.slice(0, 4), leftTies.slice(4, 8)]
+  const rightR16 = [[rightTies[0], rightTies[1]], [rightTies[2], rightTies[3]], [rightTies[4], rightTies[5]], [rightTies[6], rightTies[7]]]
+  const rightQF  = [rightTies.slice(0, 4), rightTies.slice(4, 8)]
+
+  return (
+    <div className="flex flex-row items-stretch gap-2" style={{ minWidth: 1400 }}>
+      {/* Left R32 — 8 tie cards */}
+      <div className="flex flex-col gap-2 shrink-0">
+        {leftTies.map(tie => (
+          <TieCard key={tie.tie_id} tie={tie} onTeamClick={onTeamClick} />
+        ))}
+      </div>
+
+      {/* Left R16 — 4 projected */}
+      <div className="flex flex-col justify-around">
+        {leftR16.map((pair, i) => (
+          <ProjectedMatchCard key={i} label="R16" teams={buildProjectedMatch(pair, simMap, 'r16_pct')} onTeamClick={onTeamClick} />
+        ))}
+      </div>
+
+      {/* Left QF — 2 projected */}
+      <div className="flex flex-col justify-around">
+        {leftQF.map((group, i) => (
+          <ProjectedMatchCard key={i} label="QF" teams={buildProjectedMatch(group, simMap, 'qf_pct')} onTeamClick={onTeamClick} />
+        ))}
+      </div>
+
+      {/* Left SF — 1 projected */}
+      <div className="flex flex-col justify-around">
+        <ProjectedMatchCard label="SF" teams={buildProjectedMatch(leftTies, simMap, 'sf_pct')} accent="amber" onTeamClick={onTeamClick} />
+      </div>
+
+      {/* Final — gold-bordered centre card */}
+      <div className="flex flex-col justify-center shrink-0">
+        <FinalColumn teams={buildProjectedMatch(allTies, simMap, 'final_pct')} onTeamClick={onTeamClick} />
+      </div>
+
+      {/* Right SF — 1 projected */}
+      <div className="flex flex-col justify-around">
+        <ProjectedMatchCard label="SF" teams={buildProjectedMatch(rightTies, simMap, 'sf_pct')} accent="amber" onTeamClick={onTeamClick} />
+      </div>
+
+      {/* Right QF — 2 projected */}
+      <div className="flex flex-col justify-around">
+        {rightQF.map((group, i) => (
+          <ProjectedMatchCard key={i} label="QF" teams={buildProjectedMatch(group, simMap, 'qf_pct')} onTeamClick={onTeamClick} />
+        ))}
+      </div>
+
+      {/* Right R16 — 4 projected */}
+      <div className="flex flex-col justify-around">
+        {rightR16.map((pair, i) => (
+          <ProjectedMatchCard key={i} label="R16" teams={buildProjectedMatch(pair, simMap, 'r16_pct')} onTeamClick={onTeamClick} />
+        ))}
+      </div>
+
+      {/* Right R32 — 8 tie cards */}
+      <div className="flex flex-col gap-2 shrink-0">
+        {rightTies.map(tie => (
+          <TieCard key={tie.tie_id} tie={tie} onTeamClick={onTeamClick} />
+        ))}
+      </div>
     </div>
   )
 }
@@ -430,7 +411,6 @@ export default function WorldCupBracket({ onTeamClick }) {
   const { r32, team_paths: teamPaths, draw_analysis: drawAnalysis } = data
   const leftTies  = r32.filter(t => t.bracket_half === 'left')
   const rightTies = r32.filter(t => t.bracket_half === 'right')
-  const simMap    = Object.fromEntries(teamPaths.map(t => [t.team, t]))
 
   return (
     <div className="space-y-4">
@@ -457,28 +437,14 @@ export default function WorldCupBracket({ onTeamClick }) {
 
       {/* Bracket tree */}
       {view === 'bracket' && (
-        <div className="space-y-6">
+        <div className="space-y-4">
           <div className="flex flex-wrap gap-4 text-xs text-gray-500">
             <span><span className="text-gray-300">%</span> = Elo win probability (knockout, no draws)</span>
             <span><span className="text-emerald-400">✓</span> = Confirmed result</span>
             <span className="text-amber-400">Gold border</span> = SF/Final tie
           </div>
-          <div>
-            <div className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">Left Half — Semi-Final 1 side</div>
-            <div className="overflow-x-auto pb-2">
-              <BracketHalf ties={leftTies} sims={teamPaths} half="left" onTeamClick={onTeamClick} />
-            </div>
-          </div>
-          <div className="flex items-center gap-3 px-2">
-            <div className="flex-1 border-t border-gray-700/40" />
-            <ProjectedMatchCard label="Final — July 19" teams={buildProjectedMatch(r32, simMap, 'final_pct')} accent="yellow" onTeamClick={onTeamClick} />
-            <div className="flex-1 border-t border-gray-700/40" />
-          </div>
-          <div>
-            <div className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">Right Half — Semi-Final 2 side</div>
-            <div className="overflow-x-auto pb-2">
-              <BracketHalf ties={rightTies} sims={teamPaths} half="right" onTeamClick={onTeamClick} />
-            </div>
+          <div className="overflow-x-auto pb-2">
+            <HorizontalBracket leftTies={leftTies} rightTies={rightTies} teamPaths={teamPaths} onTeamClick={onTeamClick} />
           </div>
         </div>
       )}
