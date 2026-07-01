@@ -23,6 +23,7 @@ import SettingsPage from './components/SettingsPage'
 import MatchResearch from './components/MatchResearch'
 import InternationalRatings from './components/InternationalRatings'
 import InternationalTeamProfile from './components/InternationalTeamProfile'
+import WorldCupBracket from './components/WorldCupBracket'
 
 const NAV_GROUPS = [
   {
@@ -38,6 +39,7 @@ const NAV_GROUPS = [
     label: 'International',
     items: [
       { id: 'international', label: 'Ratings' },
+      { id: 'worldcup', label: '🏆 World Cup 2026' },
     ],
   },
   {
@@ -366,6 +368,15 @@ function App() {
             eloRank={selectedNationalTeam.rank}
             onBack={() => setSelectedNationalTeam(null)}
           />
+        )}
+        {active === 'worldcup' && (
+          <div className="space-y-6">
+            <div>
+              <h1 className="text-2xl font-bold text-white">🏆 2026 FIFA World Cup</h1>
+              <p className="text-gray-400 text-sm mt-1">Elo-based knockout bracket intelligence — 100,000 Monte Carlo simulations</p>
+            </div>
+            <WorldCupBracket onTeamClick={(name) => { setSelectedNationalTeam({ name, elo: null, confederation: null, rank: null }); setActive('international'); }} />
+          </div>
         )}
         {active === 'tournament'     && <Tournament />}
         {active === 'value-bets'     && <ValueBets />}
