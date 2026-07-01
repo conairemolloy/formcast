@@ -38,14 +38,14 @@ BRACKET = [
     {"id": 7,  "team1": "United States",        "team2": "Bosnia and Herzegovina", "date": "2026-07-01"},
     {"id": 8,  "team1": "Belgium",              "team2": "Senegal",                "date": "2026-07-01"},
     # ── Right half — SF2 side (matches 81-88) ──
-    # Adjacent pairs meet in R16: (9,10)→M91, (11,12)→M92, then QF M99, then SF M102
+    # Adjacent pairs meet in R16: (9,10)→M91, (11,12)→M92, (13,14)→M96, (15,16)→M95, then QF M99/M100, then SF M102
     {"id": 9,  "team1": "Brazil",               "team2": "Japan",                  "date": "2026-06-29"},
     {"id": 10, "team1": "Ivory Coast",          "team2": "Norway",                 "date": "2026-06-30"},
     {"id": 11, "team1": "Mexico",               "team2": "Ecuador",                "date": "2026-06-30"},
     {"id": 12, "team1": "England",              "team2": "DR Congo",               "date": "2026-07-01"},
     {"id": 13, "team1": "Argentina",            "team2": "Cape Verde",             "date": "2026-07-03"},
-    {"id": 14, "team1": "Australia",            "team2": "Egypt",                  "date": "2026-07-03"},
-    {"id": 15, "team1": "Switzerland",          "team2": "Algeria",                "date": "2026-07-02"},
+    {"id": 14, "team1": "Switzerland",          "team2": "Algeria",                "date": "2026-07-02"},
+    {"id": 15, "team1": "Australia",            "team2": "Egypt",                  "date": "2026-07-03"},
     {"id": 16, "team1": "Colombia",             "team2": "Ghana",                  "date": "2026-07-03"},
 ]
 
