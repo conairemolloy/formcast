@@ -134,7 +134,7 @@ def get_worldcup_bracket():
     conf_lookup = dict(zip(elo_df["team"], elo_df["confederation"]))
 
     # Build R32 tie list
-    probs_by_id = {int(r["tie_id"]): r for r in probs_df.to_dict(orient="records")}
+    probs_by_id = {int(r["tie_id"]): r for r in probs_df.replace({np.nan: None}).to_dict(orient="records")}
     r32 = []
     for tie in _BRACKET:
         p = probs_by_id.get(tie["id"], {})
@@ -168,7 +168,7 @@ def get_worldcup_bracket():
         })
 
     # Team paths (sorted by champion probability)
-    team_paths = sims_df.sort_values("champion_pct", ascending=False).to_dict(orient="records")
+    team_paths = sims_df.sort_values("champion_pct", ascending=False).replace({np.nan: None}).to_dict(orient="records")
 
     # Draw-side analysis: remaining teams (not yet eliminated) in each half
     settled_winners = {
