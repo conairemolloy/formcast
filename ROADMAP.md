@@ -19,6 +19,7 @@
 - GitHub Actions weekly automation (Monday 6am UTC)
 - Mobile responsive
 - Ensemble predictions pipeline — XGBoost + meta-learner saved, predict_upcoming.py ready for August
+- Walk-forward ensemble backtest — 66.79% hit rate (non-draw) vs 66.71% Elo baseline across 20k matches 2020-2024
 - SHA256 prediction log — 27 predictions published, auto-settles after each gameweek
 - Dropdown navigation — 4 groups with hover dropdowns (Analysis, Predictions, Betting, Learn)
 - User accounts — Supabase Auth, signup/login/logout, FREE tier badge
@@ -102,7 +103,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 
 ---
 
-## Phase 1 — Core Models (In Progress)
+## Phase 1 — Core Models (Complete)
 - [x] Data pipeline — football-data.co.uk, 5 leagues, 2020-25
 - [x] Elo model with MoV multiplier and home advantage
 - [x] Walk-forward backtesting pipeline (strict temporal ordering)
@@ -113,6 +114,22 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [x] Glicko-2 uncertainty-aware ratings (RD + volatility)
 - [x] Bradley-Terry-Luce schedule-adjusted ratings (MLE)
 - [x] Bayesian hierarchical model (PyMC — partial pooling across leagues)
+
+### Phase 1 Completion — July 2026
+- [x] Walk-forward ensemble backtest — 66.79% hit rate vs 66.71% Elo baseline across 20,271 matches (2020-2024), proves ensemble adds genuine signal
+- [x] DC tau correction — added Dixon-Coles low-score rho correction (ρ=−0.13) to rolling _dc_probs, draw probabilities now properly calibrated
+- [x] Draw model recalibrated — replaced invented 0.30×closeness heuristic with empirically grounded 0.265 base rate formula
+- [x] International ensemble columns fixed — stopped duplicating Elo values into p_home/draw/away_ensemble for international fixtures
+- [x] Elo logic deduplicated — backtest.py now imports from elo_model.py, no more copy-paste drift risk
+- [x] League encoder consolidated — created exactly once in build_all_features(), saved instance used at prediction time
+- [x] COMP_TO_LEAGUE expanded — 6 → 15 entries, added Bundesliga2 Ligue2 ScottishPrem SerieB Segunda and common API name variants
+- [x] Always-home baseline fixed — backtest.py was printing hit rate twice under different labels, now shows genuine dumb baseline (~46% always predicting home win)
+- [x] Unknown competition warning — unknown leagues now log a WARNING instead of silently defaulting to EPL
+- [x] Stale docstring fixed — ensemble_v2.py header updated from "42-feature" to "48-feature"
+- [x] Env-var API URL — predict_upcoming.py UPCOMING_URL now reads FORMCAST_API_URL env var, enables local testing without hitting production
+- [x] feature_cols.json validation — assert fires immediately if saved feature list diverges from current FEATURE_COLS
+- [x] Per-team cold start — ensemble_backtest.py drops matches where either team has fewer than 5 prior appearances
+- [x] Models retrained — xgb_ensemble.pkl meta_learner.pkl league_encoder.pkl all regenerated with fixed DC tau correction and consolidated encoder
 
 ---
 
