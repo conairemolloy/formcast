@@ -309,13 +309,17 @@ def _dc_defence(conceded: list) -> float:
     return float(-np.log(max(np.mean(conceded), 0.01)))
 
 
-def _dc_probs(lam: float, mu: float) -> tuple[float, float, float]:
+def _dc_probs(lam: float, mu: float, rho: float = -0.13) -> tuple[float, float, float]:
     lam = max(lam, 1e-10)
     mu  = max(mu,  1e-10)
     k = np.arange(DC_MAX_GOALS + 1)
     hpmf = np.array([math.exp(-lam) * lam**i / math.factorial(i) for i in k])
     apmf = np.array([math.exp(-mu)  * mu**i  / math.factorial(i) for i in k])
     score = np.outer(hpmf, apmf)
+    score[0, 0] *= 1.0 - lam * mu * rho
+    score[0, 1] *= 1.0 + lam * rho
+    score[1, 0] *= 1.0 + mu * rho
+    score[1, 1] *= 1.0 - rho
     ii, jj = np.meshgrid(k, k, indexing="ij")
     return float(score[ii > jj].sum()), float(score[ii == jj].sum()), float(score[ii < jj].sum())
 

@@ -176,11 +176,12 @@ def _prematch_probs(
     elo_diff   = home_elo - away_elo + ha
     p_home_raw = 1.0 / (1.0 + 10 ** (-elo_diff / 400))
     p_away_raw = 1.0 / (1.0 + 10 ** (elo_diff / 400))
-    closeness  = 1.0 - abs(p_home_raw - p_away_raw)
-    p_draw     = 0.30 * closeness
-    remainder  = 1.0 - p_draw
-    p_home     = p_home_raw / (p_home_raw + p_away_raw) * remainder
-    p_away     = p_away_raw / (p_home_raw + p_away_raw) * remainder
+    base_draw       = 0.265
+    competitiveness = 1.0 - abs(p_home_raw - p_away_raw)
+    p_draw          = base_draw * (0.5 + 0.5 * competitiveness)
+    remainder       = 1.0 - p_draw
+    p_home          = p_home_raw * remainder / (p_home_raw + p_away_raw)
+    p_away          = p_away_raw * remainder / (p_home_raw + p_away_raw)
     return p_home, p_draw, p_away
 
 
@@ -531,7 +532,19 @@ def main() -> None:
                 apply_ha = True  # qualifiers, Nations League, friendlies are real home/away
 
             p_home_elo, p_draw_elo, p_away_elo = _prematch_probs(home_elo_val, away_elo_val, apply_ha)
-            probs = {"H": p_home_elo, "D": p_draw_elo, "A": p_away_elo}
+
+            # Use rolling DC probs for ensemble if team has club history; else fall back to Elo
+            dc_s = defaultdict(list, state.get("dc_scored", {}))
+            dc_c = defaultdict(list, state.get("dc_conceded", {}))
+            if dc_s[home_display] and dc_s[away_display]:
+                ha_bonus  = DC_HOME_ADV if apply_ha else 0.0
+                lam_intl  = math.exp(_dc_attack(dc_s[home_display]) - _dc_defence(dc_c[away_display]) + ha_bonus)
+                mu_intl   = math.exp(_dc_attack(dc_s[away_display]) - _dc_defence(dc_c[home_display]))
+                p_ens_h, p_ens_d, p_ens_a = _dc_probs(lam_intl, mu_intl)
+            else:
+                p_ens_h, p_ens_d, p_ens_a = p_home_elo, p_draw_elo, p_away_elo
+
+            probs = {"H": p_ens_h, "D": p_ens_d, "A": p_ens_a}
             rows.append({
                 "match_date":        match_date_str,
                 "match_time":        match_time,
@@ -541,9 +554,9 @@ def main() -> None:
                 "p_home_elo":        round(p_home_elo, 4),
                 "p_draw_elo":        round(p_draw_elo, 4),
                 "p_away_elo":        round(p_away_elo, 4),
-                "p_home_ensemble":   round(p_home_elo, 4),
-                "p_draw_ensemble":   round(p_draw_elo, 4),
-                "p_away_ensemble":   round(p_away_elo, 4),
+                "p_home_ensemble":   round(p_ens_h, 4),
+                "p_draw_ensemble":   round(p_ens_d, 4),
+                "p_away_ensemble":   round(p_ens_a, 4),
                 "predicted_outcome": max(probs, key=probs.get),
                 "is_international":  True,
             })
