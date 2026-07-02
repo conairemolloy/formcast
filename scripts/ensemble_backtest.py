@@ -134,6 +134,31 @@ def main() -> None:
     feat_df["target"]      = feat_df["result"].map(RESULT_MAP)
     feat_df["season_year"] = feat_df["season"].apply(_season_start_year)
 
+    # Per-team cold start: skip matches where either team has < 5 prior appearances
+    # in the modelling window (counts across the full feat_df, chronologically).
+    team_match_count: dict[str, int] = {}
+    home_counts: list[int] = []
+    away_counts: list[int] = []
+    for _, row in feat_df.iterrows():
+        home = row["home_team"]
+        away = row["away_team"]
+        home_counts.append(team_match_count.get(home, 0))
+        away_counts.append(team_match_count.get(away, 0))
+        team_match_count[home] = team_match_count.get(home, 0) + 1
+        team_match_count[away] = team_match_count.get(away, 0) + 1
+    feat_df["_home_count"] = home_counts
+    feat_df["_away_count"] = away_counts
+    pre_filter = len(feat_df)
+    feat_df = (
+        feat_df[(feat_df["_home_count"] >= 5) & (feat_df["_away_count"] >= 5)]
+        .drop(columns=["_home_count", "_away_count"])
+        .reset_index(drop=True)
+    )
+    print(
+        f"Per-team cold-start filter: dropped {pre_filter - len(feat_df):,} matches; "
+        f"{len(feat_df):,} remain\n"
+    )
+
     print(
         f"Modelling set: {len(feat_df):,} matches  "
         f"({feat_df['match_date'].min().date()} → "

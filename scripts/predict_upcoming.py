@@ -43,7 +43,10 @@ from ensemble_v2 import (  # noqa: E402
 )
 
 # ─── Config ──────────────────────────────────────────────────────────────────
-UPCOMING_URL = "https://web-production-eb371.up.railway.app/api/live/upcoming"
+UPCOMING_URL = os.environ.get(
+    "FORMCAST_API_URL",
+    "https://web-production-eb371.up.railway.app/api/live/upcoming"
+)
 
 BASE_DIR   = os.path.normpath(os.path.join(os.path.dirname(__file__), ".."))
 DATA_DIR   = os.path.join(BASE_DIR, "data", "processed")
@@ -439,7 +442,13 @@ def main() -> None:
     meta_model     = joblib.load(os.path.join(MODELS_DIR, "meta_learner.pkl"))
     league_encoder = joblib.load(os.path.join(MODELS_DIR, "league_encoder.pkl"))
     with open(os.path.join(MODELS_DIR, "feature_cols.json")) as f:
-        feature_cols = json.load(f)
+        saved_cols = json.load(f)
+    assert saved_cols == FEATURE_COLS, (
+        f"feature_cols.json has {len(saved_cols)} features but ensemble_v2.py "
+        f"FEATURE_COLS has {len(FEATURE_COLS)} features. "
+        f"Re-run ensemble_v2.py main() to regenerate the saved model files."
+    )
+    feature_cols = saved_cols
     print(f"  XGBoost ({len(feature_cols)} features), meta-learner, league encoder loaded\n")
 
     # Load xG lookup

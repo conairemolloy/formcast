@@ -1,5 +1,5 @@
 """
-Stacking ensemble (v2) — extends ensemble.py with the full 42-feature base model.
+Stacking ensemble (v2) — extends ensemble.py with the full 48-feature base model.
 
 Stack inputs (12 features):
   home_expected, p_home_g2,
