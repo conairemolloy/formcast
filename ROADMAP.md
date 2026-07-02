@@ -134,126 +134,113 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 ---
 
 ## Phase 2 — Feature Engineering
-### Momentum (8 signals)
+
+### Tier 1 — High Impact, Data Already Available
 - [x] Result momentum — EWM(win=3, draw=1, loss=0, λ=0.6), last 5 matches
 - [x] Score momentum — EWM(scored - conceded, λ=0.6), last 5 matches
 - [x] Elo momentum — Elo_today minus Elo_28_days_ago
 - [x] Scoring rate trend — OLS slope of goals scored, last 8 matches
 - [x] Concession rate trend — OLS slope of goals conceded, last 8 matches
-- [ ] First-half momentum — EWM(H1 score_diff), last 5
-- [ ] Second-half momentum — EWM(H2 score_diff), last 5
 - [x] Winning/losing streak — Bernoulli run length
-
-### Fatigue & Fixture Congestion (8 factors)
 - [x] Rest asymmetry (home vs away rest days differential)
 - [x] Days since last match — computed in team_tendencies.csv
 - [x] Matches in last 21 days — computed in team_tendencies.csv
-- [ ] Travel km in last 14 days
-- [ ] Cup + league dual burden (-15 Elo)
-- [ ] GAA dual code — football + hurling within 5 days (-25 Elo)
-- [ ] County team commitments during intercounty season (-10 Elo)
-- [ ] Altitude adjustment for away venue
-
-### Home Advantage (6 dimensions)
-- [ ] Base home advantage — OLS from score_diff ~ Elo_diff
-- [ ] Distance — great-circle km between grounds
-- [ ] Derby factor — same region binary
-- [ ] Neutral venue flag
-- [ ] Ground familiarity — matches at this ground this season
-- [ ] Crowd size proxy
-
-### Psychological & Situational (10 factors)
-- [ ] Manager change (binary, last 60 days, +15 Elo)
-- [ ] Cup final pressure (-5% scoring rate)
 - [x] Revenge factor (+5 Elo vs opponent who beat them last) — in ensemble
-- [ ] Title-deciding match (+3% uplift)
-- [ ] Relegation pressure (+10 Elo survival instinct)
 - [x] Post-loss bounce (+8 Elo) — in ensemble
-- [ ] Season-opener variance (widen CI 20%)
-- [ ] Referee tendency (historical cards/frees per referee)
 - [x] H2H psychological dominance — in ensemble
-- [ ] Championship vs league priority (-10 Elo squad rotation)
-
-### Weather (7 conditions — OpenWeatherMap API)
-- [ ] Wind speed > 30 km/h (-15% scoring)
-- [ ] Heavy rain > 5mm/hr (-20% scoring)
-- [ ] Temperature extremes (< 5°C or > 25°C)
-- [ ] Pitch waterlogging proxy
-- [ ] Floodlit match binary
-- [ ] Wind direction advantage (H2 tactical)
-- [ ] Altitude > 1500m
-
-### Referee & Venue Features (6 signals)
-- [ ] Referee tendencies — cards/fouls per game by referee, home bias score (data already in results.csv referee column)
-- [ ] Stadium capacity proxy — crowd noise correlates with home advantage strength
-- [ ] Altitude adjustment — away team performance penalty for high altitude venues (lookup table)
-- [ ] Distance travelled — great-circle km between home grounds, fatigue proxy for midweek games
-- [ ] Derby factor — local rivalry binary flag, form less predictive in derbies
-- [ ] Neutral venue flag — cup finals, European legs at neutral grounds
-
-### Squad & Personnel Features (8 signals)
-- [ ] Manager change bounce — binary flag, teams average +8 Elo in first 5 games under new manager
-- [ ] Key player availability — top scorer / goalkeeper missing (requires injury data source)
-- [ ] Squad rotation signal — detect rotation from historical patterns when cup game preceded league game
-- [ ] Goalkeeper form — saves above expected from xG data (already have xG, just need shot-level data)
-- [ ] Set piece specialist — teams with dead ball specialists score more from corners/free kicks
-- [ ] Top scorer availability impact — single player xG contribution as % of team total
-- [ ] Captain continuity — same captain vs new captain (leadership stability signal)
-- [ ] International break fatigue — players returning from international duty, travel and schedule disruption
-
-### Market Intelligence Features (6 signals)
-- [ ] Opening vs closing line movement — how much did odds move from open to close, direction
-- [ ] Steam move detector — multiple bookmakers move simultaneously = sharp action signal
-- [ ] Public vs sharp money split — bookmakers shade lines away from popular teams
-- [ ] Overround tracker — monitor bookmaker margin changes as signal of confidence
-- [ ] Exchange vs sportsbook divergence — Betfair price vs bookmaker price gap
-- [ ] Sharp money threshold — flag when line moves > 8% in < 2 hours pre-kickoff
-
-### Advanced Contextual Features (10 signals)
-- [ ] Score effect model — teams play differently when winning (sit deep) vs losing (chase game), current models ignore game state
-- [ ] Penalty shootout model — for cup competition knockout stage predictions
-- [ ] Cross-competition Elo continuity — already implemented, unique vs single-league platforms
-- [ ] 33-year historical dominance — psychological dominance from long-term H2H record
-- [ ] Post-European game fatigue — performance drop after Thursday Europa League travel
-- [ ] Congestion index — matches in last 14 days weighted by travel distance
-- [ ] Season phase adjustment — teams perform differently early/mid/late season (motivation, fatigue)
-- [ ] Relegation 6-pointer boost — teams in direct relegation battles show elevated performance
-- [ ] Title decider uplift — teams playing title-deciding matches under increased pressure
-- [ ] VAR decision tendency — some referees overturn more decisions, affects game flow
-
-### Current Form & Momentum Display
-- [ ] Current form bar — visual last 5 results with goals on dashboard and match preview
-- [ ] Home/away form split — show separately on team profile and match preview
-- [ ] Goal scoring form — goals scored/conceded trend last 5 matches
-- [ ] Season phase adjustment — early season wider uncertainty, late season motivation shifts
-- [ ] Relegation 6-pointer boost — teams fighting relegation show elevated performance
-- [ ] Title decider uplift — teams in title races perform differently under pressure
-- [ ] Post-European game fatigue — performance drop after Thursday Europa League travel
-- [ ] Congestion index — matches in last 14 days weighted by travel distance
-- [ ] Revenge factor — team lost last meeting, elevated motivation signal
-- [ ] Post-loss bounce — teams statistically perform better after heavy defeats
-
-### Environmental Features
-- [ ] Weather at kickoff — OpenWeatherMap API (wind speed, rain mm/hr, temperature, affects goals and cards)
-- [ ] Distance travelled — stadium coordinates database + great circle km calculation
-- [ ] Altitude adjustment — away team performance penalty for high altitude venues
-- [ ] Pitch condition proxy — rain in last 48hrs affects goal scoring rates
-
-### Disciplinary & Referee Features
 - [x] Team aggression index — normalised composite of fouls + cards (team_tendencies.csv)
 - [x] Away card premium — teams get more cards away, quantified per team
 - [x] Yellow trend — is team getting more or less disciplined recently
 - [x] Fatigue score — days rest + fixture congestion per team
-- [ ] Referee tendencies — cards/fouls per game per referee (need referee column in results.csv)
-- [ ] Home bias score — referees who favour home teams statistically
-- [ ] VAR tendency — referees who overturn more decisions
+- [ ] Home/away Elo split — maintain separate home and away Elo ratings per team beyond flat +50. Real signal especially for teams with strong home/weak away records (PRIORITY)
+- [ ] Referee tendencies — wire up referee column already in results.csv. Cards per game, fouls per game, home bias score per referee. Data exists, just not wired in (PRIORITY)
+- [ ] Venue-specific home win rate — per-team actual home win rate, not just global +50 constant
+- [ ] Relegation/title pressure — flag teams in bottom 3 or top 3 with <10 games remaining, measurable performance change
+- [ ] Opponent-adjusted form — distinguish wins vs top-half teams from wins vs relegation fodder
+- [ ] Season opener variance — widen confidence intervals for first 5 games of season, less predictable
+- [ ] Early season Elo regression — regress all teams toward league mean at season start
+- [ ] Form-weighted late season — increase EWM weight of last 5 matches in final 10 gameweeks
+- [ ] First half vs second half performance — some teams start slow or fade, use half-time scores if available in results.csv
+- [ ] Home bias score per referee — does referee statistically favour home team, quantified from historical data
+- [ ] VAR tendency — referees who overturn more decisions, affects game flow
+- [ ] League-specific home advantage — home advantage varies by league, Serie A vs Championship differ significantly
+- [ ] Promotion/relegation Elo adjustment — newly promoted teams need adjusted ratings for first season in higher division
+- [ ] Cross-competition Elo continuity — strengthen existing implementation, Champions League performance should inform league Elo more
+- [ ] Opponent quality-adjusted form — OLS regression of results controlling for opponent Elo
+- [ ] Unbeaten run momentum — teams on long unbeaten runs outperform their Elo rating
+- [ ] Clean sheet rate — goalkeeper/defensive form signal, rolling last 10 matches
+- [ ] Goals per shot ratio — shooting efficiency trend, more predictive than raw goal count
+- [ ] H2H extended history — full historical H2H dominance not just last 10 meetings
+- [ ] Derby factor — local rivalry binary flag, form less predictive in derbies, use ground distance proxy
 
-### High-Priority Model Gaps
-- [ ] Referee tendencies — wire up referee column already in results.csv into XGBoost features (cards/fouls per referee per game, home bias score). Data already exists, just not wired in
-- [ ] Home/away Elo split — maintain separate home and away Elo ratings per team, beyond the flat +50 home advantage adjustment. Real signal, especially for teams with strong home/weak away records
-- [ ] Manager change signal — +8 Elo bounce in first 5 games under new manager, well-documented in literature. TransferMarkt has manager change dates free
-- [ ] Form-weighted predictions — late season form should outweigh career average more than it currently does, increase EWM weight of last 5 matches in final 10 gameweeks of season
-- [ ] Weather integration — OpenWeatherMap free tier API, wind/rain/temperature at kickoff affects goals and cards markets specifically, integrate into match preview and as XGBoost feature
+### Tier 2 — External Data Required (All Free Sources)
+- [ ] Weather at kickoff — OpenWeatherMap free API. Wind >30km/h reduces scoring, heavy rain affects passing, extreme temperatures affect performance. One API call per upcoming fixture (PRIORITY)
+- [ ] Manager change signal — +8 Elo bounce in first 5 games under new manager, well documented in literature. TransferMarkt scrape for manager change dates, update monthly
+- [ ] Distance travelled — stadium coordinates database (lat/lng for all clubs) + great circle distance calculation. Midweek away trips to far grounds = fatigue penalty
+- [ ] Altitude adjustment — away team performance penalty for high altitude venues. Lookup table by stadium
+- [ ] Squad strength proxy — count of players per team currently playing in top leagues, use existing club Elo data as novel cross-dataset signal
+- [ ] Injury/suspension impact — key player missing affects xG significantly. Free sources: BBC Sport, Rotowire, or parse football-data.org injury flags
+- [ ] International break fatigue — players returning from international duty, travel disruption and schedule congestion
+- [ ] Europa League fatigue — performance drop after Thursday Europa League travel, especially for teams with weak squads
+- [ ] TransferMarkt market value — squad market value as proxy for squad strength, free scraping
+- [ ] Stadium capacity — crowd noise correlates with home advantage strength, proxy via capacity
+
+### Tier 3 — Model Architecture Improvements
+- [ ] Separate draw classifier — dedicated binary classifier trained specifically to predict draws, using features like team defensive ratings, historical draw rates by team/league/referee, closeness of Elo ratings
+- [ ] Score-effect model — teams play differently when winning (sit deep) vs losing (chase game), current models ignore game state entirely
+- [ ] Home/away Glicko-2 split — same as Elo split but with uncertainty tracking per venue type
+- [ ] Time-decay on xG — older xG data weighted less than recent, currently flat window
+- [ ] Bayesian draw model — model draw probability as a function of match competitiveness and historical draw rates
+- [ ] Ensemble calibration — Platt scaling or isotonic regression to calibrate probability outputs, currently overconfident on Brier
+- [ ] League strength adjustment — when teams move between leagues, adjust Elo to account for quality difference
+- [ ] Cross-league Elo normalisation — ensure EPL Elo 1600 is comparable to Bundesliga 1600
+- [ ] Feature interaction terms — explicit interaction features (elo_diff × form_diff, referee_cards × fatigue) for XGBoost
+- [ ] Temporal feature decay — weight recent matches more in all rolling windows, not just momentum
+- [ ] Confidence intervals per prediction — quantify model uncertainty per match, not just point probability
+
+### Tier 4 — Market Intelligence (Requires Betfair/Odds API)
+- [ ] Opening vs closing line movement — odds moving significantly pre-kickoff = sharp money signal
+- [ ] Steam move detector — multiple bookmakers move simultaneously = strong directional signal
+- [ ] Exchange vs sportsbook divergence — Betfair efficient market price vs bookmaker line gap
+- [ ] Overround tracker — monitor bookmaker margin changes as signal of confidence
+- [ ] Public vs sharp money split — bookmakers shade lines away from popular teams
+- [ ] Sharp money threshold — flag when line moves >8% in <2 hours pre-kickoff
+
+### Phase 2 Completion Checklist
+- [ ] Re-run ensemble_backtest.py after each major feature addition to measure uplift
+- [ ] SHAP feature importance analysis — identify which new features actually contribute
+- [ ] Calibration curve update — verify probability outputs remain calibrated after new features
+- [ ] Update feature_cols.json and retrain all saved models after final feature set confirmed
+
+### Tier 5 — Individual Player Features (Requires Player-Level Data)
+- [ ] Key player availability — top scorer or first-choice goalkeeper missing, quantify impact on team xG. Sources: BBC Sport injury feed, football-data.org, or manual flags
+- [ ] Top scorer xG contribution — individual player xG as % of team total, when missing = proportional team xG reduction
+- [ ] Goalkeeper form — saves above expected from shot data, shotstopping quality beyond team defence
+- [ ] Captain continuity — same captain vs new captain, leadership stability signal
+- [ ] Set piece specialist availability — teams with dead ball specialists score more from corners/free kicks, absence is measurable
+- [ ] Player form streaks — individual scoring/assist streaks as momentum signal, beyond team-level momentum
+- [ ] Squad depth index — quality drop from first XI to bench, affects performance in fixture congestion
+- [ ] International duty fatigue — players returning from long-haul international travel, minutes played for national team
+- [ ] Age profile — average squad age, older squads fade late season, younger squads more variance
+- [ ] Player network cohesion — pass completion rates between specific player pairs, team cohesion signal (requires StatsBomb free data)
+- [ ] Injury probability model — predict injury risk from minutes played, age, fixture congestion, identify overloaded players
+- [ ] Star player dependency — single player xG contribution as % of team total, high dependency = high variance
+
+### Tier 6 — Odds Format Display
+- [ ] American odds format — convert model probabilities to American moneyline format (+150, -200 etc). Formula: if P > 0.5 → -(P/(1-P))×100, if P < 0.5 → ((1-P)/P)×100
+- [ ] UK fractional odds — convert probabilities to traditional UK fractions (2/1, 9/4, 11/8 etc). Round to nearest standard bookmaker fraction from a lookup table of common fractions (1/4, 1/3, 4/9, 1/2, 8/15, 4/6, 8/11, 4/5, 5/6, 10/11, Evens, 11/10, 6/5, 5/4, 11/8, 6/4, 13/8, 7/4, 15/8, 2/1, 9/4, 5/2, 11/4, 3/1, 10/3, 4/1, 9/2, 5/1, 6/1, 7/1, 8/1, 10/1, 12/1, 14/1, 16/1, 20/1, 25/1, 33/1, 50/1, 66/1, 100/1)
+- [ ] Decimal odds — European format (2.50, 1.91 etc). Formula: 1/P. Already partially implemented in value bets
+- [ ] Implied probability display — show bookmaker implied probability alongside model probability for direct comparison
+- [ ] Odds comparison widget — show model probability vs best available bookmaker odds across multiple formats simultaneously
+- [ ] Each-way odds calculator — for markets where each-way betting applies (primarily horse racing, but also outright tournament markets)
+- [ ] Odds to CSV export — download current value bets with all three odds formats for use in external staking tools
+
+
+- Odds display — decimal format live on value bets page
+
+
+- [ ] Odds format converter utility function — shared module usable across all sports and all pages
+- [ ] Value bets page updated to show all three odds formats simultaneously
 
 ---
 
