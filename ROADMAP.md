@@ -714,6 +714,10 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [x] GET /api/international/worldcup/team-path endpoint
 - [x] Dedicated World Cup 2026 page under International nav
 - [x] Daily automated bracket refresh via GitHub Actions
+- [x] Fixed Railway CSV cache bug — endpoint now runs Monte Carlo simulator inline at request time with 1-hour TTL cache, no stale data possible
+- [x] Corrected official 2026 World Cup bracket pairings (all 16 R32 ties, correct R16/QF/SF paths matching FIFA match numbers M73-M104)
+- [x] Horizontal scrollable bracket tree layout — R32→R16→QF→SF→Final→SF→QF→R16→R32 in single row
+- [x] Fixed NaN serialization bug in API response causing silent JSON parse failure in browser
 
 ---
 
