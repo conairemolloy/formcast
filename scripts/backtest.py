@@ -1,19 +1,9 @@
 import os
 import numpy as np
 import pandas as pd
+from elo_model import STARTING_RATING, K, HOME_ADVANTAGE, mov_multiplier, expected_score
 
-STARTING_RATING = 1500
-K = 16  # Optimised via hyperparameter grid search (hyperparameter_search.py)
-HOME_ADVANTAGE = 50  # Optimised via hyperparameter grid search (hyperparameter_search.py)
 COLD_START = 50
-
-
-def mov_multiplier(goal_diff: int) -> float:
-    return min(2.0, 1 + np.log(1 + abs(goal_diff)) / np.log(10))
-
-
-def expected_score(rating_a: float, rating_b: float) -> float:
-    return 1 / (1 + 10 ** ((rating_b - rating_a) / 400))
 
 
 def run_backtest(df: pd.DataFrame) -> pd.DataFrame:
@@ -79,9 +69,7 @@ def print_report(pred: pd.DataFrame) -> None:
     overall_hit = non_draw["correct"].mean()
     overall_brier = pred["brier_contribution"].mean()
 
-    # Favourite baseline: home team is favourite when home_expected > 0.5
-    # which is always the predicted result, so baseline == hit rate on non-draws
-    fav_won = non_draw["correct"].sum() / len(non_draw)
+    always_home = (non_draw["actual_result"] == "H").sum() / len(non_draw)
 
     print("=" * 55)
     print("BACKTEST ACCURACY REPORT")
@@ -90,7 +78,7 @@ def print_report(pred: pd.DataFrame) -> None:
     print(f"Non-draw matches        : {len(non_draw):,}")
     print(f"Overall hit rate        : {overall_hit:.4f}  ({overall_hit * 100:.1f}%)")
     print(f"Overall Brier score     : {overall_brier:.6f}")
-    print(f"Favourite win rate      : {fav_won:.4f}  ({fav_won * 100:.1f}%)")
+    print(f"Always-home baseline    : {always_home:.4f}  ({always_home * 100:.1f}%)")
 
     print("\n--- Hit rate by league ---")
     for league, grp in non_draw.groupby("league"):

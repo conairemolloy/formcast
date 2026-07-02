@@ -51,12 +51,22 @@ MODELS_DIR = os.path.join(BASE_DIR, "models")
 
 # API competition name → internal league code used in results.csv
 COMP_TO_LEAGUE: dict[str, str] = {
-    "Premier League": "EPL",
-    "La Liga":        "LaLiga",
-    "Serie A":        "SerieA",
-    "Bundesliga":     "Bundesliga",
-    "Ligue 1":        "Ligue1",
-    "Championship":   "Championship",
+    "Premier League":       "EPL",
+    "La Liga":              "LaLiga",
+    "Serie A":              "SerieA",
+    "Bundesliga":           "Bundesliga",
+    "Ligue 1":              "Ligue1",
+    "Championship":         "Championship",
+    # Second tiers and other competitions present in results.csv
+    "2. Bundesliga":        "Bundesliga2",
+    "Bundesliga 2":         "Bundesliga2",
+    "Ligue 2":              "Ligue2",
+    "Scottish Premiership": "ScottishPrem",
+    "Scottish Premier League": "ScottishPrem",
+    "Serie B":              "SerieB",
+    "Segunda División":     "Segunda",
+    "La Liga 2":            "Segunda",
+    "Segunda Division":     "Segunda",
 }
 DEFAULT_LEAGUE = "EPL"
 
@@ -561,7 +571,9 @@ def main() -> None:
                 "is_international":  True,
             })
         else:
-            # Club fixture — existing logic completely unchanged
+            # Club fixture
+            if competition not in COMP_TO_LEAGUE:
+                print(f"  WARNING: unknown competition '{competition}' — falling back to {DEFAULT_LEAGUE}")
             league_code = COMP_TO_LEAGUE.get(competition, DEFAULT_LEAGUE)
             season      = _current_season(match_date)
 
