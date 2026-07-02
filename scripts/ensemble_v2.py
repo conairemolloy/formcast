@@ -30,6 +30,8 @@ from xgboost import XGBClassifier
 STARTING_ELO = 1500.0
 ELO_K = 16
 ELO_HA = 50
+ELO_HA_HOME = 50        # kept for global Elo compatibility
+HOME_ELO_K_SCALE = 1.0  # home/away K same as global for now
 COLD_START = 200
 FORM_WINDOW = 5
 EWM_ALPHA = 0.4
@@ -46,9 +48,10 @@ DC_MAX_GOALS = 8
 RESULT_MAP = {"A": 0, "D": 1, "H": 2}
 RESULT_INV = {0: "A", 1: "D", 2: "H"}
 
-# Full 48-feature set used for XGBoost base model
+# Full 57-feature set used for XGBoost base model
 FEATURE_COLS = [
     "home_elo", "away_elo", "elo_diff", "home_expected",
+    "home_elo_home", "home_elo_away", "away_elo_home", "away_elo_away", "venue_elo_diff",
     "home_g2_rating", "away_g2_rating", "g2_diff", "home_g2_uncertainty",
     "home_form", "away_form", "form_diff",
     "home_goals_scored_avg", "home_goals_conceded_avg",
@@ -70,6 +73,8 @@ FEATURE_COLS = [
     "home_unbeaten_run", "away_unbeaten_run",
     "post_loss_bounce", "post_loss_bounce_away",
     "league_encoded", "is_early_season",
+    # Referee
+    "ref_avg_yellows", "ref_avg_fouls", "ref_home_bias", "ref_experience",
 ]
 
 # 12-feature stack fed into the meta-learner
@@ -344,6 +349,11 @@ def build_all_features(
     g2:        dict[str, tuple] = defaultdict(lambda: (0.0, G2_INITIAL_PHI))
     team_hist: dict[str, list]  = defaultdict(list)
     elo_hist:  dict[str, list]  = defaultdict(list)
+    elo_home:  dict[str, float] = {}
+    elo_away:  dict[str, float] = {}
+    ref_stats: dict[str, dict]  = {}   # ref → {matches, yellows_total, fouls_total, home_wins}
+    global_matches:   int = 0
+    global_home_wins: int = 0
     h2h_hist:  dict[tuple, list] = defaultdict(list)
 
     # Rolling DC state (last DC_WINDOW goals)
@@ -366,6 +376,23 @@ def build_all_features(
         hg     = int(row["home_goals"])
         ag     = int(row["away_goals"])
         result = row["result"]
+
+        ref_raw  = row["referee"] if "referee" in df.columns else None
+        referee  = ref_raw if (isinstance(ref_raw, str) and ref_raw.strip()) else None
+
+        # Referee features from prior matches only (causal)
+        if referee and referee in ref_stats:
+            rs = ref_stats[referee]
+            ref_avg_yellows = rs["yellows_total"] / rs["matches"]
+            ref_avg_fouls   = rs["fouls_total"]   / rs["matches"]
+            global_hw_rate  = (global_home_wins / global_matches) if global_matches > 0 else 0.457
+            ref_home_bias   = (rs["home_wins"] / rs["matches"]) - global_hw_rate
+            ref_experience  = rs["matches"]
+        else:
+            ref_avg_yellows = 3.8
+            ref_avg_fouls   = 23.0
+            ref_home_bias   = 0.0
+            ref_experience  = 0
 
         xg_key  = (date.date(), home, away, league)
         xg_vals = xg_lookup.get(xg_key)
@@ -416,6 +443,11 @@ def build_all_features(
             # Elo
             "home_elo": home_elo, "away_elo": away_elo,
             "elo_diff": home_elo - away_elo, "home_expected": home_exp,
+            "home_elo_home": elo_home.get(home, STARTING_ELO),
+            "home_elo_away": elo_away.get(home, STARTING_ELO),
+            "away_elo_home": elo_home.get(away, STARTING_ELO),
+            "away_elo_away": elo_away.get(away, STARTING_ELO),
+            "venue_elo_diff": elo_home.get(home, STARTING_ELO) - elo_away.get(away, STARTING_ELO),
             # Glicko-2
             "home_g2_rating": home_g2_rat, "away_g2_rating": away_g2_rat,
             "g2_diff": home_g2_rat - away_g2_rat,
@@ -463,6 +495,11 @@ def build_all_features(
             "is_early_season": hf["is_early"],
             # Rolling DC
             "p_home_dc": p_home_dc, "p_draw_dc": p_draw_dc, "p_away_dc": p_away_dc,
+            # Referee
+            "ref_avg_yellows": ref_avg_yellows,
+            "ref_avg_fouls":   ref_avg_fouls,
+            "ref_home_bias":   ref_home_bias,
+            "ref_experience":  ref_experience,
             # Target
             "result": result,
         })
@@ -478,6 +515,13 @@ def build_all_features(
         mov = _elo_mov(hg - ag)
         elo[home] = home_elo + ELO_K * mov * (hs - home_exp)
         elo[away] = away_elo + ELO_K * mov * (as_ - (1.0 - home_exp))
+
+        home_exp_venue = _elo_expected(
+            elo_home.get(home, STARTING_ELO),
+            elo_away.get(away, STARTING_ELO),
+        )
+        elo_home[home] = elo_home.get(home, STARTING_ELO) + ELO_K * HOME_ELO_K_SCALE * mov * (hs - home_exp_venue)
+        elo_away[away] = elo_away.get(away, STARTING_ELO) + ELO_K * HOME_ELO_K_SCALE * mov * (as_ - (1.0 - home_exp_venue))
 
         g2[home] = _g2_update(home_mu, home_phi, away_mu,         away_phi, hs,  ha=G2_HA)
         g2[away] = _g2_update(away_mu, away_phi, home_mu + G2_HA, home_phi, as_, ha=0.0)
@@ -504,6 +548,24 @@ def build_all_features(
         dc_conceded[home] = dc_conceded[home][-(DC_WINDOW - 1):] + [ag]
         dc_scored[away]   = dc_scored[away][-(DC_WINDOW - 1):] + [ag]
         dc_conceded[away] = dc_conceded[away][-(DC_WINDOW - 1):] + [hg]
+
+        # Update referee rolling stats (AFTER recording features)
+        global_matches += 1
+        if result == "H":
+            global_home_wins += 1
+        if referee:
+            if referee not in ref_stats:
+                ref_stats[referee] = {"matches": 0, "yellows_total": 0.0, "fouls_total": 0.0, "home_wins": 0}
+            rs = ref_stats[referee]
+            rs["matches"] += 1
+            if result == "H":
+                rs["home_wins"] += 1
+            h_yel   = float(row["home_yellows"]) if pd.notna(row.get("home_yellows")) else 0.0
+            a_yel   = float(row["away_yellows"]) if pd.notna(row.get("away_yellows")) else 0.0
+            h_foul  = float(row["home_fouls"])   if pd.notna(row.get("home_fouls"))   else 0.0
+            a_foul  = float(row["away_fouls"])   if pd.notna(row.get("away_fouls"))   else 0.0
+            rs["yellows_total"] += h_yel + a_yel
+            rs["fouls_total"]   += h_foul + a_foul
 
     feat_df = pd.DataFrame(rows)
     if _created_encoder:
@@ -593,7 +655,7 @@ def main() -> None:
         os.path.join(base, "..", "data", "processed", "results.csv")
     )
 
-    df = pd.read_csv(results_path, parse_dates=["match_date"])
+    df = pd.read_csv(results_path, parse_dates=["match_date"], dtype={"referee": str})
     df = df.sort_values("match_date").reset_index(drop=True)
     df = df.dropna(subset=["home_team", "away_team", "home_goals", "away_goals", "result"])
     print(f"Loaded {len(df):,} matches across {df['league'].nunique()} leagues\n")
@@ -612,7 +674,7 @@ def main() -> None:
     else:
         print("Warning: results_with_xg.csv not found — xG features will use defaults\n")
 
-    print(f"Building features for {len(df):,} matches (48-feature set + rolling DC)...")
+    print(f"Building features for {len(df):,} matches (57-feature set + rolling DC)...")
     feat_df, league_encoder = build_all_features(df, xg_lookup)
     print(f"  Processed {len(df):,}/{len(df):,} matches (complete)\n")
 

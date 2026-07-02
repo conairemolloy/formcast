@@ -83,6 +83,7 @@ COLUMN_MAP = {
     "AR":      "away_reds",
     "HF":      "home_fouls",
     "AF":      "away_fouls",
+    "Referee": "referee",
 }
 
 
