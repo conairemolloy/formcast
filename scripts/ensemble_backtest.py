@@ -125,7 +125,7 @@ def main() -> None:
     # ── Build all 48 features in one causal pass ──────────────────────────
     print(f"Building {len(FEATURE_COLS)}-feature matrix for {len(df):,} matches"
           f" (single causal pass)...")
-    feat_df = build_all_features(df, xg_lookup)
+    feat_df, _ = build_all_features(df, xg_lookup)
     print()
 
     # ── Filter to xG era + drop cold start ───────────────────────────────

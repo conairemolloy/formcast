@@ -328,10 +328,16 @@ def _dc_probs(lam: float, mu: float, rho: float = -0.13) -> tuple[float, float, 
 # Unified single-pass feature builder
 # ---------------------------------------------------------------------------
 
-def build_all_features(df: pd.DataFrame, xg_lookup: dict | None = None) -> pd.DataFrame:
-    le = LabelEncoder()
-    le.fit(df["league"])
-    league_enc = {lg: int(i) for i, lg in enumerate(le.classes_)}
+def build_all_features(
+    df: pd.DataFrame,
+    xg_lookup: dict | None = None,
+    league_encoder: LabelEncoder | None = None,
+) -> "pd.DataFrame | tuple[pd.DataFrame, LabelEncoder]":
+    _created_encoder = league_encoder is None
+    if _created_encoder:
+        league_encoder = LabelEncoder()
+        league_encoder.fit(df["league"])
+    league_enc = {lg: int(i) for i, lg in enumerate(league_encoder.classes_)}
     xg_lookup = xg_lookup or {}
 
     elo:       dict[str, float] = defaultdict(lambda: STARTING_ELO)
@@ -499,7 +505,10 @@ def build_all_features(df: pd.DataFrame, xg_lookup: dict | None = None) -> pd.Da
         dc_scored[away]   = dc_scored[away][-(DC_WINDOW - 1):] + [ag]
         dc_conceded[away] = dc_conceded[away][-(DC_WINDOW - 1):] + [hg]
 
-    return pd.DataFrame(rows)
+    feat_df = pd.DataFrame(rows)
+    if _created_encoder:
+        return feat_df, league_encoder
+    return feat_df
 
 
 # ---------------------------------------------------------------------------
@@ -604,7 +613,7 @@ def main() -> None:
         print("Warning: results_with_xg.csv not found — xG features will use defaults\n")
 
     print(f"Building features for {len(df):,} matches (48-feature set + rolling DC)...")
-    feat_df = build_all_features(df, xg_lookup)
+    feat_df, league_encoder = build_all_features(df, xg_lookup)
     print(f"  Processed {len(df):,}/{len(df):,} matches (complete)\n")
 
     feat_df = feat_df[feat_df["match_date"] >= "2014-08-01"].reset_index(drop=True)
@@ -665,8 +674,6 @@ def main() -> None:
     print(f"Saved meta-learner to models/meta_learner.pkl")
     with open(os.path.join(models_dir, 'feature_cols.json'), 'w') as f:
         json.dump(FEATURE_COLS, f)
-    league_encoder = LabelEncoder()
-    league_encoder.fit(df["league"])
     joblib.dump(league_encoder, os.path.join(models_dir, 'league_encoder.pkl'))
 
     # ------------------------------------------------------------------
