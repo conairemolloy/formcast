@@ -106,49 +106,91 @@ function TieCard({ tie, onTeamClick, isHighlighted }) {
 // ── Projected match card (R16 / QF / SF / Final) ─────────────────────────────
 
 function buildProjectedMatch(sourceTies, simMap, probKey) {
-  // From a set of source ties, pick the top-2 most likely teams
-  const candidates = {}
+  const teams = []
   for (const tie of sourceTies) {
-    for (const teamName of [tie.team1, tie.team2].filter(Boolean)) {
-      const row = simMap[teamName]
-      if (!row) continue
-      const p = row[probKey] ?? 0
-      if (!candidates[teamName] || p > candidates[teamName]) {
-        candidates[teamName] = p
-      }
+    for (const name of [tie.team1, tie.team2]) {
+      const sim = simMap[name]
+      if (sim) teams.push({ name, ...sim })
     }
   }
-  return Object.entries(candidates)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 2)
-    .map(([name, prob]) => ({ name, prob }))
+  if (teams.length < 2) return null
+
+  teams.sort((a, b) => (b[probKey] ?? 0) - (a[probKey] ?? 0))
+  const top2 = teams.slice(0, 2)
+
+  const bothConfirmed = top2.every(t => (t[probKey] ?? 0) >= 99.9)
+
+  let team1pct, team2pct
+  if (bothConfirmed && top2[0].elo && top2[1].elo) {
+    const eloSum = top2[0].elo + top2[1].elo
+    team1pct = parseFloat(((top2[0].elo / eloSum) * 100).toFixed(1))
+    team2pct = parseFloat(((top2[1].elo / eloSum) * 100).toFixed(1))
+  } else {
+    team1pct = parseFloat((top2[0][probKey] ?? 0).toFixed(1))
+    team2pct = parseFloat((top2[1][probKey] ?? 0).toFixed(1))
+  }
+
+  return {
+    team1: top2[0].name,
+    team2: top2[1].name,
+    team1pct,
+    team2pct,
+    confirmed: bothConfirmed,
+    confederation1: top2[0].confederation,
+    confederation2: top2[1].confederation,
+  }
 }
 
-function ProjectedMatchCard({ label, teams, accent, onTeamClick }) {
-  const borderClass = accent === 'amber'
+function ProjectedMatchCard({ label, match, accent, onTeamClick }) {
+  if (!match) {
+    return (
+      <div className="rounded-lg border border-gray-700/60 overflow-hidden text-xs" style={{ minWidth: 180, maxWidth: 210 }}>
+        <div className="px-2 py-0.5 bg-gray-900/80 border-b border-gray-800 text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+          {label}
+        </div>
+        <div className="px-2 py-2 text-gray-600 italic">TBD</div>
+      </div>
+    )
+  }
+
+  const { team1, team2, team1pct, team2pct, confirmed } = match
+
+  const borderClass = confirmed
+    ? 'border-emerald-600/50 ring-1 ring-emerald-600/20'
+    : accent === 'amber'
     ? 'border-amber-500/40 ring-1 ring-amber-500/20'
     : accent === 'yellow'
     ? 'border-yellow-400/50 ring-1 ring-yellow-400/20'
     : 'border-gray-700/60'
 
-  const labelClass = accent === 'amber'
-    ? 'text-amber-400'
+  const barClass = confirmed
+    ? 'h-full bg-emerald-500 rounded-full'
+    : accent === 'amber'
+    ? 'h-full bg-amber-500 rounded-full'
     : accent === 'yellow'
-    ? 'text-yellow-400'
-    : 'text-gray-500'
+    ? 'h-full bg-yellow-400 rounded-full'
+    : 'h-full bg-emerald-600 rounded-full'
+
+  const rows = [
+    { name: team1, pct: team1pct },
+    { name: team2, pct: team2pct },
+  ]
 
   return (
     <div
       className={`rounded-lg border overflow-hidden text-xs ${borderClass}`}
       style={{ minWidth: 180, maxWidth: 210 }}
     >
-      <div className={`px-2 py-0.5 bg-gray-900/80 border-b border-gray-800 text-[10px] font-semibold uppercase tracking-wider ${labelClass}`}>
-        {label}
+      <div className="px-2 py-0.5 bg-gray-900/80 border-b border-gray-800 text-[10px] font-semibold uppercase tracking-wider flex items-center justify-between">
+        {confirmed ? (
+          <span className="text-emerald-400">✓ Confirmed</span>
+        ) : (
+          <span className={accent === 'amber' ? 'text-amber-400' : accent === 'yellow' ? 'text-yellow-400' : 'text-gray-500'}>
+            {label}
+          </span>
+        )}
       </div>
-      {teams.length === 0 && (
-        <div className="px-2 py-2 text-gray-600 italic">TBD</div>
-      )}
-      {teams.map((t, i) => (
+      {rows.map((t) => (
         <div
           key={t.name}
           onClick={() => onTeamClick?.(t.name)}
@@ -157,13 +199,10 @@ function ProjectedMatchCard({ label, teams, accent, onTeamClick }) {
           <span className="flex-1 font-medium text-gray-200 truncate">{t.name}</span>
           <div className="flex items-center gap-1 shrink-0">
             <div className="w-12 h-1 bg-gray-800 rounded-full overflow-hidden">
-              <div
-                className={accent === 'amber' ? 'h-full bg-amber-500 rounded-full' : accent === 'yellow' ? 'h-full bg-yellow-400 rounded-full' : 'h-full bg-emerald-600 rounded-full'}
-                style={{ width: `${Math.min(t.prob, 100)}%` }}
-              />
+              <div className={barClass} style={{ width: `${Math.min(t.pct, 100)}%` }} />
             </div>
             <span className="tabular-nums text-gray-400 text-[10px] w-9 text-right">
-              {t.prob.toFixed(1)}%
+              {t.pct.toFixed(1)}%
             </span>
           </div>
         </div>
@@ -174,7 +213,11 @@ function ProjectedMatchCard({ label, teams, accent, onTeamClick }) {
 
 // ── Final card (gold-bordered, slightly larger) ───────────────────────────────
 
-function FinalColumn({ teams, onTeamClick }) {
+function FinalColumn({ match, onTeamClick }) {
+  const rows = match
+    ? [{ name: match.team1, pct: match.team1pct }, { name: match.team2, pct: match.team2pct }]
+    : []
+
   return (
     <div
       className="rounded-lg border border-yellow-400/50 ring-1 ring-yellow-400/20 overflow-hidden text-xs shrink-0"
@@ -183,10 +226,10 @@ function FinalColumn({ teams, onTeamClick }) {
       <div className="px-2 py-1 bg-gray-900/80 border-b border-gray-800 text-[10px] font-semibold uppercase tracking-wider text-yellow-400 text-center">
         Final — July 19
       </div>
-      {teams.length === 0 && (
+      {rows.length === 0 && (
         <div className="px-3 py-2 text-gray-600 italic">TBD</div>
       )}
-      {teams.map((t) => (
+      {rows.map((t) => (
         <div
           key={t.name}
           onClick={() => onTeamClick?.(t.name)}
@@ -195,9 +238,9 @@ function FinalColumn({ teams, onTeamClick }) {
           <span className="flex-1 font-medium text-gray-200 truncate">{t.name}</span>
           <div className="flex items-center gap-1 shrink-0">
             <div className="w-14 h-1.5 bg-gray-800 rounded-full overflow-hidden">
-              <div className="h-full bg-yellow-400 rounded-full" style={{ width: `${Math.min(t.prob, 100)}%` }} />
+              <div className="h-full bg-yellow-400 rounded-full" style={{ width: `${Math.min(t.pct, 100)}%` }} />
             </div>
-            <span className="tabular-nums text-gray-400 text-[10px] w-9 text-right">{t.prob.toFixed(1)}%</span>
+            <span className="tabular-nums text-gray-400 text-[10px] w-9 text-right">{t.pct.toFixed(1)}%</span>
           </div>
         </div>
       ))}
@@ -228,43 +271,43 @@ function HorizontalBracket({ leftTies, rightTies, teamPaths, onTeamClick }) {
       {/* Left R16 — 4 projected */}
       <div className="flex flex-col justify-around">
         {leftR16.map((pair, i) => (
-          <ProjectedMatchCard key={i} label="R16" teams={buildProjectedMatch(pair, simMap, 'r16_pct')} onTeamClick={onTeamClick} />
+          <ProjectedMatchCard key={i} label="R16" match={buildProjectedMatch(pair, simMap, 'r16_pct')} onTeamClick={onTeamClick} />
         ))}
       </div>
 
       {/* Left QF — 2 projected */}
       <div className="flex flex-col justify-around">
         {leftQF.map((group, i) => (
-          <ProjectedMatchCard key={i} label="QF" teams={buildProjectedMatch(group, simMap, 'qf_pct')} onTeamClick={onTeamClick} />
+          <ProjectedMatchCard key={i} label="QF" match={buildProjectedMatch(group, simMap, 'qf_pct')} onTeamClick={onTeamClick} />
         ))}
       </div>
 
       {/* Left SF — 1 projected */}
       <div className="flex flex-col justify-around">
-        <ProjectedMatchCard label="SF" teams={buildProjectedMatch(leftTies, simMap, 'sf_pct')} accent="amber" onTeamClick={onTeamClick} />
+        <ProjectedMatchCard label="SF" match={buildProjectedMatch(leftTies, simMap, 'sf_pct')} accent="amber" onTeamClick={onTeamClick} />
       </div>
 
       {/* Final — gold-bordered centre card */}
       <div className="flex flex-col justify-center shrink-0">
-        <FinalColumn teams={buildProjectedMatch(allTies, simMap, 'final_pct')} onTeamClick={onTeamClick} />
+        <FinalColumn match={buildProjectedMatch(allTies, simMap, 'final_pct')} onTeamClick={onTeamClick} />
       </div>
 
       {/* Right SF — 1 projected */}
       <div className="flex flex-col justify-around">
-        <ProjectedMatchCard label="SF" teams={buildProjectedMatch(rightTies, simMap, 'sf_pct')} accent="amber" onTeamClick={onTeamClick} />
+        <ProjectedMatchCard label="SF" match={buildProjectedMatch(rightTies, simMap, 'sf_pct')} accent="amber" onTeamClick={onTeamClick} />
       </div>
 
       {/* Right QF — 2 projected */}
       <div className="flex flex-col justify-around">
         {rightQF.map((group, i) => (
-          <ProjectedMatchCard key={i} label="QF" teams={buildProjectedMatch(group, simMap, 'qf_pct')} onTeamClick={onTeamClick} />
+          <ProjectedMatchCard key={i} label="QF" match={buildProjectedMatch(group, simMap, 'qf_pct')} onTeamClick={onTeamClick} />
         ))}
       </div>
 
       {/* Right R16 — 4 projected */}
       <div className="flex flex-col justify-around">
         {rightR16.map((pair, i) => (
-          <ProjectedMatchCard key={i} label="R16" teams={buildProjectedMatch(pair, simMap, 'r16_pct')} onTeamClick={onTeamClick} />
+          <ProjectedMatchCard key={i} label="R16" match={buildProjectedMatch(pair, simMap, 'r16_pct')} onTeamClick={onTeamClick} />
         ))}
       </div>
 
