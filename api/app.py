@@ -23,6 +23,7 @@ from routes.accumulator import accumulator_bp
 from routes.live import live_bp
 from routes.auth import auth_bp
 from routes.international import international_bp
+from routes.markets import markets_bp
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "processed")
 
@@ -95,6 +96,7 @@ def create_app():
     app.register_blueprint(live_bp,        url_prefix="/api")
     app.register_blueprint(auth_bp,        url_prefix="/api")
     app.register_blueprint(international_bp, url_prefix="/api/international")
+    app.register_blueprint(markets_bp,      url_prefix="/api/markets")
 
     @app.get("/api/health")
     def health():
