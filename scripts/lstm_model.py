@@ -145,6 +145,8 @@ def build_sequences(df: pd.DataFrame):
         home   = row["home_team"]
         away   = row["away_team"]
         result = row["result"]
+        if result not in LABEL_MAP:
+            continue
         date   = row["match_date"]
 
         # ── Build sequences from history (before this match) ─────────────────
