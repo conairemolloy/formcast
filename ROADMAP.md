@@ -36,34 +36,6 @@
 
 ---
 
-## Current Build Priorities (June 2026)
-> Honest sequencing based on what moves the needle most right now.
-> Core platform is live and functional — focus is on monitoring,
-> revenue, and polish before expanding to new sports.
-
-### Now (this week)
-- [x] Sentry error monitoring — free tier, catches Railway crashes automatically
-- [x] UptimeRobot uptime monitoring — pings /api/health every 5 minutes, emails on downtime. Free tier, 5 minute setup
-- [x] World Cup Hub page — group tables, bracket, qualification probabilities. Time-sensitive: tournament ends mid-July 2026
-
-### Next (this month)
-- [ ] Email alerts (Resend) — watchlist notifications + weekly digest. Free tier (3k emails/month). Core retention mechanic — currently the watchlist exists but does nothing to bring users back
-- [ ] Pricing page + Stripe — there is currently no way to pay for FormCast. Tier system exists in DB but is completely unconnected to billing. This is the only phase that generates revenue
-- [ ] Design overhaul (Phase 6) — site reads as a developer tool, needs to look like a premium product before charging money
-
-### Before paid tier launch
-- [ ] Security & rate limiting (Phase 11) — Flask-Limiter, JWT, CORS hardening. Must be done before any public paid tier launch
-- [ ] Custom domain — formcast-blush.vercel.app is not a product URL. ~€12/year, disproportionate credibility impact
-
-### Hold until core product is solid
-- Phase 20 (Player modelling) — needs external data sources
-- Phase 13/14 (Sport/Data expansion) — wrong order before core is solid
-- Phase 11 (Security) — blocked on Phase 10 monetisation anyway
-- Phase 9/19 (Community/Social) — premature without user base
-- Phase 18 (Match Intelligence) — needs weather API + Betfair exchange
-
----
-
 ## Build Priorities — Repositioned for Commercial Launch
 > Phases renumbered to reflect the actual build order.
 
@@ -203,8 +175,8 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [x] Away card premium — teams get more cards away, quantified per team
 - [x] Yellow trend — is team getting more or less disciplined recently
 - [x] Fatigue score — days rest + fixture congestion per team
-- [ ] Home/away Elo split — maintain separate home and away Elo ratings per team beyond flat +50. Real signal especially for teams with strong home/weak away records (PRIORITY)
-- [ ] Referee tendencies — wire up referee column already in results.csv. Cards per game, fouls per game, home bias score per referee. Data exists, just not wired in (PRIORITY)
+- [x] Home/away Elo split — maintain separate home and away Elo ratings per team beyond flat +50. Real signal especially for teams with strong home/weak away records (PRIORITY)
+- [x] Referee tendencies — wire up referee column already in results.csv. Cards per game, fouls per game, home bias score per referee. Data exists, just not wired in (PRIORITY)
 - [ ] Venue-specific home win rate — per-team actual home win rate, not just global +50 constant
 - [ ] Relegation/title pressure — flag teams in bottom 3 or top 3 with <10 games remaining, measurable performance change
 - [ ] Opponent-adjusted form — distinguish wins vs top-half teams from wins vs relegation fodder
@@ -293,17 +265,6 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Odds format converter utility function — shared module usable across all sports and all pages
 - [ ] Value bets page updated to show all three odds formats simultaneously
 
----
-
-## Phase 20 — Individual Player Modelling
-- [ ] Player-level xG contribution — individual player xG as % of team total (requires shot-level data from FBref/Understat)
-- [ ] Goalkeeper save percentage above expected — shotstopping quality beyond team defence
-- [ ] Player network graph — pass completion rates between specific player pairs (team cohesion signal)
-- [ ] Top scorer absence model — quantify impact of missing striker on team xG
-- [ ] Set piece model — corners/free kicks conversion rate by taker
-- [ ] Player form streaks — individual scoring/assist streaks as momentum signal
-- [ ] Injury probability model — predict injury risk from minutes played, age, fixture congestion
-- [ ] International duty fatigue model — performance drop after long-haul international travel
 
 ---
 
@@ -313,23 +274,6 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 
 - [ ] Graph Neural Network: teams as nodes, matches as edges, GCN propagation
 - [ ] Transformer: self-attention over match history sequence
-
----
-
-## Phase 16 — Live In-Play Engine
-- [ ] Markov chain game state model (score_diff, time_bucket, half, momentum)
-- [ ] Pre-computed win probability lookup table (O(1) query)
-- [ ] Bayesian in-game updater (posterior update per event, Supabase Realtime)
-- [ ] Event impact quantification (goal +12-25%, red card -8-20%, etc — learned from data)
-- [ ] Next-event prediction (P(goal) vs P(point), P(home scores next))
-- [x] Tournament Monte Carlo simulator (100k simulations, < 5 seconds, 14 competitions)
-- [x] Live win probability engine (football-data.org, 60s cache)
-- [x] Upcoming fixtures with pre-match Elo probabilities
-- [x] /api/live endpoints (now, today, upcoming)
-- [ ] WebSocket live feed (< 1 second end-to-end latency target)
-- [ ] Live data feed integration (The Odds API €15/mo, football-data.org free tier, Betfair Exchange API)
-- [ ] Upgrade to sub-minute live feed (The Odds API €15/mo)
-- [ ] Smart money tracker (odds movement > 10% in < 1hr = sharp money signal)
 
 ---
 
@@ -348,17 +292,39 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 
 ---
 
-## Phase 21 — Validation & Statistics
-- [x] Full calibration curve (predicted prob vs empirical win rate per decile)
-- [ ] Reliability diagram with confidence intervals
-- [ ] Hosmer-Lemeshow goodness of fit test
-- [ ] Diebold-Mariano test vs naive baseline
-- [ ] Permutation feature importance
-- [ ] AIC/BIC model selection
-- [ ] Ljung-Box test (residual autocorrelation)
-- [ ] KS test (predicted vs empirical distribution)
-- [ ] Brier score by time bucket (early season vs late season)
-- [ ] Hit rate by Elo gap band
+## Phase 5 — Model Validation & Transparency
+- [ ] Full backtesting results page (hit rate and Brier by league, season, year)
+- [x] Calibration diagram (reliability plot with confidence intervals)
+- [x] Model comparison table (all models side by side)
+- [ ] Walk-forward accuracy chart (how hit rate changed over 32 seasons)
+- [x] Closing line value history (CLV per bet, cumulative CLV chart)
+- [x] Prediction log (every prediction ever made, timestamped, SHA256 hashed)
+- [ ] Monthly accuracy report (automated, updated after each round of fixtures)
+- [ ] Diebold-Mariano test results vs naive baseline
+- [ ] Hosmer-Lemeshow calibration test results
+- [ ] Permutation feature importance (which features matter most per league)
+
+---
+
+## Phase 6 — Design & Product Polish
+> The platform is technically impressive but reads like a developer tool. This phase makes it look and feel like a premium product that justifies charging money.
+
+### Visual Design
+- [ ] Design system — establish consistent color palette, type scale, spacing tokens. Emerald green as primary, slate as background, clear hierarchy between primary/secondary/muted text
+- [ ] Component library audit — standardise cards, badges, tables, filters across all pages so nothing looks inconsistent
+- [ ] Micro-animations — subtle transitions on data loading, card hover states, probability bar fills on page load
+- [ ] Icon consistency — single icon library throughout (lucide-react already imported, ensure nothing uses ad-hoc alternatives)
+
+### Key Page Redesigns
+- [ ] Dashboard redesign — hero metric strip (value bets identified, hit rate, CLV) → live value bets → upcoming fixtures → ratings snapshot. Each section visually distinct with clear heading
+- [ ] Value Bets page redesign — card layout instead of table rows, visual edge meter, bookmaker logo/name prominent, Kelly stake displayed clearly
+- [ ] Landing page redesign — above-fold must convert. Large headline, 3 key stats displayed huge, single Sign Up CTA, below-fold: how it works, sample value bets, track record
+- [ ] International / World Cup Hub — showcase page that would make someone immediately understand what FormCast does for the World Cup
+
+### Trust Signals
+- [ ] Track record section on landing — show the prediction log numbers, CLV, hit rate prominently as social proof
+- [ ] "As featured in" / methodology credibility section
+- [ ] Live counter — value bets identified today, updating in real time
 
 ---
 
@@ -427,17 +393,87 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 
 ---
 
-## Phase 5 — Model Validation & Transparency
-- [ ] Full backtesting results page (hit rate and Brier by league, season, year)
-- [x] Calibration diagram (reliability plot with confidence intervals)
-- [x] Model comparison table (all models side by side)
-- [ ] Walk-forward accuracy chart (how hit rate changed over 32 seasons)
-- [x] Closing line value history (CLV per bet, cumulative CLV chart)
-- [x] Prediction log (every prediction ever made, timestamped, SHA256 hashed)
-- [ ] Monthly accuracy report (automated, updated after each round of fixtures)
-- [ ] Diebold-Mariano test results vs naive baseline
-- [ ] Hosmer-Lemeshow calibration test results
-- [ ] Permutation feature importance (which features matter most per league)
+## Phase 9 — UX Excellence
+> Note: UX improvements apply platform-wide. Mobile responsive layout is critical given the majority of sports betting happens on mobile devices.
+
+- [ ] Onboarding tour — first-time user walkthrough explaining each page (Shepherd.js or similar)
+- [ ] Global search — find any team, match, or league instantly across the whole site
+- [ ] Keyboard shortcuts — power user navigation (G+R = ratings, G+P = predictions etc)
+- [ ] Notification centre — in-app notification bell for value bets and match alerts
+- [ ] Print/export — download predictions, value bets, or match previews as PDF or CSV
+- [ ] Embed widget — let other sites embed FormCast win probabilities via iframe or JS snippet
+- [ ] Progressive Web App (PWA) — installable on mobile home screen, offline support
+- [ ] Accessibility audit — WCAG 2.1 AA compliance, screen reader support, keyboard navigation
+- [ ] Internationalisation — Spanish, German, French, Italian language support
+- [ ] Performance optimisation — lazy loading, code splitting, sub-2s load time target
+- [ ] Dark/light mode toggle — respect system preference by default
+- [ ] Loading skeletons — replace all spinners with skeleton screens
+- [ ] Error boundaries — graceful degradation when individual components fail
+- [ ] Breadcrumb navigation — clear location context on all pages
+- [ ] Recently viewed — quick access to last 5 teams or matches viewed
+
+---
+
+## Phase 10 — Business & Monetisation
+> Note: All business, security, UX, and data phases apply across all sports — football, GAA, tennis, golf, NFL, basketball, horse racing, and any future sport additions. Features built for football first, then extended to each sport as data becomes available.
+
+- [ ] Pricing page — Free vs Pro vs Elite tiers clearly explained with feature comparison table (PRIORITY — blocks revenue)
+- [x] User accounts — Supabase Auth, save favourite teams, personalised dashboard
+- [ ] Pro tier features — advanced filters, more predictions, API access, no rate limits
+- [ ] Email alerts — Resend API, weekly digest + instant alerts for watchlist teams (free tier = 3k emails/month)
+- [ ] Push notifications — browser push for live value bets and match alerts
+- [ ] Watchlist — users save teams and get notified when they have value bets
+- [ ] API access tier — sell data access to developers with key management
+- [ ] Affiliate bookmaker links — deep-link to Bet365, Paddy Power, Betfair on value bet cards
+- [ ] Stripe subscriptions — Pro tier billing, webhook handling, subscription management (PRIORITY — blocks revenue)
+- [ ] Referral program — share FormCast, get a month free
+- [ ] Team/league following — personalised feed based on followed teams
+- [ ] PostHog analytics — track which pages and features users actually use
+
+---
+
+## Phase 11 — Security & Rate Limiting
+> Note: Security and rate limiting applies to the entire platform regardless of sport. Must be implemented before any paid tier launch.
+
+- [ ] API rate limiting — per-IP rate limits (100 req/min free, 1000 req/min pro) using Flask-Limiter
+- [ ] API key authentication — JWT tokens for pro tier API access
+- [ ] CORS hardening — restrict allowed origins to known domains only
+- [ ] Input validation — sanitise all query parameters, prevent injection attacks
+- [ ] SQL injection protection — parameterised queries everywhere (Supabase handles most of this)
+- [ ] XSS protection — Content Security Policy headers on all responses
+- [ ] HTTPS enforcement — HSTS headers, redirect all HTTP to HTTPS
+- [ ] Secrets management — rotate API keys regularly, never commit secrets to git
+- [ ] Dependency scanning — GitHub Dependabot for vulnerable packages
+- [ ] OWASP Top 10 audit — systematic review of common web vulnerabilities
+- [ ] DDoS protection — Cloudflare in front of Railway API
+- [ ] Bot detection — identify and throttle scraper bots
+- [ ] Abuse prevention — detect and block unusual usage patterns
+- [ ] Privacy compliance — GDPR cookie consent, data deletion requests, privacy policy
+- [ ] Penetration testing — scheduled security audit before any paid tier launch
+- [ ] Two-factor authentication — for admin/superuser accounts
+
+---
+
+## Phase 12 — Automation & Infrastructure
+- [x] Automated weekly data ingestion — GitHub Actions, runs every Monday 6am UTC
+- [x] Automated model retraining — Elo, tournament, value bets, backtest all automated
+- [x] Automated tournament simulator refresh
+- [x] Automated value bet generation — live odds via The Odds API
+- [x] Scheduled prediction publishing — publish_predictions.py runs Monday via GitHub Actions
+- [ ] Database backup — automated daily Supabase backup to S3
+- [ ] Monitoring & alerting — Sentry for errors, UptimeRobot for uptime, PagerDuty for critical failures
+- [ ] Sentry error monitoring — free tier, catch Railway API errors automatically (PRIORITY — do this week)
+- [ ] UptimeRobot monitoring — ping /api/health every 5 minutes, alert on downtime (PRIORITY — do this week)
+- [ ] referee_fatigue_features.py in weekly pipeline — regenerate team_tendencies.csv every Monday
+- [x] CI/CD pipeline — GitHub Actions
+- [x] Railway health checks — /api/health endpoint verified healthy, manual full pipeline health check performed this session
+- [x] Retry logic with exponential backoff — predict_upcoming.py fixture fetch now retries 3x (5s/15s/30s) on transient failures instead of immediately failing the whole pipeline
+- [ ] Automated test suite — pytest for API, Playwright for frontend E2E tests
+- [ ] Data quality checks — automated validation after each ingestion (row counts, nulls, date ranges)
+- [ ] Log aggregation — structured logging to Papertrail or Logtail
+- [ ] Cost monitoring — Railway and Vercel spend alerts
+- [x] Premier League and Championship sport keys fixed — were using wrong key names (soccer_england_premier_league, soccer_england_championship) instead of correct soccer_epl and soccer_efl_champ, confirmed against The Odds API's own /v4/sports endpoint. Recovered Premier League value bets that had been silently 404ing.
+- [ ] Ensemble auto-retraining in weekly pipeline — XGBoost/NN/LSTM currently only retrain manually, Elo is the only model updating automatically every Monday. Critical gap before August league restart — without this the ensemble predictions will stale out
 
 ---
 
@@ -540,140 +576,6 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 
 ---
 
-## Phase 22 — Frontend (React + Vite)
-- [x] Project scaffold (Vite + Tailwind + Recharts)
-- [x] Elo ratings table — live, sortable, filterable by league
-- [ ] Calibration curve — predicted prob vs actual win rate
-- [ ] Brier score over time (rolling 90-match window)
-- [ ] Cumulative P&L chart (flat stake simulation)
-- [ ] SHAP feature importance (beeswarm + waterfall per match)
-- [ ] Elo history chart — animated, all teams, 2020-present
-- [ ] H2H Elo trajectory — two-team selector
-- [ ] Score distribution heatmap (actual vs model predicted)
-- [x] Value bet screener UI (EV > 5%, Kelly stake shown)
-- [x] Accumulator builder UI (select legs, see combined EV and optimal stake)
-- [ ] Win probability timeline (live match, Supabase Realtime)
-- [x] Tournament probability evolution (updates after each result)
-- [ ] Momentum dashboard (8 signals per team)
-- [ ] Smart money tracker (odds movement visualised)
-- [ ] Model ensemble weight evolution chart
-
----
-
-## Phase 23 — API & Deployment
-- [x] Flask API scaffold
-- [x] GET /api/ratings — current Elo ratings per league
-- [x] GET /api/predictions — upcoming match predictions
-- [x] GET /api/backtest — accuracy report
-- [x] GET /api/value-bets — positive EV opportunities
-- [ ] GET /api/match/:id — single match deep dive + SHAP values
-- [x] GET /api/accumulator — optimal accumulator builder
-- [x] GET /api/tournament/:id — tournament simulation
-- [ ] WebSocket /live — real-time win probability stream
-- [x] Deploy frontend to Vercel
-- [x] Deploy API to Railway
-
----
-
-## Phase 10 — Business & Monetisation
-> Note: All business, security, UX, and data phases apply across all sports — football, GAA, tennis, golf, NFL, basketball, horse racing, and any future sport additions. Features built for football first, then extended to each sport as data becomes available.
-
-- [ ] Pricing page — Free vs Pro vs Elite tiers clearly explained with feature comparison table (PRIORITY — blocks revenue)
-- [x] User accounts — Supabase Auth, save favourite teams, personalised dashboard
-- [ ] Pro tier features — advanced filters, more predictions, API access, no rate limits
-- [ ] Email alerts — Resend API, weekly digest + instant alerts for watchlist teams (free tier = 3k emails/month)
-- [ ] Push notifications — browser push for live value bets and match alerts
-- [ ] Watchlist — users save teams and get notified when they have value bets
-- [ ] API access tier — sell data access to developers with key management
-- [ ] Affiliate bookmaker links — deep-link to Bet365, Paddy Power, Betfair on value bet cards
-- [ ] Stripe subscriptions — Pro tier billing, webhook handling, subscription management (PRIORITY — blocks revenue)
-- [ ] Referral program — share FormCast, get a month free
-- [ ] Team/league following — personalised feed based on followed teams
-- [ ] PostHog analytics — track which pages and features users actually use
-
----
-
-## Phase 17 — Trust & Accountability
-- [x] Public prediction log — every prediction published before kickoff, SHA256 stamped, verifiable by anyone
-- [x] Prediction audit trail — immutable record, timestamped, hash-linked like a blockchain
-- [ ] Monthly accuracy report — auto-generated PDF, emailed to subscribers, shows track record
-- [x] "About the Model" page — methodology overview, who built it, why trust it, track record
-- [ ] Social sharing cards — share a match preview or value bet card to Twitter/X with OG image
-- [ ] Verified track record badge — independently audited hit rate displayed prominently
-- [ ] Community leaderboard — who has the best prediction record this month
-- [ ] Tipping competition — users submit predictions, ranked by Brier score
-- [ ] Discord/Slack community integration — post value bets automatically to community channels
-- [ ] Press kit — stats, methodology, screenshots for journalists and podcasters
-- [ ] Academic paper — write up the methodology as a preprint (arXiv) for credibility
-
----
-
-## Phase 12 — Automation & Infrastructure
-- [x] Automated weekly data ingestion — GitHub Actions, runs every Monday 6am UTC
-- [x] Automated model retraining — Elo, tournament, value bets, backtest all automated
-- [x] Automated tournament simulator refresh
-- [x] Automated value bet generation — live odds via The Odds API
-- [x] Scheduled prediction publishing — publish_predictions.py runs Monday via GitHub Actions
-- [ ] Database backup — automated daily Supabase backup to S3
-- [ ] Monitoring & alerting — Sentry for errors, UptimeRobot for uptime, PagerDuty for critical failures
-- [ ] Sentry error monitoring — free tier, catch Railway API errors automatically (PRIORITY — do this week)
-- [ ] UptimeRobot monitoring — ping /api/health every 5 minutes, alert on downtime (PRIORITY — do this week)
-- [ ] referee_fatigue_features.py in weekly pipeline — regenerate team_tendencies.csv every Monday
-- [x] CI/CD pipeline — GitHub Actions
-- [x] Railway health checks — /api/health endpoint verified healthy, manual full pipeline health check performed this session
-- [x] Retry logic with exponential backoff — predict_upcoming.py fixture fetch now retries 3x (5s/15s/30s) on transient failures instead of immediately failing the whole pipeline
-- [ ] Automated test suite — pytest for API, Playwright for frontend E2E tests
-- [ ] Data quality checks — automated validation after each ingestion (row counts, nulls, date ranges)
-- [ ] Log aggregation — structured logging to Papertrail or Logtail
-- [ ] Cost monitoring — Railway and Vercel spend alerts
-- [x] Premier League and Championship sport keys fixed — were using wrong key names (soccer_england_premier_league, soccer_england_championship) instead of correct soccer_epl and soccer_efl_champ, confirmed against The Odds API's own /v4/sports endpoint. Recovered Premier League value bets that had been silently 404ing.
-- [ ] Ensemble auto-retraining in weekly pipeline — XGBoost/NN/LSTM currently only retrain manually, Elo is the only model updating automatically every Monday. Critical gap before August league restart — without this the ensemble predictions will stale out
-
----
-
-## Phase 11 — Security & Rate Limiting
-> Note: Security and rate limiting applies to the entire platform regardless of sport. Must be implemented before any paid tier launch.
-
-- [ ] API rate limiting — per-IP rate limits (100 req/min free, 1000 req/min pro) using Flask-Limiter
-- [ ] API key authentication — JWT tokens for pro tier API access
-- [ ] CORS hardening — restrict allowed origins to known domains only
-- [ ] Input validation — sanitise all query parameters, prevent injection attacks
-- [ ] SQL injection protection — parameterised queries everywhere (Supabase handles most of this)
-- [ ] XSS protection — Content Security Policy headers on all responses
-- [ ] HTTPS enforcement — HSTS headers, redirect all HTTP to HTTPS
-- [ ] Secrets management — rotate API keys regularly, never commit secrets to git
-- [ ] Dependency scanning — GitHub Dependabot for vulnerable packages
-- [ ] OWASP Top 10 audit — systematic review of common web vulnerabilities
-- [ ] DDoS protection — Cloudflare in front of Railway API
-- [ ] Bot detection — identify and throttle scraper bots
-- [ ] Abuse prevention — detect and block unusual usage patterns
-- [ ] Privacy compliance — GDPR cookie consent, data deletion requests, privacy policy
-- [ ] Penetration testing — scheduled security audit before any paid tier launch
-- [ ] Two-factor authentication — for admin/superuser accounts
-
----
-
-## Phase 9 — UX Excellence
-> Note: UX improvements apply platform-wide. Mobile responsive layout is critical given the majority of sports betting happens on mobile devices.
-
-- [ ] Onboarding tour — first-time user walkthrough explaining each page (Shepherd.js or similar)
-- [ ] Global search — find any team, match, or league instantly across the whole site
-- [ ] Keyboard shortcuts — power user navigation (G+R = ratings, G+P = predictions etc)
-- [ ] Notification centre — in-app notification bell for value bets and match alerts
-- [ ] Print/export — download predictions, value bets, or match previews as PDF or CSV
-- [ ] Embed widget — let other sites embed FormCast win probabilities via iframe or JS snippet
-- [ ] Progressive Web App (PWA) — installable on mobile home screen, offline support
-- [ ] Accessibility audit — WCAG 2.1 AA compliance, screen reader support, keyboard navigation
-- [ ] Internationalisation — Spanish, German, French, Italian language support
-- [ ] Performance optimisation — lazy loading, code splitting, sub-2s load time target
-- [ ] Dark/light mode toggle — respect system preference by default
-- [ ] Loading skeletons — replace all spinners with skeleton screens
-- [ ] Error boundaries — graceful degradation when individual components fail
-- [ ] Breadcrumb navigation — clear location context on all pages
-- [ ] Recently viewed — quick access to last 5 teams or matches viewed
-
----
-
 ## Phase 14 — Data Expansion
 - [ ] Europa League historical data — football-data.co.uk has this free, needed for cross-competition Elo continuity and Champions League qualification modelling
 - [ ] Champions League historical data — group stage + knockout, needed to improve tournament simulator accuracy
@@ -693,31 +595,6 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Japanese J1 League
 - [ ] Chinese Super League
 - [ ] Australian A-League
-
----
-
-## Phase 18 — Match Intelligence
-- [ ] Weather-adjusted predictions — incorporate OpenWeatherMap data into Elo probability adjustments
-- [ ] Distance fatigue model — penalise away teams based on travel distance for midweek games
-- [ ] Home/away Elo split — maintain separate home and away Elo ratings per team
-- [ ] Form-weighted predictions — increase weight of last 5 matches vs career average in late season
-- [ ] Pre-match news sentiment — scan team news for injury/suspension signals
-- [ ] Live odds movement tracker — detect line movement pre-kickoff as sharp money signal
-- [ ] Match importance index — weight predictions by how much the match matters (title, relegation, cup final)
-- [ ] Upset probability model — when does Elo underestimate upset probability
-- [ ] Score timeline model — predict when goals are most likely in a match (minute distribution)
-- [ ] Referee impact model — quantify how specific referee assignment affects match outcome probability
-
----
-
-## Phase 19 — Community & Social
-- [ ] Public prediction leaderboard — rank users by Brier score on their predictions
-- [ ] Tipping competition — weekly competition, users submit predictions, ranked by accuracy
-- [ ] Discord/Slack bot — post value bets and predictions automatically
-- [ ] Social sharing — one-click share match preview or value bet to Twitter/X
-- [ ] Embed widget — let other sites embed FormCast win probabilities via iframe
-- [ ] Press kit — stats, methodology screenshots for journalists and podcasters
-- [ ] Academic paper — arXiv preprint of the methodology for credibility
 
 ---
 
@@ -776,25 +653,121 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 
 ---
 
-## Phase 6 — Design & Product Polish
-> The platform is technically impressive but reads like a developer tool. This phase makes it look and feel like a premium product that justifies charging money.
+## Phase 16 — Live In-Play Engine
+- [ ] Markov chain game state model (score_diff, time_bucket, half, momentum)
+- [ ] Pre-computed win probability lookup table (O(1) query)
+- [ ] Bayesian in-game updater (posterior update per event, Supabase Realtime)
+- [ ] Event impact quantification (goal +12-25%, red card -8-20%, etc — learned from data)
+- [ ] Next-event prediction (P(goal) vs P(point), P(home scores next))
+- [x] Tournament Monte Carlo simulator (100k simulations, < 5 seconds, 14 competitions)
+- [x] Live win probability engine (football-data.org, 60s cache)
+- [x] Upcoming fixtures with pre-match Elo probabilities
+- [x] /api/live endpoints (now, today, upcoming)
+- [ ] WebSocket live feed (< 1 second end-to-end latency target)
+- [ ] Live data feed integration (The Odds API €15/mo, football-data.org free tier, Betfair Exchange API)
+- [ ] Upgrade to sub-minute live feed (The Odds API €15/mo)
+- [ ] Smart money tracker (odds movement > 10% in < 1hr = sharp money signal)
 
-### Visual Design
-- [ ] Design system — establish consistent color palette, type scale, spacing tokens. Emerald green as primary, slate as background, clear hierarchy between primary/secondary/muted text
-- [ ] Component library audit — standardise cards, badges, tables, filters across all pages so nothing looks inconsistent
-- [ ] Micro-animations — subtle transitions on data loading, card hover states, probability bar fills on page load
-- [ ] Icon consistency — single icon library throughout (lucide-react already imported, ensure nothing uses ad-hoc alternatives)
+---
 
-### Key Page Redesigns
-- [ ] Dashboard redesign — hero metric strip (value bets identified, hit rate, CLV) → live value bets → upcoming fixtures → ratings snapshot. Each section visually distinct with clear heading
-- [ ] Value Bets page redesign — card layout instead of table rows, visual edge meter, bookmaker logo/name prominent, Kelly stake displayed clearly
-- [ ] Landing page redesign — above-fold must convert. Large headline, 3 key stats displayed huge, single Sign Up CTA, below-fold: how it works, sample value bets, track record
-- [ ] International / World Cup Hub — showcase page that would make someone immediately understand what FormCast does for the World Cup
+## Phase 17 — Trust & Accountability
+- [x] Public prediction log — every prediction published before kickoff, SHA256 stamped, verifiable by anyone
+- [x] Prediction audit trail — immutable record, timestamped, hash-linked like a blockchain
+- [ ] Monthly accuracy report — auto-generated PDF, emailed to subscribers, shows track record
+- [x] "About the Model" page — methodology overview, who built it, why trust it, track record
+- [ ] Social sharing cards — share a match preview or value bet card to Twitter/X with OG image
+- [ ] Verified track record badge — independently audited hit rate displayed prominently
+- [ ] Community leaderboard — who has the best prediction record this month
+- [ ] Tipping competition — users submit predictions, ranked by Brier score
+- [ ] Discord/Slack community integration — post value bets automatically to community channels
+- [ ] Press kit — stats, methodology, screenshots for journalists and podcasters
+- [ ] Academic paper — write up the methodology as a preprint (arXiv) for credibility
 
-### Trust Signals
-- [ ] Track record section on landing — show the prediction log numbers, CLV, hit rate prominently as social proof
-- [ ] "As featured in" / methodology credibility section
-- [ ] Live counter — value bets identified today, updating in real time
+---
+
+## Phase 18 — Match Intelligence
+- [ ] Weather-adjusted predictions — incorporate OpenWeatherMap data into Elo probability adjustments
+- [ ] Distance fatigue model — penalise away teams based on travel distance for midweek games
+- [ ] Home/away Elo split — maintain separate home and away Elo ratings per team
+- [ ] Form-weighted predictions — increase weight of last 5 matches vs career average in late season
+- [ ] Pre-match news sentiment — scan team news for injury/suspension signals
+- [ ] Live odds movement tracker — detect line movement pre-kickoff as sharp money signal
+- [ ] Match importance index — weight predictions by how much the match matters (title, relegation, cup final)
+- [ ] Upset probability model — when does Elo underestimate upset probability
+- [ ] Score timeline model — predict when goals are most likely in a match (minute distribution)
+- [ ] Referee impact model — quantify how specific referee assignment affects match outcome probability
+
+---
+
+## Phase 19 — Community & Social
+- [ ] Public prediction leaderboard — rank users by Brier score on their predictions
+- [ ] Tipping competition — weekly competition, users submit predictions, ranked by accuracy
+- [ ] Discord/Slack bot — post value bets and predictions automatically
+- [ ] Social sharing — one-click share match preview or value bet to Twitter/X
+- [ ] Embed widget — let other sites embed FormCast win probabilities via iframe
+- [ ] Press kit — stats, methodology screenshots for journalists and podcasters
+- [ ] Academic paper — arXiv preprint of the methodology for credibility
+
+---
+
+## Phase 20 — Individual Player Modelling
+- [ ] Player-level xG contribution — individual player xG as % of team total (requires shot-level data from FBref/Understat)
+- [ ] Goalkeeper save percentage above expected — shotstopping quality beyond team defence
+- [ ] Player network graph — pass completion rates between specific player pairs (team cohesion signal)
+- [ ] Top scorer absence model — quantify impact of missing striker on team xG
+- [ ] Set piece model — corners/free kicks conversion rate by taker
+- [ ] Player form streaks — individual scoring/assist streaks as momentum signal
+- [ ] Injury probability model — predict injury risk from minutes played, age, fixture congestion
+- [ ] International duty fatigue model — performance drop after long-haul international travel
+
+---
+
+## Phase 21 — Validation & Statistics
+- [x] Full calibration curve (predicted prob vs empirical win rate per decile)
+- [ ] Reliability diagram with confidence intervals
+- [ ] Hosmer-Lemeshow goodness of fit test
+- [ ] Diebold-Mariano test vs naive baseline
+- [ ] Permutation feature importance
+- [ ] AIC/BIC model selection
+- [ ] Ljung-Box test (residual autocorrelation)
+- [ ] KS test (predicted vs empirical distribution)
+- [ ] Brier score by time bucket (early season vs late season)
+- [ ] Hit rate by Elo gap band
+
+---
+
+## Phase 22 — Frontend (React + Vite)
+- [x] Project scaffold (Vite + Tailwind + Recharts)
+- [x] Elo ratings table — live, sortable, filterable by league
+- [ ] Calibration curve — predicted prob vs actual win rate
+- [ ] Brier score over time (rolling 90-match window)
+- [ ] Cumulative P&L chart (flat stake simulation)
+- [ ] SHAP feature importance (beeswarm + waterfall per match)
+- [ ] Elo history chart — animated, all teams, 2020-present
+- [ ] H2H Elo trajectory — two-team selector
+- [ ] Score distribution heatmap (actual vs model predicted)
+- [x] Value bet screener UI (EV > 5%, Kelly stake shown)
+- [x] Accumulator builder UI (select legs, see combined EV and optimal stake)
+- [ ] Win probability timeline (live match, Supabase Realtime)
+- [x] Tournament probability evolution (updates after each result)
+- [ ] Momentum dashboard (8 signals per team)
+- [ ] Smart money tracker (odds movement visualised)
+- [ ] Model ensemble weight evolution chart
+
+---
+
+## Phase 23 — API & Deployment
+- [x] Flask API scaffold
+- [x] GET /api/ratings — current Elo ratings per league
+- [x] GET /api/predictions — upcoming match predictions
+- [x] GET /api/backtest — accuracy report
+- [x] GET /api/value-bets — positive EV opportunities
+- [ ] GET /api/match/:id — single match deep dive + SHAP values
+- [x] GET /api/accumulator — optimal accumulator builder
+- [x] GET /api/tournament/:id — tournament simulation
+- [ ] WebSocket /live — real-time win probability stream
+- [x] Deploy frontend to Vercel
+- [x] Deploy API to Railway
 
 ---
 
