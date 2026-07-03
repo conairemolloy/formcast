@@ -47,7 +47,7 @@
 - Phase 3 — retrain neural networks with updated feature set
 - Phase 4 — betting intelligence gaps: Dutching calculator, arbitrage detector, Sharpe ratio, max drawdown, P&L simulation
 - Phase 5 — model validation page: walk-forward accuracy chart, calibration curve, per-league Brier scores (trust-building content that converts free users to paid)
-- Market-specific models — corners, cards, BTTS, goals over/under (separate XGBoost per market)
+- [x] Market-specific models — corners, cards, BTTS, goals over/under (separate XGBoost per market)
 - Ensemble auto-retraining in weekly pipeline — critical before August EPL restart
 
 ### Stage 2 — Design & UX (Phase 6 + Phase 7 + Phase 8 + Phase 9)
@@ -177,10 +177,10 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [x] Fatigue score — days rest + fixture congestion per team
 - [x] Home/away Elo split — maintain separate home and away Elo ratings per team beyond flat +50. Real signal especially for teams with strong home/weak away records (PRIORITY)
 - [x] Referee tendencies — wire up referee column already in results.csv. Cards per game, fouls per game, home bias score per referee. Data exists, just not wired in (PRIORITY)
-- [ ] Venue-specific home win rate — per-team actual home win rate, not just global +50 constant
+- [x] Venue-specific home win rate — per-team actual home win rate, not just global +50 constant
 - [ ] Relegation/title pressure — flag teams in bottom 3 or top 3 with <10 games remaining, measurable performance change
 - [ ] Opponent-adjusted form — distinguish wins vs top-half teams from wins vs relegation fodder
-- [ ] Season opener variance — widen confidence intervals for first 5 games of season, less predictable
+- [x] Season opener variance — widen confidence intervals for first 5 games of season, less predictable (is_early_season flag in all market models)
 - [ ] Early season Elo regression — regress all teams toward league mean at season start
 - [ ] Form-weighted late season — increase EWM weight of last 5 matches in final 10 gameweeks
 - [ ] First half vs second half performance — some teams start slow or fade, use half-time scores if available in results.csv
@@ -191,7 +191,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Cross-competition Elo continuity — strengthen existing implementation, Champions League performance should inform league Elo more
 - [ ] Opponent quality-adjusted form — OLS regression of results controlling for opponent Elo
 - [ ] Unbeaten run momentum — teams on long unbeaten runs outperform their Elo rating
-- [ ] Clean sheet rate — goalkeeper/defensive form signal, rolling last 10 matches
+- [x] Clean sheet rate — goalkeeper/defensive form signal, rolling last 10 matches (venue-split in BTTS and goals models)
 - [ ] Goals per shot ratio — shooting efficiency trend, more predictive than raw goal count
 - [ ] H2H extended history — full historical H2H dominance not just last 10 meetings
 - [ ] Derby factor — local rivalry binary flag, form less predictive in derbies, use ground distance proxy
@@ -209,12 +209,12 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Stadium capacity — crowd noise correlates with home advantage strength, proxy via capacity
 
 ### Tier 3 — Model Architecture Improvements
-- [ ] Separate draw classifier — dedicated binary classifier trained specifically to predict draws, using features like team defensive ratings, historical draw rates by team/league/referee, closeness of Elo ratings
+- [x] Separate draw classifier — dedicated binary classifier trained specifically to predict draws, using features like team defensive ratings, historical draw rates by team/league/referee, closeness of Elo ratings
 - [ ] Score-effect model — teams play differently when winning (sit deep) vs losing (chase game), current models ignore game state entirely
 - [ ] Home/away Glicko-2 split — same as Elo split but with uncertainty tracking per venue type
 - [ ] Time-decay on xG — older xG data weighted less than recent, currently flat window
 - [ ] Bayesian draw model — model draw probability as a function of match competitiveness and historical draw rates
-- [ ] Ensemble calibration — Platt scaling or isotonic regression to calibrate probability outputs, currently overconfident on Brier
+- [x] Ensemble calibration — investigated: Platt scaling tested, ECE 0.0130 already well-calibrated, no isotonic regression needed
 - [ ] League strength adjustment — when teams move between leagues, adjust Elo to account for quality difference
 - [ ] Cross-league Elo normalisation — ensure EPL Elo 1600 is comparable to Bundesliga 1600
 - [ ] Feature interaction terms — explicit interaction features (elo_diff × form_diff, referee_cards × fatigue) for XGBoost
@@ -265,6 +265,14 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Odds format converter utility function — shared module usable across all sports and all pages
 - [ ] Value bets page updated to show all three odds formats simultaneously
 
+
+### Market-Specific Models — BUILT
+- [x] Corners model — XGBoost regressor, MAE 2.68, Over 9.5 accuracy 53.9% vs 52.3% naive, referee tendencies #2 feature
+- [x] Cards model — XGBoost regressor, MAE 1.48, Over 3.5 accuracy 62.5% vs 59.8% naive, referee_avg_yellows #1 feature at 24.3% importance
+- [x] BTTS model — XGBoost binary classifier, 65.4% accuracy vs 53.4% naive, ROC-AUC 0.706, near-perfect calibration
+- [x] Goals model — XGBoost regressor + Over 2.5 classifier, MAE 1.12, Over 2.5 accuracy 63.1% vs 61.5% naive
+- [x] All 4 models use causal single-pass feature engineering, no data leakage
+- [x] Referee tendency features confirmed as dominant signal in cards model (24.3% importance)
 
 ---
 
