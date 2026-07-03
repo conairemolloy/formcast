@@ -1,50 +1,27 @@
 """
 Feedforward neural network for football match outcome prediction.
-Uses 48-feature matrix from full_features.csv, xG era (2014+).
+Uses 63-feature matrix built by build_all_features() from results.csv, xG era (2014+).
 """
 import os
+import sys
 import numpy as np
 import pandas as pd
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import brier_score_loss
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from ensemble_v2 import FEATURE_COLS, build_all_features  # noqa: E402
 
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
-DATA_PATH   = "data/processed/full_features.csv"
+DATA_PATH   = "data/processed/results.csv"
 XGB_PATH    = "data/processed/full_xgb_predictions.csv"
 OUT_PATH    = "data/processed/nn_predictions.csv"
 MODEL_PATH  = "models/feedforward_nn.pt"
 XG_START    = "2014-08-01"
-
-FEATURE_COLS = [
-    "home_elo", "away_elo", "elo_diff", "home_expected",
-    "home_g2_rating", "away_g2_rating", "g2_diff", "home_g2_uncertainty",
-    "home_form", "away_form", "form_diff",
-    "home_goals_scored_avg", "home_goals_conceded_avg",
-    "away_goals_scored_avg", "away_goals_conceded_avg",
-    "home_xg_avg", "away_xg_avg",
-    "home_xg_conceded_avg", "away_xg_conceded_avg",
-    "home_xg_diff_avg", "away_xg_diff_avg",
-    "home_result_momentum", "away_result_momentum",
-    "home_score_momentum", "away_score_momentum",
-    "home_elo_momentum", "away_elo_momentum",
-    "home_streak", "away_streak",
-    "momentum_diff",
-    "home_days_rest", "away_days_rest",
-    "home_matches_21d", "away_matches_21d",
-    "rest_asymmetry",
-    "home_fatigue_score", "away_fatigue_score",
-    "h2h_home_win_rate", "h2h_goal_diff_avg",
-    "h2h_meetings", "h2h_dominance",
-    "revenge_factor",
-    "home_unbeaten_run", "away_unbeaten_run",
-    "post_loss_bounce", "post_loss_bounce_away",
-    "league_encoded", "is_early_season",
-]  # 48 features
 
 LABEL_MAP = {"A": 0, "D": 1, "H": 2}
 IDX_TO_RESULT = {0: "A", 1: "D", 2: "H"}
@@ -63,7 +40,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # Model
 # ---------------------------------------------------------------------------
 class MatchNet(nn.Module):
-    def __init__(self, n_in: int = 48):
+    def __init__(self, n_in: int = len(FEATURE_COLS)):
         super().__init__()
         self.net = nn.Sequential(
             nn.Linear(n_in, 256),
@@ -176,12 +153,15 @@ def train(model, train_loader, val_loader):
 # Main
 # ---------------------------------------------------------------------------
 def main():
-    # ── Load & filter ────────────────────────────────────────────────────────
-    df = pd.read_csv(DATA_PATH)
-    df["match_date"] = pd.to_datetime(df["match_date"])
+    # ── Load & build features ─────────────────────────────────────────────────
+    raw = pd.read_csv(DATA_PATH)
+    raw["match_date"] = pd.to_datetime(raw["match_date"])
+    print(f"Building features for {len(raw):,} matches...")
+    df, _ = build_all_features(raw)
     df = df[df["match_date"] >= XG_START].reset_index(drop=True)
-    print(f"Loaded {len(df):,} matches from {XG_START} onwards")
+    print(f"Using {len(df):,} matches from {XG_START} onwards")
 
+    df = df.dropna(subset=["result"])
     df["label"] = df["result"].map(LABEL_MAP)
     assert df["label"].notna().all(), "Unexpected result values"
 
