@@ -49,18 +49,69 @@
 ### Next (this month)
 - [ ] Email alerts (Resend) — watchlist notifications + weekly digest. Free tier (3k emails/month). Core retention mechanic — currently the watchlist exists but does nothing to bring users back
 - [ ] Pricing page + Stripe — there is currently no way to pay for FormCast. Tier system exists in DB but is completely unconnected to billing. This is the only phase that generates revenue
-- [ ] Design overhaul (Phase 22) — site reads as a developer tool, needs to look like a premium product before charging money
+- [ ] Design overhaul (Phase 6) — site reads as a developer tool, needs to look like a premium product before charging money
 
 ### Before paid tier launch
-- [ ] Security & rate limiting (Phase 16) — Flask-Limiter, JWT, CORS hardening. Must be done before any public paid tier launch
+- [ ] Security & rate limiting (Phase 11) — Flask-Limiter, JWT, CORS hardening. Must be done before any public paid tier launch
 - [ ] Custom domain — formcast-blush.vercel.app is not a product URL. ~€12/year, disproportionate credibility impact
 
 ### Hold until core product is solid
-- Phase 2b (Player modelling) — needs external data sources
-- Phase 10/18 (Sport/Data expansion) — wrong order before core is solid
-- Phase 16 (Security) — blocked on Phase 13 monetisation anyway
-- Phase 17/20 (Community/Social) — premature without user base
-- Phase 19 (Match Intelligence) — needs weather API + Betfair exchange
+- Phase 20 (Player modelling) — needs external data sources
+- Phase 13/14 (Sport/Data expansion) — wrong order before core is solid
+- Phase 11 (Security) — blocked on Phase 10 monetisation anyway
+- Phase 9/19 (Community/Social) — premature without user base
+- Phase 18 (Match Intelligence) — needs weather API + Betfair exchange
+
+---
+
+## Build Priorities — Repositioned for Commercial Launch
+> Phases renumbered to reflect the actual build order.
+
+### Stage 1 — Model Quality (Phase 2 + Phase 3 + Phase 4 + Phase 5)
+- Phase 2 Tier 1 — remaining high-impact features: venue win rate, clean sheet rate, opponent-adjusted form, relegation/title pressure, league-specific home advantage, early season Elo regression
+- Phase 2 Tier 2 — weather integration (OpenWeatherMap, one call per fixture)
+- Phase 2 Tier 3 — model architecture: separate draw classifier, ensemble calibration (Platt scaling), league-specific home advantage
+- Phase 2 Tier 6 — odds format display: American moneyline, UK fractional, decimal — shared utility used everywhere
+- Phase 3 — retrain neural networks with updated feature set
+- Phase 4 — betting intelligence gaps: Dutching calculator, arbitrage detector, Sharpe ratio, max drawdown, P&L simulation
+- Phase 5 — model validation page: walk-forward accuracy chart, calibration curve, per-league Brier scores (trust-building content that converts free users to paid)
+- Market-specific models — corners, cards, BTTS, goals over/under (separate XGBoost per market)
+- Ensemble auto-retraining in weekly pipeline — critical before August EPL restart
+
+### Stage 2 — Design & UX (Phase 6 + Phase 7 + Phase 8 + Phase 9)
+- Phase 6 — full design overhaul: dashboard hero, value bet cards, landing page conversion optimisation
+- Phase 7 — UX gaps: SHAP waterfall per match, cumulative P&L chart, form visualisation, home/away form split
+- Phase 8 — methodology docs: model explainers, interactive probability calculator, glossary page
+- Phase 9 — UX excellence: global search, loading skeletons everywhere, error boundaries, PWA support
+
+### Stage 3 — Monetisation (Phase 10 + Phase 11 + Phase 12 gaps)
+- Phase 10 — pricing page: Free vs Pro vs Elite tier comparison table
+- Phase 10 — Stripe subscriptions: Pro tier billing, webhook handling, subscription management
+- Phase 10 — email alerts: Resend API, watchlist notifications, weekly digest
+- Phase 10 — affiliate bookmaker links: Bet365, Paddy Power, Betfair on value bet cards
+- Phase 11 — security & rate limiting: Flask-Limiter, JWT, CORS hardening (must be done before paid tier)
+- Phase 12 — remaining automation: ensemble auto-retraining, test suite, data quality checks
+- Custom domain (~€12/year)
+
+### Stage 4 — Sport Expansion (Phase 13 + Phase 14 + Phase 15 remaining)
+- Phase 13 — GAA (unique market, no competition globally, use PreGame Edge data)
+- Phase 13 — Tennis (Jeff Sackmann dataset, surface-adjusted Glicko-2)
+- Phase 13 — Horse racing (UK/Ireland first, HRI + Racing Post free data)
+- Phase 13 — NBA (nba_api, Four Factors model, back-to-back fatigue)
+- Phase 14 — data expansion: more leagues, Champions League history, Conference League
+- Phase 15 remaining — Euros/Copa América historical data, confederation strength adjustment
+- Phase 2 Tier 4 — market intelligence: Betfair Exchange, line movement tracking
+- Phase 2 Tier 5 — player features: injury impact, xG contribution, goalkeeper form
+
+### Stage 5 — Advanced Features (Phase 16 + Phase 17 + Phase 18 + Phase 19 + Phase 20)
+- Phase 16 — live in-play engine: WebSocket, Markov chain game state, Bayesian updater
+- Phase 17 — trust signals: verified track record badge, monthly accuracy report, social sharing
+- Phase 18 — match intelligence: distance fatigue, live odds movement, referee impact model
+- Phase 19 — community: Discord bot, leaderboard, tipping competition
+- Phase 20 — individual player modelling: xG contribution, goalkeeper form, squad depth
+- Phase 3 — GNN and Transformer models
+- Public API tier for developers
+- White-label product for bookmakers and media companies
 
 ---
 
@@ -244,7 +295,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 
 ---
 
-## Phase 2b — Individual Player Modelling
+## Phase 20 — Individual Player Modelling
 - [ ] Player-level xG contribution — individual player xG as % of team total (requires shot-level data from FBref/Understat)
 - [ ] Goalkeeper save percentage above expected — shotstopping quality beyond team defence
 - [ ] Player network graph — pass completion rates between specific player pairs (team cohesion signal)
@@ -265,7 +316,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 
 ---
 
-## Phase 4 — Live In-Play Engine
+## Phase 16 — Live In-Play Engine
 - [ ] Markov chain game state model (score_diff, time_bucket, half, momentum)
 - [ ] Pre-computed win probability lookup table (O(1) query)
 - [ ] Bayesian in-game updater (posterior update per event, Supabase Realtime)
@@ -282,7 +333,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 
 ---
 
-## Phase 5 — Betting Intelligence
+## Phase 4 — Betting Intelligence
 - [x] Value bet screener (EV = P_model × odds - 1, threshold > 5%)
 - [x] Kelly criterion stake sizing (half-Kelly)
 - [x] Accumulator builder — optimal leg selection by EV
@@ -297,7 +348,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 
 ---
 
-## Phase 6 — Validation & Statistics
+## Phase 21 — Validation & Statistics
 - [x] Full calibration curve (predicted prob vs empirical win rate per decile)
 - [ ] Reliability diagram with confidence intervals
 - [ ] Hosmer-Lemeshow goodness of fit test
@@ -376,7 +427,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 
 ---
 
-## Phase 9 — Model Validation & Transparency
+## Phase 5 — Model Validation & Transparency
 - [ ] Full backtesting results page (hit rate and Brier by league, season, year)
 - [x] Calibration diagram (reliability plot with confidence intervals)
 - [x] Model comparison table (all models side by side)
@@ -390,7 +441,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 
 ---
 
-## Phase 10 — Sport Expansion
+## Phase 13 — Sport Expansion
 ### Soccer (additional data)
 - [ ] Extend history to 1993 (football-data.co.uk archive)
 - [ ] Understat xG integration (2014-present, top 5 leagues)
@@ -489,7 +540,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 
 ---
 
-## Phase 11 — Frontend (React + Vite)
+## Phase 22 — Frontend (React + Vite)
 - [x] Project scaffold (Vite + Tailwind + Recharts)
 - [x] Elo ratings table — live, sortable, filterable by league
 - [ ] Calibration curve — predicted prob vs actual win rate
@@ -509,7 +560,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 
 ---
 
-## Phase 12 — API & Deployment
+## Phase 23 — API & Deployment
 - [x] Flask API scaffold
 - [x] GET /api/ratings — current Elo ratings per league
 - [x] GET /api/predictions — upcoming match predictions
@@ -524,8 +575,8 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 
 ---
 
-## Phase 13 — Business & Monetisation
-> Note: All phases 13-18 apply across all sports — football, GAA, tennis, golf, NFL, basketball, horse racing, and any future sport additions. Features built for football first, then extended to each sport as data becomes available.
+## Phase 10 — Business & Monetisation
+> Note: All business, security, UX, and data phases apply across all sports — football, GAA, tennis, golf, NFL, basketball, horse racing, and any future sport additions. Features built for football first, then extended to each sport as data becomes available.
 
 - [ ] Pricing page — Free vs Pro vs Elite tiers clearly explained with feature comparison table (PRIORITY — blocks revenue)
 - [x] User accounts — Supabase Auth, save favourite teams, personalised dashboard
@@ -542,7 +593,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 
 ---
 
-## Phase 14 — Trust & Accountability
+## Phase 17 — Trust & Accountability
 - [x] Public prediction log — every prediction published before kickoff, SHA256 stamped, verifiable by anyone
 - [x] Prediction audit trail — immutable record, timestamped, hash-linked like a blockchain
 - [ ] Monthly accuracy report — auto-generated PDF, emailed to subscribers, shows track record
@@ -557,7 +608,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 
 ---
 
-## Phase 15 — Automation & Infrastructure
+## Phase 12 — Automation & Infrastructure
 - [x] Automated weekly data ingestion — GitHub Actions, runs every Monday 6am UTC
 - [x] Automated model retraining — Elo, tournament, value bets, backtest all automated
 - [x] Automated tournament simulator refresh
@@ -580,7 +631,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 
 ---
 
-## Phase 16 — Security & Rate Limiting
+## Phase 11 — Security & Rate Limiting
 > Note: Security and rate limiting applies to the entire platform regardless of sport. Must be implemented before any paid tier launch.
 
 - [ ] API rate limiting — per-IP rate limits (100 req/min free, 1000 req/min pro) using Flask-Limiter
@@ -602,7 +653,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 
 ---
 
-## Phase 17 — UX Excellence
+## Phase 9 — UX Excellence
 > Note: UX improvements apply platform-wide. Mobile responsive layout is critical given the majority of sports betting happens on mobile devices.
 
 - [ ] Onboarding tour — first-time user walkthrough explaining each page (Shepherd.js or similar)
@@ -623,7 +674,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 
 ---
 
-## Phase 18 — Data Expansion
+## Phase 14 — Data Expansion
 - [ ] Europa League historical data — football-data.co.uk has this free, needed for cross-competition Elo continuity and Champions League qualification modelling
 - [ ] Champions League historical data — group stage + knockout, needed to improve tournament simulator accuracy
 - [ ] UEFA Conference League data — 2021-present
@@ -645,7 +696,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 
 ---
 
-## Phase 19 — Match Intelligence
+## Phase 18 — Match Intelligence
 - [ ] Weather-adjusted predictions — incorporate OpenWeatherMap data into Elo probability adjustments
 - [ ] Distance fatigue model — penalise away teams based on travel distance for midweek games
 - [ ] Home/away Elo split — maintain separate home and away Elo ratings per team
@@ -659,7 +710,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 
 ---
 
-## Phase 20 — Community & Social
+## Phase 19 — Community & Social
 - [ ] Public prediction leaderboard — rank users by Brier score on their predictions
 - [ ] Tipping competition — weekly competition, users submit predictions, ranked by accuracy
 - [ ] Discord/Slack bot — post value bets and predictions automatically
@@ -670,7 +721,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 
 ---
 
-## Phase 21 — International Football
+## Phase 15 — International Football
 > The World Cup (June-July 2026) exposed a real gap: national teams
 > default to Elo 1500 with no signal, since our dataset is club
 > football only. This phase builds a proper international football
@@ -725,7 +776,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 
 ---
 
-## Phase 22 — Design & Product Polish
+## Phase 6 — Design & Product Polish
 > The platform is technically impressive but reads like a developer tool. This phase makes it look and feel like a premium product that justifies charging money.
 
 ### Visual Design
