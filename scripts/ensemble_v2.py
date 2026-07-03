@@ -1,11 +1,12 @@
 """
 Stacking ensemble (v2) — extends ensemble.py with the full 48-feature base model.
 
-Stack inputs (12 features):
+Stack inputs (13 features):
   home_expected, p_home_g2,
   p_home_dc, p_draw_dc, p_away_dc,
   p_home_xgb, p_draw_xgb, p_away_xgb,
-  elo_diff, h2h_goal_diff_avg, h2h_home_win_rate, momentum_diff
+  elo_diff, h2h_goal_diff_avg, h2h_home_win_rate, momentum_diff,
+  draw_prob
 
 Meta-learner: LogisticRegression in a StandardScaler Pipeline.
 """
@@ -81,13 +82,21 @@ FEATURE_COLS = [
     "home_season_matches", "away_season_matches", "is_late_season",
 ]
 
-# 12-feature stack fed into the meta-learner
+# 13-feature stack fed into the meta-learner
 STACK_COLS = [
     "home_expected",
     "p_home_g2",
     "p_home_dc", "p_draw_dc", "p_away_dc",
     "p_home_xgb", "p_draw_xgb", "p_away_xgb",
     "elo_diff", "h2h_goal_diff_avg", "h2h_home_win_rate", "momentum_diff",
+    "draw_prob",
+]
+
+DRAW_COLS = [
+    "elo_diff", "p_draw_dc", "home_form", "away_form",
+    "ref_avg_yellows", "home_win_rate", "away_win_rate",
+    "is_late_season", "home_goals_scored_avg", "away_goals_scored_avg",
+    "rest_asymmetry", "venue_elo_diff", "h2h_home_win_rate",
 ]
 
 
@@ -623,6 +632,14 @@ def _make_xgb() -> XGBClassifier:
     )
 
 
+def _make_draw_xgb() -> XGBClassifier:
+    return XGBClassifier(
+        n_estimators=300, max_depth=4, learning_rate=0.05,
+        subsample=0.8, colsample_bytree=0.8,
+        eval_metric="logloss", random_state=42, n_jobs=-1,
+    )
+
+
 # ---------------------------------------------------------------------------
 # Out-of-fold XGBoost (TimeSeriesSplit)
 # ---------------------------------------------------------------------------
@@ -649,7 +666,7 @@ def _sigmoid(x: np.ndarray) -> np.ndarray:
 
 def _build_stack(df: pd.DataFrame, xgb_proba: np.ndarray) -> np.ndarray:
     """
-    Assemble STACK_COLS (12 features) in the declared order.
+    Assemble STACK_COLS (excluding draw_prob, which is appended separately) in the declared order.
     xgb_proba columns: [P(A), P(D), P(H)] (XGBoost class order 0,1,2).
     """
     p_home_g2 = _sigmoid(df["g2_diff"].values / G2_SCALE * 1.6)
@@ -738,6 +755,26 @@ def main() -> None:
     train_stack = _build_stack(train_df, oof_proba)
 
     # ------------------------------------------------------------------
+    # Step 1b: OOF draw classifier (dedicated binary draw model)
+    # ------------------------------------------------------------------
+    print("\nGenerating OOF draw classifier predictions (5-fold TimeSeriesSplit)...")
+    X_tr_draw     = train_df[DRAW_COLS].values
+    draw_y        = (train_df["result"] == "D").astype(int).values
+    draw_prob_oof = np.zeros(len(train_df))
+    tss_draw = TimeSeriesSplit(n_splits=5)
+    for fold, (tr_idx, val_idx) in enumerate(tss_draw.split(X_tr_draw)):
+        print(f"  Draw fold {fold + 1}/5"
+              f"  (train={len(tr_idx):,}, val={len(val_idx):,})")
+        dc_model = _make_draw_xgb()
+        dc_model.fit(X_tr_draw[tr_idx], draw_y[tr_idx])
+        draw_prob_oof[val_idx] = dc_model.predict_proba(X_tr_draw[val_idx])[:, 1]
+
+    draw_clf = _make_draw_xgb()
+    draw_clf.fit(X_tr_draw, draw_y)
+
+    train_stack = np.column_stack([train_stack, draw_prob_oof])
+
+    # ------------------------------------------------------------------
     # Step 2: Full XGBoost trained on all of train_df (for holdout)
     # ------------------------------------------------------------------
     print("\nTraining full XGBoost on training set...")
@@ -747,6 +784,8 @@ def main() -> None:
     X_holdout_xgb   = holdout_df[FEATURE_COLS].values
     holdout_xgb_proba = xgb_full.predict_proba(X_holdout_xgb)
     holdout_stack     = _build_stack(holdout_df, holdout_xgb_proba)
+    draw_prob_ho  = draw_clf.predict_proba(holdout_df[DRAW_COLS].values)[:, 1]
+    holdout_stack = np.column_stack([holdout_stack, draw_prob_ho])
 
     # ------------------------------------------------------------------
     # Step 3: Meta-learner
@@ -767,6 +806,8 @@ def main() -> None:
     print(f"Saved XGBoost model to models/xgb_ensemble.pkl")
     joblib.dump(meta, os.path.join(models_dir, 'meta_learner.pkl'))
     print(f"Saved meta-learner to models/meta_learner.pkl")
+    joblib.dump(draw_clf, os.path.join(models_dir, 'draw_classifier.pkl'))
+    print(f"Saved draw classifier to models/draw_classifier.pkl")
     with open(os.path.join(models_dir, 'feature_cols.json'), 'w') as f:
         json.dump(FEATURE_COLS, f)
     joblib.dump(league_encoder, os.path.join(models_dir, 'league_encoder.pkl'))

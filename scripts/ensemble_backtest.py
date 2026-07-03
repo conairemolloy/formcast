@@ -28,14 +28,15 @@ import sys
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import TimeSeriesSplit
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from ensemble_v2 import (  # noqa: E402
-    COLD_START, FEATURE_COLS, RESULT_INV, RESULT_MAP, STACK_COLS,
+    COLD_START, DRAW_COLS, FEATURE_COLS, RESULT_INV, RESULT_MAP, STACK_COLS,
     build_all_features, generate_oof_xgb,
-    _build_stack, _make_xgb,
+    _build_stack, _make_draw_xgb, _make_xgb,
 )
 
 # ── Config ────────────────────────────────────────────────────────────────────
@@ -209,6 +210,22 @@ def main() -> None:
         xgb_full.fit(X_train, y_train)
         test_xgb_proba = xgb_full.predict_proba(X_test)
         test_stack     = _build_stack(test_df, test_xgb_proba)
+
+        # Step 2b: Draw classifier OOF on train → append draw_prob column to both stacks
+        print(f"  Draw classifier ({N_OOF_SPLITS}-fold TimeSeriesSplit)...")
+        X_tr_draw     = train_df[DRAW_COLS].values
+        draw_y        = (train_df["result"] == "D").astype(int).values
+        draw_prob_oof = np.zeros(len(train_df))
+        tss_draw = TimeSeriesSplit(n_splits=N_OOF_SPLITS)
+        for fold, (tr_idx, val_idx) in enumerate(tss_draw.split(X_tr_draw)):
+            dc_model = _make_draw_xgb()
+            dc_model.fit(X_tr_draw[tr_idx], draw_y[tr_idx])
+            draw_prob_oof[val_idx] = dc_model.predict_proba(X_tr_draw[val_idx])[:, 1]
+        draw_clf = _make_draw_xgb()
+        draw_clf.fit(X_tr_draw, draw_y)
+        train_stack  = np.column_stack([train_stack, draw_prob_oof])
+        draw_prob_te = draw_clf.predict_proba(test_df[DRAW_COLS].values)[:, 1]
+        test_stack   = np.column_stack([test_stack, draw_prob_te])
 
         # Step 3: Meta-learner fit on OOF stack, predict test stack
         print(f"  Meta-learner (LogisticRegression + StandardScaler)...")
