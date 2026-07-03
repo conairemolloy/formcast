@@ -292,7 +292,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Accumulator independence testing (same-league correlation correction)
 - [ ] Accumulator EV matrix UI — best combinations visualised as grid
 - [x] Closing line value (CLV) tracking — mean(log(P_model / P_close))
-- [ ] SHA256 prediction accountability ledger (hash-stamped pre-match)
+- [x] SHA256 prediction accountability ledger (hash-stamped pre-match)
 - [ ] Sharpe ratio + max drawdown on simulated flat-stake strategy
 - [ ] Dutching calculator — optimal stake distribution across multiple outcomes
 - [ ] Arbitrage detector — Σ(1/odds) < 1 across bookmakers, flag instantly
@@ -696,7 +696,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 ## Phase 18 — Match Intelligence
 - [ ] Weather-adjusted predictions — incorporate OpenWeatherMap data into Elo probability adjustments
 - [ ] Distance fatigue model — penalise away teams based on travel distance for midweek games
-- [ ] Home/away Elo split — maintain separate home and away Elo ratings per team
+- [x] Home/away Elo split — maintain separate home and away Elo ratings per team
 - [ ] Form-weighted predictions — increase weight of last 5 matches vs career average in late season
 - [ ] Pre-match news sentiment — scan team news for injury/suspension signals
 - [ ] Live odds movement tracker — detect line movement pre-kickoff as sharp money signal
