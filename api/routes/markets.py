@@ -8,12 +8,17 @@ GET /api/markets/goals    — total goals prediction + Over/Under probs
 GET /api/markets/preview  — all 4 markets in one response
 """
 from datetime import datetime, timezone
+from math import exp as _exp, factorial as _factorial
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 from flask import Blueprint, jsonify, request
 from scipy.stats import norm
+
+
+def _pois(lam: float, k: int) -> float:
+    return _exp(-lam) * (lam ** k) / _factorial(k)
 
 markets_bp = Blueprint("markets", __name__)
 
@@ -195,6 +200,143 @@ def _require_teams():
     if not home or not away:
         return None, None, None, _err("home_team and away_team are required")
     return home, away, league, None
+
+
+# ── Shared lookup helpers (imported by live.py for /match/preview) ────────────
+
+def _lookup_corners(home_team: str, away_team: str, league: str = "") -> dict:
+    """ML corners prediction with aliased keys for MatchPreview.jsx compatibility."""
+    row = _lookup(_corners_df, home_team, away_team)
+    using_fallback = row is None
+    predicted = float(row["predicted_corners"]) if not using_fallback else _fb(_CORNERS_LEAGUE_AVG, league, _CORNERS_GLOBAL_AVG)
+    h = _HOME_STATS.get(home_team, {})
+    a = _AWAY_STATS.get(away_team, {})
+    home_avg = _f(h.get("corners_avg"), 2)
+    away_avg = _f(a.get("corners_avg"), 2)
+    return {
+        "predicted_corners": _f(predicted, 2),
+        "total_avg":         _f(predicted, 2),   # MatchPreview.jsx reads corners.total_avg
+        "home_avg":          home_avg,            # MatchPreview.jsx reads corners.home_avg
+        "away_avg":          away_avg,            # MatchPreview.jsx reads corners.away_avg
+        "home_corners_avg":  home_avg,
+        "away_corners_avg":  away_avg,
+        "over_8_5":          _f(_over_prob(predicted, 8.5,  _CORNERS_STD)),
+        "over_9_5":          _f(_over_prob(predicted, 9.5,  _CORNERS_STD)),
+        "over_10_5":         _f(_over_prob(predicted, 10.5, _CORNERS_STD)),
+        "over_9_5_prob":     _f(_over_prob(predicted, 9.5,  _CORNERS_STD)),
+        "over_10_5_prob":    _f(_over_prob(predicted, 10.5, _CORNERS_STD)),
+        "over_11_5_prob":    _f(_over_prob(predicted, 11.5, _CORNERS_STD)),
+        "using_fallback":    using_fallback,
+    }
+
+
+def _lookup_cards(home_team: str, away_team: str, league: str = "") -> dict:
+    """ML cards prediction with aliased keys for MatchPreview.jsx compatibility."""
+    row = _lookup(_cards_df, home_team, away_team)
+    using_fallback = row is None
+    predicted = float(row["predicted_yellows"]) if not using_fallback else _fb(_CARDS_LEAGUE_AVG, league, _CARDS_GLOBAL_AVG)
+    h = _HOME_STATS.get(home_team, {})
+    a = _AWAY_STATS.get(away_team, {})
+    home_avg = _f(h.get("yellows_avg"), 2)
+    away_avg = _f(a.get("yellows_avg"), 2)
+    return {
+        "predicted_yellows": _f(predicted, 2),
+        "total_avg":         _f(predicted, 2),   # MatchPreview.jsx reads cards.total_avg
+        "home_avg":          home_avg,            # MatchPreview.jsx reads cards.home_avg
+        "away_avg":          away_avg,            # MatchPreview.jsx reads cards.away_avg
+        "over_2_5":          _f(_over_prob(predicted, 2.5, _CARDS_STD)),
+        "over_3_5":          _f(_over_prob(predicted, 3.5, _CARDS_STD)),
+        "over_4_5":          _f(_over_prob(predicted, 4.5, _CARDS_STD)),
+        "over_3_5_prob":     _f(_over_prob(predicted, 3.5, _CARDS_STD)),
+        "over_4_5_prob":     _f(_over_prob(predicted, 4.5, _CARDS_STD)),
+        "over_5_5_prob":     _f(_over_prob(predicted, 5.5, _CARDS_STD)),
+        "using_fallback":    using_fallback,
+    }
+
+
+def _lookup_btts(home_team: str, away_team: str, league: str = "") -> dict:
+    """ML BTTS prediction."""
+    row = _lookup(_btts_df, home_team, away_team)
+    using_fallback = row is None
+    btts_prob = float(row["btts_prob"]) if not using_fallback else _fb(_BTTS_LEAGUE_AVG, league, _BTTS_GLOBAL_AVG)
+    h = _HOME_STATS.get(home_team, {})
+    a = _AWAY_STATS.get(away_team, {})
+    return {
+        "btts_prob":           _f(btts_prob),
+        "btts_yes_prob":       _f(btts_prob),
+        "btts_no_prob":        _f(1.0 - btts_prob),
+        "home_scoring_rate":   _f(h.get("scoring_rate")),
+        "away_scoring_rate":   _f(a.get("scoring_rate")),
+        "home_conceding_rate": _f(h.get("conceding_rate")),
+        "away_conceding_rate": _f(a.get("conceding_rate")),
+        "using_fallback":      using_fallback,
+    }
+
+
+def _lookup_goals(home_team: str, away_team: str, league: str = "") -> dict:
+    """ML goals prediction, shaped to match all keys MatchPreview.jsx expects."""
+    row = _lookup(_goals_df, home_team, away_team)
+    using_fallback = row is None
+
+    if not using_fallback:
+        predicted = float(row["predicted_goals"])
+        over_1_5  = float(row["over15_prob"])
+        over_2_5  = float(row["over25_prob"])
+        over_3_5  = float(row["over35_prob"])
+        over_4_5  = float(row["over45_prob"])
+    else:
+        predicted = _fb(_GOALS_LEAGUE_AVG, league, _GOALS_GLOBAL_AVG)
+        over_1_5  = _fb(_GOALS_OVER15_AVG, league, 0.75)
+        over_2_5  = _fb(_GOALS_OVER25_AVG, league, 0.50)
+        over_3_5  = _fb(_GOALS_OVER35_AVG, league, 0.28)
+        over_4_5  = _fb(_GOALS_OVER45_AVG, league, 0.13)
+
+    # Nested over/under dict matching GoalsSection in MatchPreview.jsx
+    over_0_5 = _over_prob(predicted, 0.5, _GOALS_STD)
+    over_under = {
+        "0.5": {"over": _f(over_0_5),    "under": _f(1.0 - over_0_5)},
+        "1.5": {"over": _f(over_1_5),    "under": _f(1.0 - over_1_5)},
+        "2.5": {"over": _f(over_2_5),    "under": _f(1.0 - over_2_5)},
+        "3.5": {"over": _f(over_3_5),    "under": _f(1.0 - over_3_5)},
+    }
+
+    # BTTS and scoring rates from the BTTS model
+    b_row = _lookup(_btts_df, home_team, away_team)
+    btts_prob = float(b_row["btts_prob"]) if b_row is not None else _fb(_BTTS_LEAGUE_AVG, league, _BTTS_GLOBAL_AVG)
+
+    h = _HOME_STATS.get(home_team, {})
+    a = _AWAY_STATS.get(away_team, {})
+
+    # Correct-score matrix via Poisson using 10-match venue averages
+    lam_h = h.get("goals_avg") or 1.35
+    lam_a = a.get("goals_avg") or 1.05
+    _MAX = 5
+    score_list = []
+    for hg in range(_MAX + 1):
+        for ag in range(_MAX + 1):
+            score_list.append((f"{hg}-{ag}", round(_pois(lam_h, hg) * _pois(lam_a, ag), 4)))
+    score_list.sort(key=lambda x: -x[1])
+    top_scores = [{"score": s, "prob": p} for s, p in score_list[:8]]
+
+    return {
+        # ML model fields
+        "predicted_goals": _f(predicted, 2),
+        "over_1_5_prob":   _f(over_1_5),
+        "over_2_5_prob":   _f(over_2_5),
+        "over_3_5_prob":   _f(over_3_5),
+        "over_4_5_prob":   _f(over_4_5),
+        "home_goals_avg":  _f(h.get("goals_avg"), 2),
+        "away_goals_avg":  _f(a.get("goals_avg"), 2),
+        "using_fallback":  using_fallback,
+        # MatchPreview.jsx compatibility keys
+        "over_under":      over_under,
+        "btts":            _f(btts_prob),
+        "home_to_score":   _f(h.get("scoring_rate")),
+        "away_to_score":   _f(a.get("scoring_rate")),
+        "top_scores":      top_scores,
+        "lambda_home":     round(lam_h, 3),
+        "lambda_away":     round(lam_a, 3),
+    }
 
 
 # ── Endpoints ─────────────────────────────────────────────────────────────────

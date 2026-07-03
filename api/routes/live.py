@@ -8,6 +8,8 @@ import pandas as pd
 import httpx
 from flask import Blueprint, jsonify, request
 
+from .markets import _lookup_corners, _lookup_cards, _lookup_btts, _lookup_goals
+
 live_bp = Blueprint("live", __name__)
 
 FDATA_API_KEY = "3edbe9850f784e8a86328acaabfd9561"
@@ -870,12 +872,14 @@ def match_preview():
     away_elo = away_elo_intl if away_elo_intl is not None else _resolve_elo(away_team)
     p_home, p_draw, p_away = _prematch_probs(home_elo, away_elo)
 
+    league = request.args.get("league", "EPL").strip()
+
     home_form = _last5_stats(home_canon)
     away_form = _last5_stats(away_canon)
     h2h       = _h2h_stats(home_canon, away_canon)
-    goals     = _goals_model(home_form, away_form)
-    corners   = _corners_markets(home_canon, away_canon)
-    cards     = _cards_markets(home_canon, away_canon)
+    goals     = _lookup_goals(home_canon, away_canon, league)
+    corners   = _lookup_corners(home_canon, away_canon, league)
+    cards     = _lookup_cards(home_canon, away_canon, league)
 
     return jsonify({
         "success": True,
