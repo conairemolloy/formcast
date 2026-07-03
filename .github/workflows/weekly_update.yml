@@ -41,6 +41,18 @@ jobs:
       - name: Run ELO model
         run: python scripts/elo_model.py
 
+      - name: Run corners model
+        run: python scripts/corners_model.py
+
+      - name: Run cards model
+        run: python scripts/cards_model.py
+
+      - name: Run BTTS model
+        run: python scripts/btts_model.py
+
+      - name: Run goals model
+        run: python scripts/goals_model.py
+
       - name: Generate ensemble predictions for upcoming fixtures
         run: python scripts/predict_upcoming.py
 
