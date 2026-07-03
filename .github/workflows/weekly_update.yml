@@ -53,6 +53,12 @@ jobs:
       - name: Run goals model
         run: python scripts/goals_model.py
 
+      - name: Retrain feedforward neural network
+        run: python scripts/neural_network.py
+
+      - name: Retrain LSTM
+        run: python scripts/lstm_model.py
+
       - name: Generate ensemble predictions for upcoming fixtures
         run: python scripts/predict_upcoming.py
 

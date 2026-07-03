@@ -90,6 +90,7 @@ STACK_COLS = [
     "p_home_dc", "p_draw_dc", "p_away_dc",
     "p_home_xgb", "p_draw_xgb", "p_away_xgb",
     "elo_diff", "h2h_goal_diff_avg", "h2h_home_win_rate", "momentum_diff",
+    "p_home_lstm",
     "draw_prob",
 ]
 
@@ -359,6 +360,19 @@ def build_all_features(
     league_enc = {lg: int(i) for i, lg in enumerate(league_encoder.classes_)}
     xg_lookup = xg_lookup or {}
 
+    lstm_lookup: dict[tuple, float] = {}
+    global_mean_home = 0.45
+    lstm_path = os.path.normpath(
+        os.path.join(os.path.dirname(__file__), "..", "data", "processed", "lstm_predictions.csv")
+    )
+    if os.path.exists(lstm_path):
+        lstm_df = pd.read_csv(lstm_path, parse_dates=["match_date"])
+        if len(lstm_df) > 0:
+            global_mean_home = float(lstm_df["p_home"].mean())
+        for _, r in lstm_df.iterrows():
+            key = (r["home_team"], r["away_team"], str(r["match_date"].date()))
+            lstm_lookup[key] = float(r["p_home"])
+
     elo:       dict[str, float] = defaultdict(lambda: STARTING_ELO)
     g2:        dict[str, tuple] = defaultdict(lambda: (0.0, G2_INITIAL_PHI))
     team_hist: dict[str, list]  = defaultdict(list)
@@ -522,6 +536,8 @@ def build_all_features(
             # Context
             "league_encoded": league_enc[league],
             "is_early_season": hf["is_early"],
+            # LSTM stack feature
+            "p_home_lstm": lstm_lookup.get((home, away, str(date.date())), global_mean_home),
             # Rolling DC
             "p_home_dc": p_home_dc, "p_draw_dc": p_draw_dc, "p_away_dc": p_away_dc,
             # Referee
@@ -680,6 +696,7 @@ def _build_stack(df: pd.DataFrame, xgb_proba: np.ndarray) -> np.ndarray:
         df["h2h_goal_diff_avg"].values,
         df["h2h_home_win_rate"].values,
         df["momentum_diff"].values,
+        df["p_home_lstm"].values,
     ])
 
 
