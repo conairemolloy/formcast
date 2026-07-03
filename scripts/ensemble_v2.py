@@ -19,6 +19,7 @@ from datetime import timedelta
 import joblib
 import numpy as np
 import pandas as pd
+from sklearn.calibration import CalibratedClassifierCV
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import TimeSeriesSplit
 from sklearn.pipeline import Pipeline
@@ -695,6 +696,19 @@ def _hit(pred: np.ndarray, actual: pd.Series) -> float:
     return float((pred == actual.values).mean())
 
 
+def expected_calibration_error(y_true, y_prob, n_bins=10):
+    """Compute Expected Calibration Error."""
+    bins = np.linspace(0, 1, n_bins + 1)
+    ece = 0.0
+    for i in range(n_bins):
+        mask = (y_prob >= bins[i]) & (y_prob < bins[i+1])
+        if mask.sum() > 0:
+            acc = y_true[mask].mean()
+            conf = y_prob[mask].mean()
+            ece += mask.mean() * abs(acc - conf)
+    return ece
+
+
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
@@ -797,6 +811,14 @@ def main() -> None:
     ])
     meta.fit(train_stack, y_train)
 
+    # Calibrate via 5-fold CV on training stack
+    meta_calibrated = CalibratedClassifierCV(
+        LogisticRegression(C=0.1, max_iter=1000, random_state=42),
+        method='isotonic',
+        cv=5,
+    )
+    meta_calibrated.fit(train_stack, y_train)
+
     # ------------------------------------------------------------------
     # Save models
     # ------------------------------------------------------------------
@@ -806,6 +828,8 @@ def main() -> None:
     print(f"Saved XGBoost model to models/xgb_ensemble.pkl")
     joblib.dump(meta, os.path.join(models_dir, 'meta_learner.pkl'))
     print(f"Saved meta-learner to models/meta_learner.pkl")
+    joblib.dump(meta_calibrated, os.path.join(models_dir, 'meta_learner_calibrated.pkl'))
+    print(f"Saved calibrated meta-learner to models/meta_learner_calibrated.pkl")
     joblib.dump(draw_clf, os.path.join(models_dir, 'draw_classifier.pkl'))
     print(f"Saved draw classifier to models/draw_classifier.pkl")
     with open(os.path.join(models_dir, 'feature_cols.json'), 'w') as f:
@@ -817,10 +841,15 @@ def main() -> None:
     # ------------------------------------------------------------------
     meta_proba = meta.predict_proba(holdout_stack)   # cols: P(A), P(D), P(H)
     meta_pred  = meta.predict(holdout_stack)
+    cal_proba  = meta_calibrated.predict_proba(holdout_stack)
+    cal_pred   = meta_calibrated.predict(holdout_stack)
 
     holdout_df["p_away"] = meta_proba[:, 0]
     holdout_df["p_draw"] = meta_proba[:, 1]
     holdout_df["p_home"] = meta_proba[:, 2]
+    holdout_df["p_away_cal"] = cal_proba[:, 0]
+    holdout_df["p_draw_cal"] = cal_proba[:, 1]
+    holdout_df["p_home_cal"] = cal_proba[:, 2]
     holdout_df["predicted_result"] = [RESULT_INV[int(p)] for p in meta_pred]
     holdout_df["actual_result"]    = holdout_df["result"]
     holdout_df["correct"] = (
@@ -831,6 +860,10 @@ def main() -> None:
 
     ens_hit   = holdout_df["correct"].mean()
     ens_brier = _brier(holdout_df["p_home"].values, actual)
+
+    cal_pred_str = np.array([RESULT_INV[int(p)] for p in cal_pred])
+    cal_hit   = _hit(cal_pred_str, actual)
+    cal_brier = _brier(holdout_df["p_home_cal"].values, actual)
 
     # Full XGBoost standalone
     xgb_pred_str = np.array([RESULT_INV[int(p)] for p in xgb_full.predict(X_holdout_xgb)])
@@ -882,11 +915,12 @@ def main() -> None:
     print(f"  {'-' * 44}")
 
     rows_table = [
-        ("Ensemble v2",  ens_hit,  ens_brier),
-        ("Full XGB",     xgb_hit,  xgb_brier),
-        ("Elo baseline", elo_hit,  elo_brier),
-        ("Glicko-2",     g2_hit,   g2_brier),
-        ("Dixon-Coles",  dc_hit,   dc_brier),
+        ("Ensemble v2",       ens_hit,  ens_brier),
+        ("Ensemble v2 (cal)", cal_hit,  cal_brier),
+        ("Full XGB",          xgb_hit,  xgb_brier),
+        ("Elo baseline",      elo_hit,  elo_brier),
+        ("Glicko-2",          g2_hit,   g2_brier),
+        ("Dixon-Coles",       dc_hit,   dc_brier),
     ]
     for name, hr, br in rows_table:
         marker = " ◀ best" if (hr == max(r[1] for r in rows_table) or
@@ -898,6 +932,19 @@ def main() -> None:
     print(f"\n  Improvement over best single model:")
     print(f"    Hit rate : {hit_delta:+.4f}  ({'✓ better' if hit_delta >= 0 else '✗ worse'})")
     print(f"    Brier    : {brier_delta:+.6f}  ({'✓ better' if brier_delta <= 0 else '✗ worse'})")
+    print("=" * 68)
+
+    # ------------------------------------------------------------------
+    # Calibration quality (ECE on home-win probability)
+    # ------------------------------------------------------------------
+    y_home_binary = (holdout_df["actual_result"] == "H").astype(int).values
+    ece_uncal = expected_calibration_error(y_home_binary, meta_proba[:, 2])
+    ece_cal   = expected_calibration_error(y_home_binary, cal_proba[:, 2])
+    print(f"\nCALIBRATION  (home-win probability, ECE over {len(holdout_df):,} holdout matches)")
+    print(f"  ECE uncalibrated : {ece_uncal:.4f}")
+    print(f"  ECE calibrated   : {ece_cal:.4f}")
+    print(f"  ECE improvement  : {ece_uncal - ece_cal:+.4f}  "
+          f"({'✓ better' if ece_cal < ece_uncal else '✗ worse'})")
     print("=" * 68)
 
     # ------------------------------------------------------------------
