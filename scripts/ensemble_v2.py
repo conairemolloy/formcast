@@ -48,7 +48,7 @@ DC_MAX_GOALS = 8
 RESULT_MAP = {"A": 0, "D": 1, "H": 2}
 RESULT_INV = {0: "A", 1: "D", 2: "H"}
 
-# Full 57-feature set used for XGBoost base model
+# Full 63-feature set used for XGBoost base model
 FEATURE_COLS = [
     "home_elo", "away_elo", "elo_diff", "home_expected",
     "home_elo_home", "home_elo_away", "away_elo_home", "away_elo_away", "venue_elo_diff",
@@ -75,6 +75,10 @@ FEATURE_COLS = [
     "league_encoded", "is_early_season",
     # Referee
     "ref_avg_yellows", "ref_avg_fouls", "ref_home_bias", "ref_experience",
+    # Venue win rates
+    "home_win_rate", "away_win_rate", "venue_win_rate_diff",
+    # Season phase
+    "home_season_matches", "away_season_matches", "is_late_season",
 ]
 
 # 12-feature stack fed into the meta-learner
@@ -355,6 +359,9 @@ def build_all_features(
     global_matches:   int = 0
     global_home_wins: int = 0
     h2h_hist:  dict[tuple, list] = defaultdict(list)
+    team_home_record:   dict[str, list]   = {}   # team → [1,0,...] home W=1
+    team_away_record:   dict[str, list]   = {}   # team → [1,0,...] away W=1
+    team_season_matches: dict[tuple, int] = {}   # (team, season) → match count
 
     # Rolling DC state (last DC_WINDOW goals)
     dc_scored:   dict[str, list] = defaultdict(list)
@@ -436,6 +443,18 @@ def build_all_features(
         away_comp = (af["result_momentum"] + af["score_momentum"]
                      + af["elo_momentum"]  + af["streak"]) / 4.0
 
+        # Venue win rates (from prior matches only)
+        _hwr = team_home_record.get(home)
+        _awr = team_away_record.get(away)
+        home_win_rate       = float(np.mean(_hwr)) if _hwr else 0.46
+        away_win_rate       = float(np.mean(_awr)) if _awr else 0.28
+        venue_win_rate_diff = home_win_rate - away_win_rate
+
+        # Season phase
+        home_season_matches = team_season_matches.get((home, season), 0)
+        away_season_matches = team_season_matches.get((away, season), 0)
+        is_late_season      = 1 if min(home_season_matches, away_season_matches) >= 28 else 0
+
         rows.append({
             # Metadata
             "match_date": date, "season": season, "league": league,
@@ -500,6 +519,14 @@ def build_all_features(
             "ref_avg_fouls":   ref_avg_fouls,
             "ref_home_bias":   ref_home_bias,
             "ref_experience":  ref_experience,
+            # Venue win rates
+            "home_win_rate":       home_win_rate,
+            "away_win_rate":       away_win_rate,
+            "venue_win_rate_diff": venue_win_rate_diff,
+            # Season phase
+            "home_season_matches": home_season_matches,
+            "away_season_matches": away_season_matches,
+            "is_late_season":      is_late_season,
             # Target
             "result": result,
         })
@@ -566,6 +593,12 @@ def build_all_features(
             a_foul  = float(row["away_fouls"])   if pd.notna(row.get("away_fouls"))   else 0.0
             rs["yellows_total"] += h_yel + a_yel
             rs["fouls_total"]   += h_foul + a_foul
+
+        # Update venue win-rate records and season match counts
+        team_home_record.setdefault(home, []).append(1 if result == "H" else 0)
+        team_away_record.setdefault(away, []).append(1 if result == "A" else 0)
+        team_season_matches[(home, season)] = home_season_matches + 1
+        team_season_matches[(away, season)] = away_season_matches + 1
 
     feat_df = pd.DataFrame(rows)
     if _created_encoder:
