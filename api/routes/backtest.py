@@ -1,6 +1,8 @@
 from datetime import datetime, timezone
+import os
 import pandas as pd
 from flask import Blueprint, jsonify, request, current_app
+from scipy.stats import chi2, norm
 
 backtest_bp = Blueprint("backtest", __name__)
 
@@ -80,9 +82,25 @@ def get_calibration():
         .rename(columns={"bin": "bin_label"})
     )
 
+    # Hosmer-Lemeshow chi-squared test
+    hl_bins = calibration[calibration["count"] > 0].copy()
+    obs   = hl_bins["actual_rate"] * hl_bins["count"]
+    exp   = hl_bins["mean_predicted"] * hl_bins["count"]
+    n_i   = hl_bins["count"]
+    denom = (exp * (1 - exp / n_i)).clip(lower=1e-10)
+    hl_stat = float(((obs - exp) ** 2 / denom).sum())
+    hl_df   = max(1, len(hl_bins) - 2)
+    hl_pval = float(1 - chi2.cdf(hl_stat, hl_df))
+    hl_interp = "Well calibrated (p>0.05)" if hl_pval > 0.05 else "Poorly calibrated (p≤0.05)"
+
     return jsonify({
         "success": True,
-        "data": calibration.to_dict(orient="records"),
+        "data": {
+            "bins":           calibration.to_dict(orient="records"),
+            "hl_statistic":   round(hl_stat, 4),
+            "hl_pvalue":      round(hl_pval, 4),
+            "hl_interpretation": hl_interp,
+        },
     })
 
 
@@ -118,6 +136,58 @@ def get_pnl():
             "final_pnl":  final_pnl,
             "roi":        roi,
             "win_rate":   win_rate,
+        },
+    })
+
+
+@backtest_bp.get("/backtest/dm-test")
+def get_dm_test():
+    data_dir = os.path.normpath(
+        os.path.join(os.path.dirname(__file__), "..", "..", "data", "processed")
+    )
+    path = os.path.join(data_dir, "ensemble_backtest_predictions.csv")
+
+    try:
+        df = pd.read_csv(path)
+    except FileNotFoundError:
+        return jsonify({"success": False, "error": "ensemble_backtest_predictions.csv not found"}), 404
+
+    required = {"correct_ensemble", "correct_elo"}
+    if not required.issubset(df.columns):
+        return jsonify({"success": False, "error": f"Missing columns: {required - set(df.columns)}"}), 422
+
+    # DM test: d_t = L(ensemble_t) - L(elo_t), L = binary squared error (1 - correct)
+    d = (1 - df["correct_ensemble"]) - (1 - df["correct_elo"])
+    n = len(d)
+    mean_d = float(d.mean())
+    var_d  = float(d.var(ddof=1))
+
+    if var_d == 0:
+        return jsonify({"success": False, "error": "Zero variance in loss differential — models are identical"}), 422
+
+    dm_stat = mean_d / (var_d / n) ** 0.5
+    p_value = float(2 * (1 - norm.cdf(abs(dm_stat))))  # two-tailed
+
+    ensemble_better = mean_d < 0  # lower loss = better
+
+    if p_value < 0.05:
+        sig = "significantly" if p_value < 0.01 else "marginally"
+        winner = "Ensemble" if ensemble_better else "Elo"
+        loser  = "Elo" if ensemble_better else "Ensemble"
+        interp = f"{winner} {sig} outperforms {loser} (p={p_value:.4f})"
+    else:
+        interp = f"No significant difference between Ensemble and Elo (p={p_value:.4f})"
+
+    return jsonify({
+        "success": True,
+        "data": {
+            "dm_statistic":      round(dm_stat, 4),
+            "p_value":           round(p_value, 4),
+            "interpretation":    interp,
+            "ensemble_better":   bool(ensemble_better),
+            "n_matches":         n,
+            "ensemble_hit_rate": round(float(df["correct_ensemble"].mean() * 100), 2),
+            "elo_hit_rate":      round(float(df["correct_elo"].mean() * 100), 2),
         },
     })
 

@@ -45,6 +45,20 @@ const BarTooltip = ({ active, payload, label }) => {
   )
 }
 
+const SeasonTooltip = ({ active, payload, label }) => {
+  if (!active || !payload?.length) return null
+  return (
+    <div className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm space-y-0.5">
+      <p className="text-gray-300 font-medium">{label}</p>
+      {payload.map(p => (
+        <p key={p.dataKey} style={{ color: p.color }}>
+          {p.name}: {Number(p.value).toFixed(1)}%
+        </p>
+      ))}
+    </div>
+  )
+}
+
 const CalibTooltip = ({ active, payload }) => {
   if (!active || !payload?.length) return null
   const d = payload[0]?.payload
@@ -90,8 +104,10 @@ const PnlTooltip = ({ active, payload }) => {
 export default function BacktestReport() {
   const [data, setData]           = useState(null)
   const [calibData, setCalibData] = useState(null)
+  const [hlData, setHlData]       = useState(null)
   const [pnlData, setPnlData]     = useState(null)
   const [clvData, setClvData]     = useState(null)
+  const [dmData, setDmData]       = useState(null)
   const [loading, setLoading]     = useState(true)
   const [error, setError]         = useState(null)
 
@@ -104,12 +120,19 @@ export default function BacktestReport() {
     ])
       .then(([backtestRes, calibRes, pnlRes, clvRes]) => {
         setData(backtestRes.data.data)
-        setCalibData(calibRes.data.data)
+        setCalibData(calibRes.data.data.bins)
+        setHlData(calibRes.data.data)
         setPnlData(pnlRes.data.data)
         setClvData(clvRes.data.data)
       })
       .catch(() => setError('Failed to load backtest data'))
       .finally(() => setLoading(false))
+  }, [])
+
+  useEffect(() => {
+    api.get('/api/backtest/dm-test')
+      .then(r => setDmData(r.data.data))
+      .catch(() => {})
   }, [])
 
   if (loading) return (
@@ -128,7 +151,14 @@ export default function BacktestReport() {
   const seasonData = data.by_season.map(s => ({
     ...s,
     hit_rate_pct: +(s.hit_rate * 100).toFixed(1),
+    baseline_pct: 66.7,
   }))
+  const seasonMin = seasonData.length
+    ? Math.min(Math.floor(Math.min(...seasonData.map(s => s.hit_rate_pct))) - 3, 63)
+    : 55
+  const seasonMax = seasonData.length
+    ? Math.max(Math.ceil(Math.max(...seasonData.map(s => s.hit_rate_pct))) + 3, 71)
+    : 80
 
   const maxCount = Math.max(...(calibData ?? []).map(d => d.count))
   const chartData = (calibData ?? []).map(d => ({
@@ -224,23 +254,48 @@ export default function BacktestReport() {
         </div>
       </div>
 
-      {/* Hit rate by season */}
+      {/* Walk-forward accuracy line chart */}
       <div className="bg-gray-900 border border-gray-800 rounded-xl p-3 md:p-5">
-        <h2 className="text-base font-semibold text-white mb-4">Elo Walk-Forward Hit Rate by Season (non-draw matches)</h2>
-        <ResponsiveContainer width="100%" height={200}>
-          <BarChart data={seasonData} barCategoryGap="30%">
+        <h2 className="text-base font-semibold text-white mb-1">Walk-Forward Hit Rate by Season</h2>
+        <p className="text-xs text-gray-500 mb-4">Non-draw matches. Dashed line = 66.7% Elo long-run baseline.</p>
+        <ResponsiveContainer width="100%" height={220}>
+          <LineChart data={seasonData} margin={{ top: 8, right: 16, bottom: 8, left: 0 }}>
             <XAxis dataKey="season" tick={{ fill: '#9ca3af', fontSize: 12 }} axisLine={false} tickLine={false} />
             <YAxis
-              domain={[0, 100]}
+              domain={[seasonMin, seasonMax]}
               tickFormatter={v => `${v}%`}
               tick={{ fill: '#6b7280', fontSize: 11 }}
               axisLine={false}
               tickLine={false}
-              width={40}
+              width={44}
             />
-            <Tooltip content={<BarTooltip />} cursor={{ fill: 'rgba(255,255,255,0.03)' }} />
-            <Bar dataKey="hit_rate_pct" fill="#6366f1" radius={[4, 4, 0, 0]} />
-          </BarChart>
+            <Tooltip content={<SeasonTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.08)' }} />
+            <Legend
+              verticalAlign="top"
+              align="right"
+              iconType="plainline"
+              wrapperStyle={{ fontSize: 12, color: '#9ca3af', paddingBottom: 8 }}
+            />
+            <Line
+              name="Hit Rate"
+              type="monotone"
+              dataKey="hit_rate_pct"
+              stroke="#10b981"
+              strokeWidth={2}
+              dot={{ r: 4, fill: '#10b981', stroke: '#10b981' }}
+              activeDot={{ r: 6, fill: '#34d399', stroke: '#10b981' }}
+            />
+            <Line
+              name="Elo Baseline (66.7%)"
+              type="monotone"
+              dataKey="baseline_pct"
+              stroke="#6b7280"
+              strokeWidth={1.5}
+              strokeDasharray="5 4"
+              dot={false}
+              activeDot={false}
+            />
+          </LineChart>
         </ResponsiveContainer>
       </div>
 
@@ -303,6 +358,23 @@ export default function BacktestReport() {
               />
             </LineChart>
           </ResponsiveContainer>
+
+          {hlData && (
+            <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-xs border-t border-gray-800 pt-3">
+              <span className="text-gray-500">
+                HL χ²: <span className="font-mono text-gray-300">{hlData.hl_statistic?.toFixed(4)}</span>
+              </span>
+              <span className="text-gray-500">
+                p-value:{' '}
+                <span className={`font-mono ${hlData.hl_pvalue > 0.05 ? 'text-emerald-400' : 'text-red-400'}`}>
+                  {hlData.hl_pvalue?.toFixed(4)}
+                </span>
+              </span>
+              <span className={hlData.hl_pvalue > 0.05 ? 'text-emerald-400' : 'text-amber-400'}>
+                {hlData.hl_interpretation}
+              </span>
+            </div>
+          )}
         </div>
       )}
 
@@ -344,6 +416,46 @@ export default function BacktestReport() {
         </table>
         </div>
       </div>
+
+      {/* Diebold-Mariano test */}
+      {dmData && (
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-3 md:p-5">
+          <h2 className="text-base font-semibold text-white mb-1">Diebold-Mariano Test</h2>
+          <p className="text-xs text-gray-500 mb-4">
+            Tests whether the Ensemble model's forecast accuracy is significantly different from the Elo baseline.
+            Loss function: binary squared error per match.
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
+            <StatCard
+              label="DM Statistic"
+              value={dmData.dm_statistic?.toFixed(4)}
+              color={dmData.ensemble_better ? 'text-emerald-400' : 'text-red-400'}
+              sub="Negative = ensemble better"
+            />
+            <StatCard
+              label="p-value"
+              value={dmData.p_value?.toFixed(4)}
+              color={dmData.p_value < 0.05 ? 'text-emerald-400' : 'text-gray-400'}
+              sub={dmData.p_value < 0.05 ? 'Significant (α=0.05)' : 'Not significant'}
+            />
+            <StatCard
+              label="Ensemble Hit Rate"
+              value={`${dmData.ensemble_hit_rate?.toFixed(2)}%`}
+              color="text-emerald-400"
+              sub={`${dmData.n_matches?.toLocaleString()} matches`}
+            />
+            <StatCard
+              label="Elo Hit Rate"
+              value={`${dmData.elo_hit_rate?.toFixed(2)}%`}
+              color="text-gray-300"
+              sub="Baseline"
+            />
+          </div>
+          <p className={`text-sm ${dmData.p_value < 0.05 ? (dmData.ensemble_better ? 'text-emerald-400' : 'text-red-400') : 'text-gray-400'}`}>
+            {dmData.interpretation}
+          </p>
+        </div>
+      )}
 
       {/* Flat Stake P&L */}
       {clvData && (() => {
