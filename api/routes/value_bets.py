@@ -52,8 +52,12 @@ def get_summary():
     if "profit_flat" in df.columns and total_bets > 1:
         returns = df["profit_flat"]
         sharpe = round(returns.mean() / returns.std(), 4) if returns.std() > 0 else None
+        cumulative = np.cumsum(returns.values)
+        running_max = np.maximum.accumulate(cumulative)
+        max_drawdown = round(float((running_max - cumulative).max()), 4)
     else:
         sharpe = None
+        max_drawdown = None
 
     result = {
         "total_bets": total_bets,
@@ -61,6 +65,7 @@ def get_summary():
         "roi": roi,
         "mean_clv": mean_clv,
         "sharpe": sharpe,
+        "max_drawdown": max_drawdown,
     }
 
     return jsonify({

@@ -173,6 +173,24 @@ def kelly_simulation(bets: pd.DataFrame) -> pd.DataFrame:
 # 5. Accumulator builder
 # ---------------------------------------------------------------------------
 
+def _correlation_penalty(legs: list) -> float:
+    """
+    Returns a multiplier (0.70-1.0) to apply to combined EV.
+    Penalises accumulators with same-league legs on same date.
+    """
+    leagues = [lg.get("league", "") for lg in legs]
+    dates   = [str(lg.get("match_date", "")) for lg in legs]
+
+    penalty = 1.0
+    for i in range(len(legs)):
+        for j in range(i + 1, len(legs)):
+            if leagues[i] == leagues[j]:
+                penalty *= 0.92  # 8% penalty per same-league pair
+            if dates[i] == dates[j] and leagues[i] == leagues[j]:
+                penalty *= 0.95  # additional 5% for same day same league
+    return max(penalty, 0.70)  # floor at 70%
+
+
 def build_accumulators(bets: pd.DataFrame) -> pd.DataFrame:
     """
     For each matchday find the best 2-leg and 3-leg acca built from
@@ -199,26 +217,28 @@ def build_accumulators(bets: pd.DataFrame) -> pd.DataFrame:
                 for lg in legs:
                     c_odds *= lg["odds"]
                     c_p    *= lg["p_model"]
-                ev = c_odds * c_p - 1.0
+                penalty = _correlation_penalty(legs)
+                ev = (c_odds * c_p - 1.0) * penalty
                 if ev > best_ev:
                     best_ev  = ev
-                    best_row = (legs, c_odds, c_p, ev)
+                    best_row = (legs, c_odds, c_p, ev, penalty)
             return best_row
 
         for n_legs in (2, 3):
             result = _best_combo(n_legs)
             if result is None:
                 continue
-            legs, c_odds, c_p, ev = result
+            legs, c_odds, c_p, ev, penalty = result
             won     = all(lg["won"] for lg in legs)
             row     = {
-                "match_date":    date,
-                "n_legs":        n_legs,
-                "combined_odds": round(c_odds, 3),
-                "combined_p":    round(c_p, 4),
-                "acca_ev":       round(ev, 4),
-                "won":           int(won),
-                "profit_flat":   round(c_odds - 1.0 if won else -1.0, 4),
+                "match_date":         date,
+                "n_legs":             n_legs,
+                "combined_odds":      round(c_odds, 3),
+                "combined_p":         round(c_p, 4),
+                "acca_ev":            round(ev, 4),
+                "correlation_penalty": round(penalty, 4),
+                "won":                int(won),
+                "profit_flat":        round(c_odds - 1.0 if won else -1.0, 4),
             }
             for k, lg in enumerate(legs, start=1):
                 row[f"leg{k}_home"]    = lg["home_team"]
