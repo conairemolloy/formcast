@@ -50,7 +50,7 @@ DC_MAX_GOALS = 8
 RESULT_MAP = {"A": 0, "D": 1, "H": 2}
 RESULT_INV = {0: "A", 1: "D", 2: "H"}
 
-# Full 63-feature set used for XGBoost base model
+# Full 70-feature set used for XGBoost base model
 FEATURE_COLS = [
     "home_elo", "away_elo", "elo_diff", "home_expected",
     "home_elo_home", "home_elo_away", "away_elo_home", "away_elo_away", "venue_elo_diff",
@@ -81,6 +81,12 @@ FEATURE_COLS = [
     "home_win_rate", "away_win_rate", "venue_win_rate_diff",
     # Season phase
     "home_season_matches", "away_season_matches", "is_late_season",
+    # Clean sheet rate
+    "home_cs_rate", "away_cs_rate",
+    # Opponent-adjusted form
+    "home_opp_adj_form", "away_opp_adj_form",
+    # Relegation/title pressure
+    "home_pressure", "away_pressure", "pressure_diff",
 ]
 
 # 13-feature stack fed into the meta-learner
@@ -400,6 +406,12 @@ def build_all_features(
     team_home_record:   dict[str, list]   = {}   # team → [1,0,...] home W=1
     team_away_record:   dict[str, list]   = {}   # team → [1,0,...] away W=1
     team_season_matches: dict[tuple, int] = {}   # (team, season) → match count
+    team_cs_home: dict[str, list] = {}           # home clean sheets (1=cs, 0=conceded)
+    team_cs_away: dict[str, list] = {}           # away clean sheets
+    team_opp_adj_form: dict[str, list] = {}      # result_value × opponent_strength_multiplier
+    team_season_points: dict[tuple, int] = {}    # (team, season, league) → points
+    team_season_gd: dict[tuple, int] = {}        # (team, season, league) → goal difference
+    league_season_teams: dict[tuple, list] = {}  # (season, league) → list of teams
 
     # Rolling DC state (last DC_WINDOW goals)
     dc_scored:   dict[str, list] = defaultdict(list)
@@ -493,6 +505,28 @@ def build_all_features(
         away_season_matches = team_season_matches.get((away, season), 0)
         is_late_season      = 1 if min(home_season_matches, away_season_matches) >= 28 else 0
 
+        # Clean sheet rates (last 10 home/away matches)
+        home_cs_rate = float(np.mean(team_cs_home.get(home, [])[-10:])) if team_cs_home.get(home) else 0.28
+        away_cs_rate = float(np.mean(team_cs_away.get(away, [])[-10:])) if team_cs_away.get(away) else 0.22
+
+        # Opponent-adjusted form (last 10)
+        WINDOW = 10
+        home_opp_adj = float(np.mean(team_opp_adj_form.get(home, [])[-WINDOW:])) if team_opp_adj_form.get(home) else 0.0
+        away_opp_adj = float(np.mean(team_opp_adj_form.get(away, [])[-WINDOW:])) if team_opp_adj_form.get(away) else 0.0
+
+        # Relegation/title pressure from current season standings
+        league_teams = league_season_teams.get((season, league), [])
+        if len(league_teams) >= 4:
+            all_pts = [(t, team_season_points.get((t, season, league), 0)) for t in league_teams]
+            all_pts.sort(key=lambda x: -x[1])
+            home_pos = next((i + 1 for i, (t, _) in enumerate(all_pts) if t == home), len(league_teams) // 2)
+            away_pos = next((i + 1 for i, (t, _) in enumerate(all_pts) if t == away), len(league_teams) // 2)
+            n_teams = len(league_teams)
+            home_pressure = 1 if home_pos <= 3 else (-1 if home_pos >= n_teams - 2 else 0)
+            away_pressure = 1 if away_pos <= 3 else (-1 if away_pos >= n_teams - 2 else 0)
+        else:
+            home_pressure, away_pressure = 0, 0
+
         rows.append({
             # Metadata
             "match_date": date, "season": season, "league": league,
@@ -569,6 +603,16 @@ def build_all_features(
             "home_season_matches": home_season_matches,
             "away_season_matches": away_season_matches,
             "is_late_season":      is_late_season,
+            # Clean sheet rate
+            "home_cs_rate": home_cs_rate,
+            "away_cs_rate": away_cs_rate,
+            # Opponent-adjusted form
+            "home_opp_adj_form": home_opp_adj,
+            "away_opp_adj_form": away_opp_adj,
+            # Relegation/title pressure
+            "home_pressure": home_pressure,
+            "away_pressure": away_pressure,
+            "pressure_diff": home_pressure - away_pressure,
             # Target
             "result": result,
         })
@@ -641,6 +685,31 @@ def build_all_features(
         team_away_record.setdefault(away, []).append(1 if result == "A" else 0)
         team_season_matches[(home, season)] = home_season_matches + 1
         team_season_matches[(away, season)] = away_season_matches + 1
+
+        # Update clean sheet records
+        team_cs_home.setdefault(home, []).append(1 if ag == 0 else 0)
+        team_cs_away.setdefault(away, []).append(1 if hg == 0 else 0)
+
+        # Update opponent-adjusted form
+        elo_ratio_h = away_elo / max(home_elo, 1)
+        elo_ratio_a = home_elo / max(away_elo, 1)
+        h_result_val = 1.0 if result == "H" else (0.5 if result == "D" else 0.0)
+        a_result_val = 1.0 if result == "A" else (0.5 if result == "D" else 0.0)
+        team_opp_adj_form.setdefault(home, []).append(h_result_val * elo_ratio_h)
+        team_opp_adj_form.setdefault(away, []).append(a_result_val * elo_ratio_a)
+
+        # Update season standings
+        pts_h = 3 if result == "H" else (1 if result == "D" else 0)
+        pts_a = 3 if result == "A" else (1 if result == "D" else 0)
+        key_h = (home, season, league)
+        key_a = (away, season, league)
+        team_season_points[key_h] = team_season_points.get(key_h, 0) + pts_h
+        team_season_points[key_a] = team_season_points.get(key_a, 0) + pts_a
+        sk = (season, league)
+        if home not in league_season_teams.get(sk, []):
+            league_season_teams.setdefault(sk, []).append(home)
+        if away not in league_season_teams.get(sk, []):
+            league_season_teams.setdefault(sk, []).append(away)
 
     feat_df = pd.DataFrame(rows)
     if _created_encoder:
