@@ -1,5 +1,7 @@
 from datetime import datetime, timezone
+import json
 import os
+import joblib
 import pandas as pd
 from flask import Blueprint, jsonify, request, current_app
 from scipy.stats import chi2, norm
@@ -188,6 +190,53 @@ def get_dm_test():
             "n_matches":         n,
             "ensemble_hit_rate": round(float(df["correct_ensemble"].mean() * 100), 2),
             "elo_hit_rate":      round(float(df["correct_elo"].mean() * 100), 2),
+        },
+    })
+
+
+@backtest_bp.get("/backtest/feature-importance")
+def get_feature_importance():
+    models_dir = os.path.normpath(
+        os.path.join(os.path.dirname(__file__), "..", "..", "models")
+    )
+    model_path   = os.path.join(models_dir, "xgb_ensemble.pkl")
+    feature_path = os.path.join(models_dir, "feature_cols.json")
+
+    if not os.path.exists(model_path):
+        return jsonify({"success": False, "error": "xgb_ensemble.pkl not found"}), 404
+    if not os.path.exists(feature_path):
+        return jsonify({"success": False, "error": "feature_cols.json not found"}), 404
+
+    if "xgb_ensemble" not in current_app.config:
+        current_app.config["xgb_ensemble"]      = joblib.load(model_path)
+        with open(feature_path) as f:
+            current_app.config["xgb_feature_cols"] = json.load(f)
+
+    model        = current_app.config["xgb_ensemble"]
+    feature_cols = current_app.config["xgb_feature_cols"]
+
+    # Model trained on numpy arrays → XGBoost internal names are f0, f1, …
+    raw_scores = model.get_booster().get_score(importance_type="gain")
+
+    scores = {
+        name: float(raw_scores.get(f"f{i}", 0.0))
+        for i, name in enumerate(feature_cols)
+    }
+    total      = sum(scores.values()) or 1.0
+    normalized = {k: v / total for k, v in scores.items()}
+
+    sorted_features = sorted(normalized.items(), key=lambda x: x[1], reverse=True)
+    top30 = [
+        {"feature": name, "importance": round(imp, 6), "rank": rank + 1}
+        for rank, (name, imp) in enumerate(sorted_features[:30])
+    ]
+
+    return jsonify({
+        "success": True,
+        "data": {
+            "features":   top30,
+            "method":     "XGBoost gain",
+            "n_features": len(feature_cols),
         },
     })
 
