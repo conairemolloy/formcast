@@ -59,6 +59,15 @@ jobs:
       - name: Retrain LSTM
         run: python scripts/lstm_model.py
 
+      - name: Run Bradley-Terry model
+        run: python scripts/bradley_terry.py
+
+      - name: Run Dixon-Coles model
+        run: python scripts/dixon_coles.py
+
+      - name: Retrain ensemble (XGBoost + meta-learner)
+        run: python scripts/ensemble_v2.py
+
       - name: Generate ensemble predictions for upcoming fixtures
         run: python scripts/predict_upcoming.py
 
