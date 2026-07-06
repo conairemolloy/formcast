@@ -33,6 +33,7 @@
 - International Ratings page — confederation filtering (UEFA/CONMEBOL/CONCACAF/CAF/AFC/OFC), 336 teams, top-level nav dropdown
 - World Cup value bets — live odds via The Odds API (soccer_fifa_world_cup), real international Elo-based edges, free tier usage (~30 credits/month)
 - CI/CD pipeline fully healthy — fixed 3-week silent failure (missing joblib/xgboost in requirements.txt), added retry logic with exponential backoff for live fixture fetching
+- LSTM predictions in ensemble stack — 14-feature meta-learner, 66.83% walk-forward backtest
 
 ---
 
@@ -280,8 +281,16 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [x] Feedforward: Input → Dense(256,ReLU) → BN → Dropout(0.3) → Dense(128,ReLU) → Dense(3,Softmax)
 - [x] LSTM: last 5 match feature vectors → LSTM(128) → Dense(64) → Dense(1,σ)
 
-- [ ] Graph Neural Network: teams as nodes, matches as edges, GCN propagation
-- [ ] Transformer: self-attention over match history sequence
+- [x] Graph Neural Network: teams as nodes, matches as edges, GCN propagation
+- [x] Transformer: self-attention over match history sequence
+
+### Phase 3 Completion — July 2026
+- [x] Feedforward NN retrained with 63-feature set (was 48), NaN result guard added
+- [x] LSTM retrained with NaN guard — 53.6% hit rate vs 51.4% Elo baseline, Brier 0.584
+- [x] LSTM added to ensemble meta-learner stack as 14th feature (p_home_lstm)
+- [x] Both NNs wired into weekly GitHub Actions pipeline
+- [x] Walk-forward backtest improved to 66.83% vs 66.71% Elo — new best result
+- [x] ECE (Expected Calibration Error) improved to 0.0126 — well calibrated
 
 ---
 
