@@ -1,0 +1,252 @@
+{
+  "summary": {
+    "n_bets": 3829,
+    "date_range_start": "2024-01-21",
+    "date_range_end": "2026-05-24",
+    "roi_kelly_pct": -19.3,
+    "roi_flat_pct": -15.76,
+    "sharpe_annualised": -0.946,
+    "max_drawdown_pct": 100.0,
+    "win_rate_pct": 31.91,
+    "avg_odds": 3.274,
+    "avg_edge_pct": 8.43,
+    "mean_clv": 0.184,
+    "total_staked": 5180.12,
+    "total_profit_kelly": -1000.0,
+    "total_profit_flat": -603.52,
+    "starting_bankroll": 1000.0,
+    "ending_bankroll": 0.0,
+    "bankroll_growth_pct": -100.0
+  },
+  "by_outcome": {
+    "H": {
+      "n_bets": 2274,
+      "win_rate_pct": 35.88,
+      "roi_flat_pct": -14.55,
+      "sharpe_flat": -0.115,
+      "max_drawdown_flat_units": 337.1,
+      "avg_odds": 2.812,
+      "avg_edge_pct": 8.77,
+      "mean_clv": 0.1649,
+      "total_profit_flat": -330.96
+    },
+    "D": {
+      "n_bets": 337,
+      "win_rate_pct": 16.32,
+      "roi_flat_pct": -27.16,
+      "sharpe_flat": -0.161,
+      "max_drawdown_flat_units": 121.29,
+      "avg_odds": 4.814,
+      "avg_edge_pct": 6.28,
+      "mean_clv": 0.2145,
+      "total_profit_flat": -91.54
+    },
+    "A": {
+      "n_bets": 1218,
+      "win_rate_pct": 28.82,
+      "roi_flat_pct": -14.86,
+      "sharpe_flat": -0.099,
+      "max_drawdown_flat_units": 207.86,
+      "avg_odds": 3.712,
+      "avg_edge_pct": 8.39,
+      "mean_clv": 0.2113,
+      "total_profit_flat": -181.02
+    }
+  },
+  "by_league": {
+    "Championship": {
+      "n_bets": 545,
+      "win_rate_pct": 27.52,
+      "roi_flat_pct": -14.25,
+      "sharpe_flat": -0.094,
+      "max_drawdown_flat_units": 82.78,
+      "avg_odds": 3.705,
+      "avg_edge_pct": 8.16,
+      "mean_clv": 0.2019,
+      "total_profit_flat": -77.65
+    },
+    "Segunda": {
+      "n_bets": 517,
+      "win_rate_pct": 27.27,
+      "roi_flat_pct": -11.42,
+      "sharpe_flat": -0.074,
+      "max_drawdown_flat_units": 84.24,
+      "avg_odds": 3.758,
+      "avg_edge_pct": 8.73,
+      "mean_clv": 0.2236,
+      "total_profit_flat": -59.03
+    },
+    "SerieB": {
+      "n_bets": 388,
+      "win_rate_pct": 27.58,
+      "roi_flat_pct": -25.49,
+      "sharpe_flat": -0.197,
+      "max_drawdown_flat_units": 102.97,
+      "avg_odds": 3.229,
+      "avg_edge_pct": 8.85,
+      "mean_clv": 0.1905,
+      "total_profit_flat": -98.9
+    },
+    "SerieA": {
+      "n_bets": 352,
+      "win_rate_pct": 38.07,
+      "roi_flat_pct": -22.11,
+      "sharpe_flat": -0.2,
+      "max_drawdown_flat_units": 79.13,
+      "avg_odds": 2.802,
+      "avg_edge_pct": 8.61,
+      "mean_clv": 0.1637,
+      "total_profit_flat": -77.83
+    },
+    "EPL": {
+      "n_bets": 347,
+      "win_rate_pct": 32.85,
+      "roi_flat_pct": -12.35,
+      "sharpe_flat": -0.082,
+      "max_drawdown_flat_units": 52.12,
+      "avg_odds": 3.357,
+      "avg_edge_pct": 8.07,
+      "mean_clv": 0.1856,
+      "total_profit_flat": -42.87
+    },
+    "Ligue2": {
+      "n_bets": 328,
+      "win_rate_pct": 29.88,
+      "roi_flat_pct": -11.98,
+      "sharpe_flat": -0.083,
+      "max_drawdown_flat_units": 46.5,
+      "avg_odds": 3.174,
+      "avg_edge_pct": 8.71,
+      "mean_clv": 0.1708,
+      "total_profit_flat": -39.29
+    },
+    "LaLiga": {
+      "n_bets": 318,
+      "win_rate_pct": 37.11,
+      "roi_flat_pct": -14.71,
+      "sharpe_flat": -0.117,
+      "max_drawdown_flat_units": 53.15,
+      "avg_odds": 2.965,
+      "avg_edge_pct": 8.34,
+      "mean_clv": 0.1672,
+      "total_profit_flat": -46.79
+    },
+    "Bundesliga2": {
+      "n_bets": 300,
+      "win_rate_pct": 34.33,
+      "roi_flat_pct": -12.58,
+      "sharpe_flat": -0.097,
+      "max_drawdown_flat_units": 54.04,
+      "avg_odds": 2.938,
+      "avg_edge_pct": 8.62,
+      "mean_clv": 0.1704,
+      "total_profit_flat": -37.74
+    },
+    "Bundesliga": {
+      "n_bets": 284,
+      "win_rate_pct": 32.75,
+      "roi_flat_pct": -26.76,
+      "sharpe_flat": -0.22,
+      "max_drawdown_flat_units": 89.55,
+      "avg_odds": 3.339,
+      "avg_edge_pct": 8.59,
+      "mean_clv": 0.1886,
+      "total_profit_flat": -76.01
+    },
+    "Ligue1": {
+      "n_bets": 251,
+      "win_rate_pct": 32.67,
+      "roi_flat_pct": -4.66,
+      "sharpe_flat": -0.03,
+      "max_drawdown_flat_units": 28.63,
+      "avg_odds": 3.288,
+      "avg_edge_pct": 7.72,
+      "mean_clv": 0.1726,
+      "total_profit_flat": -11.69
+    },
+    "Other": {
+      "n_bets": 199,
+      "win_rate_pct": 41.21,
+      "roi_flat_pct": -17.95,
+      "sharpe_flat": -0.162,
+      "max_drawdown_flat_units": 44.29,
+      "avg_odds": 2.681,
+      "avg_edge_pct": 7.9,
+      "mean_clv": 0.1298,
+      "total_profit_flat": -35.72
+    }
+  },
+  "by_edge_bucket": {
+    "5-10%": {
+      "n_bets": 2909,
+      "win_rate_pct": 32.18,
+      "roi_flat_pct": -14.87,
+      "sharpe_flat": -0.106,
+      "max_drawdown_flat_units": 461.85,
+      "avg_odds": 3.335,
+      "avg_edge_pct": 6.94,
+      "mean_clv": 0.1522,
+      "total_profit_flat": -432.64
+    },
+    "10-15%": {
+      "n_bets": 752,
+      "win_rate_pct": 31.65,
+      "roi_flat_pct": -17.32,
+      "sharpe_flat": -0.129,
+      "max_drawdown_flat_units": 145.15,
+      "avg_odds": 3.086,
+      "avg_edge_pct": 11.91,
+      "mean_clv": 0.259,
+      "total_profit_flat": -130.27
+    },
+    "15%+": {
+      "n_bets": 168,
+      "win_rate_pct": 28.57,
+      "roi_flat_pct": -24.17,
+      "sharpe_flat": -0.191,
+      "max_drawdown_flat_units": 48.19,
+      "avg_odds": 3.063,
+      "avg_edge_pct": 18.61,
+      "mean_clv": 0.3994,
+      "total_profit_flat": -40.61
+    }
+  },
+  "kelly_sensitivity": {
+    "0.10x Kelly": {
+      "kelly_multiplier": 0.1,
+      "ending_bankroll": 1.31,
+      "bankroll_growth_pct": -99.87,
+      "roi_pct": -19.19,
+      "max_drawdown_pct": 99.88,
+      "sharpe_annualised": -2.445,
+      "n_bets_placed": 3817
+    },
+    "0.25x Kelly": {
+      "kelly_multiplier": 0.25,
+      "ending_bankroll": 0.0,
+      "bankroll_growth_pct": -100.0,
+      "roi_pct": -20.57,
+      "max_drawdown_pct": 100.0,
+      "sharpe_annualised": -1.378,
+      "n_bets_placed": 3817
+    },
+    "0.50x Kelly": {
+      "kelly_multiplier": 0.5,
+      "ending_bankroll": 0.0,
+      "bankroll_growth_pct": -100.0,
+      "roi_pct": -19.3,
+      "max_drawdown_pct": 100.0,
+      "sharpe_annualised": -0.946,
+      "n_bets_placed": 3817
+    },
+    "1.00x Kelly": {
+      "kelly_multiplier": 1.0,
+      "ending_bankroll": 0.0,
+      "bankroll_growth_pct": -100.0,
+      "roi_pct": -19.76,
+      "max_drawdown_pct": 100.0,
+      "sharpe_annualised": -0.824,
+      "n_bets_placed": 3817
+    }
+  }
+}
