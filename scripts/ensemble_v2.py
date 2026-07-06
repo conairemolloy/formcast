@@ -655,11 +655,11 @@ def build_all_features(
 def _make_xgb() -> XGBClassifier:
     return XGBClassifier(
         n_estimators=500,
-        max_depth=5,
+        max_depth=4,
         learning_rate=0.03,
-        subsample=0.8,
+        subsample=0.9,
         colsample_bytree=0.7,
-        min_child_weight=3,
+        min_child_weight=1,
         eval_metric="mlogloss",
         random_state=42,
     )
@@ -668,7 +668,7 @@ def _make_xgb() -> XGBClassifier:
 def _make_draw_xgb() -> XGBClassifier:
     return XGBClassifier(
         n_estimators=300, max_depth=4, learning_rate=0.05,
-        subsample=0.8, colsample_bytree=0.8,
+        subsample=0.9, colsample_bytree=0.8,
         eval_metric="logloss", random_state=42, n_jobs=-1,
     )
 
