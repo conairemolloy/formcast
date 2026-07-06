@@ -34,6 +34,7 @@
 - World Cup value bets — live odds via The Odds API (soccer_fifa_world_cup), real international Elo-based edges, free tier usage (~30 credits/month)
 - CI/CD pipeline fully healthy — fixed 3-week silent failure (missing joblib/xgboost in requirements.txt), added retry logic with exponential backoff for live fixture fetching
 - LSTM predictions in ensemble stack — 14-feature meta-learner, 66.83% walk-forward backtest
+- 70-feature ensemble, 15-feature meta-learner stack, 66.92% walk-forward backtest, ECE 0.0098
 
 ---
 
@@ -179,8 +180,8 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [x] Home/away Elo split — maintain separate home and away Elo ratings per team beyond flat +50. Real signal especially for teams with strong home/weak away records (PRIORITY)
 - [x] Referee tendencies — wire up referee column already in results.csv. Cards per game, fouls per game, home bias score per referee. Data exists, just not wired in (PRIORITY)
 - [x] Venue-specific home win rate — per-team actual home win rate, not just global +50 constant
-- [ ] Relegation/title pressure — flag teams in bottom 3 or top 3 with <10 games remaining, measurable performance change
-- [ ] Opponent-adjusted form — distinguish wins vs top-half teams from wins vs relegation fodder
+- [x] Relegation/title pressure — flag teams in bottom 3 or top 3 with <10 games remaining, measurable performance change
+- [x] Opponent-adjusted form — distinguish wins vs top-half teams from wins vs relegation fodder
 - [x] Season opener variance — widen confidence intervals for first 5 games of season, less predictable (is_early_season flag in all market models)
 - [ ] Early season Elo regression — regress all teams toward league mean at season start
 - [ ] Form-weighted late season — increase EWM weight of last 5 matches in final 10 gameweeks
@@ -215,7 +216,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Home/away Glicko-2 split — same as Elo split but with uncertainty tracking per venue type
 - [ ] Time-decay on xG — older xG data weighted less than recent, currently flat window
 - [ ] Bayesian draw model — model draw probability as a function of match competitiveness and historical draw rates
-- [x] Ensemble calibration — investigated: Platt scaling tested, ECE 0.0130 already well-calibrated, no isotonic regression needed
+- [x] Ensemble calibration (Platt scaling) — investigated, ECE 0.0098 already excellent
 - [ ] League strength adjustment — when teams move between leagues, adjust Elo to account for quality difference
 - [ ] Cross-league Elo normalisation — ensure EPL Elo 1600 is comparable to Bundesliga 1600
 - [ ] Feature interaction terms — explicit interaction features (elo_diff × form_diff, referee_cards × fatigue) for XGBoost
@@ -285,12 +286,13 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [x] Transformer: self-attention over match history sequence
 
 ### Phase 3 Completion — July 2026
-- [x] Feedforward NN retrained with 63-feature set (was 48), NaN result guard added
-- [x] LSTM retrained with NaN guard — 53.6% hit rate vs 51.4% Elo baseline, Brier 0.584
-- [x] LSTM added to ensemble meta-learner stack as 14th feature (p_home_lstm)
-- [x] Both NNs wired into weekly GitHub Actions pipeline
-- [x] Walk-forward backtest improved to 66.83% vs 66.71% Elo — new best result
-- [x] ECE (Expected Calibration Error) improved to 0.0126 — well calibrated
+- [x] Feedforward NN retrained with 70-feature set, NaN guard added
+- [x] LSTM retrained with NaN guard — 53.6% hit rate vs 51.4% Elo, Brier 0.584
+- [x] LSTM added to ensemble stack as 14th meta-feature
+- [x] BTL added to ensemble stack as 15th meta-feature
+- [x] XGBoost hyperparameters optimized via random search (30 trials) — max_depth=4, subsample=0.9, min_child_weight=1
+- [x] Both NNs wired into weekly pipeline
+- [x] Final walk-forward backtest: 66.92% vs 66.71% Elo, ECE 0.0098, 70 features, 15 stack features
 
 ---
 
