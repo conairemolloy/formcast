@@ -473,6 +473,43 @@ def get_goals():
     })
 
 
+@markets_bp.get("/dutch")
+def dutch_calculator():
+    """
+    GET /api/markets/dutch?stake=100&home_odds=2.5&draw_odds=3.4&away_odds=2.8
+    &home_prob=0.45&draw_prob=0.25&away_prob=0.30
+    """
+    try:
+        stake = float(request.args.get("stake", 100))
+        home_odds = float(request.args.get("home_odds", 0))
+        draw_odds = float(request.args.get("draw_odds", 0))
+        away_odds = float(request.args.get("away_odds", 0))
+        home_prob = float(request.args.get("home_prob", 1/home_odds if home_odds else 0.33))
+        draw_prob = float(request.args.get("draw_prob", 1/draw_odds if draw_odds else 0.33))
+        away_prob = float(request.args.get("away_prob", 1/away_odds if away_odds else 0.34))
+
+        if not all([home_odds, draw_odds, away_odds]):
+            return jsonify({"success": False, "error": "home_odds, draw_odds, away_odds required"}), 400
+    except (ValueError, ZeroDivisionError) as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+
+    from scripts.dutching_arbitrage import dutch_stakes, to_american, to_fractional
+    outcomes = [
+        {"name": "Home", "odds": home_odds, "model_prob": home_prob},
+        {"name": "Draw", "odds": draw_odds, "model_prob": draw_prob},
+        {"name": "Away", "odds": away_odds, "model_prob": away_prob},
+    ]
+    result = dutch_stakes(outcomes, stake)
+
+    # Add odds format conversions
+    result["odds_formats"] = {
+        "home": {"decimal": home_odds, "american": to_american(1/home_odds), "fractional": to_fractional(1/home_odds)},
+        "draw": {"decimal": draw_odds, "american": to_american(1/draw_odds), "fractional": to_fractional(1/draw_odds)},
+        "away": {"decimal": away_odds, "american": to_american(1/away_odds), "fractional": to_fractional(1/away_odds)},
+    }
+    return jsonify({"success": True, "data": result})
+
+
 @markets_bp.get("/preview")
 def get_preview():
     home, away, league, bad = _require_teams()
