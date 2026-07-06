@@ -300,14 +300,23 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [x] Value bet screener (EV = P_model × odds - 1, threshold > 5%)
 - [x] Kelly criterion stake sizing (half-Kelly)
 - [x] Accumulator builder — optimal leg selection by EV
-- [ ] Accumulator independence testing (same-league correlation correction)
-- [ ] Accumulator EV matrix UI — best combinations visualised as grid
+- [x] Accumulator independence testing (same-league correlation correction)
+- [x] Accumulator EV matrix UI — best combinations visualised as grid
 - [x] Closing line value (CLV) tracking — mean(log(P_model / P_close))
 - [x] SHA256 prediction accountability ledger (hash-stamped pre-match)
-- [ ] Sharpe ratio + max drawdown on simulated flat-stake strategy
-- [ ] Dutching calculator — optimal stake distribution across multiple outcomes
-- [ ] Arbitrage detector — Σ(1/odds) < 1 across bookmakers, flag instantly
+- [x] Sharpe ratio + max drawdown on simulated flat-stake strategy
+- [x] Dutching calculator — optimal stake distribution across multiple outcomes
+- [x] Arbitrage detector — Σ(1/odds) < 1 across bookmakers, flag instantly
 - [x] Match deep-dive page — win/draw/loss probabilities, goals markets, correct scores, BTTS, corners markets, cards markets, H2H stats
+
+### Phase 4 Completion — July 2026
+- [x] Max drawdown added to /value-bets/summary API response
+- [x] Accumulator same-league correlation correction — 8% penalty per same-league pair, 5% additional for same day
+- [x] Accumulator EV matrix UI — collapsible 2-leg combination grid, colour-coded EV, correlation-adjusted
+- [x] Dutching calculator — optimal stake distribution, guaranteed return calculation, odds format display
+- [x] Arbitrage detector — Σ(1/odds) < 1 check across bookmakers, stakes for target profit
+- [x] Sharpe ratio + max drawdown on flat-stake strategy — both in API and terminal report
+- [x] Portfolio analytics — P&L tracking, Kelly sensitivity, market/league/edge breakdowns
 
 ---
 
