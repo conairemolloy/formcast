@@ -14,16 +14,14 @@ const LEAGUE_COLORS = {
   Ligue1:     '#ef4444',
 }
 
-const MODEL_COMPARISON = [
-  { model: 'Ensemble v2',   hitRate: 49.35, brier: 0.177, predictions: 10099 },
-  { model: 'XGBoost',       hitRate: 49.07, brier: 0.178, predictions: 10099 },
-  { model: 'Elo (baseline)',hitRate: 49.05, brier: 0.162, predictions: 10099 },
-  { model: 'Glicko-2',      hitRate: 47.55, brier: 0.174, predictions: 10099 },
-  { model: 'Dixon-Coles',   hitRate: 46.95, brier: 0.191, predictions: 10099 },
-]
-
-const BEST_HIT_RATE = Math.max(...MODEL_COMPARISON.map(m => m.hitRate))
-const BEST_BRIER    = Math.min(...MODEL_COMPARISON.map(m => m.brier))
+// Brier scores have no live API source — kept as reference values
+const MODEL_BRIER = {
+  'Ensemble v2':    0.177,
+  'XGBoost':        0.178,
+  'Elo (baseline)': 0.162,
+  'Glicko-2':       0.174,
+  'Dixon-Coles':    0.191,
+}
 
 function StatCard({ label, value, color, sub }) {
   return (
@@ -73,6 +71,16 @@ const CalibTooltip = ({ active, payload }) => {
   )
 }
 
+const FeatImportTooltip = ({ active, payload, label }) => {
+  if (!active || !payload?.length) return null
+  return (
+    <div className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm">
+      <p className="text-gray-300 font-medium">{label}</p>
+      <p className="text-emerald-400">{(payload[0].value * 100).toFixed(2)}% gain share</p>
+    </div>
+  )
+}
+
 const ClvTooltip = ({ active, payload }) => {
   if (!active || !payload?.length) return null
   const d = payload[0]?.payload
@@ -102,14 +110,15 @@ const PnlTooltip = ({ active, payload }) => {
 }
 
 export default function BacktestReport() {
-  const [data, setData]           = useState(null)
-  const [calibData, setCalibData] = useState(null)
-  const [hlData, setHlData]       = useState(null)
-  const [pnlData, setPnlData]     = useState(null)
-  const [clvData, setClvData]     = useState(null)
-  const [dmData, setDmData]       = useState(null)
-  const [loading, setLoading]     = useState(true)
-  const [error, setError]         = useState(null)
+  const [data, setData]                     = useState(null)
+  const [calibData, setCalibData]           = useState(null)
+  const [hlData, setHlData]                 = useState(null)
+  const [pnlData, setPnlData]               = useState(null)
+  const [clvData, setClvData]               = useState(null)
+  const [dmData, setDmData]                 = useState(null)
+  const [featImportance, setFeatImportance] = useState(null)
+  const [loading, setLoading]               = useState(true)
+  const [error, setError]                   = useState(null)
 
   useEffect(() => {
     Promise.all([
@@ -132,6 +141,12 @@ export default function BacktestReport() {
   useEffect(() => {
     api.get('/api/backtest/dm-test')
       .then(r => setDmData(r.data.data))
+      .catch(() => {})
+  }, [])
+
+  useEffect(() => {
+    api.get('/api/backtest/feature-importance')
+      .then(r => setFeatImportance(r.data.data))
       .catch(() => {})
   }, [])
 
@@ -168,6 +183,24 @@ export default function BacktestReport() {
     perfect: +(d.mean_predicted * 100).toFixed(1),
     count:   d.count,
   }))
+
+  // Ensemble and Elo hit rates come from the live DM test endpoint;
+  // XGB/G2/DC hit rates have no dedicated API so use reference values.
+  const comparisonRows = dmData ? [
+    { model: 'Ensemble v2',    hitRate: dmData.ensemble_hit_rate, brier: MODEL_BRIER['Ensemble v2'],    predictions: dmData.n_matches },
+    { model: 'XGBoost',        hitRate: 49.07,                    brier: MODEL_BRIER['XGBoost'],        predictions: dmData.n_matches },
+    { model: 'Elo (baseline)', hitRate: dmData.elo_hit_rate,      brier: MODEL_BRIER['Elo (baseline)'], predictions: dmData.n_matches },
+    { model: 'Glicko-2',      hitRate: 47.55,                    brier: MODEL_BRIER['Glicko-2'],      predictions: dmData.n_matches },
+    { model: 'Dixon-Coles',   hitRate: 46.95,                    brier: MODEL_BRIER['Dixon-Coles'],   predictions: dmData.n_matches },
+  ] : [
+    { model: 'Ensemble v2',    hitRate: 49.35, brier: 0.177, predictions: 10099 },
+    { model: 'XGBoost',        hitRate: 49.07, brier: 0.178, predictions: 10099 },
+    { model: 'Elo (baseline)', hitRate: 49.05, brier: 0.162, predictions: 10099 },
+    { model: 'Glicko-2',      hitRate: 47.55, brier: 0.174, predictions: 10099 },
+    { model: 'Dixon-Coles',   hitRate: 46.95, brier: 0.191, predictions: 10099 },
+  ]
+  const bestHitRate = Math.max(...comparisonRows.map(m => m.hitRate))
+  const bestBrier   = Math.min(...comparisonRows.map(m => m.brier))
 
   const ModelDot = (props) => {
     const { cx, cy, payload } = props
@@ -358,23 +391,77 @@ export default function BacktestReport() {
               />
             </LineChart>
           </ResponsiveContainer>
+        </div>
+      )}
 
-          {hlData && (
-            <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-xs border-t border-gray-800 pt-3">
-              <span className="text-gray-500">
-                HL χ²: <span className="font-mono text-gray-300">{hlData.hl_statistic?.toFixed(4)}</span>
-              </span>
-              <span className="text-gray-500">
-                p-value:{' '}
+      {/* Statistical Tests — Hosmer-Lemeshow + Diebold-Mariano */}
+      {hlData && (
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-3 md:p-5">
+          <h2 className="text-base font-semibold text-white mb-4">Statistical Tests</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            {/* Hosmer-Lemeshow */}
+            <div className="space-y-2">
+              <h3 className="text-sm font-medium text-gray-400 mb-3">Hosmer-Lemeshow Calibration Test</h3>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-500">χ² statistic</span>
+                <span className="font-mono text-gray-300">{hlData.hl_statistic?.toFixed(4)}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-500">p-value</span>
                 <span className={`font-mono ${hlData.hl_pvalue > 0.05 ? 'text-emerald-400' : 'text-red-400'}`}>
                   {hlData.hl_pvalue?.toFixed(4)}
                 </span>
-              </span>
-              <span className={hlData.hl_pvalue > 0.05 ? 'text-emerald-400' : 'text-amber-400'}>
-                {hlData.hl_interpretation}
-              </span>
+              </div>
+              <div className="flex items-center gap-2 pt-2 mt-2 border-t border-gray-800">
+                <span className={`font-bold ${hlData.hl_pvalue > 0.05 ? 'text-emerald-400' : 'text-red-400'}`}>
+                  {hlData.hl_pvalue > 0.05 ? '✓' : '✗'}
+                </span>
+                <span className={`text-sm ${hlData.hl_pvalue > 0.05 ? 'text-emerald-400' : 'text-amber-400'}`}>
+                  {hlData.hl_interpretation}
+                </span>
+              </div>
             </div>
-          )}
+
+            {/* Diebold-Mariano */}
+            {dmData ? (
+              <div className="space-y-2">
+                <h3 className="text-sm font-medium text-gray-400 mb-3">Diebold-Mariano Significance Test</h3>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-500">DM statistic</span>
+                  <span className={`font-mono ${dmData.ensemble_better ? 'text-emerald-400' : 'text-red-400'}`}>
+                    {dmData.dm_statistic?.toFixed(4)}
+                  </span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-500">p-value</span>
+                  <span className={`font-mono ${dmData.p_value < 0.05 ? 'text-emerald-400' : 'text-gray-400'}`}>
+                    {dmData.p_value?.toFixed(4)}
+                  </span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-500">Ensemble hit rate</span>
+                  <span className="font-mono text-emerald-400">{dmData.ensemble_hit_rate?.toFixed(2)}%</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-500">Elo hit rate</span>
+                  <span className="font-mono text-gray-300">{dmData.elo_hit_rate?.toFixed(2)}%</span>
+                </div>
+                <div className="flex items-center gap-2 pt-2 mt-2 border-t border-gray-800">
+                  <span className={`font-bold ${dmData.p_value < 0.05 ? (dmData.ensemble_better ? 'text-emerald-400' : 'text-red-400') : 'text-gray-500'}`}>
+                    {dmData.p_value < 0.05 ? (dmData.ensemble_better ? '✓' : '✗') : '—'}
+                  </span>
+                  <span className={`text-sm ${dmData.p_value < 0.05 ? (dmData.ensemble_better ? 'text-emerald-400' : 'text-red-400') : 'text-gray-400'}`}>
+                    {dmData.interpretation}
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center text-gray-600 text-sm">
+                DM test data unavailable
+              </div>
+            )}
+          </div>
         </div>
       )}
 
@@ -385,79 +472,80 @@ export default function BacktestReport() {
           Hit rates below are 3-outcome (H/D/A) on the ensemble holdout. Elo binary hit rate (non-draw only) is 68.7% — see charts above.
         </p>
         <p className="text-xs text-gray-600 mb-4">
-          Evaluated on 2024–2026 holdout (10,099 matches)
+          Evaluated on 2024–2026 holdout ({(dmData?.n_matches ?? 10099).toLocaleString()} matches)
         </p>
         <div className="overflow-x-auto">
-        <table className="w-full text-sm min-w-[380px]">
-          <thead>
-            <tr className="text-gray-500 text-xs border-b border-gray-800">
-              <th className="text-left pb-2 font-medium">Model</th>
-              <th className="text-right pb-2 font-medium">Hit Rate</th>
-              <th className="text-right pb-2 font-medium">Brier Score</th>
-              <th className="text-right pb-2 font-medium">Predictions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {MODEL_COMPARISON.map((row, i) => (
-              <tr key={row.model} className={i < MODEL_COMPARISON.length - 1 ? 'border-b border-gray-800/50' : ''}>
-                <td className="py-2.5 text-gray-300">{row.model}</td>
-                <td className={`py-2.5 text-right tabular-nums font-medium ${row.hitRate === BEST_HIT_RATE ? 'text-emerald-400' : 'text-gray-400'}`}>
-                  {row.hitRate.toFixed(2)}%
-                </td>
-                <td className={`py-2.5 text-right tabular-nums font-medium ${row.brier === BEST_BRIER ? 'text-emerald-400' : 'text-gray-400'}`}>
-                  {row.brier.toFixed(3)}
-                </td>
-                <td className="py-2.5 text-right tabular-nums text-gray-500">
-                  {row.predictions.toLocaleString()}
-                </td>
+          <table className="w-full text-sm min-w-[380px]">
+            <thead>
+              <tr className="text-gray-500 text-xs border-b border-gray-800">
+                <th className="text-left pb-2 font-medium">Model</th>
+                <th className="text-right pb-2 font-medium">Hit Rate</th>
+                <th className="text-right pb-2 font-medium">Brier Score</th>
+                <th className="text-right pb-2 font-medium">Predictions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {comparisonRows.map((row, i) => (
+                <tr key={row.model} className={i < comparisonRows.length - 1 ? 'border-b border-gray-800/50' : ''}>
+                  <td className="py-2.5 text-gray-300">{row.model}</td>
+                  <td className={`py-2.5 text-right tabular-nums font-medium ${row.hitRate === bestHitRate ? 'text-emerald-400' : 'text-gray-400'}`}>
+                    {row.hitRate.toFixed(2)}%
+                  </td>
+                  <td className={`py-2.5 text-right tabular-nums font-medium ${row.brier === bestBrier ? 'text-emerald-400' : 'text-gray-400'}`}>
+                    {row.brier.toFixed(3)}
+                  </td>
+                  <td className="py-2.5 text-right tabular-nums text-gray-500">
+                    {row.predictions.toLocaleString()}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
 
-      {/* Diebold-Mariano test */}
-      {dmData && (
+      {/* Feature Importance */}
+      {featImportance && (
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-3 md:p-5">
-          <h2 className="text-base font-semibold text-white mb-1">Diebold-Mariano Test</h2>
+          <h2 className="text-base font-semibold text-white mb-1">Feature Importance</h2>
           <p className="text-xs text-gray-500 mb-4">
-            Tests whether the Ensemble model's forecast accuracy is significantly different from the Elo baseline.
-            Loss function: binary squared error per match.
+            Top 15 XGBoost features by gain importance ({featImportance.n_features} total). Method: {featImportance.method}.
           </p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
-            <StatCard
-              label="DM Statistic"
-              value={dmData.dm_statistic?.toFixed(4)}
-              color={dmData.ensemble_better ? 'text-emerald-400' : 'text-red-400'}
-              sub="Negative = ensemble better"
-            />
-            <StatCard
-              label="p-value"
-              value={dmData.p_value?.toFixed(4)}
-              color={dmData.p_value < 0.05 ? 'text-emerald-400' : 'text-gray-400'}
-              sub={dmData.p_value < 0.05 ? 'Significant (α=0.05)' : 'Not significant'}
-            />
-            <StatCard
-              label="Ensemble Hit Rate"
-              value={`${dmData.ensemble_hit_rate?.toFixed(2)}%`}
-              color="text-emerald-400"
-              sub={`${dmData.n_matches?.toLocaleString()} matches`}
-            />
-            <StatCard
-              label="Elo Hit Rate"
-              value={`${dmData.elo_hit_rate?.toFixed(2)}%`}
-              color="text-gray-300"
-              sub="Baseline"
-            />
-          </div>
-          <p className={`text-sm ${dmData.p_value < 0.05 ? (dmData.ensemble_better ? 'text-emerald-400' : 'text-red-400') : 'text-gray-400'}`}>
-            {dmData.interpretation}
-          </p>
+          <ResponsiveContainer width="100%" height={420}>
+            <BarChart
+              data={featImportance.features.slice(0, 15)}
+              layout="vertical"
+              margin={{ top: 4, right: 48, bottom: 4, left: 8 }}
+              barCategoryGap="20%"
+            >
+              <XAxis
+                type="number"
+                domain={[0, 'dataMax']}
+                tickFormatter={v => `${(v * 100).toFixed(1)}%`}
+                tick={{ fill: '#6b7280', fontSize: 10 }}
+                axisLine={false}
+                tickLine={false}
+              />
+              <YAxis
+                type="category"
+                dataKey="feature"
+                width={170}
+                tick={{ fill: '#9ca3af', fontSize: 11 }}
+                axisLine={false}
+                tickLine={false}
+              />
+              <Tooltip content={<FeatImportTooltip />} cursor={{ fill: 'rgba(255,255,255,0.03)' }} />
+              <Bar dataKey="importance" radius={[0, 4, 4, 0]}>
+                {featImportance.features.slice(0, 15).map((entry, idx) => (
+                  <Cell key={entry.feature} fill={idx < 5 ? '#10b981' : '#4b5563'} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       )}
 
-      {/* Flat Stake P&L */}
+      {/* Closing Line Value (CLV) */}
       {clvData && (() => {
         const clvTrending = clvData.clv_chart.length > 1 &&
           clvData.clv_chart[clvData.clv_chart.length - 1].cumulative_clv >= clvData.clv_chart[0].cumulative_clv
@@ -536,6 +624,7 @@ export default function BacktestReport() {
         )
       })()}
 
+      {/* Value Bets P&L */}
       {pnlData && (() => {
         const positive = pnlData.final_pnl >= 0
         const lineColor = positive ? '#10b981' : '#ef4444'
