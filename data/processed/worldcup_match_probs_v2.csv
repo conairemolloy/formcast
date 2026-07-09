@@ -1,17 +1,17 @@
 round,tie_id,team1,team2,team1_elo,team2_elo,team1_win_pct,team2_win_pct,settled,winner,score,date,bracket_half
-r32,1,Germany,Paraguay,1949.66,1842.53,64.95,35.05,True,Paraguay,1-1 (pens),2026-06-29,left
-r32,2,France,Sweden,2121.55,1770.01,88.33,11.67,True,France,3-0,2026-07-01,left
-r32,3,South Africa,Canada,1676.1,1835.51,28.54,71.46,True,Canada,0-1,2026-06-28,left
-r32,4,Netherlands,Morocco,1992.89,1979.59,51.91,48.09,True,Morocco,1-1 (pens),2026-06-29,left
-r32,5,Portugal,Croatia,2020.62,1898.05,66.94,33.06,True,Portugal,2-1,2026-07-02,left
-r32,6,Spain,Austria,2154.44,1855.84,84.8,15.2,True,Spain,3-0,2026-07-02,left
-r32,7,United States,Bosnia and Herzegovina,1851.82,1645.94,76.59,23.41,True,United States,2-0,2026-07-01,left
-r32,8,Belgium,Senegal,1946.54,1832.2,65.89,34.11,True,Belgium,3-2,2026-07-01,left
-r32,9,Brazil,Japan,2055.2,1916.74,68.93,31.07,True,Brazil,2-1,2026-06-29,right
-r32,10,Ivory Coast,Norway,1808.58,1933.45,32.77,67.23,True,Norway,1-2,2026-06-30,right
-r32,11,Mexico,Ecuador,1981.0,1894.6,62.18,37.82,True,Mexico,2-0,2026-06-30,right
-r32,12,England,DR Congo,2035.97,1738.22,84.74,15.26,True,England,2-1,2026-07-01,right
-r32,13,Argentina,Cape Verde,2160.58,1670.98,94.37,5.63,False,,,2026-07-03,right
-r32,14,Switzerland,Algeria,1963.29,1828.29,68.51,31.49,True,Switzerland,2-0,2026-07-02,right
-r32,15,Australia,Egypt,1842.65,1827.26,52.21,47.79,False,,,2026-07-03,right
-r32,16,Colombia,Ghana,2021.11,1645.99,89.65,10.35,False,,,2026-07-03,right
+r32,1,Germany,Paraguay,1949.67,1831.66,66.36,33.64,True,Paraguay,1-1 (pens),2026-06-29,left
+r32,2,France,Sweden,2132.42,1770.01,88.96,11.04,True,France,3-0,2026-07-01,left
+r32,3,South Africa,Canada,1676.1,1811.18,31.48,68.52,True,Canada,0-1,2026-06-28,left
+r32,4,Netherlands,Morocco,1992.89,2003.92,48.41,51.59,True,Morocco,1-1 (pens),2026-06-29,left
+r32,5,Portugal,Croatia,2000.04,1898.05,64.27,35.73,True,Portugal,2-1,2026-07-02,left
+r32,6,Spain,Austria,2175.03,1855.84,86.26,13.74,True,Spain,3-0,2026-07-02,left
+r32,7,United States,Bosnia and Herzegovina,1816.89,1645.94,72.79,27.21,True,United States,2-0,2026-07-01,left
+r32,8,Belgium,Senegal,1981.46,1832.2,70.25,29.75,True,Belgium,3-2,2026-07-01,left
+r32,9,Brazil,Japan,2011.72,1916.74,63.34,36.66,True,Brazil,2-1,2026-06-29,right
+r32,10,Ivory Coast,Norway,1808.58,1976.93,27.51,72.49,True,Norway,1-2,2026-06-30,right
+r32,11,Mexico,Ecuador,1948.94,1894.6,57.76,42.24,True,Mexico,2-0,2026-06-30,right
+r32,12,England,DR Congo,2068.03,1738.22,86.97,13.03,True,England,2-1,2026-07-01,right
+r32,13,Argentina,Cape Verde,2172.46,1667.32,94.82,5.18,True,Argentina,3-2,2026-07-03,right
+r32,14,Switzerland,Algeria,1967.88,1828.29,69.07,30.93,True,Switzerland,2-0,2026-07-02,right
+r32,15,Australia,Egypt,1841.54,1820.14,53.08,46.92,True,Egypt,1-1 (pens),2026-07-03,right
+r32,16,Colombia,Ghana,2023.25,1639.26,90.12,9.88,True,Colombia,1-0,2026-07-03,right
