@@ -1,16 +1,7 @@
 match_date,match_time,league,home_team,away_team,p_home_elo,p_draw_elo,p_away_elo,p_home_ensemble,p_draw_ensemble,p_away_ensemble,predicted_outcome,is_international
-2026-06-29,17:00,FIFA World Cup,Brazil,Japan,0.4529,0.2417,0.3055,0.4529,0.2417,0.3055,H,True
-2026-06-29,20:30,FIFA World Cup,Germany,Paraguay,0.6323,0.1524,0.2153,0.6323,0.1524,0.2153,H,True
-2026-06-30,01:00,FIFA World Cup,Netherlands,Morocco,0.3643,0.2915,0.3442,0.3643,0.2915,0.3442,H,True
-2026-06-30,17:00,FIFA World Cup,Ivory Coast,Norway,0.3109,0.2481,0.441,0.3109,0.2481,0.441,A,True
-2026-06-30,21:00,FIFA World Cup,France,Sweden,0.7602,0.0957,0.1442,0.7602,0.0957,0.1442,H,True
-2026-07-01,01:00,FIFA World Cup,Mexico,Ecuador,0.4455,0.2457,0.3089,0.4455,0.2457,0.3089,H,True
-2026-07-01,16:00,FIFA World Cup,England,Congo,0.9658,0.0129,0.0213,0.9658,0.0129,0.0213,H,True
-2026-07-01,20:00,FIFA World Cup,Belgium,Senegal,0.4205,0.2593,0.3201,0.4205,0.2593,0.3201,H,True
-2026-07-02,00:00,FIFA World Cup,United States,Bosnia and Herzegovina,0.7127,0.1162,0.1711,0.7127,0.1162,0.1711,H,True
-2026-07-02,19:00,FIFA World Cup,Spain,Austria,0.6989,0.1223,0.1788,0.6989,0.1223,0.1788,H,True
-2026-07-02,23:00,FIFA World Cup,Portugal,Croatia,0.4514,0.2425,0.3061,0.4514,0.2425,0.3061,H,True
-2026-07-03,03:00,FIFA World Cup,Switzerland,Algeria,0.4247,0.257,0.3183,0.4247,0.257,0.3183,H,True
-2026-07-03,18:00,FIFA World Cup,Australia,Egypt,0.4664,0.2345,0.2992,0.4664,0.2345,0.2992,H,True
-2026-07-03,22:00,FIFA World Cup,Argentina,Cape Verde,0.9109,0.0341,0.055,0.9109,0.0341,0.055,H,True
-2026-07-04,01:30,FIFA World Cup,Colombia,Ghana,0.8649,0.0524,0.0827,0.8649,0.0524,0.0827,H,True
+2026-07-06,19:00,FIFA World Cup,Portugal,Spain,0.248,0.2163,0.5357,0.248,0.2163,0.5357,A,True
+2026-07-07,00:00,FIFA World Cup,United States,Belgium,0.3278,0.248,0.4241,0.3278,0.248,0.4241,A,True
+2026-07-07,16:00,FIFA World Cup,Argentina,Egypt,0.7286,0.166,0.1054,0.7286,0.166,0.1054,H,True
+2026-07-07,20:00,FIFA World Cup,Switzerland,Colombia,0.3099,0.2407,0.4494,0.3099,0.2407,0.4494,A,True
+2026-07-09,20:00,FIFA World Cup,France,Morocco,0.5293,0.2181,0.2526,0.5293,0.2181,0.2526,H,True
+2026-07-11,21:00,FIFA World Cup,Norway,England,0.2912,0.2331,0.4756,0.2912,0.2331,0.4756,A,True
