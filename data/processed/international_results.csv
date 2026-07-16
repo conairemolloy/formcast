@@ -29608,6 +29608,9 @@ date,home_team,away_team,home_score,away_score,result,tournament,city,country,ne
 2005-10-26,Mexico,Uruguay,3,1,H,Friendly,Guadalajara,Mexico,False,2005
 2005-10-27,Bahrain,Panama,5,0,H,Friendly,Riffa,Bahrain,False,2005
 2005-10-30,Puerto Rico,Guadeloupe,1,3,A,Friendly,Bayamón,Puerto Rico,False,2005
+2005-11-02,Northern Cyprus,Kosovo,1,0,H,KTFF 50th Anniversary Cup,North Nicosia,Northern Cyprus,False,2005
+2005-11-03,Sápmi,Kosovo,1,4,A,KTFF 50th Anniversary Cup,Girne,Northern Cyprus,True,2005
+2005-11-04,Northern Cyprus,Sápmi,6,2,H,KTFF 50th Anniversary Cup,North Nicosia,Northern Cyprus,False,2005
 2005-11-06,Zanzibar,Tanzania,0,1,A,Friendly,Zanzibar City,Zanzibar,False,2005
 2005-11-09,France,Costa Rica,3,2,H,Friendly,Fort-de-France,Martinique,True,2005
 2005-11-09,Tajikistan,Afghanistan,4,0,H,Friendly,Dushanbe,Tajikistan,False,2005
@@ -46111,7 +46114,7 @@ date,home_team,away_team,home_score,away_score,result,tournament,city,country,ne
 2023-06-17,Luxembourg,Liechtenstein,2,0,H,UEFA Euro qualification,Luxembourg,Luxembourg,False,2023
 2023-06-17,Iceland,Slovakia,1,2,A,UEFA Euro qualification,Reykjavík,Iceland,False,2023
 2023-06-17,Portugal,Bosnia and Herzegovina,3,0,H,UEFA Euro qualification,Lisbon,Portugal,False,2023
-2023-06-17,Ticino,Raetia,1,8,A,CONIFA World Football Cup qualification,Tenero-Contra,Switzerland,False,2023
+2023-06-17,Canton Ticino,Raetia,1,8,A,CONIFA World Football Cup qualification,Tenero-Contra,Switzerland,False,2023
 2023-06-17,Turkmenistan,Oman,0,2,A,CAFA Nations Cup,Tashkent,Uzbekistan,True,2023
 2023-06-17,Uzbekistan,Tajikistan,5,1,H,CAFA Nations Cup,Tashkent,Uzbekistan,False,2023
 2023-06-17,Djibouti,Pakistan,3,1,H,Mauritius Four Nations Cup,Saint Pierre,Mauritius,True,2023
@@ -46294,7 +46297,7 @@ date,home_team,away_team,home_score,away_score,result,tournament,city,country,ne
 2023-08-04,Tamil Eelam,Hmong,3,0,H,CONIFA Asia Cup,Alcochete,Portugal,True,2023
 2023-08-05,Hmong,Tibet,5,4,H,CONIFA Asia Cup,Alcochete,Portugal,True,2023
 2023-08-06,Tibet,Tamil Eelam,1,3,A,CONIFA Asia Cup,Alcochete,Portugal,True,2023
-2023-08-06,Raetia,Ticino,5,1,H,Friendly,Domat/Ems,Switzerland,False,2023
+2023-08-06,Raetia,Canton Ticino,5,1,H,Friendly,Domat/Ems,Switzerland,False,2023
 2023-08-08,Tamil Eelam,Hmong,3,1,H,CONIFA Asia Cup,Alcochete,Portugal,True,2023
 2023-08-24,Comoros,Mayotte,0,0,D,Indian Ocean Island Games,Antananarivo,Madagascar,True,2023
 2023-08-24,Madagascar,Seychelles,1,0,H,Indian Ocean Island Games,Antananarivo,Madagascar,False,2023
@@ -49297,6 +49300,10 @@ date,home_team,away_team,home_score,away_score,result,tournament,city,country,ne
 2026-06-02,Haiti,New Zealand,4,0,H,Friendly,Fort Lauderdale,United States,True,2026
 2026-06-02,Morocco,Madagascar,4,0,H,Friendly,Rabat,Morocco,False,2026
 2026-06-02,Wales,Ghana,1,1,D,Friendly,Cardiff,Wales,False,2026
+2026-06-02,Padania,Raetia,4,1,H,CONIFA European Football Cup,Carate Brianza,Italy,False,2026
+2026-06-02,Rouet-Provence,Canton Ticino,0,1,A,CONIFA European Football Cup,Carate Brianza,Italy,True,2026
+2026-06-03,Padania,Greenland,3,1,H,CONIFA European Football Cup,Carate Brianza,Italy,False,2026
+2026-06-03,Canton Ticino,Northern Cyprus,1,5,A,CONIFA European Football Cup,Carate Brianza,Italy,True,2026
 2026-06-03,Albania,Israel,0,1,A,Friendly,Tirana,Albania,False,2026
 2026-06-03,DR Congo,Denmark,0,0,D,Friendly,Liège,Belgium,True,2026
 2026-06-03,Gibraltar,British Virgin Islands,4,0,H,Friendly,Europa Point,Gibraltar,False,2026
@@ -49306,7 +49313,9 @@ date,home_team,away_team,home_score,away_score,result,tournament,city,country,ne
 2026-06-03,Panama,Dominican Republic,4,2,H,Friendly,Panama City,Panama,False,2026
 2026-06-03,Poland,Nigeria,2,2,D,Friendly,Warsaw,Poland,False,2026
 2026-06-03,Philippines,Guam,5,1,H,Friendly,Manila,Philippines,False,2026
-2026-06-01,Maldives,Pakistan,0,3,A,Diamond Jubilee International Football Tournament,Malé,Maldives,False,2026
+2026-06-04,Raetia,Greenland,1,4,A,CONIFA European Football Cup,Carate Brianza,Italy,True,2026
+2026-06-04,Rouet-Provence,Northern Cyprus,0,4,A,CONIFA European Football Cup,Carate Brianza,Italy,True,2026
+2026-06-04,Maldives,Pakistan,0,3,A,Diamond Jubilee International Football Tournament,Malé,Maldives,False,2026
 2026-06-04,Andorra,Liechtenstein,2,0,H,Friendly,Encamp,Andorra,False,2026
 2026-06-04,Cambodia,Bhutan,4,0,H,Friendly,Phnom Penh,Cambodia,False,2026
 2026-06-04,France,Ivory Coast,1,2,A,Friendly,Nantes,France,False,2026
@@ -49338,6 +49347,9 @@ date,home_team,away_team,home_score,away_score,result,tournament,city,country,ne
 2026-06-05,Benin,Niger,1,1,D,Friendly,Casablanca,Morocco,True,2026
 2026-06-05,Central African Republic,Togo,1,1,D,Friendly,Mohammedia,Morocco,True,2026
 2026-06-05,Puerto Rico,Saudi Arabia,0,3,A,Friendly,Austin,United States,True,2026
+2026-06-06,Raetia,Rouet-Provence,3,3,D,CONIFA European Football Cup,Carate Brianza,Italy,True,2026
+2026-06-06,Greenland,Canton Ticino,3,2,H,CONIFA European Football Cup,Carate Brianza,Italy,True,2026
+2026-06-06,Padania,Northern Cyprus,1,6,A,CONIFA European Football Cup,Carate Brianza,Italy,False,2026
 2026-06-06,Vanuatu,Fiji,2,1,H,Friendly,Port Vila,Vanuatu,False,2026
 2026-06-06,Albania,Luxembourg,0,1,A,Friendly,Tirana,Albania,False,2026
 2026-06-06,Argentina,Honduras,2,0,H,Friendly,College Station,United States,True,2026
@@ -49351,7 +49363,6 @@ date,home_team,away_team,home_score,away_score,result,tournament,city,country,ne
 2026-06-06,England,New Zealand,1,0,H,Friendly,Tampa,United States,True,2026
 2026-06-06,Sierra Leone,Liberia,1,0,H,Friendly,Bo,Sierra Leone,False,2026
 2026-06-06,Ethiopia,Malawi,1,0,H,Friendly,Dire Dawa,Ethiopia,False,2026
-2026-06-06,Gibraltar,Cayman Islands,4,1,H,Friendly,Gibraltar,Gibraltar,False,2026
 2026-06-06,Jamaica,South Africa,0,1,A,Friendly,Pachuca,Mexico,True,2026
 2026-06-06,Kyrgyzstan,Palestine,0,0,D,Friendly,Bishkek,Kyrgyzstan,False,2026
 2026-06-06,Panama,Bosnia and Herzegovina,1,1,D,Friendly,St. Louis,United States,True,2026
@@ -49504,4 +49515,5 @@ date,home_team,away_team,home_score,away_score,result,tournament,city,country,ne
 2026-07-10,Spain,Belgium,2,1,H,FIFA World Cup,Inglewood,United States,True,2026
 2026-07-11,Norway,England,1,2,A,FIFA World Cup,Miami Gardens,United States,True,2026
 2026-07-11,Argentina,Switzerland,3,1,H,FIFA World Cup,Kansas City,United States,True,2026
-2026-07-14,France,Spain,0,0,D,FIFA World Cup,Arlington,United States,True,2026
+2026-07-14,France,Spain,0,2,A,FIFA World Cup,Arlington,United States,True,2026
+2026-07-15,England,Argentina,1,2,A,FIFA World Cup,Atlanta,United States,True,2026
