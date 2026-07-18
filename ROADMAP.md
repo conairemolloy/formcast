@@ -252,20 +252,16 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Star player dependency — single player xG contribution as % of team total, high dependency = high variance
 
 ### Tier 6 — Odds Format Display
-- [ ] American odds format — convert model probabilities to American moneyline format (+150, -200 etc). Formula: if P > 0.5 → -(P/(1-P))×100, if P < 0.5 → ((1-P)/P)×100
-- [ ] UK fractional odds — convert probabilities to traditional UK fractions (2/1, 9/4, 11/8 etc). Round to nearest standard bookmaker fraction from a lookup table of common fractions (1/4, 1/3, 4/9, 1/2, 8/15, 4/6, 8/11, 4/5, 5/6, 10/11, Evens, 11/10, 6/5, 5/4, 11/8, 6/4, 13/8, 7/4, 15/8, 2/1, 9/4, 5/2, 11/4, 3/1, 10/3, 4/1, 9/2, 5/1, 6/1, 7/1, 8/1, 10/1, 12/1, 14/1, 16/1, 20/1, 25/1, 33/1, 50/1, 66/1, 100/1)
-- [ ] Decimal odds — European format (2.50, 1.91 etc). Formula: 1/P. Already partially implemented in value bets
-- [ ] Implied probability display — show bookmaker implied probability alongside model probability for direct comparison
-- [ ] Odds comparison widget — show model probability vs best available bookmaker odds across multiple formats simultaneously
-- [ ] Each-way odds calculator — for markets where each-way betting applies (primarily horse racing, but also outright tournament markets)
+- [x] American odds format — American moneyline (+150, −200); decimal≥2 → +round((d−1)×100), decimal<2 → −round(100/(d−1)); shared JS module (oddsFormat.js) ports Python logic exactly so JS and Python always agree
+- [x] UK fractional odds — nearest standard UK fraction via 40-entry COMMON_FRACTIONS lookup (ported exactly from dutching_arbitrage.py); target = decimal−1 = (1−p)/p; JS and Python guaranteed to return same fraction for same decimal
+- [x] Decimal odds — European format (2.50, 1.91 etc); shared formatOdds() in oddsFormat.js, user-selectable as default
+- [x] Implied probability display — shown as "(43.5% impl.)" alongside odds on Value Bets table rows and Live Bets cards
+- [ ] Odds comparison widget — show model probability vs best available bookmaker odds across multiple formats simultaneously (deferred — folds into Phase 6 Value Bets page redesign)
+- [ ] Each-way odds calculator — for markets where each-way betting applies (primarily horse racing, outright tournament markets)
 - [ ] Odds to CSV export — download current value bets with all three odds formats for use in external staking tools
 
-
-- Odds display — decimal format live on value bets page
-
-
-- [x] Odds format converter utility function — to_decimal/to_american/to_fractional/all_formats in dutching_arbitrage.py; frontend wiring still pending
-- [ ] Value bets page updated to show all three odds formats simultaneously
+- [x] Odds format converter utility function — to_decimal/to_american/to_fractional/all_formats in dutching_arbitrage.py; JS-side oddsFormat.js created, wired to Settings, Value Bets, and Accumulators pages
+- [x] Value bets page updated to show all three odds formats simultaneously — shows selected format + implied probability; switchable via Dec/Frac/US segmented control at top of page and in Settings → Display; preference persisted to localStorage and server profile (odds_format column)
 
 
 ### Market-Specific Models — BUILT
@@ -347,8 +343,19 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 ## Phase 6 — Design & Product Polish
 > The platform is technically impressive but reads like a developer tool. This phase makes it look and feel like a premium product that justifies charging money.
 
+### Design Principles (read before starting any Phase 6 task)
+- [ ] Trust-at-a-glance hierarchy — every screen leads with ONE confident number or visual, not multiple equal-weight panels. Dashboard hero = single big metric (live CLV or edge found this week), everything else secondary
+- [ ] Restraint palette — one brand colour (emerald), one positive accent, one negative accent, everything else neutral slate. No ad-hoc colours anywhere. Two heading sizes, one body size, one small size — no exceptions
+- [ ] Typographic respect for numbers — tabular figures (font-variant-numeric: tabular-nums) in every table, consistent decimal places site-wide (2.50 never 2.5), consistent probability precision everywhere
+- [ ] Progressive disclosure — surface states the conclusion plainly ("Model sees 12% more chance than the bookmaker"), calculations/Kelly/model breakdown one tap deeper. Methodology page carries credibility for diggers; surface stays clean
+- [ ] Confidence bands — wire prediction_uncertainty metadata (built in Phase 2 Batch 3) into prediction displays as visual confidence indication
+- [ ] Motion only where data changes — probability bars fill once on load, numbers tick on update, nothing else animates. Movement = "this is live"
+- [ ] Designed empty states — off-season/no-value-bets/no-data states are designed screens with a next action ("Leagues return August 15 — see the World Cup Hub"), never blank tables or bare spinners. NOTE: launching into off-season means the no-live-bets state IS the first impression for many users
+- [ ] One signature element — pick ONE distinctive visual (edge meter, Elo chart style, or bracket tree) and over-invest in it; that's what gets screenshotted and shared
+- [ ] Design tokens doc first — before any page redesign, write frontend/DESIGN.md with colour tokens, type scale, spacing scale; every subsequent frontend task references it (same pattern as the shared feature pipeline, but for design)
+
 ### Visual Design
-- [ ] Design system — establish consistent color palette, type scale, spacing tokens. Emerald green as primary, slate as background, clear hierarchy between primary/secondary/muted text
+- [ ] Design system — **do this first; artefact is frontend/DESIGN.md** — establish colour tokens, type scale, spacing scale. Emerald green as primary, slate as background, clear hierarchy between primary/secondary/muted text. Every subsequent Phase 6 task references this doc
 - [ ] Component library audit — standardise cards, badges, tables, filters across all pages so nothing looks inconsistent
 - [ ] Micro-animations — subtle transitions on data loading, card hover states, probability bar fills on page load
 - [ ] Icon consistency — single icon library throughout (lucide-react already imported, ensure nothing uses ad-hoc alternatives)

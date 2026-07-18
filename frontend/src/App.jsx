@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { BarChart2, Menu, X, LayoutDashboard, ChevronDown, LogIn } from 'lucide-react'
 import api from './api'
 import { clearAuthToken } from './api'
+import { setOddsFormat } from './oddsFormat'
 import Landing from './components/Landing'
 import Dashboard from './components/Dashboard'
 import RatingsTable from './components/RatingsTable'
@@ -143,7 +144,11 @@ function App() {
         setUser(cached)
         // Verify token is still valid in background
         api.get('/api/auth/profile')
-          .then(res => setUser(u => ({ ...u, ...res.data.profile, access_token: token })))
+          .then(res => {
+            const prof = res.data.profile
+            if (prof.odds_format) setOddsFormat(prof.odds_format)
+            setUser(u => ({ ...u, ...prof, access_token: token }))
+          })
           .catch(() => {
             clearAuthToken()
             setUser(null)

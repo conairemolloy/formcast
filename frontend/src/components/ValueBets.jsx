@@ -2,16 +2,7 @@ import { useState, useEffect, useMemo } from 'react'
 import api from '../api'
 import { Loader2, CheckCircle2, XCircle, Zap } from 'lucide-react'
 import Tooltip from './Tooltip'
-
-function gcd(a, b) { return b === 0 ? a : gcd(b, a % b) }
-
-function decimalToFractional(decimal) {
-  if (!decimal || decimal <= 1) return '—'
-  const num = Math.round((decimal - 1) * 100)
-  const den = 100
-  const g = gcd(num, den)
-  return `${num / g}/${den / g}`
-}
+import { formatOdds, impliedProbability, useOddsFormat } from '../oddsFormat'
 
 function StatCard({ label, value, sub, tip }) {
   return (
@@ -44,10 +35,10 @@ const SORT_OPTIONS = [
   { value: 'date', label: 'Date' },
 ]
 
-function LiveBetCard({ bet }) {
+function LiveBetCard({ bet, format }) {
   const outcome = bet.value_outcome
   const edge    = bet.value_edge
-  const implied = bet.value_odds ? 1 / bet.value_odds : null
+  const implied = bet.value_odds ? impliedProbability(bet.value_odds) : null
 
   return (
     <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 flex flex-col gap-3 hover:border-emerald-500/30 transition-colors">
@@ -91,7 +82,7 @@ function LiveBetCard({ bet }) {
         <div>
           <p className="text-xs text-gray-600 mb-0.5">Best odds</p>
           <p className="text-sm font-semibold text-white tabular-nums">
-            {bet.value_odds != null ? Number(bet.value_odds).toFixed(2) : '—'}
+            {bet.value_odds != null ? formatOdds(bet.value_odds, format) : '—'}
           </p>
           {implied && (
             <p className="text-xs text-gray-600 tabular-nums">{(implied * 100).toFixed(1)}% imp.</p>
@@ -118,6 +109,7 @@ export default function ValueBets() {
   const [wonFilter, setWonFilter] = useState('ALL')
   const [sortBy, setSortBy]       = useState('edge')
   const [minEdge, setMinEdge]     = useState(0.05)
+  const [oddsFormat, updateOddsFormat] = useOddsFormat()
 
   useEffect(() => {
     Promise.all([
@@ -203,7 +195,7 @@ export default function ValueBets() {
         ) : liveBets.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {liveBets.map((bet, i) => (
-              <LiveBetCard key={i} bet={bet} />
+              <LiveBetCard key={i} bet={bet} format={oddsFormat} />
             ))}
           </div>
         ) : (
@@ -282,6 +274,22 @@ export default function ValueBets() {
               onClick={() => setWonFilter(val)}
               className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
                 wonFilter === val
+                  ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                  : 'bg-gray-900 text-gray-400 border border-gray-700 hover:text-white'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex gap-1">
+          {[['decimal', 'Dec'], ['fractional', 'Frac'], ['american', 'US']].map(([val, label]) => (
+            <button
+              key={val}
+              onClick={() => updateOddsFormat(val)}
+              className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
+                oddsFormat === val
                   ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
                   : 'bg-gray-900 text-gray-400 border border-gray-700 hover:text-white'
               }`}
@@ -371,8 +379,10 @@ export default function ValueBets() {
                   {(b.p_model * 100).toFixed(1)}%
                 </td>
                 <td className="px-4 py-3 text-right text-gray-300 tabular-nums">
-                  {Number(b.odds).toFixed(2)}{' '}
-                  <span className="text-gray-600 text-xs">({decimalToFractional(b.odds)})</span>
+                  {formatOdds(b.odds, oddsFormat)}
+                  {b.odds > 1 && (
+                    <span className="text-gray-600 text-xs ml-1">({(impliedProbability(b.odds) * 100).toFixed(1)}% impl.)</span>
+                  )}
                 </td>
                 <td className="px-4 py-3 text-right"><EdgeBadge edge={b.edge} /></td>
                 <td className="px-4 py-3 text-right text-gray-300 tabular-nums">

@@ -1,13 +1,22 @@
 import { useState } from 'react'
 import { Loader2, AlertTriangle } from 'lucide-react'
 import api from '../api'
+import { getOddsFormat, setOddsFormat } from '../oddsFormat'
 
 export default function SettingsPage({ user, onUserUpdate }) {
   const [name, setName]             = useState(user?.name || '')
   const [emailAlerts, setEmailAlerts] = useState(user?.email_alerts ?? true)
+  const [oddsFormat, setOddsFormatState] = useState(() =>
+    user?.odds_format ?? getOddsFormat()
+  )
   const [saving, setSaving]         = useState(false)
   const [saved, setSaved]           = useState(false)
   const [error, setError]           = useState(null)
+
+  function handleFormatChange(fmt) {
+    setOddsFormat(fmt)
+    setOddsFormatState(fmt)
+  }
 
   async function handleSave(e) {
     e.preventDefault()
@@ -15,7 +24,7 @@ export default function SettingsPage({ user, onUserUpdate }) {
     setError(null)
     setSaved(false)
     try {
-      const res = await api.put('/api/auth/profile', { name, email_alerts: emailAlerts })
+      const res = await api.put('/api/auth/profile', { name, email_alerts: emailAlerts, odds_format: oddsFormat })
       onUserUpdate(res.data.profile)
       setSaved(true)
       setTimeout(() => setSaved(false), 3000)
@@ -88,6 +97,39 @@ export default function SettingsPage({ user, onUserUpdate }) {
               />
             </button>
           </label>
+        </div>
+
+        {/* Display */}
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+          <h2 className="text-sm font-semibold text-gray-300 mb-4">Display</h2>
+
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <p className="text-sm text-white font-medium">Odds format</p>
+              <p className="text-xs text-gray-500 mt-0.5">How odds are displayed across the site</p>
+            </div>
+            <div className="flex gap-1 shrink-0">
+              {[
+                ['decimal',    'Decimal',    '2.50'],
+                ['fractional', 'Fractional', '6/4'],
+                ['american',   'American',   '+150'],
+              ].map(([val, label, ex]) => (
+                <button
+                  key={val}
+                  type="button"
+                  title={ex}
+                  onClick={() => handleFormatChange(val)}
+                  className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
+                    oddsFormat === val
+                      ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                      : 'bg-gray-800 text-gray-400 border border-gray-700 hover:text-white'
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
         {error && (

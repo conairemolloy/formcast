@@ -1,28 +1,29 @@
 import { useState, useEffect, useMemo, useRef } from 'react'
 import api from '../api'
 import { Loader2, CheckCircle2, XCircle, ChevronDown } from 'lucide-react'
+import { formatOdds, useOddsFormat } from '../oddsFormat'
 
-function LegPill({ home, away, outcome, odds }) {
+function LegPill({ home, away, outcome, odds, format }) {
   if (typeof home !== 'string' || typeof away !== 'string') return null
   return (
     <span className="inline-flex items-center gap-1 bg-gray-800 rounded px-2 py-0.5 text-xs text-gray-300 mr-1 mb-1">
       <span className="font-medium text-white">{home} vs {away}</span>
       <span className="text-gray-500">·</span>
       <span className="font-mono text-blue-400">{outcome ?? '—'}</span>
-      <span className="text-gray-600">@{Number(odds)?.toFixed(2) ?? '—'}</span>
+      <span className="text-gray-600">@{odds != null ? formatOdds(odds, format) : '—'}</span>
     </span>
   )
 }
 
-function AccaCard({ acca }) {
+function AccaCard({ acca, format }) {
   const ev = Number(acca.acca_ev)
   return (
     <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 hover:border-gray-700 transition-colors">
       <div className="flex items-start justify-between gap-4 mb-3">
         <div className="flex flex-wrap gap-1">
-          <LegPill home={acca.leg1_home} away={acca.leg1_away} outcome={acca.leg1_outcome} odds={acca.leg1_odds} />
-          <LegPill home={acca.leg2_home} away={acca.leg2_away} outcome={acca.leg2_outcome} odds={acca.leg2_odds} />
-          <LegPill home={acca.leg3_home} away={acca.leg3_away} outcome={acca.leg3_outcome} odds={acca.leg3_odds} />
+          <LegPill home={acca.leg1_home} away={acca.leg1_away} outcome={acca.leg1_outcome} odds={acca.leg1_odds} format={format} />
+          <LegPill home={acca.leg2_home} away={acca.leg2_away} outcome={acca.leg2_outcome} odds={acca.leg2_odds} format={format} />
+          <LegPill home={acca.leg3_home} away={acca.leg3_away} outcome={acca.leg3_outcome} odds={acca.leg3_odds} format={format} />
         </div>
         <div className="shrink-0">
           {acca.won
@@ -36,7 +37,7 @@ function AccaCard({ acca }) {
         <div>
           <span className="text-gray-500 text-xs">Combined Odds</span>
           <p className="font-mono font-semibold text-white">
-            {Number(acca.combined_odds)?.toFixed(2) ?? '—'}
+            {acca.combined_odds != null ? formatOdds(acca.combined_odds, format) : '—'}
           </p>
         </div>
         <div>
@@ -101,7 +102,7 @@ function shortLabel(bet) {
 // EVMatrix component
 // ---------------------------------------------------------------------------
 
-function EVMatrix({ bets }) {
+function EVMatrix({ bets, format }) {
   // Normalise selected pair as [lo, hi] so [i,j] and [j,i] both map to the same key
   const [selected, setSelected] = useState(null)
 
@@ -220,18 +221,18 @@ function EVMatrix({ bets }) {
           <div className="flex items-center gap-2 flex-wrap">
             <LegPill
               home={detail.a.home_team} away={detail.a.away_team}
-              outcome={detail.a.outcome} odds={detail.a.odds}
+              outcome={detail.a.outcome} odds={detail.a.odds} format={format}
             />
             <span className="text-gray-600 text-sm">+</span>
             <LegPill
               home={detail.b.home_team} away={detail.b.away_team}
-              outcome={detail.b.outcome} odds={detail.b.odds}
+              outcome={detail.b.outcome} odds={detail.b.odds} format={format}
             />
           </div>
           <div className="flex flex-wrap gap-6 text-sm">
             <div>
               <span className="text-gray-500 text-xs">Combined Odds</span>
-              <p className="font-mono font-semibold text-white">{detail.combinedOdds.toFixed(2)}</p>
+              <p className="font-mono font-semibold text-white">{formatOdds(detail.combinedOdds, format)}</p>
             </div>
             <div>
               <span className="text-gray-500 text-xs">Model Prob</span>
@@ -279,6 +280,7 @@ export default function Accumulators() {
   const [matrixLoading, setMatrixLoading]   = useState(false)
   const [matrixError, setMatrixError]       = useState(null)
   const matrixFetched                       = useRef(false)
+  const [oddsFormat]                        = useOddsFormat()
 
   useEffect(() => {
     for (const n of [2, 3]) {
@@ -368,7 +370,7 @@ export default function Accumulators() {
             {matrixError && (
               <p className="text-red-400 text-sm py-2">{matrixError}</p>
             )}
-            {!matrixLoading && !matrixError && <EVMatrix bets={matrixBets} />}
+            {!matrixLoading && !matrixError && <EVMatrix bets={matrixBets} format={oddsFormat} />}
           </div>
         )}
       </div>
@@ -440,7 +442,7 @@ export default function Accumulators() {
         <div className="space-y-3">
           {filtered.length === 0
             ? <p className="text-gray-500 text-sm">No accumulators found.</p>
-            : filtered.map((acca, i) => <AccaCard key={i} acca={acca} />)
+            : filtered.map((acca, i) => <AccaCard key={i} acca={acca} format={oddsFormat} />)
           }
         </div>
       )}

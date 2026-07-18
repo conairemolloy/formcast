@@ -55,6 +55,7 @@ def _shape_profile(row: dict) -> dict:
         "tier":         row.get("tier", "free"),
         "watchlist":    row.get("watchlist") or [],
         "email_alerts": row.get("email_alerts", True),
+        "odds_format":  row.get("odds_format", "decimal"),
     }
 
 
@@ -168,6 +169,8 @@ def update_profile():
         updates["name"] = body["name"]
     if "email_alerts" in body:
         updates["email_alerts"] = bool(body["email_alerts"])
+    if body.get("odds_format") in ("decimal", "fractional", "american"):
+        updates["odds_format"] = body["odds_format"]
 
     _, admin = _get_clients()
     admin.table("profiles").update(updates).eq("id", user.id).execute()
