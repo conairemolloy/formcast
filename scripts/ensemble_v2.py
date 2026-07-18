@@ -37,6 +37,7 @@ HOME_ELO_K_SCALE = 1.0  # home/away K same as global for now
 COLD_START = 200
 FORM_WINDOW = 5
 EWM_ALPHA = 0.4
+LATE_EWM_ALPHA = 0.6
 
 G2_SCALE = 173.7178
 G2_INITIAL_PHI = 200.0 / G2_SCALE
@@ -53,7 +54,34 @@ RESULT_INV = {0: "A", 1: "D", 2: "H"}
 REGRESSION_FACTOR = 0.75   # fraction of Elo deviation from league mean retained at season start
 HA_MIN_MATCHES    = 100    # min league matches before using learned per-league home advantage
 
-# Full 70-feature set used for XGBoost base model
+DERBY_PAIRS: frozenset = frozenset({
+    # Top-flight derbies
+    frozenset({"Arsenal", "Tottenham"}),
+    frozenset({"Liverpool", "Everton"}),
+    frozenset({"Man United", "Man City"}),
+    frozenset({"Barcelona", "Real Madrid"}),
+    frozenset({"Barcelona", "Espanol"}),
+    frozenset({"Real Madrid", "Ath Madrid"}),
+    frozenset({"Sevilla", "Betis"}),
+    frozenset({"Milan", "Inter"}),
+    frozenset({"Roma", "Lazio"}),
+    frozenset({"Juventus", "Torino"}),
+    frozenset({"Dortmund", "Schalke 04"}),
+    frozenset({"Bayern Munich", "M'Gladbach"}),
+    frozenset({"Bayern Munich", "M'gladbach"}),   # dataset has both spellings
+    frozenset({"Paris SG", "Marseille"}),
+    frozenset({"Lyon", "St Etienne"}),
+    frozenset({"Celtic", "Rangers"}),
+    # Second-tier derbies
+    frozenset({"Leeds", "Bradford"}),
+    frozenset({"Sunderland", "Middlesbrough"}),
+    frozenset({"Derby", "Nott'm Forest"}),
+    frozenset({"Sheffield United", "Sheffield Weds"}),
+    frozenset({"Hamburg", "St Pauli"}),
+    frozenset({"Hannover", "Braunschweig"}),
+})
+
+# Full 75-feature set used for XGBoost base model
 FEATURE_COLS = [
     "home_elo", "away_elo", "elo_diff", "home_expected",
     "home_elo_home", "home_elo_away", "away_elo_home", "away_elo_away", "venue_elo_diff",
@@ -90,6 +118,14 @@ FEATURE_COLS = [
     "home_opp_adj_form", "away_opp_adj_form",
     # Relegation/title pressure
     "home_pressure", "away_pressure", "pressure_diff",
+    # Late-season form (stronger EWM alpha, non-zero only when is_late_season == 1)
+    "late_season_form_diff",
+    # Shot conversion (goals / shots, last 10 matches with shot data)
+    "home_shot_conversion", "away_shot_conversion",
+    # H2H all-time dominance (over entire history)
+    "h2h_all_time_dominance",
+    # Derby fixture flag
+    "is_derby",
 ]
 
 # 13-feature stack fed into the meta-learner
@@ -154,9 +190,9 @@ def _g2_update(
 # Momentum / streak helpers
 # ---------------------------------------------------------------------------
 
-def _ewm(values: list) -> float:
+def _ewm(values: list, alpha: float = EWM_ALPHA) -> float:
     n = len(values)
-    weights = [(1.0 - EWM_ALPHA) ** (n - 1 - i) for i in range(n)]
+    weights = [(1.0 - alpha) ** (n - 1 - i) for i in range(n)]
     total = sum(weights)
     return sum(w * v for w, v in zip(weights, values)) / total
 
@@ -324,6 +360,20 @@ def _fatigue_score(days_rest: int, matches_21d: int, asymmetry: float, home: boo
 
 
 # ---------------------------------------------------------------------------
+# Shot-conversion helper
+# ---------------------------------------------------------------------------
+
+def _shot_conversion(hist: list) -> float:
+    """Rolling goals-per-shot over the last 10 matches that have shot data."""
+    recent = [h for h in hist[-10:] if h.get("shots") is not None and h["shots"] > 0]
+    if not recent:
+        return 0.11
+    total_shots = sum(h["shots"] for h in recent)
+    total_goals = sum(h["goals_scored"] for h in recent)
+    return total_goals / total_shots if total_shots > 0 else 0.11
+
+
+# ---------------------------------------------------------------------------
 # Rolling Dixon-Coles helpers (from ensemble.py)
 # ---------------------------------------------------------------------------
 
@@ -370,6 +420,7 @@ def init_state() -> dict:
         "team_hist":  defaultdict(list),
         "elo_hist":   defaultdict(list),
         "h2h_hist":   defaultdict(list),
+        "h2h_totals": {},
         "dc_scored":  defaultdict(list),
         "dc_conceded": defaultdict(list),
         "ref_stats":  {},
@@ -585,6 +636,33 @@ def compute_match_features(
     else:
         home_pressure, away_pressure = 0, 0
 
+    # Late-season form diff (stronger EWM alpha when is_late_season)
+    if is_late_season:
+        _h5 = list(team_hist[home])[-FORM_WINDOW:]
+        _a5 = list(team_hist[away])[-FORM_WINDOW:]
+        _hlf = _ewm([h["points"] for h in _h5], alpha=LATE_EWM_ALPHA) / 3.0 if len(_h5) >= 2 else 0.5
+        _alf = _ewm([h["points"] for h in _a5], alpha=LATE_EWM_ALPHA) / 3.0 if len(_a5) >= 2 else 0.5
+        late_season_form_diff = _hlf - _alf
+    else:
+        late_season_form_diff = 0.0
+
+    # Shot conversion (goals / shots, last 10 matches per team with shot data)
+    home_shot_conv = _shot_conversion(list(team_hist[home]))
+    away_shot_conv = _shot_conversion(list(team_hist[away]))
+
+    # H2H all-time dominance (win margin / total meetings, entire history)
+    _hkey_all = _h2h_key(home, away)
+    _htot = state["h2h_totals"].get(_hkey_all)
+    if _htot and _htot["meetings"] > 0:
+        _home_wins_all = _htot["wins_a"] if home == _hkey_all[0] else _htot["wins_b"]
+        _away_wins_all = _htot["wins_b"] if home == _hkey_all[0] else _htot["wins_a"]
+        h2h_all_time_dominance = (_home_wins_all - _away_wins_all) / _htot["meetings"]
+    else:
+        h2h_all_time_dominance = 0.0
+
+    # Derby flag
+    is_derby = 1 if frozenset({home, away}) in DERBY_PAIRS else 0
+
     # LSTM and BTL stack lookups (fall back to global mean for unseen fixtures)
     _date_str    = str(date.date()) if hasattr(date, "date") else str(date)
     p_home_lstm  = lstm_lookup.get((home, away, _date_str), global_mean_home)
@@ -667,6 +745,15 @@ def compute_match_features(
         "home_pressure": home_pressure,
         "away_pressure": away_pressure,
         "pressure_diff": home_pressure - away_pressure,
+        # Late-season form diff
+        "late_season_form_diff": late_season_form_diff,
+        # Shot conversion
+        "home_shot_conversion": home_shot_conv,
+        "away_shot_conversion": away_shot_conv,
+        # H2H all-time dominance
+        "h2h_all_time_dominance": h2h_all_time_dominance,
+        # Derby flag
+        "is_derby": is_derby,
         # Stack inputs (not in FEATURE_COLS but needed for meta-learner)
         "p_home_lstm": p_home_lstm,
         "p_home_btl":  p_home_btl,
@@ -691,6 +778,8 @@ def update_state(
     away_yellows: float = 0.0,
     home_fouls: float = 0.0,
     away_fouls: float = 0.0,
+    home_shots: int | None = None,
+    away_shots: int | None = None,
 ) -> None:
     """
     Apply pre-match adjustments (idempotent) then advance the walk-forward
@@ -756,14 +845,24 @@ def update_state(
     state["g2"][away] = _g2_update(away_mu, away_phi, home_mu + G2_HA, home_phi, as_, ha=0.0)
 
     # H2H and team history
-    state["h2h_hist"][_h2h_key(home, away)].append(
+    _hkey_upd = _h2h_key(home, away)
+    state["h2h_hist"][_hkey_upd].append(
         {"home": home, "result": result, "hg": hg, "ag": ag}
     )
+    _htot_upd = state["h2h_totals"].setdefault(_hkey_upd, {"wins_a": 0, "wins_b": 0, "meetings": 0})
+    _htot_upd["meetings"] += 1
+    if result != "D":
+        _winner = home if result == "H" else away
+        if _winner == _hkey_upd[0]:
+            _htot_upd["wins_a"] += 1
+        else:
+            _htot_upd["wins_b"] += 1
     state["team_hist"][home].append({
         "date": date, "season": season, "result": home_res,
         "points": pts_map[home_res],
         "goal_diff": hg - ag, "goals_scored": hg, "goals_conceded": ag,
         "is_home": True, "xg_scored": h_xg, "xg_conceded": a_xg, "xg_diff": xg_d,
+        "shots": home_shots,
     })
     state["team_hist"][away].append({
         "date": date, "season": season, "result": away_res,
@@ -771,6 +870,7 @@ def update_state(
         "goal_diff": ag - hg, "goals_scored": ag, "goals_conceded": hg,
         "is_home": False, "xg_scored": a_xg, "xg_conceded": h_xg,
         "xg_diff": (-xg_d if xg_d is not None else None),
+        "shots": away_shots,
     })
 
     # Rolling DC windows
@@ -849,6 +949,11 @@ def build_all_features(
     league_enc = {lg: int(i) for i, lg in enumerate(league_encoder.classes_)}
     xg_lookup = xg_lookup or {}
 
+    # Validate DERBY_PAIRS team names against actual data (warn on typos)
+    _all_data_teams = set(df["home_team"]) | set(df["away_team"])
+    for _dname in sorted({n for pair in DERBY_PAIRS for n in pair} - _all_data_teams):
+        print(f"  WARNING: DERBY_PAIRS name '{_dname}' not found in results.csv")
+
     _base = os.path.dirname(__file__)
     lstm_lookup: dict[tuple, float] = {}
     global_mean_home = 0.45
@@ -925,16 +1030,19 @@ def build_all_features(
             "result": result,
         })
 
-        h_yel  = float(row["home_yellows"]) if pd.notna(row.get("home_yellows")) else 0.0
-        a_yel  = float(row["away_yellows"]) if pd.notna(row.get("away_yellows")) else 0.0
-        h_foul = float(row["home_fouls"])   if pd.notna(row.get("home_fouls"))   else 0.0
-        a_foul = float(row["away_fouls"])   if pd.notna(row.get("away_fouls"))   else 0.0
+        h_yel    = float(row["home_yellows"]) if pd.notna(row.get("home_yellows")) else 0.0
+        a_yel    = float(row["away_yellows"]) if pd.notna(row.get("away_yellows")) else 0.0
+        h_foul   = float(row["home_fouls"])   if pd.notna(row.get("home_fouls"))   else 0.0
+        a_foul   = float(row["away_fouls"])   if pd.notna(row.get("away_fouls"))   else 0.0
+        h_shots  = int(row["home_shots"]) if "home_shots" in df.columns and pd.notna(row.get("home_shots")) else None
+        a_shots  = int(row["away_shots"]) if "away_shots" in df.columns and pd.notna(row.get("away_shots")) else None
 
         update_state(
             state, home, away, date, season, league, hg, ag, result,
             xg_vals=xg_vals, ref_name=ref_raw,
             home_yellows=h_yel, away_yellows=a_yel,
             home_fouls=h_foul, away_fouls=a_foul,
+            home_shots=h_shots, away_shots=a_shots,
         )
 
     if _n_regress > 10:

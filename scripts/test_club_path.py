@@ -137,6 +137,8 @@ def main() -> None:
             away_yellows=float(row["away_yellows"]) if pd.notna(row.get("away_yellows")) else 0.0,
             home_fouls=float(row["home_fouls"])   if pd.notna(row.get("home_fouls"))   else 0.0,
             away_fouls=float(row["away_fouls"])   if pd.notna(row.get("away_fouls"))   else 0.0,
+            home_shots=int(row["home_shots"]) if "home_shots" in hist_df.columns and pd.notna(row.get("home_shots")) else None,
+            away_shots=int(row["away_shots"]) if "away_shots" in hist_df.columns and pd.notna(row.get("away_shots")) else None,
         )
 
     known_teams = set(state["team_hist"].keys()) | set(state["elo"].keys())

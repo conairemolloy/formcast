@@ -34,7 +34,7 @@
 - World Cup value bets — live odds via The Odds API (soccer_fifa_world_cup), real international Elo-based edges, free tier usage (~30 credits/month)
 - CI/CD pipeline fully healthy — fixed 3-week silent failure (missing joblib/xgboost in requirements.txt), added retry logic with exponential backoff for live fixture fetching
 - LSTM predictions in ensemble stack — 14-feature meta-learner, 66.83% walk-forward backtest
-- 70-feature ensemble, 15-feature meta-learner stack, 66.92% walk-forward backtest, ECE 0.0098
+- 75-feature ensemble, 15-feature meta-learner stack, 66.92% walk-forward backtest, ECE 0.0098
 
 ---
 
@@ -184,7 +184,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [x] Opponent-adjusted form — distinguish wins vs top-half teams from wins vs relegation fodder
 - [x] Season opener variance — widen confidence intervals for first 5 games of season, less predictable (is_early_season flag in all market models)
 - [x] Early season Elo regression — REGRESSION_FACTOR=0.75, regress toward league mean, ensemble_v2.py build_all_features()
-- [ ] Form-weighted late season — increase EWM weight of last 5 matches in final 10 gameweeks
+- [x] Form-weighted late season — `late_season_form_diff` feature; EWM alpha 0.6 (vs 0.4 default) over last 5 matches, non-zero only when `is_late_season == 1` (≥28 season matches per team)
 - [ ] First half vs second half performance — some teams start slow or fade, use half-time scores if available in results.csv
 - [x] Home bias score per referee — ref_home_bias feature, ensemble_v2.py
 - [ ] VAR tendency — referees who overturn more decisions, affects game flow **[PARKED: no VAR data available from football-data.co.uk]**
@@ -194,9 +194,9 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [x] Opponent quality-adjusted form — home/away_opp_adj_form features (result × opponent Elo ratio, last 10), ensemble_v2.py
 - [x] Unbeaten run momentum — home/away_unbeaten_run features (capped at 15), ensemble_v2.py
 - [x] Clean sheet rate — goalkeeper/defensive form signal, rolling last 10 matches (venue-split in BTTS and goals models)
-- [ ] Goals per shot ratio — shooting efficiency trend, more predictive than raw goal count
-- [ ] H2H extended history — full historical H2H dominance not just last 10 meetings
-- [ ] Derby factor — local rivalry binary flag, form less predictive in derbies, use ground distance proxy
+- [x] Goals per shot ratio — `home_shot_conversion` / `away_shot_conversion`; goals÷shots rolling last 10 matches with shot data (fallback 0.11); `home_shots`/`away_shots` now stored in team_hist via `update_state()`
+- [x] H2H extended history — `h2h_all_time_dominance`; (home_wins − away_wins) / total meetings over full history; running totals in `state["h2h_totals"]` keyed by canonical pair, O(1) per match
+- [x] Derby factor — `is_derby` binary flag; 22 hardcoded pairs (16 top-flight + 6 second-tier) in module-level `DERBY_PAIRS` frozenset; both M'Gladbach spellings covered; team names validated against results.csv at build time with warnings on typos
 
 ### Tier 2 — External Data Required (All Free Sources)
 - [ ] Weather at kickoff — OpenWeatherMap free API. Wind >30km/h reduces scoring, heavy rain affects passing, extreme temperatures affect performance. One API call per upcoming fixture (PRIORITY)
@@ -727,7 +727,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Weather-adjusted predictions — incorporate OpenWeatherMap data into Elo probability adjustments
 - [ ] Distance fatigue model — penalise away teams based on travel distance for midweek games
 - [x] Home/away Elo split — maintain separate home and away Elo ratings per team
-- [ ] Form-weighted predictions — increase weight of last 5 matches vs career average in late season
+- [x] Form-weighted predictions — implemented as `late_season_form_diff` (see Phase 2 Tier 1); EWM alpha 0.6 over last 5 matches when `is_late_season == 1`
 - [ ] Pre-match news sentiment — scan team news for injury/suspension signals
 - [ ] Live odds movement tracker — detect line movement pre-kickoff as sharp money signal
 - [ ] Match importance index — weight predictions by how much the match matters (title, relegation, cup final)

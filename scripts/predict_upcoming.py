@@ -388,15 +388,18 @@ def main() -> None:
         ref_raw = ref_raw if (isinstance(ref_raw, str) and ref_raw.strip()) else None
         xg_key  = (date.date(), home, away, league)
         xg_vals = xg_lookup.get(xg_key)
-        h_yel  = float(row["home_yellows"]) if pd.notna(row.get("home_yellows")) else 0.0
-        a_yel  = float(row["away_yellows"]) if pd.notna(row.get("away_yellows")) else 0.0
-        h_foul = float(row["home_fouls"])   if pd.notna(row.get("home_fouls"))   else 0.0
-        a_foul = float(row["away_fouls"])   if pd.notna(row.get("away_fouls"))   else 0.0
+        h_yel   = float(row["home_yellows"]) if pd.notna(row.get("home_yellows")) else 0.0
+        a_yel   = float(row["away_yellows"]) if pd.notna(row.get("away_yellows")) else 0.0
+        h_foul  = float(row["home_fouls"])   if pd.notna(row.get("home_fouls"))   else 0.0
+        a_foul  = float(row["away_fouls"])   if pd.notna(row.get("away_fouls"))   else 0.0
+        h_shots = int(row["home_shots"]) if "home_shots" in hist_df.columns and pd.notna(row.get("home_shots")) else None
+        a_shots = int(row["away_shots"]) if "away_shots" in hist_df.columns and pd.notna(row.get("away_shots")) else None
         update_state(
             state, home, away, date, season, league, hg, ag, result,
             xg_vals=xg_vals, ref_name=ref_raw,
             home_yellows=h_yel, away_yellows=a_yel,
             home_fouls=h_foul, away_fouls=a_foul,
+            home_shots=h_shots, away_shots=a_shots,
         )
 
     known_teams = set(state["team_hist"].keys()) | set(state["elo"].keys())
