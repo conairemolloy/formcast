@@ -50,6 +50,9 @@ DC_MAX_GOALS = 8
 RESULT_MAP = {"A": 0, "D": 1, "H": 2}
 RESULT_INV = {0: "A", 1: "D", 2: "H"}
 
+REGRESSION_FACTOR = 0.75   # fraction of Elo deviation from league mean retained at season start
+HA_MIN_MATCHES    = 100    # min league matches before using learned per-league home advantage
+
 # Full 70-feature set used for XGBoost base model
 FEATURE_COLS = [
     "home_elo", "away_elo", "elo_diff", "home_expected",
@@ -354,6 +357,485 @@ def _dc_probs(lam: float, mu: float, rho: float = -0.13) -> tuple[float, float, 
 # ---------------------------------------------------------------------------
 # Unified single-pass feature builder
 # ---------------------------------------------------------------------------
+# Walk-forward state: init / pre-match adjust / compute features / post-match update
+# ---------------------------------------------------------------------------
+
+def init_state() -> dict:
+    """Return a fresh state dict for walk-forward feature computation."""
+    return {
+        "elo":        defaultdict(lambda: STARTING_ELO),
+        "g2":         defaultdict(lambda: (0.0, G2_INITIAL_PHI)),
+        "elo_home":   {},
+        "elo_away":   {},
+        "team_hist":  defaultdict(list),
+        "elo_hist":   defaultdict(list),
+        "h2h_hist":   defaultdict(list),
+        "dc_scored":  defaultdict(list),
+        "dc_conceded": defaultdict(list),
+        "ref_stats":  {},
+        "global_matches":   0,
+        "global_home_wins": 0,
+        "team_home_record":   {},
+        "team_away_record":   {},
+        "team_season_matches": {},
+        "team_cs_home": {},
+        "team_cs_away": {},
+        "team_opp_adj_form": {},
+        "team_season_points": {},
+        "team_season_gd":     {},
+        "league_season_teams": {},
+        "team_last_season": {},
+        "team_last_league": {},
+        "league_elo_tracker": {},
+        "league_hw": {},
+        "league_nm": {},
+    }
+
+
+def _apply_pre_match_adjustments(
+    state: dict,
+    home: str,
+    away: str,
+    season: str,
+    league: str,
+) -> list:
+    """
+    Apply season-boundary Elo regression and promotion/relegation shift for home
+    and away. Idempotent: a second call with the same (home, away, season, league)
+    is a no-op because team_last_season/team_last_league are updated on the first
+    call.
+
+    Returns a list of event dicts fired this call (empty when idempotent).
+    Each dict has keys: type ('regress' or 'promo'), team, and context fields.
+    """
+    events = []
+    for _team in (home, away):
+        _prev_season = state["team_last_season"].get(_team)
+        _prev_league = state["team_last_league"].get(_team)
+
+        if _prev_season is not None and _prev_season != season:
+            _tracker = state["league_elo_tracker"].get(league, {})
+            _lg_mean = float(np.mean(list(_tracker.values()))) if _tracker else STARTING_ELO
+            _ha_mean = float(np.mean(list(state["elo_home"].values()))) if state["elo_home"] else STARTING_ELO
+            _aa_mean = float(np.mean(list(state["elo_away"].values()))) if state["elo_away"] else STARTING_ELO
+            state["elo"][_team]      = _lg_mean + REGRESSION_FACTOR * (state["elo"][_team] - _lg_mean)
+            state["elo_home"][_team] = _ha_mean + REGRESSION_FACTOR * (state["elo_home"].get(_team, STARTING_ELO) - _ha_mean)
+            state["elo_away"][_team] = _aa_mean + REGRESSION_FACTOR * (state["elo_away"].get(_team, STARTING_ELO) - _aa_mean)
+            events.append({
+                "type": "regress", "team": _team,
+                "from_season": _prev_season, "to_season": season, "league": league,
+            })
+
+        if _prev_league is not None and _prev_league != league:
+            _old_tracker = state["league_elo_tracker"].get(_prev_league, {})
+            _new_tracker = state["league_elo_tracker"].get(league, {})
+            _old_lg_mean = float(np.mean(list(_old_tracker.values()))) if _old_tracker else STARTING_ELO
+            _new_lg_mean = float(np.mean(list(_new_tracker.values()))) if _new_tracker else STARTING_ELO
+            _shift = 0.5 * (_new_lg_mean - _old_lg_mean)
+            _old_e = state["elo"][_team]
+            state["elo"][_team]      += _shift
+            state["elo_home"][_team]  = state["elo_home"].get(_team, STARTING_ELO) + _shift
+            state["elo_away"][_team]  = state["elo_away"].get(_team, STARTING_ELO) + _shift
+            events.append({
+                "type": "promo", "team": _team,
+                "from_league": _prev_league, "to_league": league,
+                "old_elo": _old_e, "new_elo": state["elo"][_team],
+            })
+
+        state["team_last_season"][_team] = season
+        state["team_last_league"][_team] = league
+
+    return events
+
+
+def compute_match_features(
+    state: dict,
+    home: str,
+    away: str,
+    date,
+    season: str,
+    league: str,
+    league_enc: dict,
+    *,
+    xg_vals: tuple | None = None,
+    ref_raw: str | None = None,
+    lstm_lookup: dict | None = None,
+    btl_lookup: dict | None = None,
+    global_mean_home: float = 0.45,
+    btl_global_mean: float = 0.45,
+) -> dict:
+    """
+    Compute the full feature dict for one fixture using the current pre-match
+    state. Calls _apply_pre_match_adjustments first (idempotent — no-op if
+    already applied by the caller). Does NOT update state with the match result;
+    call update_state() after this to advance the walk-forward state.
+
+    Returns a dict with all 70 FEATURE_COLS keys plus p_home_dc/p_draw_dc/
+    p_away_dc, p_home_lstm, p_home_btl (stack inputs not in FEATURE_COLS).
+    """
+    _apply_pre_match_adjustments(state, home, away, season, league)
+
+    lstm_lookup = lstm_lookup or {}
+    btl_lookup  = btl_lookup  or {}
+
+    elo         = state["elo"]
+    g2          = state["g2"]
+    elo_home    = state["elo_home"]
+    elo_away    = state["elo_away"]
+    team_hist   = state["team_hist"]
+    elo_hist_s  = state["elo_hist"]
+    h2h_hist    = state["h2h_hist"]
+    dc_scored   = state["dc_scored"]
+    dc_conceded = state["dc_conceded"]
+
+    home_elo = elo[home]
+    away_elo = elo[away]
+
+    # Per-league home advantage (learned from prior matches)
+    _lg_nm        = state["league_nm"].get(league, 0)
+    _gm           = state["global_matches"]
+    _ghw          = state["global_home_wins"]
+    if _lg_nm >= HA_MIN_MATCHES and _gm > 0:
+        _global_hw_rate = _ghw / _gm
+        _lg_hw_rate     = state["league_hw"].get(league, 0) / _lg_nm
+        _ha_league = float(np.clip(
+            ELO_HA * (_lg_hw_rate / _global_hw_rate) if _global_hw_rate > 0 else ELO_HA,
+            0.5 * ELO_HA, 1.5 * ELO_HA,
+        ))
+    else:
+        _ha_league = ELO_HA
+    home_exp = _elo_expected(home_elo + _ha_league, away_elo)
+
+    home_mu, home_phi = g2[home]
+    away_mu, away_phi = g2[away]
+    home_g2_rat = home_mu * G2_SCALE + 1500.0
+    away_g2_rat = away_mu * G2_SCALE + 1500.0
+
+    # Rolling Dixon-Coles probabilities
+    atk_h = _dc_attack(dc_scored[home])
+    def_h = _dc_defence(dc_conceded[home])
+    atk_a = _dc_attack(dc_scored[away])
+    def_a = _dc_defence(dc_conceded[away])
+    lam   = math.exp(atk_h - def_a + DC_HOME_ADV)
+    mu_dc = math.exp(atk_a - def_h)
+    p_home_dc, p_draw_dc, p_away_dc = _dc_probs(lam, mu_dc)
+
+    # Include current pre-match Elo in the history snapshot (for momentum)
+    h_elo_hist = list(elo_hist_s[home]) + [(date, home_elo)]
+    a_elo_hist = list(elo_hist_s[away]) + [(date, away_elo)]
+
+    hf  = _team_features(list(team_hist[home]), h_elo_hist, home_elo, date, season)
+    af  = _team_features(list(team_hist[away]), a_elo_hist, away_elo, date, season)
+    h2h = _h2h_features(h2h_hist[_h2h_key(home, away)], home)
+
+    asymmetry = float(np.clip(hf["days_rest"] - af["days_rest"], -10, 10))
+    home_fat  = _fatigue_score(hf["days_rest"], hf["matches_21d"], asymmetry, home=True)
+    away_fat  = _fatigue_score(af["days_rest"], af["matches_21d"], asymmetry, home=False)
+
+    home_comp = (hf["result_momentum"] + hf["score_momentum"]
+                 + hf["elo_momentum"]  + hf["streak"]) / 4.0
+    away_comp = (af["result_momentum"] + af["score_momentum"]
+                 + af["elo_momentum"]  + af["streak"]) / 4.0
+
+    # Referee features (from prior matches only)
+    if ref_raw and ref_raw in state["ref_stats"]:
+        rs = state["ref_stats"][ref_raw]
+        _global_hw_rate_ref = (_ghw / _gm) if _gm > 0 else 0.457
+        ref_avg_yellows = rs["yellows_total"] / rs["matches"]
+        ref_avg_fouls   = rs["fouls_total"]   / rs["matches"]
+        ref_home_bias   = (rs["home_wins"] / rs["matches"]) - _global_hw_rate_ref
+        ref_experience  = rs["matches"]
+    else:
+        ref_avg_yellows = 3.8
+        ref_avg_fouls   = 23.0
+        ref_home_bias   = 0.0
+        ref_experience  = 0
+
+    # Venue win rates
+    _hwr = state["team_home_record"].get(home)
+    _awr = state["team_away_record"].get(away)
+    home_win_rate       = float(np.mean(_hwr)) if _hwr else 0.46
+    away_win_rate       = float(np.mean(_awr)) if _awr else 0.28
+    venue_win_rate_diff = home_win_rate - away_win_rate
+
+    # Season phase
+    home_season_matches = state["team_season_matches"].get((home, season), 0)
+    away_season_matches = state["team_season_matches"].get((away, season), 0)
+    is_late_season      = 1 if min(home_season_matches, away_season_matches) >= 28 else 0
+
+    # Clean sheet rates (last 10 home/away matches)
+    home_cs_rate = float(np.mean(state["team_cs_home"].get(home, [])[-10:])) if state["team_cs_home"].get(home) else 0.28
+    away_cs_rate = float(np.mean(state["team_cs_away"].get(away, [])[-10:])) if state["team_cs_away"].get(away) else 0.22
+
+    # Opponent-adjusted form (last 10)
+    _WINDOW = 10
+    home_opp_adj = float(np.mean(state["team_opp_adj_form"].get(home, [])[-_WINDOW:])) if state["team_opp_adj_form"].get(home) else 0.0
+    away_opp_adj = float(np.mean(state["team_opp_adj_form"].get(away, [])[-_WINDOW:])) if state["team_opp_adj_form"].get(away) else 0.0
+
+    # Relegation/title pressure from current season standings
+    league_teams = state["league_season_teams"].get((season, league), [])
+    if len(league_teams) >= 4:
+        all_pts  = [(t, state["team_season_points"].get((t, season, league), 0)) for t in league_teams]
+        all_pts.sort(key=lambda x: -x[1])
+        n_teams  = len(league_teams)
+        home_pos = next((i + 1 for i, (t, _) in enumerate(all_pts) if t == home), n_teams // 2)
+        away_pos = next((i + 1 for i, (t, _) in enumerate(all_pts) if t == away), n_teams // 2)
+        home_pressure = 1 if home_pos <= 3 else (-1 if home_pos >= n_teams - 2 else 0)
+        away_pressure = 1 if away_pos <= 3 else (-1 if away_pos >= n_teams - 2 else 0)
+    else:
+        home_pressure, away_pressure = 0, 0
+
+    # LSTM and BTL stack lookups (fall back to global mean for unseen fixtures)
+    _date_str    = str(date.date()) if hasattr(date, "date") else str(date)
+    p_home_lstm  = lstm_lookup.get((home, away, _date_str), global_mean_home)
+    p_home_btl   = btl_lookup.get((home, away, _date_str), btl_global_mean)
+
+    return {
+        # Elo
+        "home_elo": home_elo, "away_elo": away_elo,
+        "elo_diff": home_elo - away_elo, "home_expected": home_exp,
+        "home_elo_home": elo_home.get(home, STARTING_ELO),
+        "home_elo_away": elo_away.get(home, STARTING_ELO),
+        "away_elo_home": elo_home.get(away, STARTING_ELO),
+        "away_elo_away": elo_away.get(away, STARTING_ELO),
+        "venue_elo_diff": elo_home.get(home, STARTING_ELO) - elo_away.get(away, STARTING_ELO),
+        # Glicko-2
+        "home_g2_rating": home_g2_rat, "away_g2_rating": away_g2_rat,
+        "g2_diff": home_g2_rat - away_g2_rat,
+        "home_g2_uncertainty": home_phi * G2_SCALE,
+        # Form
+        "home_form": hf["form"], "away_form": af["form"],
+        "form_diff": hf["form"] - af["form"],
+        "home_goals_scored_avg": hf["gs_avg"],
+        "home_goals_conceded_avg": hf["gc_avg"],
+        "away_goals_scored_avg": af["gs_avg"],
+        "away_goals_conceded_avg": af["gc_avg"],
+        # xG (from prior matches in team_hist — no current-match leakage)
+        "home_xg_avg": hf["xg_scored_home_avg"],
+        "home_xg_conceded_avg": hf["xg_conceded_home_avg"],
+        "away_xg_avg": af["xg_scored_away_avg"],
+        "away_xg_conceded_avg": af["xg_conceded_away_avg"],
+        "home_xg_diff_avg": hf["xg_diff_avg"],
+        "away_xg_diff_avg": af["xg_diff_avg"],
+        # Momentum
+        "home_result_momentum": hf["result_momentum"],
+        "away_result_momentum": af["result_momentum"],
+        "home_score_momentum": hf["score_momentum"],
+        "away_score_momentum": af["score_momentum"],
+        "home_elo_momentum": hf["elo_momentum"],
+        "away_elo_momentum": af["elo_momentum"],
+        "home_streak": hf["streak"], "away_streak": af["streak"],
+        "momentum_diff": home_comp - away_comp,
+        # Fatigue
+        "home_days_rest": hf["days_rest"], "away_days_rest": af["days_rest"],
+        "home_matches_21d": hf["matches_21d"], "away_matches_21d": af["matches_21d"],
+        "rest_asymmetry": asymmetry,
+        "home_fatigue_score": home_fat, "away_fatigue_score": away_fat,
+        # H2H
+        "h2h_home_win_rate":  h2h["h2h_home_win_rate"],
+        "h2h_goal_diff_avg":  h2h["h2h_goal_diff_avg"],
+        "h2h_meetings":       h2h["h2h_meetings"],
+        "h2h_dominance":      h2h["h2h_dominance"],
+        "revenge_factor":     h2h["revenge_factor"],
+        "home_unbeaten_run":  hf["unbeaten_run"],
+        "away_unbeaten_run":  af["unbeaten_run"],
+        "post_loss_bounce":      hf["post_loss"],
+        "post_loss_bounce_away": af["post_loss"],
+        # Context
+        "league_encoded": league_enc.get(league, 0),
+        "is_early_season": hf["is_early"],
+        # Referee
+        "ref_avg_yellows": ref_avg_yellows,
+        "ref_avg_fouls":   ref_avg_fouls,
+        "ref_home_bias":   ref_home_bias,
+        "ref_experience":  ref_experience,
+        # Venue win rates
+        "home_win_rate":       home_win_rate,
+        "away_win_rate":       away_win_rate,
+        "venue_win_rate_diff": venue_win_rate_diff,
+        # Season phase
+        "home_season_matches": home_season_matches,
+        "away_season_matches": away_season_matches,
+        "is_late_season":      is_late_season,
+        # Clean sheet rate
+        "home_cs_rate": home_cs_rate,
+        "away_cs_rate": away_cs_rate,
+        # Opponent-adjusted form
+        "home_opp_adj_form": home_opp_adj,
+        "away_opp_adj_form": away_opp_adj,
+        # Relegation/title pressure
+        "home_pressure": home_pressure,
+        "away_pressure": away_pressure,
+        "pressure_diff": home_pressure - away_pressure,
+        # Stack inputs (not in FEATURE_COLS but needed for meta-learner)
+        "p_home_lstm": p_home_lstm,
+        "p_home_btl":  p_home_btl,
+        "p_home_dc": p_home_dc, "p_draw_dc": p_draw_dc, "p_away_dc": p_away_dc,
+    }
+
+
+def update_state(
+    state: dict,
+    home: str,
+    away: str,
+    date,
+    season: str,
+    league: str,
+    hg: int,
+    ag: int,
+    result: str,
+    *,
+    xg_vals: tuple | None = None,
+    ref_name: str | None = None,
+    home_yellows: float = 0.0,
+    away_yellows: float = 0.0,
+    home_fouls: float = 0.0,
+    away_fouls: float = 0.0,
+) -> None:
+    """
+    Apply pre-match adjustments (idempotent) then advance the walk-forward
+    state with the match result. Call AFTER compute_match_features() to
+    preserve walk-forward integrity (features never see their own result).
+    """
+    _apply_pre_match_adjustments(state, home, away, season, league)
+
+    if result == "H":
+        hs, as_, home_res, away_res = 1.0, 0.0, "W", "L"
+    elif result == "D":
+        hs, as_, home_res, away_res = 0.5, 0.5, "D", "D"
+    else:
+        hs, as_, home_res, away_res = 0.0, 1.0, "L", "W"
+    pts_map = {"W": 3, "D": 1, "L": 0}
+
+    home_elo = state["elo"][home]
+    away_elo = state["elo"][away]
+
+    # Recompute per-league HA (same formula as compute_match_features)
+    _lg_nm = state["league_nm"].get(league, 0)
+    _gm    = state["global_matches"]
+    _ghw   = state["global_home_wins"]
+    if _lg_nm >= HA_MIN_MATCHES and _gm > 0:
+        _global_hw_rate = _ghw / _gm
+        _lg_hw_rate     = state["league_hw"].get(league, 0) / _lg_nm
+        _ha_league = float(np.clip(
+            ELO_HA * (_lg_hw_rate / _global_hw_rate) if _global_hw_rate > 0 else ELO_HA,
+            0.5 * ELO_HA, 1.5 * ELO_HA,
+        ))
+    else:
+        _ha_league = ELO_HA
+    home_exp = _elo_expected(home_elo + _ha_league, away_elo)
+
+    home_mu, home_phi = state["g2"][home]
+    away_mu, away_phi = state["g2"][away]
+
+    h_xg = xg_vals[0] if xg_vals else None
+    a_xg = xg_vals[1] if xg_vals else None
+    xg_d = xg_vals[2] if xg_vals else None
+
+    # Record pre-match Elo for momentum lookups
+    state["elo_hist"][home].append((date, home_elo))
+    state["elo_hist"][away].append((date, away_elo))
+
+    # Elo update
+    mov = _elo_mov(hg - ag)
+    state["elo"][home] = home_elo + ELO_K * mov * (hs - home_exp)
+    state["elo"][away] = away_elo + ELO_K * mov * (as_ - (1.0 - home_exp))
+
+    # Venue Elo update
+    home_exp_venue = _elo_expected(
+        state["elo_home"].get(home, STARTING_ELO),
+        state["elo_away"].get(away, STARTING_ELO),
+    )
+    state["elo_home"][home] = (state["elo_home"].get(home, STARTING_ELO)
+                               + ELO_K * HOME_ELO_K_SCALE * mov * (hs - home_exp_venue))
+    state["elo_away"][away] = (state["elo_away"].get(away, STARTING_ELO)
+                               + ELO_K * HOME_ELO_K_SCALE * mov * (as_ - (1.0 - home_exp_venue)))
+
+    # Glicko-2 update
+    state["g2"][home] = _g2_update(home_mu, home_phi, away_mu,         away_phi, hs,  ha=G2_HA)
+    state["g2"][away] = _g2_update(away_mu, away_phi, home_mu + G2_HA, home_phi, as_, ha=0.0)
+
+    # H2H and team history
+    state["h2h_hist"][_h2h_key(home, away)].append(
+        {"home": home, "result": result, "hg": hg, "ag": ag}
+    )
+    state["team_hist"][home].append({
+        "date": date, "season": season, "result": home_res,
+        "points": pts_map[home_res],
+        "goal_diff": hg - ag, "goals_scored": hg, "goals_conceded": ag,
+        "is_home": True, "xg_scored": h_xg, "xg_conceded": a_xg, "xg_diff": xg_d,
+    })
+    state["team_hist"][away].append({
+        "date": date, "season": season, "result": away_res,
+        "points": pts_map[away_res],
+        "goal_diff": ag - hg, "goals_scored": ag, "goals_conceded": hg,
+        "is_home": False, "xg_scored": a_xg, "xg_conceded": h_xg,
+        "xg_diff": (-xg_d if xg_d is not None else None),
+    })
+
+    # Rolling DC windows
+    state["dc_scored"][home]   = state["dc_scored"][home][-(DC_WINDOW - 1):]   + [hg]
+    state["dc_conceded"][home] = state["dc_conceded"][home][-(DC_WINDOW - 1):] + [ag]
+    state["dc_scored"][away]   = state["dc_scored"][away][-(DC_WINDOW - 1):]   + [ag]
+    state["dc_conceded"][away] = state["dc_conceded"][away][-(DC_WINDOW - 1):] + [hg]
+
+    # Referee rolling stats
+    state["global_matches"] += 1
+    if result == "H":
+        state["global_home_wins"] += 1
+    if ref_name:
+        if ref_name not in state["ref_stats"]:
+            state["ref_stats"][ref_name] = {"matches": 0, "yellows_total": 0.0,
+                                             "fouls_total": 0.0, "home_wins": 0}
+        rs = state["ref_stats"][ref_name]
+        rs["matches"] += 1
+        if result == "H":
+            rs["home_wins"] += 1
+        rs["yellows_total"] += home_yellows + away_yellows
+        rs["fouls_total"]   += home_fouls   + away_fouls
+
+    # Venue win rates and season match counts
+    state["team_home_record"].setdefault(home, []).append(1 if result == "H" else 0)
+    state["team_away_record"].setdefault(away, []).append(1 if result == "A" else 0)
+    _hsm = state["team_season_matches"].get((home, season), 0)
+    _asm = state["team_season_matches"].get((away, season), 0)
+    state["team_season_matches"][(home, season)] = _hsm + 1
+    state["team_season_matches"][(away, season)] = _asm + 1
+
+    # Clean sheet records
+    state["team_cs_home"].setdefault(home, []).append(1 if ag == 0 else 0)
+    state["team_cs_away"].setdefault(away, []).append(1 if hg == 0 else 0)
+
+    # Opponent-adjusted form
+    elo_ratio_h  = away_elo / max(home_elo, 1)
+    elo_ratio_a  = home_elo / max(away_elo, 1)
+    h_result_val = 1.0 if result == "H" else (0.5 if result == "D" else 0.0)
+    a_result_val = 1.0 if result == "A" else (0.5 if result == "D" else 0.0)
+    state["team_opp_adj_form"].setdefault(home, []).append(h_result_val * elo_ratio_h)
+    state["team_opp_adj_form"].setdefault(away, []).append(a_result_val * elo_ratio_a)
+
+    # Season standings
+    pts_h = 3 if result == "H" else (1 if result == "D" else 0)
+    pts_a = 3 if result == "A" else (1 if result == "D" else 0)
+    key_h = (home, season, league)
+    key_a = (away, season, league)
+    state["team_season_points"][key_h] = state["team_season_points"].get(key_h, 0) + pts_h
+    state["team_season_points"][key_a] = state["team_season_points"].get(key_a, 0) + pts_a
+    sk = (season, league)
+    if home not in state["league_season_teams"].get(sk, []):
+        state["league_season_teams"].setdefault(sk, []).append(home)
+    if away not in state["league_season_teams"].get(sk, []):
+        state["league_season_teams"].setdefault(sk, []).append(away)
+
+    # League Elo tracker and per-league home-advantage stats
+    state["league_elo_tracker"].setdefault(league, {})[home] = state["elo"][home]
+    state["league_elo_tracker"].setdefault(league, {})[away] = state["elo"][away]
+    state["league_nm"][league] = state["league_nm"].get(league, 0) + 1
+    if result == "H":
+        state["league_hw"][league] = state["league_hw"].get(league, 0) + 1
+
+
+# ---------------------------------------------------------------------------
 
 def build_all_features(
     df: pd.DataFrame,
@@ -367,59 +849,32 @@ def build_all_features(
     league_enc = {lg: int(i) for i, lg in enumerate(league_encoder.classes_)}
     xg_lookup = xg_lookup or {}
 
+    _base = os.path.dirname(__file__)
     lstm_lookup: dict[tuple, float] = {}
     global_mean_home = 0.45
-    lstm_path = os.path.normpath(
-        os.path.join(os.path.dirname(__file__), "..", "data", "processed", "lstm_predictions.csv")
-    )
-    if os.path.exists(lstm_path):
-        lstm_df = pd.read_csv(lstm_path, parse_dates=["match_date"])
-        if len(lstm_df) > 0:
-            global_mean_home = float(lstm_df["p_home"].mean())
-        for _, r in lstm_df.iterrows():
-            key = (r["home_team"], r["away_team"], str(r["match_date"].date()))
-            lstm_lookup[key] = float(r["p_home"])
+    _lstm_path = os.path.normpath(os.path.join(_base, "..", "data", "processed", "lstm_predictions.csv"))
+    if os.path.exists(_lstm_path):
+        _lstm_df = pd.read_csv(_lstm_path, parse_dates=["match_date"])
+        if len(_lstm_df) > 0:
+            global_mean_home = float(_lstm_df["p_home"].mean())
+        for _, r in _lstm_df.iterrows():
+            lstm_lookup[(r["home_team"], r["away_team"], str(r["match_date"].date()))] = float(r["p_home"])
 
     btl_lookup: dict[tuple, float] = {}
     btl_global_mean = 0.45
-    btl_path = os.path.normpath(
-        os.path.join(os.path.dirname(__file__), "..", "data", "processed", "btl_predictions.csv")
-    )
-    if os.path.exists(btl_path):
-        btl_df = pd.read_csv(btl_path, parse_dates=["match_date"])
-        if len(btl_df) > 0:
-            btl_global_mean = float(btl_df["p_home_btl"].mean())
-        for _, r in btl_df.iterrows():
-            key = (r["home_team"], r["away_team"], str(r["match_date"].date()))
-            btl_lookup[key] = float(r["p_home_btl"])
+    _btl_path = os.path.normpath(os.path.join(_base, "..", "data", "processed", "btl_predictions.csv"))
+    if os.path.exists(_btl_path):
+        _btl_df = pd.read_csv(_btl_path, parse_dates=["match_date"])
+        if len(_btl_df) > 0:
+            btl_global_mean = float(_btl_df["p_home_btl"].mean())
+        for _, r in _btl_df.iterrows():
+            btl_lookup[(r["home_team"], r["away_team"], str(r["match_date"].date()))] = float(r["p_home_btl"])
 
-    elo:       dict[str, float] = defaultdict(lambda: STARTING_ELO)
-    g2:        dict[str, tuple] = defaultdict(lambda: (0.0, G2_INITIAL_PHI))
-    team_hist: dict[str, list]  = defaultdict(list)
-    elo_hist:  dict[str, list]  = defaultdict(list)
-    elo_home:  dict[str, float] = {}
-    elo_away:  dict[str, float] = {}
-    ref_stats: dict[str, dict]  = {}   # ref → {matches, yellows_total, fouls_total, home_wins}
-    global_matches:   int = 0
-    global_home_wins: int = 0
-    h2h_hist:  dict[tuple, list] = defaultdict(list)
-    team_home_record:   dict[str, list]   = {}   # team → [1,0,...] home W=1
-    team_away_record:   dict[str, list]   = {}   # team → [1,0,...] away W=1
-    team_season_matches: dict[tuple, int] = {}   # (team, season) → match count
-    team_cs_home: dict[str, list] = {}           # home clean sheets (1=cs, 0=conceded)
-    team_cs_away: dict[str, list] = {}           # away clean sheets
-    team_opp_adj_form: dict[str, list] = {}      # result_value × opponent_strength_multiplier
-    team_season_points: dict[tuple, int] = {}    # (team, season, league) → points
-    team_season_gd: dict[tuple, int] = {}        # (team, season, league) → goal difference
-    league_season_teams: dict[tuple, list] = {}  # (season, league) → list of teams
-
-    # Rolling DC state (last DC_WINDOW goals)
-    dc_scored:   dict[str, list] = defaultdict(list)
-    dc_conceded: dict[str, list] = defaultdict(list)
-
-    pts_map = {"W": 3, "D": 1, "L": 0}
-    rows = []
+    state   = init_state()
+    rows    = []
     n_total = len(df)
+    _n_regress = 0
+    _n_promo   = 0
 
     for i, row in df.iterrows():
         if i > 0 and i % 2000 == 0:
@@ -434,282 +889,59 @@ def build_all_features(
         ag     = int(row["away_goals"])
         result = row["result"]
 
-        ref_raw  = row["referee"] if "referee" in df.columns else None
-        referee  = ref_raw if (isinstance(ref_raw, str) and ref_raw.strip()) else None
-
-        # Referee features from prior matches only (causal)
-        if referee and referee in ref_stats:
-            rs = ref_stats[referee]
-            ref_avg_yellows = rs["yellows_total"] / rs["matches"]
-            ref_avg_fouls   = rs["fouls_total"]   / rs["matches"]
-            global_hw_rate  = (global_home_wins / global_matches) if global_matches > 0 else 0.457
-            ref_home_bias   = (rs["home_wins"] / rs["matches"]) - global_hw_rate
-            ref_experience  = rs["matches"]
-        else:
-            ref_avg_yellows = 3.8
-            ref_avg_fouls   = 23.0
-            ref_home_bias   = 0.0
-            ref_experience  = 0
+        ref_raw = row["referee"] if "referee" in df.columns else None
+        ref_raw = ref_raw if (isinstance(ref_raw, str) and ref_raw.strip()) else None
 
         xg_key  = (date.date(), home, away, league)
         xg_vals = xg_lookup.get(xg_key)
-        h_xg    = xg_vals[0] if xg_vals else None
-        a_xg    = xg_vals[1] if xg_vals else None
-        xg_d    = xg_vals[2] if xg_vals else None
 
-        # Pre-match ratings
-        home_elo = elo[home]
-        away_elo = elo[away]
-        home_exp = _elo_expected(home_elo + ELO_HA, away_elo)
+        # Pre-match adjustments: season regression and promotion/relegation.
+        # Called explicitly here to capture events for logging; compute_match_features
+        # and update_state call it again (idempotent — no-op on second call).
+        for ev in _apply_pre_match_adjustments(state, home, away, season, league):
+            if ev["type"] == "regress":
+                _n_regress += 1
+                if _n_regress <= 10:
+                    print(f"  [Season-Regress] {ev['team']}: "
+                          f"{ev['from_season']} → {ev['to_season']} in {ev['league']}")
+            else:
+                _n_promo += 1
+                if _n_promo <= 10:
+                    print(f"  [Promo/Rel] {ev['team']}: "
+                          f"{ev['from_league']} → {ev['to_league']}  "
+                          f"Elo {ev['old_elo']:.0f} → {ev['new_elo']:.0f}")
 
-        home_mu, home_phi = g2[home]
-        away_mu, away_phi = g2[away]
-        home_g2_rat = home_mu * G2_SCALE + 1500.0
-        away_g2_rat = away_mu * G2_SCALE + 1500.0
-
-        # Rolling DC probabilities
-        atk_h = _dc_attack(dc_scored[home])
-        def_h = _dc_defence(dc_conceded[home])
-        atk_a = _dc_attack(dc_scored[away])
-        def_a = _dc_defence(dc_conceded[away])
-        lam = math.exp(atk_h - def_a + DC_HOME_ADV)
-        mu  = math.exp(atk_a - def_h)
-        p_home_dc, p_draw_dc, p_away_dc = _dc_probs(lam, mu)
-
-        # Record pre-match Elo for elo_momentum lookups
-        elo_hist[home].append((date, home_elo))
-        elo_hist[away].append((date, away_elo))
-
-        hf  = _team_features(team_hist[home], elo_hist[home], home_elo, date, season)
-        af  = _team_features(team_hist[away], elo_hist[away], away_elo, date, season)
-        h2h = _h2h_features(h2h_hist[_h2h_key(home, away)], home)
-
-        asymmetry = float(np.clip(hf["days_rest"] - af["days_rest"], -10, 10))
-        home_fat  = _fatigue_score(hf["days_rest"], hf["matches_21d"], asymmetry, home=True)
-        away_fat  = _fatigue_score(af["days_rest"], af["matches_21d"], asymmetry, home=False)
-
-        home_comp = (hf["result_momentum"] + hf["score_momentum"]
-                     + hf["elo_momentum"]  + hf["streak"]) / 4.0
-        away_comp = (af["result_momentum"] + af["score_momentum"]
-                     + af["elo_momentum"]  + af["streak"]) / 4.0
-
-        # Venue win rates (from prior matches only)
-        _hwr = team_home_record.get(home)
-        _awr = team_away_record.get(away)
-        home_win_rate       = float(np.mean(_hwr)) if _hwr else 0.46
-        away_win_rate       = float(np.mean(_awr)) if _awr else 0.28
-        venue_win_rate_diff = home_win_rate - away_win_rate
-
-        # Season phase
-        home_season_matches = team_season_matches.get((home, season), 0)
-        away_season_matches = team_season_matches.get((away, season), 0)
-        is_late_season      = 1 if min(home_season_matches, away_season_matches) >= 28 else 0
-
-        # Clean sheet rates (last 10 home/away matches)
-        home_cs_rate = float(np.mean(team_cs_home.get(home, [])[-10:])) if team_cs_home.get(home) else 0.28
-        away_cs_rate = float(np.mean(team_cs_away.get(away, [])[-10:])) if team_cs_away.get(away) else 0.22
-
-        # Opponent-adjusted form (last 10)
-        WINDOW = 10
-        home_opp_adj = float(np.mean(team_opp_adj_form.get(home, [])[-WINDOW:])) if team_opp_adj_form.get(home) else 0.0
-        away_opp_adj = float(np.mean(team_opp_adj_form.get(away, [])[-WINDOW:])) if team_opp_adj_form.get(away) else 0.0
-
-        # Relegation/title pressure from current season standings
-        league_teams = league_season_teams.get((season, league), [])
-        if len(league_teams) >= 4:
-            all_pts = [(t, team_season_points.get((t, season, league), 0)) for t in league_teams]
-            all_pts.sort(key=lambda x: -x[1])
-            home_pos = next((i + 1 for i, (t, _) in enumerate(all_pts) if t == home), len(league_teams) // 2)
-            away_pos = next((i + 1 for i, (t, _) in enumerate(all_pts) if t == away), len(league_teams) // 2)
-            n_teams = len(league_teams)
-            home_pressure = 1 if home_pos <= 3 else (-1 if home_pos >= n_teams - 2 else 0)
-            away_pressure = 1 if away_pos <= 3 else (-1 if away_pos >= n_teams - 2 else 0)
-        else:
-            home_pressure, away_pressure = 0, 0
+        feat = compute_match_features(
+            state, home, away, date, season, league, league_enc,
+            xg_vals=xg_vals, ref_raw=ref_raw,
+            lstm_lookup=lstm_lookup, btl_lookup=btl_lookup,
+            global_mean_home=global_mean_home, btl_global_mean=btl_global_mean,
+        )
 
         rows.append({
-            # Metadata
             "match_date": date, "season": season, "league": league,
             "home_team": home, "away_team": away,
-            # Elo
-            "home_elo": home_elo, "away_elo": away_elo,
-            "elo_diff": home_elo - away_elo, "home_expected": home_exp,
-            "home_elo_home": elo_home.get(home, STARTING_ELO),
-            "home_elo_away": elo_away.get(home, STARTING_ELO),
-            "away_elo_home": elo_home.get(away, STARTING_ELO),
-            "away_elo_away": elo_away.get(away, STARTING_ELO),
-            "venue_elo_diff": elo_home.get(home, STARTING_ELO) - elo_away.get(away, STARTING_ELO),
-            # Glicko-2
-            "home_g2_rating": home_g2_rat, "away_g2_rating": away_g2_rat,
-            "g2_diff": home_g2_rat - away_g2_rat,
-            "home_g2_uncertainty": home_phi * G2_SCALE,
-            # Form
-            "home_form": hf["form"], "away_form": af["form"],
-            "form_diff": hf["form"] - af["form"],
-            "home_goals_scored_avg": hf["gs_avg"],
-            "home_goals_conceded_avg": hf["gc_avg"],
-            "away_goals_scored_avg": af["gs_avg"],
-            "away_goals_conceded_avg": af["gc_avg"],
-            # xG (from prior matches, no leakage)
-            "home_xg_avg": hf["xg_scored_home_avg"],
-            "home_xg_conceded_avg": hf["xg_conceded_home_avg"],
-            "away_xg_avg": af["xg_scored_away_avg"],
-            "away_xg_conceded_avg": af["xg_conceded_away_avg"],
-            "home_xg_diff_avg": hf["xg_diff_avg"],
-            "away_xg_diff_avg": af["xg_diff_avg"],
-            # Momentum
-            "home_result_momentum": hf["result_momentum"],
-            "away_result_momentum": af["result_momentum"],
-            "home_score_momentum": hf["score_momentum"],
-            "away_score_momentum": af["score_momentum"],
-            "home_elo_momentum": hf["elo_momentum"],
-            "away_elo_momentum": af["elo_momentum"],
-            "home_streak": hf["streak"], "away_streak": af["streak"],
-            "momentum_diff": home_comp - away_comp,
-            # Fatigue
-            "home_days_rest": hf["days_rest"], "away_days_rest": af["days_rest"],
-            "home_matches_21d": hf["matches_21d"], "away_matches_21d": af["matches_21d"],
-            "rest_asymmetry": asymmetry,
-            "home_fatigue_score": home_fat, "away_fatigue_score": away_fat,
-            # H2H
-            "h2h_home_win_rate":  h2h["h2h_home_win_rate"],
-            "h2h_goal_diff_avg":  h2h["h2h_goal_diff_avg"],
-            "h2h_meetings":       h2h["h2h_meetings"],
-            "h2h_dominance":      h2h["h2h_dominance"],
-            "revenge_factor":     h2h["revenge_factor"],
-            "home_unbeaten_run":  hf["unbeaten_run"],
-            "away_unbeaten_run":  af["unbeaten_run"],
-            "post_loss_bounce":      hf["post_loss"],
-            "post_loss_bounce_away": af["post_loss"],
-            # Context
-            "league_encoded": league_enc[league],
-            "is_early_season": hf["is_early"],
-            # LSTM stack feature
-            "p_home_lstm": lstm_lookup.get((home, away, str(date.date())), global_mean_home),
-            # BTL stack feature
-            "p_home_btl": btl_lookup.get((home, away, str(date.date())), btl_global_mean),
-            # Rolling DC
-            "p_home_dc": p_home_dc, "p_draw_dc": p_draw_dc, "p_away_dc": p_away_dc,
-            # Referee
-            "ref_avg_yellows": ref_avg_yellows,
-            "ref_avg_fouls":   ref_avg_fouls,
-            "ref_home_bias":   ref_home_bias,
-            "ref_experience":  ref_experience,
-            # Venue win rates
-            "home_win_rate":       home_win_rate,
-            "away_win_rate":       away_win_rate,
-            "venue_win_rate_diff": venue_win_rate_diff,
-            # Season phase
-            "home_season_matches": home_season_matches,
-            "away_season_matches": away_season_matches,
-            "is_late_season":      is_late_season,
-            # Clean sheet rate
-            "home_cs_rate": home_cs_rate,
-            "away_cs_rate": away_cs_rate,
-            # Opponent-adjusted form
-            "home_opp_adj_form": home_opp_adj,
-            "away_opp_adj_form": away_opp_adj,
-            # Relegation/title pressure
-            "home_pressure": home_pressure,
-            "away_pressure": away_pressure,
-            "pressure_diff": home_pressure - away_pressure,
-            # Target
+            **feat,
             "result": result,
         })
 
-        # Update state (AFTER recording features)
-        if result == "H":
-            hs, as_, home_res, away_res = 1.0, 0.0, "W", "L"
-        elif result == "D":
-            hs, as_, home_res, away_res = 0.5, 0.5, "D", "D"
-        else:
-            hs, as_, home_res, away_res = 0.0, 1.0, "L", "W"
+        h_yel  = float(row["home_yellows"]) if pd.notna(row.get("home_yellows")) else 0.0
+        a_yel  = float(row["away_yellows"]) if pd.notna(row.get("away_yellows")) else 0.0
+        h_foul = float(row["home_fouls"])   if pd.notna(row.get("home_fouls"))   else 0.0
+        a_foul = float(row["away_fouls"])   if pd.notna(row.get("away_fouls"))   else 0.0
 
-        mov = _elo_mov(hg - ag)
-        elo[home] = home_elo + ELO_K * mov * (hs - home_exp)
-        elo[away] = away_elo + ELO_K * mov * (as_ - (1.0 - home_exp))
-
-        home_exp_venue = _elo_expected(
-            elo_home.get(home, STARTING_ELO),
-            elo_away.get(away, STARTING_ELO),
+        update_state(
+            state, home, away, date, season, league, hg, ag, result,
+            xg_vals=xg_vals, ref_name=ref_raw,
+            home_yellows=h_yel, away_yellows=a_yel,
+            home_fouls=h_foul, away_fouls=a_foul,
         )
-        elo_home[home] = elo_home.get(home, STARTING_ELO) + ELO_K * HOME_ELO_K_SCALE * mov * (hs - home_exp_venue)
-        elo_away[away] = elo_away.get(away, STARTING_ELO) + ELO_K * HOME_ELO_K_SCALE * mov * (as_ - (1.0 - home_exp_venue))
 
-        g2[home] = _g2_update(home_mu, home_phi, away_mu,         away_phi, hs,  ha=G2_HA)
-        g2[away] = _g2_update(away_mu, away_phi, home_mu + G2_HA, home_phi, as_, ha=0.0)
-
-        h2h_hist[_h2h_key(home, away)].append(
-            {"home": home, "result": result, "hg": hg, "ag": ag}
-        )
-        team_hist[home].append({
-            "date": date, "season": season, "result": home_res,
-            "points": pts_map[home_res],
-            "goal_diff": hg - ag, "goals_scored": hg, "goals_conceded": ag,
-            "is_home": True, "xg_scored": h_xg, "xg_conceded": a_xg,
-            "xg_diff": xg_d,
-        })
-        team_hist[away].append({
-            "date": date, "season": season, "result": away_res,
-            "points": pts_map[away_res],
-            "goal_diff": ag - hg, "goals_scored": ag, "goals_conceded": hg,
-            "is_home": False, "xg_scored": a_xg, "xg_conceded": h_xg,
-            "xg_diff": (-xg_d if xg_d is not None else None),
-        })
-
-        dc_scored[home]   = dc_scored[home][-(DC_WINDOW - 1):] + [hg]
-        dc_conceded[home] = dc_conceded[home][-(DC_WINDOW - 1):] + [ag]
-        dc_scored[away]   = dc_scored[away][-(DC_WINDOW - 1):] + [ag]
-        dc_conceded[away] = dc_conceded[away][-(DC_WINDOW - 1):] + [hg]
-
-        # Update referee rolling stats (AFTER recording features)
-        global_matches += 1
-        if result == "H":
-            global_home_wins += 1
-        if referee:
-            if referee not in ref_stats:
-                ref_stats[referee] = {"matches": 0, "yellows_total": 0.0, "fouls_total": 0.0, "home_wins": 0}
-            rs = ref_stats[referee]
-            rs["matches"] += 1
-            if result == "H":
-                rs["home_wins"] += 1
-            h_yel   = float(row["home_yellows"]) if pd.notna(row.get("home_yellows")) else 0.0
-            a_yel   = float(row["away_yellows"]) if pd.notna(row.get("away_yellows")) else 0.0
-            h_foul  = float(row["home_fouls"])   if pd.notna(row.get("home_fouls"))   else 0.0
-            a_foul  = float(row["away_fouls"])   if pd.notna(row.get("away_fouls"))   else 0.0
-            rs["yellows_total"] += h_yel + a_yel
-            rs["fouls_total"]   += h_foul + a_foul
-
-        # Update venue win-rate records and season match counts
-        team_home_record.setdefault(home, []).append(1 if result == "H" else 0)
-        team_away_record.setdefault(away, []).append(1 if result == "A" else 0)
-        team_season_matches[(home, season)] = home_season_matches + 1
-        team_season_matches[(away, season)] = away_season_matches + 1
-
-        # Update clean sheet records
-        team_cs_home.setdefault(home, []).append(1 if ag == 0 else 0)
-        team_cs_away.setdefault(away, []).append(1 if hg == 0 else 0)
-
-        # Update opponent-adjusted form
-        elo_ratio_h = away_elo / max(home_elo, 1)
-        elo_ratio_a = home_elo / max(away_elo, 1)
-        h_result_val = 1.0 if result == "H" else (0.5 if result == "D" else 0.0)
-        a_result_val = 1.0 if result == "A" else (0.5 if result == "D" else 0.0)
-        team_opp_adj_form.setdefault(home, []).append(h_result_val * elo_ratio_h)
-        team_opp_adj_form.setdefault(away, []).append(a_result_val * elo_ratio_a)
-
-        # Update season standings
-        pts_h = 3 if result == "H" else (1 if result == "D" else 0)
-        pts_a = 3 if result == "A" else (1 if result == "D" else 0)
-        key_h = (home, season, league)
-        key_a = (away, season, league)
-        team_season_points[key_h] = team_season_points.get(key_h, 0) + pts_h
-        team_season_points[key_a] = team_season_points.get(key_a, 0) + pts_a
-        sk = (season, league)
-        if home not in league_season_teams.get(sk, []):
-            league_season_teams.setdefault(sk, []).append(home)
-        if away not in league_season_teams.get(sk, []):
-            league_season_teams.setdefault(sk, []).append(away)
+    if _n_regress > 10:
+        print(f"  ... and {_n_regress - 10} more season-regression events suppressed.")
+    if _n_promo > 10:
+        print(f"  ... and {_n_promo - 10} more promotion/relegation events suppressed.")
+    print(f"Season regressions applied: {_n_regress} | League-change adjustments: {_n_promo}")
 
     feat_df = pd.DataFrame(rows)
     if _created_encoder:

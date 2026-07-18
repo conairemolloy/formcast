@@ -183,16 +183,16 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [x] Relegation/title pressure — flag teams in bottom 3 or top 3 with <10 games remaining, measurable performance change
 - [x] Opponent-adjusted form — distinguish wins vs top-half teams from wins vs relegation fodder
 - [x] Season opener variance — widen confidence intervals for first 5 games of season, less predictable (is_early_season flag in all market models)
-- [ ] Early season Elo regression — regress all teams toward league mean at season start
+- [x] Early season Elo regression — REGRESSION_FACTOR=0.75, regress toward league mean, ensemble_v2.py build_all_features()
 - [ ] Form-weighted late season — increase EWM weight of last 5 matches in final 10 gameweeks
 - [ ] First half vs second half performance — some teams start slow or fade, use half-time scores if available in results.csv
-- [ ] Home bias score per referee — does referee statistically favour home team, quantified from historical data
-- [ ] VAR tendency — referees who overturn more decisions, affects game flow
-- [ ] League-specific home advantage — home advantage varies by league, Serie A vs Championship differ significantly
-- [ ] Promotion/relegation Elo adjustment — newly promoted teams need adjusted ratings for first season in higher division
-- [ ] Cross-competition Elo continuity — strengthen existing implementation, Champions League performance should inform league Elo more
-- [ ] Opponent quality-adjusted form — OLS regression of results controlling for opponent Elo
-- [ ] Unbeaten run momentum — teams on long unbeaten runs outperform their Elo rating
+- [x] Home bias score per referee — ref_home_bias feature, ensemble_v2.py
+- [ ] VAR tendency — referees who overturn more decisions, affects game flow **[PARKED: no VAR data available from football-data.co.uk]**
+- [x] League-specific home advantage — learned online per-league HA (HA_MIN_MATCHES=100), clamped [0.5×, 1.5×], ensemble_v2.py build_all_features()
+- [x] Promotion/relegation Elo adjustment — 50% step toward new league mean on first appearance in new league, ensemble_v2.py build_all_features()
+- [ ] Cross-competition Elo continuity — strengthen existing implementation, Champions League performance should inform league Elo more **[PARKED: no European competition data ingested; revisit if CL ingestion added via football-data.org]**
+- [x] Opponent quality-adjusted form — home/away_opp_adj_form features (result × opponent Elo ratio, last 10), ensemble_v2.py
+- [x] Unbeaten run momentum — home/away_unbeaten_run features (capped at 15), ensemble_v2.py
 - [x] Clean sheet rate — goalkeeper/defensive form signal, rolling last 10 matches (venue-split in BTTS and goals models)
 - [ ] Goals per shot ratio — shooting efficiency trend, more predictive than raw goal count
 - [ ] H2H extended history — full historical H2H dominance not just last 10 meetings
@@ -264,7 +264,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - Odds display — decimal format live on value bets page
 
 
-- [ ] Odds format converter utility function — shared module usable across all sports and all pages
+- [x] Odds format converter utility function — to_decimal/to_american/to_fractional/all_formats in dutching_arbitrage.py; frontend wiring still pending
 - [ ] Value bets page updated to show all three odds formats simultaneously
 
 
@@ -321,16 +321,26 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 ---
 
 ## Phase 5 — Model Validation & Transparency
-- [ ] Full backtesting results page (hit rate and Brier by league, season, year)
+- [x] Full backtesting results page (hit rate and Brier by league, season, year)
 - [x] Calibration diagram (reliability plot with confidence intervals)
 - [x] Model comparison table (all models side by side)
-- [ ] Walk-forward accuracy chart (how hit rate changed over 32 seasons)
+- [x] Walk-forward accuracy chart (how hit rate changed over 32 seasons)
 - [x] Closing line value history (CLV per bet, cumulative CLV chart)
 - [x] Prediction log (every prediction ever made, timestamped, SHA256 hashed)
-- [ ] Monthly accuracy report (automated, updated after each round of fixtures)
-- [ ] Diebold-Mariano test results vs naive baseline
-- [ ] Hosmer-Lemeshow calibration test results
-- [ ] Permutation feature importance (which features matter most per league)
+- [x] Monthly accuracy report (automated, updated after each round of fixtures)
+- [x] Diebold-Mariano test results vs naive baseline
+- [x] Hosmer-Lemeshow calibration test results
+- [x] Permutation feature importance (which features matter most per league)
+
+### Phase 5 Completion — July 2026
+- [x] Walk-forward accuracy line chart — 1993–2026 with Elo baseline reference line
+- [x] Hosmer-Lemeshow calibration test — χ²=9.14, p=0.33, well calibrated
+- [x] Diebold-Mariano significance test — DM=-1.39, p=0.165, ensemble better but not significant
+- [x] Feature importance chart — top 15 XGBoost gain features, horizontal bar chart
+- [x] Model comparison table — live from API replacing hardcoded values
+- [x] Statistical tests section in BacktestReport UI
+- [x] Feature importance endpoint GET /api/backtest/feature-importance
+- [x] DM test endpoint GET /api/backtest/dm-test
 
 ---
 
