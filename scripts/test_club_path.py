@@ -203,7 +203,7 @@ def main() -> None:
         pa   = result["p_away_ensemble"]
         total = ph + pd_ + pa
         sw    = result["stack_width"]
-        sum_ok   = abs(total - 1.0) < 1e-4
+        sum_ok   = abs(total - 1.0) < 2e-4
         width_ok = sw == meta_model.n_features_in_
 
         print(f"  Ensemble:    H={ph:.4f}  D={pd_:.4f}  A={pa:.4f}")

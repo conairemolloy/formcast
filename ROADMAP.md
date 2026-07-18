@@ -34,7 +34,7 @@
 - World Cup value bets — live odds via The Odds API (soccer_fifa_world_cup), real international Elo-based edges, free tier usage (~30 credits/month)
 - CI/CD pipeline fully healthy — fixed 3-week silent failure (missing joblib/xgboost in requirements.txt), added retry logic with exponential backoff for live fixture fetching
 - LSTM predictions in ensemble stack — 14-feature meta-learner, 66.83% walk-forward backtest
-- 75-feature ensemble, 15-feature meta-learner stack, 66.92% walk-forward backtest, ECE 0.0098
+- 82-feature ensemble (Batch 3: +7), 15-feature meta-learner stack, 66.92% walk-forward backtest, ECE 0.0098
 
 ---
 
@@ -212,16 +212,16 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 
 ### Tier 3 — Model Architecture Improvements
 - [x] Separate draw classifier — dedicated binary classifier trained specifically to predict draws, using features like team defensive ratings, historical draw rates by team/league/referee, closeness of Elo ratings
-- [ ] Score-effect model — teams play differently when winning (sit deep) vs losing (chase game), current models ignore game state entirely
-- [ ] Home/away Glicko-2 split — same as Elo split but with uncertainty tracking per venue type
-- [ ] Time-decay on xG — older xG data weighted less than recent, currently flat window
-- [ ] Bayesian draw model — model draw probability as a function of match competitiveness and historical draw rates
+- [ ] Score-effect model — teams play differently when winning (sit deep) vs losing (chase game), current models ignore game state entirely **[DEFERRED Batch 3: needs in-game state data not available in results.csv]**
+- [x] Home/away Glicko-2 split — venue-specific G2 dicts (g2_home/g2_away); 4 new features: home_g2_home, away_g2_away, g2_venue_diff, away_g2_uncertainty (Batch 3)
+- [x] Time-decay on xG — DECAY=0.85 exponential weighting replaces flat window across all 6 xG averages (Batch 3)
+- [ ] Bayesian draw model — model draw probability as a function of match competitiveness and historical draw rates **[DEFERRED Batch 3: draw classifier already covers this — enhancement not gap; revisit after SHAP analysis]**
 - [x] Ensemble calibration (Platt scaling) — investigated, ECE 0.0098 already excellent
-- [ ] League strength adjustment — when teams move between leagues, adjust Elo to account for quality difference
-- [ ] Cross-league Elo normalisation — ensure EPL Elo 1600 is comparable to Bundesliga 1600
-- [ ] Feature interaction terms — explicit interaction features (elo_diff × form_diff, referee_cards × fatigue) for XGBoost
-- [ ] Temporal feature decay — weight recent matches more in all rolling windows, not just momentum
-- [ ] Confidence intervals per prediction — quantify model uncertainty per match, not just point probability
+- [ ] League strength adjustment — when teams move between leagues, adjust Elo to account for quality difference **[DEFERRED Batch 3: partially addressed by Batch 1 promo/rel mechanism; revisit at SHAP stage]**
+- [ ] Cross-league Elo normalisation — ensure EPL Elo 1600 is comparable to Bundesliga 1600 **[DEFERRED Batch 3: partially addressed by Batch 1 promo/rel mechanism; revisit at SHAP stage]**
+- [x] Feature interaction terms — elo_x_form (elo_diff × form_diff / 100), fatigue_x_congestion (rest_asymmetry × congestion_diff), derby_x_h2h (Batch 3: 3 new features)
+- [x] Temporal feature decay — DECAY=0.85 EWM on goals scored/conceded averages and clean sheet rates; momentum features untouched (already EWM), form kept flat (feeds late_season_form_diff contrast), shot conversion left to observe (Batch 3)
+- [x] Confidence intervals per prediction — prediction_uncertainty = (home_phi + away_phi) / (2 × G2_INITIAL_PHI), normalised by initial phi; returned as metadata key only, NOT in FEATURE_COLS (Batch 3)
 
 ### Tier 4 — Market Intelligence (Requires Betfair/Odds API)
 - [ ] Opening vs closing line movement — odds moving significantly pre-kickoff = sharp money signal

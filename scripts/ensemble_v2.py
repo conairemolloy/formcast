@@ -38,6 +38,7 @@ COLD_START = 200
 FORM_WINDOW = 5
 EWM_ALPHA = 0.4
 LATE_EWM_ALPHA = 0.6
+DECAY = 0.85   # exponential decay weight for rolling windows (xG, goals, clean sheets)
 
 G2_SCALE = 173.7178
 G2_INITIAL_PHI = 200.0 / G2_SCALE
@@ -126,6 +127,10 @@ FEATURE_COLS = [
     "h2h_all_time_dominance",
     # Derby fixture flag
     "is_derby",
+    # Home/Away Glicko-2 split (venue-specific ratings + away uncertainty)
+    "home_g2_home", "away_g2_away", "g2_venue_diff", "away_g2_uncertainty",
+    # Feature interactions
+    "elo_x_form", "fatigue_x_congestion", "derby_x_h2h",
 ]
 
 # 13-feature stack fed into the meta-learner
@@ -197,6 +202,16 @@ def _ewm(values: list, alpha: float = EWM_ALPHA) -> float:
     return sum(w * v for w, v in zip(weights, values)) / total
 
 
+def _decay_mean(values: list, decay: float = DECAY) -> float:
+    """Exponentially decay-weighted mean: most-recent match has weight 1, oldest DECAY^(n-1)."""
+    if not values:
+        return 0.0
+    n = len(values)
+    weights = [decay ** (n - 1 - i) for i in range(n)]
+    total = sum(weights)
+    return sum(w * v for w, v in zip(weights, values)) / total
+
+
 def _streak(hist: list) -> int:
     if not hist:
         return 0
@@ -245,8 +260,8 @@ def _team_features(
     if fw:
         nf = len(fw)
         form   = sum(h["points"] for h in fw) / (3.0 * nf)
-        gs_avg = sum(h["goals_scored"] for h in fw) / nf
-        gc_avg = sum(h["goals_conceded"] for h in fw) / nf
+        gs_avg = _decay_mean([h["goals_scored"]   for h in fw])
+        gc_avg = _decay_mean([h["goals_conceded"] for h in fw])
     else:
         form, gs_avg, gc_avg = 0.5, 1.5, 1.5
 
@@ -288,11 +303,11 @@ def _team_features(
     fw_axg     = away_xg_hist[-FORM_WINDOW:]
     fw_axg_all = all_xg_hist[-FORM_WINDOW:]
 
-    xg_scored_home_avg   = sum(h["xg_scored"]   for h in fw_hxg)     / len(fw_hxg)     if fw_hxg     else 1.3
-    xg_conceded_home_avg = sum(h["xg_conceded"] for h in fw_hxg)     / len(fw_hxg)     if fw_hxg     else 1.3
-    xg_scored_away_avg   = sum(h["xg_scored"]   for h in fw_axg)     / len(fw_axg)     if fw_axg     else 1.3
-    xg_conceded_away_avg = sum(h["xg_conceded"] for h in fw_axg)     / len(fw_axg)     if fw_axg     else 1.3
-    xg_diff_avg          = sum(h["xg_diff"]     for h in fw_axg_all) / len(fw_axg_all) if fw_axg_all else 0.0
+    xg_scored_home_avg   = _decay_mean([h["xg_scored"]   for h in fw_hxg])     if fw_hxg     else 1.3
+    xg_conceded_home_avg = _decay_mean([h["xg_conceded"] for h in fw_hxg])     if fw_hxg     else 1.3
+    xg_scored_away_avg   = _decay_mean([h["xg_scored"]   for h in fw_axg])     if fw_axg     else 1.3
+    xg_conceded_away_avg = _decay_mean([h["xg_conceded"] for h in fw_axg])     if fw_axg     else 1.3
+    xg_diff_avg          = _decay_mean([h["xg_diff"]     for h in fw_axg_all]) if fw_axg_all else 0.0
 
     return {
         "form": form, "gs_avg": gs_avg, "gc_avg": gc_avg,
@@ -415,6 +430,8 @@ def init_state() -> dict:
     return {
         "elo":        defaultdict(lambda: STARTING_ELO),
         "g2":         defaultdict(lambda: (0.0, G2_INITIAL_PHI)),
+        "g2_home":    defaultdict(lambda: (0.0, G2_INITIAL_PHI)),
+        "g2_away":    defaultdict(lambda: (0.0, G2_INITIAL_PHI)),
         "elo_home":   {},
         "elo_away":   {},
         "team_hist":  defaultdict(list),
@@ -521,8 +538,9 @@ def compute_match_features(
     already applied by the caller). Does NOT update state with the match result;
     call update_state() after this to advance the walk-forward state.
 
-    Returns a dict with all 70 FEATURE_COLS keys plus p_home_dc/p_draw_dc/
-    p_away_dc, p_home_lstm, p_home_btl (stack inputs not in FEATURE_COLS).
+    Returns a dict with all 82 FEATURE_COLS keys plus p_home_dc/p_draw_dc/
+    p_away_dc, p_home_lstm, p_home_btl (stack inputs not in FEATURE_COLS),
+    and prediction_uncertainty (metadata only, not in FEATURE_COLS).
     """
     _apply_pre_match_adjustments(state, home, away, season, league)
 
@@ -561,6 +579,12 @@ def compute_match_features(
     away_mu, away_phi = g2[away]
     home_g2_rat = home_mu * G2_SCALE + 1500.0
     away_g2_rat = away_mu * G2_SCALE + 1500.0
+
+    # Venue-specific G2 ratings (home team's home rating, away team's away rating)
+    home_g2h_mu, _ = state["g2_home"][home]
+    away_g2a_mu, _ = state["g2_away"][away]
+    home_g2h_rating = home_g2h_mu * G2_SCALE + 1500.0
+    away_g2a_rating = away_g2a_mu * G2_SCALE + 1500.0
 
     # Rolling Dixon-Coles probabilities
     atk_h = _dc_attack(dc_scored[home])
@@ -614,9 +638,11 @@ def compute_match_features(
     away_season_matches = state["team_season_matches"].get((away, season), 0)
     is_late_season      = 1 if min(home_season_matches, away_season_matches) >= 28 else 0
 
-    # Clean sheet rates (last 10 home/away matches)
-    home_cs_rate = float(np.mean(state["team_cs_home"].get(home, [])[-10:])) if state["team_cs_home"].get(home) else 0.28
-    away_cs_rate = float(np.mean(state["team_cs_away"].get(away, [])[-10:])) if state["team_cs_away"].get(away) else 0.22
+    # Clean sheet rates (last 10 home/away matches, decay-weighted)
+    _hcs = state["team_cs_home"].get(home, [])[-10:]
+    _acs = state["team_cs_away"].get(away, [])[-10:]
+    home_cs_rate = _decay_mean(_hcs) if _hcs else 0.28
+    away_cs_rate = _decay_mean(_acs) if _acs else 0.22
 
     # Opponent-adjusted form (last 10)
     _WINDOW = 10
@@ -662,6 +688,16 @@ def compute_match_features(
 
     # Derby flag
     is_derby = 1 if frozenset({home, away}) in DERBY_PAIRS else 0
+
+    # Feature interactions (computed from already-resolved values — no state changes)
+    _elo_diff  = home_elo - away_elo
+    _form_diff = hf["form"] - af["form"]
+    elo_x_form           = _elo_diff * _form_diff / 100.0
+    fatigue_x_congestion = asymmetry * (hf["matches_21d"] - af["matches_21d"])
+    derby_x_h2h          = is_derby * h2h_all_time_dominance
+
+    # Prediction uncertainty (metadata — NOT in FEATURE_COLS)
+    prediction_uncertainty = (home_phi + away_phi) / (2.0 * G2_INITIAL_PHI)
 
     # LSTM and BTL stack lookups (fall back to global mean for unseen fixtures)
     _date_str    = str(date.date()) if hasattr(date, "date") else str(date)
@@ -754,6 +790,17 @@ def compute_match_features(
         "h2h_all_time_dominance": h2h_all_time_dominance,
         # Derby flag
         "is_derby": is_derby,
+        # Home/Away Glicko-2 split
+        "home_g2_home":       home_g2h_rating,
+        "away_g2_away":       away_g2a_rating,
+        "g2_venue_diff":      home_g2h_rating - away_g2a_rating,
+        "away_g2_uncertainty": away_phi * G2_SCALE,
+        # Feature interactions
+        "elo_x_form":           elo_x_form,
+        "fatigue_x_congestion": fatigue_x_congestion,
+        "derby_x_h2h":          derby_x_h2h,
+        # Prediction uncertainty (metadata — NOT a model feature)
+        "prediction_uncertainty": prediction_uncertainty,
         # Stack inputs (not in FEATURE_COLS but needed for meta-learner)
         "p_home_lstm": p_home_lstm,
         "p_home_btl":  p_home_btl,
@@ -840,9 +887,17 @@ def update_state(
     state["elo_away"][away] = (state["elo_away"].get(away, STARTING_ELO)
                                + ELO_K * HOME_ELO_K_SCALE * mov * (as_ - (1.0 - home_exp_venue)))
 
-    # Glicko-2 update
+    # Venue-specific G2: capture pre-match state before any update
+    _h_g2h = state["g2_home"][home]
+    _a_g2a = state["g2_away"][away]
+
+    # Glicko-2 update (global)
     state["g2"][home] = _g2_update(home_mu, home_phi, away_mu,         away_phi, hs,  ha=G2_HA)
     state["g2"][away] = _g2_update(away_mu, away_phi, home_mu + G2_HA, home_phi, as_, ha=0.0)
+
+    # Venue-specific G2 update (home team's home rating; away team's away rating)
+    state["g2_home"][home] = _g2_update(_h_g2h[0], _h_g2h[1], away_mu,         away_phi, hs,  ha=G2_HA)
+    state["g2_away"][away] = _g2_update(_a_g2a[0], _a_g2a[1], home_mu + G2_HA, home_phi, as_, ha=0.0)
 
     # H2H and team history
     _hkey_upd = _h2h_key(home, away)
