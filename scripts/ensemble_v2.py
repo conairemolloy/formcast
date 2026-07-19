@@ -82,7 +82,52 @@ DERBY_PAIRS: frozenset = frozenset({
     frozenset({"Hannover", "Braunschweig"}),
 })
 
-# Full 75-feature set used for XGBoost base model
+# ---------------------------------------------------------------------------
+# Stadium geography — loaded once at import time from data/reference/stadiums.csv
+# Both raw and .strip() variants registered so trailing-space artefacts in
+# results.csv (e.g. "Kaiserslautern ") still resolve correctly.
+# ---------------------------------------------------------------------------
+
+_STADIUMS_CSV = os.path.normpath(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "reference", "stadiums.csv")
+)
+_STADIUM_LOOKUP: dict[str, dict] = {}
+
+
+def _load_stadiums() -> None:
+    if not os.path.exists(_STADIUMS_CSV):
+        return
+    df = pd.read_csv(_STADIUMS_CSV, keep_default_na=False)
+    for _, row in df.iterrows():
+        raw = str(row["team"])
+        try:
+            entry = {
+                "lat": float(row["latitude"])  if row["latitude"]  != "" else None,
+                "lng": float(row["longitude"]) if row["longitude"] != "" else None,
+                "alt": float(row["altitude_m"]) if row["altitude_m"] != "" else None,
+                "cap": float(row["capacity"])  if row["capacity"]  != "" else None,
+            }
+        except (ValueError, KeyError):
+            entry = {"lat": None, "lng": None, "alt": None, "cap": None}
+        _STADIUM_LOOKUP[raw] = entry
+        stripped = raw.strip()
+        if stripped != raw:
+            _STADIUM_LOOKUP.setdefault(stripped, entry)
+
+
+_load_stadiums()
+
+
+def _haversine_km(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
+    R = 6371.0
+    phi1, phi2 = math.radians(lat1), math.radians(lat2)
+    a = (math.sin(math.radians(lat2 - lat1) / 2) ** 2
+         + math.cos(phi1) * math.cos(phi2)
+         * math.sin(math.radians(lng2 - lng1) / 2) ** 2)
+    return 2.0 * R * math.asin(math.sqrt(a))
+
+
+# Full 85-feature set used for XGBoost base model
 FEATURE_COLS = [
     "home_elo", "away_elo", "elo_diff", "home_expected",
     "home_elo_home", "home_elo_away", "away_elo_home", "away_elo_away", "venue_elo_diff",
@@ -131,6 +176,8 @@ FEATURE_COLS = [
     "home_g2_home", "away_g2_away", "g2_venue_diff", "away_g2_uncertainty",
     # Feature interactions
     "elo_x_form", "fatigue_x_congestion", "derby_x_h2h",
+    # Stadium geography (fallback 0.0 when either stadium unknown)
+    "away_travel_km", "altitude_diff", "home_capacity_log",
 ]
 
 # 13-feature stack fed into the meta-learner
@@ -538,7 +585,7 @@ def compute_match_features(
     already applied by the caller). Does NOT update state with the match result;
     call update_state() after this to advance the walk-forward state.
 
-    Returns a dict with all 82 FEATURE_COLS keys plus p_home_dc/p_draw_dc/
+    Returns a dict with all 85 FEATURE_COLS keys plus p_home_dc/p_draw_dc/
     p_away_dc, p_home_lstm, p_home_btl (stack inputs not in FEATURE_COLS),
     and prediction_uncertainty (metadata only, not in FEATURE_COLS).
     """
@@ -696,6 +743,19 @@ def compute_match_features(
     fatigue_x_congestion = asymmetry * (hf["matches_21d"] - af["matches_21d"])
     derby_x_h2h          = is_derby * h2h_all_time_dominance
 
+    # Stadium geography features (haversine distance + altitude differential + capacity)
+    _hs = _STADIUM_LOOKUP.get(home) or _STADIUM_LOOKUP.get(home.strip(), {})
+    _as = _STADIUM_LOOKUP.get(away) or _STADIUM_LOOKUP.get(away.strip(), {})
+    _h_lat, _h_lng = _hs.get("lat"), _hs.get("lng")
+    _a_lat, _a_lng = _as.get("lat"), _as.get("lng")
+    away_travel_km = (
+        _haversine_km(_h_lat, _h_lng, _a_lat, _a_lng)
+        if _h_lat is not None and _a_lat is not None
+        else 0.0
+    )
+    altitude_diff    = float((_hs.get("alt") or 0.0) - (_as.get("alt") or 0.0))
+    home_capacity_log = math.log10(_hs["cap"]) if _hs.get("cap") else math.log10(20000.0)
+
     # Prediction uncertainty (metadata — NOT in FEATURE_COLS)
     prediction_uncertainty = (home_phi + away_phi) / (2.0 * G2_INITIAL_PHI)
 
@@ -799,6 +859,10 @@ def compute_match_features(
         "elo_x_form":           elo_x_form,
         "fatigue_x_congestion": fatigue_x_congestion,
         "derby_x_h2h":          derby_x_h2h,
+        # Stadium geography
+        "away_travel_km":    away_travel_km,
+        "altitude_diff":     altitude_diff,
+        "home_capacity_log": home_capacity_log,
         # Prediction uncertainty (metadata — NOT a model feature)
         "prediction_uncertainty": prediction_uncertainty,
         # Stack inputs (not in FEATURE_COLS but needed for meta-learner)

@@ -36,11 +36,17 @@ jobs:
       - name: Run World Cup knockout simulator
         run: python scripts/worldcup_knockout_simulator.py
 
+      - name: Log odds snapshot
+        run: python scripts/log_odds_snapshot.py
+        continue-on-error: true
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+
       - name: Commit and push updated CSVs
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/processed/international_results.csv data/processed/international_elo_ratings.csv data/processed/international_shootouts.csv data/processed/worldcup_bracket_sims.csv data/processed/worldcup_match_probs.csv
+          git add data/processed/international_results.csv data/processed/international_elo_ratings.csv data/processed/international_shootouts.csv data/processed/worldcup_bracket_sims.csv data/processed/worldcup_match_probs.csv data/processed/odds_history.csv
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else

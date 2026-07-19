@@ -199,10 +199,11 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [x] Derby factor — `is_derby` binary flag; 22 hardcoded pairs (16 top-flight + 6 second-tier) in module-level `DERBY_PAIRS` frozenset; both M'Gladbach spellings covered; team names validated against results.csv at build time with warnings on typos
 
 ### Tier 2 — External Data Required (All Free Sources)
-- [ ] Weather at kickoff — OpenWeatherMap free API. Wind >30km/h reduces scoring, heavy rain affects passing, extreme temperatures affect performance. One API call per upcoming fixture (PRIORITY)
+- [~] Weather at kickoff — prediction-time display live (fetch_weather.py → upcoming_weather.csv → merged into upcoming_predictions.csv); training feature blocked on historical weather data backfill; logger running since July 2026, revisit as training feature next season
 - [ ] Manager change signal — +8 Elo bounce in first 5 games under new manager, well documented in literature. TransferMarkt scrape for manager change dates, update monthly
-- [ ] Distance travelled — stadium coordinates database (lat/lng for all clubs) + great circle distance calculation. Midweek away trips to far grounds = fatigue penalty
-- [ ] Altitude adjustment — away team performance penalty for high altitude venues. Lookup table by stadium
+- [x] Distance travelled — away_travel_km feature (haversine); stadiums.csv covers 442/444 teams; 0.0 fallback when stadium unknown
+- [x] Altitude adjustment — altitude_diff feature (home_alt − away_home_alt, metres); same stadiums.csv source; 0.0 fallback
+- [x] Stadium capacity proxy — home_capacity_log feature (log10(capacity)); fallback log10(20000) ≈ 4.30 when unknown
 - [ ] Squad strength proxy — count of players per team currently playing in top leagues, use existing club Elo data as novel cross-dataset signal
 - [ ] Injury/suspension impact — key player missing affects xG significantly. Free sources: BBC Sport, Rotowire, or parse football-data.org injury flags
 - [ ] International break fatigue — players returning from international duty, travel disruption and schedule congestion
@@ -224,12 +225,13 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [x] Confidence intervals per prediction — prediction_uncertainty = (home_phi + away_phi) / (2 × G2_INITIAL_PHI), normalised by initial phi; returned as metadata key only, NOT in FEATURE_COLS (Batch 3)
 
 ### Tier 4 — Market Intelligence (Requires Betfair/Odds API)
-- [ ] Opening vs closing line movement — odds moving significantly pre-kickoff = sharp money signal
-- [ ] Steam move detector — multiple bookmakers move simultaneously = strong directional signal
-- [ ] Exchange vs sportsbook divergence — Betfair efficient market price vs bookmaker line gap
-- [ ] Overround tracker — monitor bookmaker margin changes as signal of confidence
-- [ ] Public vs sharp money split — bookmakers shade lines away from popular teams
-- [ ] Sharp money threshold — flag when line moves >8% in <2 hours pre-kickoff
+> All Tier 4 items blocked on odds history depth. log_odds_snapshot.py running since July 2026, appending per-bookmaker rows to odds_history.csv on every weekly + daily pipeline run. Revisit ~Oct 2026 once ~3 months of snapshots exist.
+- [ ] Opening vs closing line movement — odds moving significantly pre-kickoff = sharp money signal **[blocked on odds history — logger running since July 2026, revisit ~Oct 2026]**
+- [ ] Steam move detector — multiple bookmakers move simultaneously = strong directional signal **[blocked on odds history — logger running since July 2026, revisit ~Oct 2026]**
+- [ ] Exchange vs sportsbook divergence — Betfair efficient market price vs bookmaker line gap **[blocked on odds history — logger running since July 2026, revisit ~Oct 2026]**
+- [ ] Overround tracker — monitor bookmaker margin changes as signal of confidence **[blocked on odds history — logger running since July 2026, revisit ~Oct 2026]**
+- [ ] Public vs sharp money split — bookmakers shade lines away from popular teams **[blocked on odds history — logger running since July 2026, revisit ~Oct 2026]**
+- [ ] Sharp money threshold — flag when line moves >8% in <2 hours pre-kickoff **[blocked on odds history — logger running since July 2026, revisit ~Oct 2026]**
 
 ### Phase 2 Completion Checklist
 - [ ] Re-run ensemble_backtest.py after each major feature addition to measure uplift
@@ -533,7 +535,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Player-level stats API for prop betting (FBref, Opta, or StatsBomb)
 - [ ] Corners and cards historical data (football-data.co.uk has some of this already)
 - [ ] Referee database — historical cards/fouls/home bias per referee (from results.csv referee column)
-- [ ] Stadium coordinates database — lat/lng for all clubs to calculate travel distances
+- [x] Stadium coordinates database — data/reference/stadiums.csv; 442/444 teams filled (lat, lng, altitude_m, capacity); powers away_travel_km, altitude_diff, home_capacity_log features in ensemble_v2.py
 - [ ] TransferMarkt integration — injury/suspension data, market values, manager changes
 - [ ] Betfair Exchange API — live exchange prices for line movement tracking
 - [ ] OpenWeatherMap API — weather at kickoff time (wind, rain, temperature)

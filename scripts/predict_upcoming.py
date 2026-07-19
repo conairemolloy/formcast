@@ -539,6 +539,24 @@ def main() -> None:
             })
 
     out_df = pd.DataFrame(rows)
+
+    # Merge weather display columns if upcoming_weather.csv is available.
+    # Weather is display-only — it is NOT a model input.
+    wx_path = os.path.join(DATA_DIR, "upcoming_weather.csv")
+    if os.path.exists(wx_path):
+        try:
+            wx_df = pd.read_csv(wx_path, dtype=str)
+            if not wx_df.empty and {"match_date", "home_team", "away_team"}.issubset(wx_df.columns):
+                out_df = out_df.merge(
+                    wx_df[["match_date", "home_team", "away_team",
+                            "temp_c", "wind_kph", "rain_mm", "condition"]],
+                    on=["match_date", "home_team", "away_team"],
+                    how="left",
+                )
+                print(f"  Merged weather for {out_df['temp_c'].notna().sum()} fixtures")
+        except Exception as _wx_exc:
+            print(f"  WARNING: could not merge weather: {_wx_exc}", file=sys.stderr)
+
     out_df.to_csv(out_path, index=False)
     print(f"Saved {len(out_df)} predictions to {out_path}")
 
