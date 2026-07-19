@@ -35,6 +35,14 @@ jobs:
       - name: Fix team names
         run: python scripts/fix_team_names.py
 
+      - name: Ingest xG data (Understat)
+        run: python scripts/ingest_xg_data.py
+        continue-on-error: true
+
+      - name: Merge xG features into results
+        run: python scripts/merge_xg_features.py
+        continue-on-error: true
+
       - name: Publish predictions (pre-retrain)
         run: python scripts/publish_predictions.py
 
@@ -67,6 +75,9 @@ jobs:
 
       - name: Retrain ensemble (XGBoost + meta-learner)
         run: python scripts/ensemble_v2.py
+
+      - name: Canary — club prediction path smoke test
+        run: python scripts/test_club_path.py
 
       - name: Fetch weather for upcoming fixtures
         run: python scripts/fetch_weather.py

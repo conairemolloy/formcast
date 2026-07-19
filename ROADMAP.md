@@ -46,8 +46,8 @@
 - [ ] UptimeRobot on /api/health (15 min signup)
 - [ ] OPENWEATHER_API_KEY as GitHub Actions secret + local .env (unblocks weather column in predictions)
 - [ ] Custom domain purchase + Vercel config (~€12/yr; formcast-blush.vercel.app undermines premium positioning — highest ROI item in the design phase)
-- [ ] test_club_path.py as CI canary step in weekly workflow — pipeline fails loudly instead of shipping broken predictions silently
-- [ ] Verify first Monday pipeline run end-to-end after these changes (models/*.pkl now committed, weather + odds logger steps new)
+- [x] test_club_path.py as CI canary step in weekly workflow — pipeline fails loudly instead of shipping broken predictions silently
+- [ ] Verify first Monday pipeline run end-to-end — watch the full Actions log; run now includes: elo step, xG attempt (continue-on-error), canary, weather (daily + weekly), odds logger, pickle commits
 
 **Then: Phase 6 Design (DESIGN.md first per Design Principles), with Phase 3 NN retrain folded in where needed**
 
@@ -214,7 +214,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [x] Derby factor — `is_derby` binary flag; 22 hardcoded pairs (16 top-flight + 6 second-tier) in module-level `DERBY_PAIRS` frozenset; both M'Gladbach spellings covered; team names validated against results.csv at build time with warnings on typos
 
 ### Tier 2 — External Data Required (All Free Sources)
-- [~] Weather at kickoff — prediction-time display live (fetch_weather.py → upcoming_weather.csv → merged into upcoming_predictions.csv); training feature blocked on historical weather data backfill; logger running since July 2026, revisit as training feature next season
+- [~] Weather at kickoff — prediction-time display live (fetch_weather.py → upcoming_weather.csv → merged into upcoming_predictions.csv); daily refresh wired into international_update.yml (5am UTC) since July 2026, also runs weekly; training feature blocked on historical weather data backfill, revisit as training feature next season
 - [ ] Manager change signal — +8 Elo bounce in first 5 games under new manager, well documented in literature. TransferMarkt scrape for manager change dates, update monthly
 - [x] Distance travelled — away_travel_km feature (haversine); stadiums.csv covers 442/444 teams; 0.0 fallback when stadium unknown
 - [x] Altitude adjustment — altitude_diff feature (home_alt − away_home_alt, metres); same stadiums.csv source; 0.0 fallback
