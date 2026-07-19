@@ -4,6 +4,7 @@ For each match: last 5 matches of home team + last 5 matches of away team.
 8 features per team per match × 2 teams = 16 features per timestep.
 """
 import os
+import sys
 import numpy as np
 import pandas as pd
 import torch
@@ -11,11 +12,13 @@ import torch.nn as nn
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.preprocessing import StandardScaler
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from ensemble_v2 import build_all_features  # noqa: E402
+
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
-DATA_PATH       = "data/processed/full_features.csv"
-XG_RESULTS_PATH = "data/processed/results_with_xg.csv"
+RESULTS_PATH    = "data/processed/results.csv"
 NN_PRED_PATH    = "data/processed/nn_predictions.csv"
 OUT_PATH        = "data/processed/lstm_predictions.csv"
 MODEL_PATH      = "models/lstm_nn.pt"
@@ -262,22 +265,40 @@ def train_model(model: nn.Module, train_loader: DataLoader, val_loader: DataLoad
 # Main
 # ---------------------------------------------------------------------------
 def main():
-    # ── Load & merge ─────────────────────────────────────────────────────────
-    ff = pd.read_csv(DATA_PATH)
-    ff["match_date"] = pd.to_datetime(ff["match_date"])
-
-    xg = pd.read_csv(XG_RESULTS_PATH)
-    xg = xg.drop_duplicates(subset=["match_date", "home_team", "away_team"])
-    xg["match_date"] = pd.to_datetime(xg["match_date"])
-
-    df = ff.merge(
-        xg[["match_date", "home_team", "away_team", "home_goals", "away_goals", "home_xg", "away_xg"]],
-        on=["match_date", "home_team", "away_team"],
-        how="left",
+    # ── Load & build features ─────────────────────────────────────────────────
+    raw = pd.read_csv(RESULTS_PATH)
+    raw["match_date"] = pd.to_datetime(raw["match_date"])
+    print(f"Building features for {len(raw):,} matches...")
+    df, _ = build_all_features(raw)
+    # build_all_features does not pass through per-match goals; merge them back.
+    # Dedup the right side: results.csv has ~1,222 key-collision pairs where the
+    # same match was ingested under two different leagues; without dedup the
+    # left-join cross-produces 2×2=4 rows per duplicated key (+2,444 rows total).
+    _goals = raw[["match_date", "home_team", "away_team", "home_goals", "away_goals"]].drop_duplicates(
+        subset=["match_date", "home_team", "away_team"]
     )
-    # Fallback to rolling averages where actual xG is missing (pre-2014 era)
-    df["home_xg"] = df["home_xg"].fillna(df["home_xg_avg"])
-    df["away_xg"] = df["away_xg"].fillna(df["away_xg_avg"])
+    df = df.merge(_goals, on=["match_date", "home_team", "away_team"], how="left")
+    # Hybrid xG: real per-match values (Understat, top-5 leagues through May 2025)
+    # where available; rolling-average fallback for lower leagues and newer matches.
+    _XG_ACTUALS = "data/processed/results_with_xg.csv"
+    if os.path.exists(_XG_ACTUALS):
+        xg_actual = pd.read_csv(_XG_ACTUALS, parse_dates=["match_date"])
+        xg_actual = xg_actual.drop_duplicates(subset=["match_date", "home_team", "away_team"])
+        xg_actual = xg_actual.rename(columns={"home_xg": "home_xg_actual", "away_xg": "away_xg_actual"})
+        df = df.merge(
+            xg_actual[["match_date", "home_team", "away_team", "home_xg_actual", "away_xg_actual"]],
+            on=["match_date", "home_team", "away_team"],
+            how="left",
+        )
+        _n_real = int(df["home_xg_actual"].notna().sum())
+        df["home_xg"] = df["home_xg_actual"].fillna(df["home_xg_avg"])
+        df["away_xg"] = df["away_xg_actual"].fillna(df["away_xg_avg"])
+        df = df.drop(columns=["home_xg_actual", "away_xg_actual"])
+        print(f"xG signal: real per-match for {_n_real:,} rows, rolling-avg fallback for rest")
+    else:
+        df["home_xg"] = df["home_xg_avg"]
+        df["away_xg"] = df["away_xg_avg"]
+        print("xG signal: rolling averages only (results_with_xg.csv not found)")
 
     n_xg = (df["match_date"] >= XG_START).sum()
     print(f"Loaded {len(df):,} total matches  |  xG-era (>={XG_START}): {n_xg:,}")
@@ -371,7 +392,7 @@ def main():
     df_xg_sorted = (
         df.sort_values("match_date")
         .reset_index(drop=True)
-        .loc[lambda d: d["match_date"] >= XG_START]
+        .loc[lambda d: (d["match_date"] >= XG_START) & (d["result"].isin(LABEL_MAP))]
         .reset_index(drop=True)
     )
     elo_ph = df_xg_sorted.iloc[split:]["home_expected"].values
@@ -381,6 +402,23 @@ def main():
     elo_p  = np.column_stack([elo_pa / norm, elo_pd / norm, elo_ph / norm])
     print(f"  Elo baseline    — hit rate: {hit_rate(y_test, elo_p):.4f}  "
           f"Brier: {brier_mc(y_test, elo_p):.4f}")
+
+    # ── Like-for-like segment breakdown ───────────────────────────────────────
+    _TOP5 = {"EPL", "LaLiga", "SerieA", "Ligue1", "Bundesliga"}
+    _meta_df = pd.DataFrame(meta_test)
+    _meta_df["match_date"] = pd.to_datetime(_meta_df["match_date"])
+    _mask_top5 = (
+        _meta_df["league"].isin(_TOP5) & (_meta_df["match_date"] <= "2025-05-25")
+    ).values
+    _mask_lower = (~_meta_df["league"].isin(_TOP5)).values
+    for _lbl, _mask in [
+        ("Top-5 comparable window (vs old 53.6%/0.584)", _mask_top5),
+        ("Lower divisions (new coverage)               ", _mask_lower),
+    ]:
+        if _mask.sum():
+            print(f"  {_lbl} — n={_mask.sum():,}  "
+                  f"hit rate: {hit_rate(y_test[_mask], lstm_p[_mask]):.4f}  "
+                  f"Brier: {brier_mc(y_test[_mask], lstm_p[_mask]):.4f}")
     print("=" * 60)
 
     # ── Save predictions ───────────────────────────────────────────────────────

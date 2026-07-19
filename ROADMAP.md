@@ -539,6 +539,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [x] Retry logic with exponential backoff — predict_upcoming.py fixture fetch now retries 3x (5s/15s/30s) on transient failures instead of immediately failing the whole pipeline
 - [ ] Automated test suite — pytest for API, Playwright for frontend E2E tests
 - [ ] Data quality checks — automated validation after each ingestion (row counts, nulls, date ranges)
+- [ ] Ingest dedup — results.csv has 1,222 duplicate (match_date, home_team, away_team) key pairs (2,444 rows) where the same match was ingested under two different leagues (e.g. LaLiga + Segunda for 1993-94 Spanish teams); lstm_model.py now guards against merge inflation but root cause should be fixed in the ingest pipeline with a dedup step keyed on (match_date, home_team, away_team)
 - [ ] Log aggregation — structured logging to Papertrail or Logtail
 - [ ] Cost monitoring — Railway and Vercel spend alerts
 - [x] Premier League and Championship sport keys fixed — were using wrong key names (soccer_england_premier_league, soccer_england_championship) instead of correct soccer_epl and soccer_efl_champ, confirmed against The Odds API's own /v4/sports endpoint. Recovered Premier League value bets that had been silently 404ing.
