@@ -11,3 +11,4 @@ scipy==1.17.1
 joblib==1.5.3
 xgboost==3.2.0
 sentry-sdk[flask]==2.19.2
+shap==0.52.0

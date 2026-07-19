@@ -1,5 +1,5 @@
 """
-Stacking ensemble (v2) — extends ensemble.py with the full 48-feature base model.
+Stacking ensemble (v2) — extends ensemble.py with the full 76-feature base model.
 
 Stack inputs (13 features):
   home_expected, p_home_g2,
@@ -140,24 +140,20 @@ FEATURE_COLS = [
     "home_result_momentum", "away_result_momentum",
     "home_score_momentum", "away_score_momentum",
     "home_elo_momentum", "away_elo_momentum",
-    "home_streak", "away_streak",
     "momentum_diff",
     "home_days_rest", "away_days_rest",
     "home_matches_21d", "away_matches_21d",
     "rest_asymmetry",
     "home_fatigue_score", "away_fatigue_score",
     "h2h_home_win_rate", "h2h_goal_diff_avg",
-    "h2h_meetings", "h2h_dominance",
-    "revenge_factor",
     "home_unbeaten_run", "away_unbeaten_run",
-    "post_loss_bounce", "post_loss_bounce_away",
-    "league_encoded", "is_early_season",
+    "league_encoded",
     # Referee
     "ref_avg_yellows", "ref_avg_fouls", "ref_home_bias", "ref_experience",
     # Venue win rates
     "home_win_rate", "away_win_rate", "venue_win_rate_diff",
     # Season phase
-    "home_season_matches", "away_season_matches", "is_late_season",
+    "home_season_matches", "away_season_matches",
     # Clean sheet rate
     "home_cs_rate", "away_cs_rate",
     # Opponent-adjusted form
@@ -178,6 +174,8 @@ FEATURE_COLS = [
     "elo_x_form", "fatigue_x_congestion", "derby_x_h2h",
     # Stadium geography (fallback 0.0 when either stadium unknown)
     "away_travel_km", "altitude_diff", "home_capacity_log",
+    # Season edge flags (binary; SHAP undervalues due to rare activation but backtest impact is real)
+    "is_early_season", "is_late_season",
 ]
 
 # 13-feature stack fed into the meta-learner
@@ -1369,13 +1367,13 @@ def main() -> None:
     print("Training meta-learner (LogisticRegression + StandardScaler)...")
     meta = Pipeline([
         ("scaler", StandardScaler()),
-        ("lr", LogisticRegression(C=1.0, max_iter=1000, random_state=42)),
+        ("lr", LogisticRegression(C=1.0, max_iter=5000, random_state=42)),
     ])
     meta.fit(train_stack, y_train)
 
     # Calibrate via 5-fold CV on training stack
     meta_calibrated = CalibratedClassifierCV(
-        LogisticRegression(C=0.1, max_iter=1000, random_state=42),
+        LogisticRegression(C=0.1, max_iter=5000, random_state=42),
         method='isotonic',
         cv=5,
     )
@@ -1507,6 +1505,8 @@ def main() -> None:
     print(f"  ECE calibrated   : {ece_cal:.4f}")
     print(f"  ECE improvement  : {ece_uncal - ece_cal:+.4f}  "
           f"({'✓ better' if ece_cal < ece_uncal else '✗ worse'})")
+    print(f"  NOTE: uncalibrated model (meta_learner.pkl) is the SERVING model.")
+    print(f"        Platt layer retired — calibrated variant retained for monitoring only.")
     print("=" * 68)
 
     # ------------------------------------------------------------------

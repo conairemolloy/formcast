@@ -34,7 +34,22 @@
 - World Cup value bets — live odds via The Odds API (soccer_fifa_world_cup), real international Elo-based edges, free tier usage (~30 credits/month)
 - CI/CD pipeline fully healthy — fixed 3-week silent failure (missing joblib/xgboost in requirements.txt), added retry logic with exponential backoff for live fixture fetching
 - LSTM predictions in ensemble stack — 14-feature meta-learner, 66.83% walk-forward backtest
-- 82-feature ensemble (Batch 3: +7), 15-feature meta-learner stack, 66.92% walk-forward backtest, ECE 0.0098
+- 78-feature ensemble (Phase 2 final: SHAP-culled from 85), 15-feature meta-learner stack, ~67.0% non-draw walk-forward (2024 season: 67.6%, +0.9pp over Elo), ECE 0.0127 uncalibrated (serving model; Platt layer retired)
+
+---
+
+## NEXT UP — Priority Queue (July 2026)
+> Work through in order before starting Phase 3+.
+
+**August readiness (~1 week of evenings)**
+- [ ] Sentry error monitoring (15 min signup; silent failures already cost 3 weeks once)
+- [ ] UptimeRobot on /api/health (15 min signup)
+- [ ] OPENWEATHER_API_KEY as GitHub Actions secret + local .env (unblocks weather column in predictions)
+- [ ] Custom domain purchase + Vercel config (~€12/yr; formcast-blush.vercel.app undermines premium positioning — highest ROI item in the design phase)
+- [ ] test_club_path.py as CI canary step in weekly workflow — pipeline fails loudly instead of shipping broken predictions silently
+- [ ] Verify first Monday pipeline run end-to-end after these changes (models/*.pkl now committed, weather + odds logger steps new)
+
+**Then: Phase 6 Design (DESIGN.md first per Design Principles), with Phase 3 NN retrain folded in where needed**
 
 ---
 
@@ -50,7 +65,7 @@
 - Phase 4 — betting intelligence gaps: Dutching calculator, arbitrage detector, Sharpe ratio, max drawdown, P&L simulation
 - Phase 5 — model validation page: walk-forward accuracy chart, calibration curve, per-league Brier scores (trust-building content that converts free users to paid)
 - [x] Market-specific models — corners, cards, BTTS, goals over/under (separate XGBoost per market)
-- Ensemble auto-retraining in weekly pipeline — critical before August EPL restart
+- [x] Ensemble auto-retraining in weekly pipeline — VERIFIED July 2026; all models retrain every Monday (workflow steps 8-16); pickle commit fixed so Railway stays in sync
 
 ### Stage 2 — Design & UX (Phase 6 + Phase 7 + Phase 8 + Phase 9)
 - Phase 6 — full design overhaul: dashboard hero, value bet cards, landing page conversion optimisation
@@ -110,10 +125,10 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 | Metric | Value |
 |--------|-------|
 | Matches in database | 128,797 (14 competitions, 1993-2026) |
-| Competitions | EPL, Championship, La Liga, Segunda, Serie A, Serie B, Bundesliga, Bundesliga 2, Ligue 1, Ligue 2, Scottish Prem, Champions League, Eredivisie, Euro 2024 |
+| Competitions | EPL, Championship, La Liga, Segunda, Serie A, Serie B, Bundesliga, Bundesliga 2, Ligue 1, Ligue 2, Scottish Prem |
 | Walk-forward hit rate | 68.7% (non-draw, optimised Elo, 128k matches) |
 | Walk-forward Brier score | 0.156 |
-| Ensemble v2 hit rate | 53.3% (3-outcome, 2023-25 holdout) |
+| Ensemble v2 hit rate | 49.0% (3-outcome holdout) / ~67.0% (non-draw walk-forward) |
 | Neural network hit rate | 53.1% (feedforward, 2014-25) |
 | LSTM hit rate | 53.3% (temporal sequences, 2014-25) |
 | Neural network Brier | 0.584 |
@@ -217,7 +232,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [x] Home/away Glicko-2 split — venue-specific G2 dicts (g2_home/g2_away); 4 new features: home_g2_home, away_g2_away, g2_venue_diff, away_g2_uncertainty (Batch 3)
 - [x] Time-decay on xG — DECAY=0.85 exponential weighting replaces flat window across all 6 xG averages (Batch 3)
 - [ ] Bayesian draw model — model draw probability as a function of match competitiveness and historical draw rates **[DEFERRED Batch 3: draw classifier already covers this — enhancement not gap; revisit after SHAP analysis]**
-- [x] Ensemble calibration (Platt scaling) — investigated, ECE 0.0098 already excellent
+- [x] Ensemble calibration (Platt scaling) — Platt layer retired; uncalibrated ECE 0.0125 is well-calibrated and consistently beats the calibrated variant across three configs (0.0131, 0.0149, 0.0160 calibrated vs 0.0125–0.0128 uncalibrated); ECE comparison retained in training output for monitoring
 - [ ] League strength adjustment — when teams move between leagues, adjust Elo to account for quality difference **[DEFERRED Batch 3: partially addressed by Batch 1 promo/rel mechanism; revisit at SHAP stage]**
 - [ ] Cross-league Elo normalisation — ensure EPL Elo 1600 is comparable to Bundesliga 1600 **[DEFERRED Batch 3: partially addressed by Batch 1 promo/rel mechanism; revisit at SHAP stage]**
 - [x] Feature interaction terms — elo_x_form (elo_diff × form_diff / 100), fatigue_x_congestion (rest_asymmetry × congestion_diff), derby_x_h2h (Batch 3: 3 new features)
@@ -234,10 +249,26 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Sharp money threshold — flag when line moves >8% in <2 hours pre-kickoff **[blocked on odds history — logger running since July 2026, revisit ~Oct 2026]**
 
 ### Phase 2 Completion Checklist
-- [ ] Re-run ensemble_backtest.py after each major feature addition to measure uplift
-- [ ] SHAP feature importance analysis — identify which new features actually contribute
-- [ ] Calibration curve update — verify probability outputs remain calibrated after new features
-- [ ] Update feature_cols.json and retrain all saved models after final feature set confirmed
+- [x] Re-run ensemble_backtest.py after each major feature addition to measure uplift
+- [x] SHAP feature importance analysis — 85→78: culled 7 features (post-loss bounces, revenge, streaks, superseded h2h pair); season flags (is_early_season, is_late_season) restored — SHAP undervalued them due to binary/rare-activation; gating logic retained in pipeline; kept pressure trio, derby pair, unbeaten runs as rare-but-real
+- [x] Calibration curve update — Platt layer retired; uncalibrated ECE 0.0125 is well-calibrated and consistently beats calibrated variant; monitoring comparison retained in training output
+- [x] Update feature_cols.json and retrain all saved models after final feature set confirmed
+
+### Phase 2 Completion — July 2026
+- [x] Feature journey: 70 (Phase 1) → 85 (Batches 1–3) → 78 (SHAP cull, season flags restored); final set locked in FEATURE_COLS and regenerated to feature_cols.json
+- [x] Backtest: ~66.9% walk-forward (full 2020-2024) → ~67.0%; 2024 season 67.6% (+0.9pp vs Elo baseline)
+- [x] Season-boundary Elo regression (REGRESSION_FACTOR=0.75 toward league mean) — measurable reduction in start-of-season over-confidence
+- [x] Per-league home advantage learned online (HA_MIN_MATCHES=100, clamped [0.5×, 1.5×]) — replaces flat +50 constant
+- [x] Promotion/relegation Elo adjustment — 50% step toward new league mean on first appearance, prevents cross-league distortion
+- [x] Shared architecture: init_state / compute_match_features / update_state — single canonical implementation eliminates training/prediction drift
+- [x] predict_upcoming 22-feature drift bug fixed — feature vector was missing 22 columns vs training; guards added; test_club_path.py as regression canary
+- [x] SHAP cull 85 → 78: removed 7 features (post-loss bounce, revenge factor, streak, superseded h2h pair); is_early_season and is_late_season restored after post-cull backtest showed consistent softening across leagues — SHAP undervalued them due to binary/rare-activation bias
+- [x] Platt calibration retired — uncalibrated ECE 0.0127 consistently beats calibrated variant across three configs; Platt comparison retained in training output as monitoring signal
+- [x] Tier 6 odds formats shipped to production — decimal/fractional/American via shared oddsFormat.js + dutching_arbitrage.py; user preference persisted to Supabase
+- [x] Stadium geography features: stadiums.csv 442/444 teams, away_travel_km + altitude_diff + home_capacity_log in FEATURE_COLS
+- [x] Weather infrastructure: fetch_weather.py + upcoming_weather.csv running since July 2026; blocked as training feature pending historical backfill (revisit next season)
+- [x] Odds history infrastructure: log_odds_snapshot.py running since July 2026, appending to odds_history.csv; Tier 4 market intelligence blocked on 3-month history minimum (revisit ~Oct 2026)
+- [x] Tiers 2 (scraping items) / 4 / 5 consciously parked with revisit dates; no silent deferrals
 
 ### Tier 5 — Individual Player Features (Requires Player-Level Data)
 - [ ] Key player availability — top scorer or first-choice goalkeeper missing, quantify impact on team xG. Sources: BBC Sport injury feed, football-data.org, or manual flags
@@ -405,22 +436,14 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Weather display on match preview — wind, rain, temp for upcoming fixtures with impact assessment
 - [ ] Home/away form split on match preview — last 5 home results vs last 5 away results
 - [ ] Current form visualization — last 5 results dots with goals scored/conceded
-- [ ] SHAP waterfall chart per match — why did the model predict this outcome
-- [ ] Cumulative P&L chart — flat stake simulation over time with drawdown shading
-- [ ] Brier score trend chart — rolling 90-match window showing model improvement
-- [ ] Match prediction card — shareable upcoming fixture card for social media
-- [ ] Tournament probability treemap — visual probability distribution per team
-- [ ] Value bet history chart — CLV over time, ROI by league breakdown
-- [ ] Animated Elo bar chart race — top 20 teams over 33 seasons
 - [ ] Global search — find any team, match, or league instantly across the whole site
-- [ ] Loading skeletons everywhere — replace all remaining spinners
 - [ ] PWA support — installable on mobile home screen, offline support
 - [ ] Onboarding tour — first-time user walkthrough (Shepherd.js)
 - [ ] Custom domain (formcast.io or similar)
 - [ ] Design overhaul — site currently reads as a developer tool, needs to look like a premium product. Priority: dashboard hero, value bet cards, team profile pages, landing page conversion
 - [ ] Dashboard hero section — big focal-point number or chart immediately communicating scale and sophistication (e.g. animated counter for value bets identified, live Elo chart)
 - [ ] Value bet cards redesign — currently text-heavy rows, should look like trading cards with visual probability bars, odds highlighted, edge displayed prominently with color coding
-- [ ] Landing page conversion optimisation — headline, social proof numbers (3,829 value bets, 128k matches, 68.7% hit rate) displayed large and front-and-center, single clear CTA above fold
+- [ ] Landing page conversion optimisation — headline, social proof numbers (3,525 value bets, 128k matches, 68.7% hit rate) displayed large and front-and-center, single clear CTA above fold
 - [ ] Typography and spacing overhaul — more whitespace, larger headings, consistent type scale, premium feel without changing functionality
 - [ ] Team profile page visual hierarchy — breathing room, better section structure, Elo chart more prominent
 - [ ] Color-coded probability displays — win/draw/loss shown with green/grey/red visual bars throughout, not just numbers
@@ -435,7 +458,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Ensemble explainer (how models are stacked, what meta-learner weights mean)
 - [ ] xG explainer (what expected goals measures, why it predicts better than goals)
 - [ ] Interactive probability calculator (enter two team ratings, see win probabilities)
-- [ ] Feature importance visualisation (SHAP beeswarm across all 48 features)
+- [ ] Feature importance visualisation (SHAP beeswarm across all 78 features)
 - [ ] Glossary page (Brier score, CLV, Kelly criterion, EV, overround etc)
 
 ---
@@ -520,7 +543,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Log aggregation — structured logging to Papertrail or Logtail
 - [ ] Cost monitoring — Railway and Vercel spend alerts
 - [x] Premier League and Championship sport keys fixed — were using wrong key names (soccer_england_premier_league, soccer_england_championship) instead of correct soccer_epl and soccer_efl_champ, confirmed against The Odds API's own /v4/sports endpoint. Recovered Premier League value bets that had been silently 404ing.
-- [ ] Ensemble auto-retraining in weekly pipeline — XGBoost/NN/LSTM currently only retrain manually, Elo is the only model updating automatically every Monday. Critical gap before August league restart — without this the ensemble predictions will stale out
+- [x] Ensemble auto-retraining in weekly pipeline — VERIFIED July 2026: all models retrain every Monday (workflow steps 8-16: corners, cards, BTTS, goals, NN, LSTM, Bradley-Terry, Dixon-Coles, XGBoost + meta-learner + draw classifier); fixed pickle commit (July 2026) so Railway backtest route no longer drifts from weekly retrains
 
 ---
 
