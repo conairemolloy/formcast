@@ -1,6 +1,6 @@
 # FormCast — Sports Prediction Platform
 ### Elo + Glicko-2 + Dixon-Coles + BTL + XGBoost + Neural Ensemble
-*Last updated: June 2026*
+*Last updated: July 2026*
 
 ---
 
@@ -57,13 +57,13 @@
 > Phases renumbered to reflect the actual build order.
 
 ### Stage 1 — Model Quality (Phase 2 + Phase 3 + Phase 4 + Phase 5)
-- Phase 2 Tier 1 — remaining high-impact features: venue win rate, clean sheet rate, opponent-adjusted form, relegation/title pressure, league-specific home advantage, early season Elo regression
-- Phase 2 Tier 2 — weather integration (OpenWeatherMap, one call per fixture)
-- Phase 2 Tier 3 — model architecture: separate draw classifier, ensemble calibration (Platt scaling), league-specific home advantage
-- Phase 2 Tier 6 — odds format display: American moneyline, UK fractional, decimal — shared utility used everywhere
+- [x] Phase 2 Tier 1 — remaining high-impact features: venue win rate, clean sheet rate, opponent-adjusted form, relegation/title pressure, league-specific home advantage, early season Elo regression — COMPLETE July 2026
+- [x] Phase 2 Tier 2 — weather infrastructure (fetch_weather.py + upcoming_weather.csv running; training feature pending historical backfill) — COMPLETE July 2026
+- [x] Phase 2 Tier 3 — model architecture: separate draw classifier, ensemble calibration (Platt scaling retired, ECE 0.0127), league-specific home advantage — COMPLETE July 2026
+- [x] Phase 2 Tier 6 — odds format display: American moneyline, UK fractional, decimal — shared utility used everywhere — COMPLETE July 2026
 - Phase 3 — retrain neural networks with updated feature set
 - Phase 4 — betting intelligence gaps: Dutching calculator, arbitrage detector, Sharpe ratio, max drawdown, P&L simulation
-- Phase 5 — model validation page: walk-forward accuracy chart, calibration curve, per-league Brier scores (trust-building content that converts free users to paid)
+- [x] Phase 5 — model validation page: walk-forward accuracy chart, calibration curve, per-league Brier scores (trust-building content that converts free users to paid) — COMPLETE July 2026
 - [x] Market-specific models — corners, cards, BTTS, goals over/under (separate XGBoost per market)
 - [x] Ensemble auto-retraining in weekly pipeline — VERIFIED July 2026; all models retrain every Monday (workflow steps 8-16); pickle commit fixed so Railway stays in sync
 
@@ -224,7 +224,6 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] International break fatigue — players returning from international duty, travel disruption and schedule congestion
 - [ ] Europa League fatigue — performance drop after Thursday Europa League travel, especially for teams with weak squads
 - [ ] TransferMarkt market value — squad market value as proxy for squad strength, free scraping
-- [ ] Stadium capacity — crowd noise correlates with home advantage strength, proxy via capacity
 
 ### Tier 3 — Model Architecture Improvements
 - [x] Separate draw classifier — dedicated binary classifier trained specifically to predict draws, using features like team defensive ratings, historical draw rates by team/league/referee, closeness of Elo ratings
@@ -531,7 +530,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [x] Automated value bet generation — live odds via The Odds API
 - [x] Scheduled prediction publishing — publish_predictions.py runs Monday via GitHub Actions
 - [ ] Database backup — automated daily Supabase backup to S3
-- [ ] Monitoring & alerting — Sentry for errors, UptimeRobot for uptime, PagerDuty for critical failures
+- [ ] Monitoring & alerting — Sentry for errors, UptimeRobot for uptime, PagerDuty for critical failures (Sentry + UptimeRobot broken out as PRIORITY items below and in NEXT UP; PagerDuty deferred until paid tier)
 - [ ] Sentry error monitoring — free tier, catch Railway API errors automatically (PRIORITY — do this week)
 - [ ] UptimeRobot monitoring — ping /api/health every 5 minutes, alert on downtime (PRIORITY — do this week)
 - [ ] referee_fatigue_features.py in weekly pipeline — regenerate team_tendencies.csv every Monday
@@ -561,11 +560,11 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [x] Stadium coordinates database — data/reference/stadiums.csv; 442/444 teams filled (lat, lng, altitude_m, capacity); powers away_travel_km, altitude_diff, home_capacity_log features in ensemble_v2.py
 - [ ] TransferMarkt integration — injury/suspension data, market values, manager changes
 - [ ] Betfair Exchange API — live exchange prices for line movement tracking
-- [ ] OpenWeatherMap API — weather at kickoff time (wind, rain, temperature)
+- [ ] OpenWeatherMap API — weather at kickoff time (wind, rain, temperature) — infrastructure built (fetch_weather.py); only API key setup remains — see NEXT UP queue
 - [ ] Squad rotation detection — cup game before league game pattern detection
 - [ ] International break fatigue — performance drop after international duty
 - [ ] Manager change tracking — manual or TransferMarkt, +8 Elo bounce signal
-- [ ] Distance travelled database — stadium lat/lng for all 442 clubs, travel km calculator
+- [x] Distance travelled database — stadium lat/lng for all 442 clubs, travel km calculator — same artefact as stadiums.csv above
 - [ ] Europa League historical data
 - [ ] UEFA Conference League data 2021-present
 - [ ] World Cup 2018 and 2022 full data
