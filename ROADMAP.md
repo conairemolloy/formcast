@@ -42,12 +42,14 @@
 > Work through in order before starting Phase 3+.
 
 **August readiness (~1 week of evenings)**
+- [ ] **CRITICAL — live value bets run Elo-only, not the ensemble.** fetch_live_odds.py computes live value bets using plain Elo, NOT the 78-feature ensemble that backtests at ~67% non-draw. This means users act on Elo-quality picks while the marketing/track-record uses ensemble numbers — a real gap between what's proven and what ships. Must close before August EPL restart. Scope: route live fixtures through the ensemble prediction path (predict_upcoming.py already builds ensemble predictions via the shared pipeline — likely fetch_live_odds should consume those rather than recomputing Elo). Also unblocks prediction_uncertainty for live bets (currently absent because Elo path has no Glicko phi ensemble output), which enables true edge×confidence ranking on Bet of the Day. Single highest-value open item in the project.
 - [ ] Sentry error monitoring (15 min signup; silent failures already cost 3 weeks once)
 - [ ] UptimeRobot on /api/health (15 min signup)
 - [ ] OPENWEATHER_API_KEY as GitHub Actions secret + local .env (unblocks weather column in predictions)
 - [ ] Custom domain purchase + Vercel config (~€12/yr; formcast-blush.vercel.app undermines premium positioning — highest ROI item in the design phase)
 - [x] test_club_path.py as CI canary step in weekly workflow — pipeline fails loudly instead of shipping broken predictions silently
 - [ ] Verify first Monday pipeline run end-to-end — watch the full Actions log; run now includes: elo step, xG attempt (continue-on-error), canary, weather (daily + weekly), odds logger, pickle commits
+  - Note: after Monday's run, VERIFY the newly-wired columns populated: prediction_uncertainty in value_bets.csv (needs ensemble retrain) and value_bookmaker in live_value_bets.csv (needs odds fetch). Both degrade gracefully if absent but the Bet of the Day edge×confidence ranking and bookmaker display depend on them.
 
 **Then: Phase 6 Design (DESIGN.md first per Design Principles), with Phase 3 NN retrain folded in where needed**
 
