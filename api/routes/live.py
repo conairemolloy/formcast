@@ -848,7 +848,7 @@ def live_value_bets():
     cols = [
         "match_date", "match_time", "league", "home_team", "away_team",
         "home_elo", "away_elo", "p_home", "p_draw", "p_away",
-        "value_outcome", "value_edge", "value_odds", "value_p_model",
+        "value_outcome", "value_edge", "value_odds", "value_p_model", "value_bookmaker",
     ]
     available = [c for c in cols if c in value_df.columns]
     records = value_df[available].where(value_df[available].notna(), None).to_dict(orient="records")

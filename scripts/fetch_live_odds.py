@@ -228,11 +228,13 @@ def _fetch_odds(sport: str) -> list[dict]:
     return resp.json()
 
 
-def _best_h2h_odds(event: dict) -> tuple[float | None, float | None, float | None]:
-    """Return (best_home_odds, best_draw_odds, best_away_odds) across all bookmakers."""
+def _best_h2h_odds(event: dict) -> tuple[float | None, float | None, float | None, str | None, str | None, str | None]:
+    """Return (best_home_odds, best_draw_odds, best_away_odds, bm_home, bm_draw, bm_away) across all bookmakers."""
     best_home = best_draw = best_away = None
+    bm_home = bm_draw = bm_away = None
 
     for bm in event.get("bookmakers", []):
+        bm_title = bm.get("title") or bm.get("key")
         for market in bm.get("markets", []):
             if market.get("key") != "h2h":
                 continue
@@ -246,12 +248,15 @@ def _best_h2h_odds(event: dict) -> tuple[float | None, float | None, float | Non
 
             if home_odds and (best_home is None or home_odds > best_home):
                 best_home = home_odds
+                bm_home = bm_title
             if away_odds and (best_away is None or away_odds > best_away):
                 best_away = away_odds
+                bm_away = bm_title
             if draw_odds and (best_draw is None or draw_odds > best_draw):
                 best_draw = draw_odds
+                bm_draw = bm_title
 
-    return best_home, best_draw, best_away
+    return best_home, best_draw, best_away, bm_home, bm_draw, bm_away
 
 
 # ---------------------------------------------------------------------------
@@ -356,7 +361,7 @@ def main():
                 model_used = "elo"
 
             # Best bookmaker odds
-            best_home_odds, best_draw_odds, best_away_odds = _best_h2h_odds(event)
+            best_home_odds, best_draw_odds, best_away_odds, bm_home, bm_draw, bm_away = _best_h2h_odds(event)
 
             # Edge calculations (only if odds available)
             edge_home = edge_draw = edge_away = None
@@ -376,10 +381,11 @@ def main():
             candidates = [(o, e, od, p) for o, e, od, p in candidates if e is not None and e > VALUE_EDGE]
             candidates.sort(key=lambda x: -x[1])
 
-            value_outcome = value_edge = value_odds = value_p_model = None
+            value_outcome = value_edge = value_odds = value_p_model = value_bookmaker = None
             if candidates:
                 value_outcome, value_edge, value_odds, value_p_model = candidates[0]
                 value_p_model = round(value_p_model, 4)
+                value_bookmaker = {"H": bm_home, "D": bm_draw, "A": bm_away}.get(value_outcome)
 
             rows.append({
                 "match_date":       match_date,
@@ -402,6 +408,7 @@ def main():
                 "value_edge":       value_edge,
                 "value_odds":       value_odds,
                 "value_p_model":    value_p_model,
+                "value_bookmaker":  value_bookmaker,
                 "model":            model_used,
             })
 
@@ -412,7 +419,7 @@ def main():
             "home_elo", "away_elo", "p_home", "p_draw", "p_away",
             "best_home_odds", "best_draw_odds", "best_away_odds",
             "edge_home", "edge_draw", "edge_away",
-            "value_outcome", "value_edge", "value_odds", "value_p_model", "model",
+            "value_outcome", "value_edge", "value_odds", "value_p_model", "value_bookmaker", "model",
         ])
         out_df.to_csv(out_path, index=False)
         return

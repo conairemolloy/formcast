@@ -1516,6 +1516,7 @@ def main() -> None:
         "match_date", "league", "home_team", "away_team",
         "p_home", "p_draw", "p_away",
         "predicted_result", "actual_result", "correct",
+        "prediction_uncertainty",
     ]
     out_path = os.path.normpath(
         os.path.join(base, "..", "data", "processed", "ensemble_v2_predictions.csv")

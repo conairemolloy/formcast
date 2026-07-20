@@ -123,6 +123,7 @@ def extract_value_bets(df: pd.DataFrame) -> pd.DataFrame:
                 "profit_flat":   round((odds - 1.0) if won else -1.0, 4),
                 "profit_kelly":  round((kelly / 2) * (odds - 1.0) if won else -(kelly / 2), 4),
                 "clv":           round(clv, 4),
+                "prediction_uncertainty": r.get("prediction_uncertainty"),
             })
 
     bets = pd.DataFrame(rows)
