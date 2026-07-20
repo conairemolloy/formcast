@@ -383,7 +383,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Confidence bands — wire prediction_uncertainty metadata (built in Phase 2 Batch 3) into prediction displays as visual confidence indication
 - [ ] Motion only where data changes — probability bars fill once on load, numbers tick on update, nothing else animates. Movement = "this is live"
 - [ ] Designed empty states — off-season/no-value-bets/no-data states are designed screens with a next action ("Leagues return August 15 — see the World Cup Hub"), never blank tables or bare spinners. NOTE: launching into off-season means the no-live-bets state IS the first impression for many users
-- [ ] One signature element — pick ONE distinctive visual (edge meter, Elo chart style, or bracket tree) and over-invest in it; that's what gets screenshotted and shared
+- [ ] One signature element — pick ONE distinctive visual (edge meter, Elo chart style, or bracket tree) and over-invest in it; that's what gets screenshotted and shared. DECIDED: the edge meter — a stacked bar showing bookmaker-implied probability (grey) + the model's additional edge (emerald), the emerald segment IS the edge. Lives on every value bet card and the Bet of the Day hero. This is the screenshot asset.
 - [ ] Design tokens doc first — before any page redesign, write frontend/DESIGN.md with colour tokens, type scale, spacing scale; every subsequent frontend task references it (same pattern as the shared feature pipeline, but for design)
 
 ### Visual Design
@@ -395,13 +395,23 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 ### Key Page Redesigns
 - [ ] Dashboard redesign — hero metric strip (value bets identified, hit rate, CLV) → live value bets → upcoming fixtures → ratings snapshot. Each section visually distinct with clear heading
 - [ ] Value Bets page redesign — card layout instead of table rows, visual edge meter, bookmaker logo/name prominent, Kelly stake displayed clearly
+- [ ] Value Bets editorial hierarchy (Bet of the Day) — the value bets surface is curated, not a flat list. Three tiers: (1) BET OF THE DAY — single highest-conviction pick, hero treatment, emerald-bordered card, full edge meter + plain-language "model sees X%, book implies Y%" + Kelly/book/odds row. Ranked by EDGE × CONFIDENCE, not raw edge (raw-edge sort surfaces noisy longshots — wrong thing to headline; confidence-weighting protects trust positioning). (2) TODAY'S TOP VALUE — next 3-4 strongest as compact edge-meter cards. (3) FULL LIST — complete filterable list below ("View all N →"). All odds render in the user's chosen format (decimal/fractional/American) via the Tier 6 oddsFormat preference. FREEMIUM DECISION: Bet of the Day is FREE / visible logged-out (daily proof + marketing/screenshot asset + retention hook); full list + shortlist paywalled. Off-season: hero pulls from World Cup module so it's never empty.
+  - Note: MOBILE-FIRST — huge share of betting traffic is phone, in-the-moment. Edge-meter cards, Bet of the Day hero, shortlist must work single-column at 375px, stacking cleanly. Build mobile-first, not desktop-retrofitted.
+  - Note: DATA DEPENDENCY — "ranked by edge × confidence" requires per-bet confidence (the prediction_uncertainty metadata from Phase 2 Batch 3). Verify /api/markets exposes it before building the hero; if absent, surface it in the API first or compute a client-side proxy. Recon this before the Value Bets build.
+- [ ] Match detail view (card tap-through) — value bet cards and Bet of the Day are tappable → detail view with full progressive disclosure: seven-model contribution breakdown, H2H, form, xG, confidence band (prediction_uncertainty). This is the "one tap deeper" layer from the progressive-disclosure principle. Decide card→detail navigation in the Value Bets build even if the detail view itself ships slightly after, so it's not retrofitted.
 - [ ] Landing page redesign — above-fold must convert. Large headline, 3 key stats displayed huge, single Sign Up CTA, below-fold: how it works, sample value bets, track record
 - [ ] International / World Cup Hub — showcase page that would make someone immediately understand what FormCast does for the World Cup
+- [ ] Navigation & first-visit flow — the journey, not just individual pages. (1) PRIMARY JOURNEY: cold visitor sees a clear one-line promise ("Bets where the model disagrees with the bookmaker. Every result logged — win or lose.") + three huge proof stats (hit rate, +19% mean CLV, ~3,500 bets logged) + one CTA + a live Bet of the Day example. (2) NAV structured around the journey not features: Today's Value Bets · Track Record · How It Works · World Cup · [account] — the nav sells. (3) OFF-SEASON HOME = first impression for many (launch is off-season): lead with Track Record + World Cup Hub + Bet of the Day + "first EPL value bets Aug 15 — sign up" email capture; the empty state becomes the conversion funnel. (4) LOGGED-IN vs LOGGED-OUT states defined. Do this flow definition BEFORE the landing/dashboard/value-bets page redesigns so they serve it. Supersedes the Phase 7 "onboarding tour" item.
 
 ### Trust Signals
 - [ ] Track record section on landing — show the prediction log numbers, CLV, hit rate prominently as social proof
 - [ ] "As featured in" / methodology credibility section
 - [ ] Live counter — value bets identified today, updating in real time
+- [ ] "Yesterday's Bet of the Day — result" — publicly show the previous day's headline pick and whether it won/lost. Closes the honesty loop visibly ("here's what we picked, here's what happened"). Strongest trust-building feature available; follows on from Bet of the Day. Draws from the logged prediction record (win or lose, per positioning).
+- [ ] Shareable Bet of the Day card image — auto-generated share image (Twitter/Telegram/social) of the daily pick, since Bet of the Day is the primary marketing asset. High-leverage for audience growth; build after the core hero ships. Full feature, not part of first Value Bets build.
+
+### Pre-Launch Compliance
+- [ ] Responsible gambling & compliance footer — UK betting-advice norms: 18+ notice, BeGambleAware/GamCare links, "past performance does not guarantee future results" disclaimer, clear "not financial advice" framing. Cheap to add, bad to miss pre-launch. Also review affiliate/advertising compliance if bookmaker links are used.
 
 ---
 

@@ -24,9 +24,9 @@ function EdgeBadge({ edge }) {
 
 const OUTCOME_LABELS = { H: 'Home', D: 'Draw', A: 'Away' }
 const OUTCOME_COLORS = {
-  H: 'bg-blue-500/20 text-blue-300 border border-blue-500/30',
-  D: 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30',
-  A: 'bg-purple-500/20 text-purple-300 border border-purple-500/30',
+  H: 'bg-[var(--bg-overlay)] text-[var(--text-secondary)] border border-[var(--border)]',
+  D: 'bg-[var(--bg-overlay)] text-[var(--text-secondary)] border border-[var(--border)]',
+  A: 'bg-[var(--bg-overlay)] text-[var(--text-secondary)] border border-[var(--border)]',
 }
 const SORT_OPTIONS = [
   { value: 'edge', label: 'Edge' },
@@ -210,10 +210,10 @@ export default function ValueBets() {
       </section>
 
       {/* ── Historical tracker ───────────────────────────────── */}
-      <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg px-4 py-3 flex items-start gap-3">
-        <span className="text-blue-400 text-sm mt-0.5">ℹ</span>
+      <div className="bg-[var(--brand-subtle)] border border-[var(--brand-border)] rounded-lg px-4 py-3 flex items-start gap-3">
+        <span className="text-[var(--brand)] text-sm mt-0.5">ℹ</span>
         <div>
-          <p className="text-sm font-medium text-blue-300">Historical Track Record</p>
+          <p className="text-sm font-medium text-[var(--brand)]">Historical Track Record</p>
           <p className="text-xs text-gray-400 mt-0.5">
             These are historical bets identified by the model where our probability
             exceeded the implied odds probability by 5%+. Results shown are actual

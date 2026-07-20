@@ -19,9 +19,9 @@ const USE_CASES = [
     desc: 'Click any upcoming fixture to get a full breakdown — win probabilities, correct scores, BTTS, goals markets, corners, cards, H2H record and current form.',
     cta: 'View Live Fixtures →',
     tab: 'live',
-    iconBg:   'bg-blue-500/10 border-blue-500/20',
-    iconText: 'text-blue-400',
-    btnHover: 'hover:text-blue-400',
+    iconBg:   'bg-[var(--brand-subtle)] border-[var(--brand-border)]',
+    iconText: 'text-[var(--brand)]',
+    btnHover: 'hover:text-[var(--brand)]',
   },
   {
     Icon: TrendingUp,
@@ -30,9 +30,9 @@ const USE_CASES = [
     desc: 'Browse Elo ratings for 500+ teams across 14 competitions. Click any team for their full rating history, season stats and head-to-head record.',
     cta: 'View Ratings →',
     tab: 'ratings',
-    iconBg:   'bg-purple-500/10 border-purple-500/20',
-    iconText: 'text-purple-400',
-    btnHover: 'hover:text-purple-400',
+    iconBg:   'bg-[var(--bg-overlay)] border-[var(--border)]',
+    iconText: 'text-[var(--text-secondary)]',
+    btnHover: 'hover:text-[var(--text-primary)]',
   },
 ]
 
@@ -63,7 +63,7 @@ const STEPS = [
 
 export default function Landing({ onNavigate }) {
   return (
-    <div className="min-h-screen text-white" style={{ backgroundColor: '#0a0a0f' }}>
+    <div className="min-h-screen text-white" style={{ backgroundColor: 'var(--bg-base)' }}>
 
       {/* ── NAV ── */}
       <nav

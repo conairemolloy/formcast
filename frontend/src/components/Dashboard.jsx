@@ -42,7 +42,7 @@ function MiniProbBar({ pHome, pDraw, pAway }) {
       <div className="flex h-1.5 rounded-full overflow-hidden">
         <div className="bg-emerald-500" style={{ width: `${ph}%` }} />
         <div className="bg-gray-600"   style={{ width: `${pd}%` }} />
-        <div className="bg-red-500"    style={{ width: `${pa}%` }} />
+        <div style={{ width: `${pa}%`, backgroundColor: 'var(--negative)' }} />
       </div>
       <div className="flex justify-between mt-0.5 text-[10px] tabular-nums text-gray-500">
         <span>{ph}%</span>
@@ -243,7 +243,7 @@ function RatingRow({ team, rank }) {
 
 const MODEL_STATS = [
   { label: 'Hit Rate',   value: '68.7%',    color: 'text-emerald-400' },
-  { label: 'Brier',      value: '0.156',    color: 'text-blue-400' },
+  { label: 'Brier',      value: '0.156',    color: 'text-[var(--text-secondary)]' },
   { label: 'Mean CLV',   value: '+19.0%',   color: 'text-emerald-400' },
   { label: 'Matches',    value: '128,797',  color: 'text-gray-300' },
 ]

@@ -1,8 +1,76 @@
 @import "tailwindcss";
 
-@keyframes ticker {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+:root {
+  /* ── Background layers ─────────────────────────────────── */
+  --bg-base:             #09090b;
+  --bg-raised:           #111118;
+  --bg-overlay:          #1c1c28;
+
+  /* ── Brand — emerald ──────────────────────────────────── */
+  --brand:               #34d399;
+  --brand-dim:           #10b981;
+  --brand-subtle:        rgba(52, 211, 153, 0.12);
+  --brand-border:        rgba(52, 211, 153, 0.25);
+
+  /* ── Positive ─────────────────────────────────────────── */
+  --positive:            #34d399;
+  --positive-subtle:     rgba(52, 211, 153, 0.12);
+  --positive-border:     rgba(52, 211, 153, 0.22);
+
+  /* ── Negative ─────────────────────────────────────────── */
+  --negative:            #f87171;
+  --negative-subtle:     rgba(248, 113, 113, 0.10);
+  --negative-border:     rgba(248, 113, 113, 0.20);
+
+  /* ── Warning — edge tier badge only ───────────────────── */
+  --warning:             #fbbf24;
+  --warning-subtle:      rgba(251, 191, 36, 0.11);
+  --warning-border:      rgba(251, 191, 36, 0.20);
+
+  /* ── Neutral text ramp ────────────────────────────────── */
+  --text-primary:        #f1f5f9;
+  --text-secondary:      #cbd5e1;
+  --text-tertiary:       #94a3b8;
+  --text-muted:          #64748b;
+  --text-ghost:          #475569;
+
+  /* ── Borders ──────────────────────────────────────────── */
+  --border:              #1e2533;
+  --border-subtle:       rgba(255, 255, 255, 0.05);
+  --border-focus:        rgba(52, 211, 153, 0.50);
+
+  /* ── Typography ───────────────────────────────────────── */
+  --font-ui:    -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+  --font-code:  "JetBrains Mono", "Fira Code", "SF Mono", ui-monospace, monospace;
+
+  --text-display:        2rem;       /* 32px — hero metric only */
+  --text-heading:        1.25rem;    /* 20px — page H1 */
+  --text-subheading:     0.875rem;   /* 14px — section heading */
+  --text-body:           0.875rem;   /* 14px — default */
+  --text-small:          0.75rem;    /* 12px — labels, meta */
+
+  --weight-display:      800;
+  --weight-heading:      700;
+  --weight-subheading:   600;
+  --weight-body:         400;
+
+  /* ── Border-radius ────────────────────────────────────── */
+  --radius-sm:           6px;
+  --radius-md:           10px;
+  --radius-lg:           14px;
+  --radius-full:         9999px;
+
+  /* ── Motion ───────────────────────────────────────────── */
+  --duration-fast:       120ms;
+  --duration-data:       400ms;
+  --duration-enter:      500ms;
+  --duration-number:     300ms;
+  --ease-standard:       cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-decelerate:     cubic-bezier(0, 0, 0.2, 1);
+}
+
+body {
+  font-family: var(--font-ui);
 }
 
 @keyframes fade-up {
