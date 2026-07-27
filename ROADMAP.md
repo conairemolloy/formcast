@@ -42,7 +42,7 @@
 > Work through in order before starting Phase 3+.
 
 **August readiness (~1 week of evenings)**
-- [ ] **CRITICAL — live value bets run Elo-only, not the ensemble.** fetch_live_odds.py computes live value bets using plain Elo, NOT the 78-feature ensemble that backtests at ~67% non-draw. This means users act on Elo-quality picks while the marketing/track-record uses ensemble numbers — a real gap between what's proven and what ships. Must close before August EPL restart. Scope: route live fixtures through the ensemble prediction path (predict_upcoming.py already builds ensemble predictions via the shared pipeline — likely fetch_live_odds should consume those rather than recomputing Elo). Also unblocks prediction_uncertainty for live bets (currently absent because Elo path has no Glicko phi ensemble output), which enables true edge×confidence ranking on Bet of the Day. Single highest-value open item in the project.
+- [ ] **Live value bets: ensemble-join reliability (was "Elo-only")** — fetch_live_odds.py already bridges to ensemble predictions via upcoming_predictions.csv, but falls back to stale Elo SILENTLY on team-name key misses. Root cause: two divergent name-resolution pipelines — odds API → _ODDS_TO_ELO (sparse, top-leagues-only, missing most Championship/Serie B/etc) vs football-data → results.csv canonical. Instrumentation added to log hit/miss rate per run. NEXT: (1) measure real miss rate once season fixtures populate [instrumentation live], (2) fix by unifying to ONE canonical team-name resolver (single-source-of-truth, same principle as feature pipeline) rather than extending the sparse _ODDS_TO_ELO dict, (3) also unify the two divergent Elo fallback formulas (fetch_live_odds HOME_ADV=50 + own draw formula vs predict_upcoming's — they disagree), (4) emit prediction_uncertainty from predict_upcoming.py (one line — meta_proba already computed) so live Bet of the Day gets edge×confidence ranking. Off-season note: miss-rate measurement only meaningful once upcoming fixtures exist.
 - [ ] Sentry error monitoring (15 min signup; silent failures already cost 3 weeks once)
 - [ ] UptimeRobot on /api/health (15 min signup)
 - [ ] OPENWEATHER_API_KEY as GitHub Actions secret + local .env (unblocks weather column in predictions)
@@ -108,8 +108,7 @@
 
 ## Off-Season Status (May–July 2026)
 European leagues finished. Pipeline fully built and tested.
-Next live value bets: August 2026 when EPL/La Liga/Serie A/Bundesliga/Ligue 1 restart.
-Ensemble predictions will power value bets from August — 7-model stack vs Elo-only currently.
+Live value bets already bridge to the ensemble where team names resolve; the fix is making that join reliable (see NEXT UP). Fuller fixture coverage from August when leagues restart.
 
 ---
 
