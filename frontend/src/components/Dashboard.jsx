@@ -163,7 +163,7 @@ function ValueBetCard({ bet }) {
             {bet.home_team} <span className="text-gray-600">vs</span> {bet.away_team}
           </p>
           <p className="text-[10px] text-gray-600 mt-0.5">
-            {isIntl && <span className="text-blue-400 mr-1">🌍</span>}
+            {isIntl && <span className="text-[var(--text-muted)] mr-1">🌍</span>}
             {bet.league} · {bet.match_date}
             {bet.match_time ? ` · ${bet.match_time}` : ''}
           </p>
