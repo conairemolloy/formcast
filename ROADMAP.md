@@ -58,6 +58,18 @@
 
 ---
 
+## Pre-Launch Requirements (must be TRUE before charging)
+> These are not features — they're the gate to launching a paid product. Absence of any of these actively bites the day after launch.
+
+- [ ] **v1.0 Launch Definition** — an explicit, minimal checklist of what MUST be true to go live and take payment. Forces the scope decision that prevents building forever across 22 phases. Define the smallest cut people will pay for (likely: polished football multi-market value bets + Bet/Acca of the Day + trust/proof surfaces + Stripe + legal + staging). Everything else is post-launch. WRITE THIS FIRST — it governs prioritisation of everything else.
+- [ ] **Legal foundation** — Terms of Service, Privacy Policy, refund/cancellation policy. Clarify legal standing: is this "betting advice"? In which jurisdictions? UK gambling-adjacent paid services have real regulatory rules. This is not the compliance footer — it's genuine pre-revenue legal work, likely needs actual legal advice. Getting it wrong can end the product.
+- [ ] **Data source commercial licensing audit** — football-data.co.uk, Understat, The Odds API, football-data.org, martj42 international dataset, etc. Several are "free for personal/non-commercial use." The moment we charge money, personal-use data may NOT be licensed for a paid product. Audit EVERY data source's commercial terms before monetising. Quiet landmine — could force paid data contracts or source changes.
+- [ ] **Staging / preview environment** — currently push-to-main deploys straight to production (Vercel/Railway). Fine with no users; unacceptable with paying customers (a bad push breaks the live product). Need a staging branch/environment to test before production. Infrastructure hygiene that becomes non-negotiable at launch.
+- [ ] **Settlement robustness & correctness** — the entire pitch is "every result logged, win or lose." The settlement pipeline (did the bet win?) must be provably correct and tamper-evident across ALL markets and sports. If a corners/cards bet settles wrong, the "verifiable track record" claim collapses. As multi-market expands, settlement complexity grows — needs explicit robustness work + validation, not just the SHA256 log (which proves the prediction, not the settlement).
+- [ ] **Customer support mechanism** — support email + help/FAQ page at minimum. The day someone pays they'll have billing questions, bug reports, "why no email." No support channel exists anywhere currently — glaring the day after launch.
+
+---
+
 ## Build Priorities — Repositioned for Commercial Launch
 > Phases renumbered to reflect the actual build order.
 
@@ -397,6 +409,7 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Design tokens doc first — before any page redesign, write frontend/DESIGN.md with colour tokens, type scale, spacing scale; every subsequent frontend task references it (same pattern as the shared feature pipeline, but for design)
 - [ ] Product-demo imagery (not stock photos) — for a quant/betting product, imagery = the PRODUCT shown beautifully: animated edge meter filling, numbers ticking up, clean product screenshots, at most one tasteful hero graphic. AVOID stock footballer photos, generic "data" imagery, decorative gifs — they read cheaper, not premium. Credibility comes from clean typography and confident numbers (like a trading terminal), not pictures. A short looping gif of the real edge meter animating = excellent landing-page demo.
 - [ ] Progressive disclosure is the antidote to overload — the platform is deeply data-rich (78 features, 7 models, SHAP); the DISCIPLINE is that every surface shows the CONCLUSION (Arsenal, +11% edge), with the data mountain one click deeper. Most users never dig; the depth being there builds trust even unused. Every screen: hide 90%, surface the 10% that matters.
+- [ ] "No-bet day" honesty mechanism — some days the model finds no strong value. A trustworthy product SAYS SO ("no strong edges today — we don't force picks") rather than manufacturing a weak Bet of the Day. Protects the track record from forced low-confidence picks dragging it down, and is itself a powerful trust signal — the discipline that separates FormCast from tipsters who post daily regardless. PHILOSOPHY: never force a pick to fill a slot.
 
 ### Visual Design
 - [ ] Design system — **do this first; artefact is frontend/DESIGN.md** — establish colour tokens, type scale, spacing scale. Emerald green as primary, slate as background, clear hierarchy between primary/secondary/muted text. Every subsequent Phase 6 task references this doc
@@ -544,6 +557,8 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Notification preferences & control — granular control or users unsubscribe entirely: which sports, daily vs weekly, which bet types (singles/accas), email vs push. Under-designed notification prefs kill email programs. Powered by the sport/team preferences captured at signup.
 - [ ] Weekly "how did we do" recap — periodic honesty-loop recap (email + page): "this week: 23 value bets found, 14 won, +8% ROI, best pick was X." Turns skeptics into believers — critical for a trust-first product. Extends the "Yesterday's Bet of the Day result" trust signal.
 - [ ] Bet tracking / "I placed this" — let users mark value bets they actually took, building a personal P&L and bet history. Strong stickiness/retention feature (their own track record living in the app). Powered by existing settle/results logic. Likely post-launch polish but design the value-bet card to accommodate a "track this bet" action so it's not retrofitted.
+- [ ] Onboarding email sequence — first-week emails converting signup → active user ("how to read a value bet", "your first Bet of the Day"). Distinct from the daily digest; known retention lever.
+- [ ] Product analytics & funnel observability — beyond Sentry (errors): which features get used, where users drop off in signup, what converts free→paid (PostHog). Can't improve what you can't see; guides all post-launch decisions.
 
 ---
 
