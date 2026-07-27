@@ -1,7 +1,7 @@
 match_date,match_time,league,home_team,away_team,p_home_elo,p_draw_elo,p_away_elo,p_home_ensemble,p_draw_ensemble,p_away_ensemble,predicted_outcome,is_international
-2026-07-06,19:00,FIFA World Cup,Portugal,Spain,0.248,0.2163,0.5357,0.248,0.2163,0.5357,A,True
-2026-07-07,00:00,FIFA World Cup,United States,Belgium,0.3278,0.248,0.4241,0.3278,0.248,0.4241,A,True
-2026-07-07,16:00,FIFA World Cup,Argentina,Egypt,0.7286,0.166,0.1054,0.7286,0.166,0.1054,H,True
-2026-07-07,20:00,FIFA World Cup,Switzerland,Colombia,0.3099,0.2407,0.4494,0.3099,0.2407,0.4494,A,True
-2026-07-09,20:00,FIFA World Cup,France,Morocco,0.5293,0.2181,0.2526,0.5293,0.2181,0.2526,H,True
-2026-07-11,21:00,FIFA World Cup,Norway,England,0.2912,0.2331,0.4756,0.2912,0.2331,0.4756,A,True
+2026-07-29,22:30,Campeonato Brasileiro Série A,Mirassol,Clube do Remo,0.4308,0.2461,0.3231,0.4152,0.3241,0.2607,H,False
+2026-07-29,22:30,Campeonato Brasileiro Série A,Inter,CR Flamengo,0.6646,0.1822,0.1532,0.7577,0.1712,0.0711,H,False
+2026-07-30,00:30,Campeonato Brasileiro Série A,EC Vitória,SE Palmeiras,0.4308,0.2461,0.3231,0.4152,0.3241,0.2607,H,False
+2026-07-30,00:30,Campeonato Brasileiro Série A,Fluminense,EC Bahia,0.4308,0.2461,0.3231,0.4152,0.3241,0.2607,H,False
+2026-07-30,22:30,Campeonato Brasileiro Série A,SC Corinthians Paulista,CA Paranaense,0.4308,0.2461,0.3231,0.4152,0.3241,0.2607,H,False
+2026-07-31,00:30,Campeonato Brasileiro Série A,Coritiba FBC,Cruzeiro EC,0.4308,0.2461,0.3231,0.4152,0.3241,0.2607,H,False
