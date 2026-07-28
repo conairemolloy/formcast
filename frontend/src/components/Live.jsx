@@ -63,11 +63,11 @@ function ProbBar({ pHome, pDraw, pAway }) {
 function StatusBadge({ status }) {
   const map = {
     IN_PLAY:   { cls: 'bg-emerald-500/20 text-emerald-400', label: 'Live' },
-    PAUSED:    { cls: 'bg-yellow-500/20 text-yellow-400',   label: 'HT' },
+    PAUSED:    { cls: 'bg-[var(--bg-overlay)] text-[var(--text-secondary)]',   label: 'HT' },
     LIVE:      { cls: 'bg-emerald-500/20 text-emerald-400', label: 'Live' },
     FINISHED:  { cls: 'bg-gray-700 text-gray-400',          label: 'FT' },
-    SCHEDULED: { cls: 'bg-blue-500/20 text-blue-400',       label: 'Soon' },
-    TIMED:     { cls: 'bg-blue-500/20 text-blue-400',       label: 'Fixture' },
+    SCHEDULED: { cls: 'bg-[var(--bg-overlay)] text-[var(--text-secondary)]', label: 'Soon' },
+    TIMED:     { cls: 'bg-[var(--bg-overlay)] text-[var(--text-secondary)]', label: 'Fixture' },
     POSTPONED: { cls: 'bg-gray-700 text-gray-500',          label: 'PPD' },
     CANCELLED: { cls: 'bg-gray-700 text-gray-500',          label: 'Canc.' },
   }

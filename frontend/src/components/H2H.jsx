@@ -92,19 +92,19 @@ function ProbBar({ homeTeam, awayTeam, pHome, pDraw, pAway }) {
       <div className="flex items-center justify-between text-sm mb-2">
         <span className="font-medium text-emerald-400 truncate max-w-[35%]">{homeTeam}</span>
         <span className="text-gray-500 text-xs">Draw</span>
-        <span className="font-medium text-blue-400 truncate max-w-[35%] text-right">{awayTeam}</span>
+        <span className="font-medium text-[var(--text-secondary)] truncate max-w-[35%] text-right">{awayTeam}</span>
       </div>
 
       <div className="flex h-3 rounded-full overflow-hidden gap-px">
         <div className="bg-emerald-500 transition-all duration-700 rounded-l-full" style={{ width: `${ph}%` }} />
         <div className="bg-gray-600 transition-all duration-700" style={{ width: `${pd}%` }} />
-        <div className="bg-blue-500 transition-all duration-700 rounded-r-full" style={{ width: `${pa}%` }} />
+        <div className="bg-[var(--negative)] transition-all duration-700 rounded-r-full" style={{ width: `${pa}%` }} />
       </div>
 
       <div className="flex items-center justify-between mt-2">
         <span className="text-lg font-bold tabular-nums text-emerald-400">{ph}%</span>
         <span className="text-sm tabular-nums text-gray-500">{pd}%</span>
-        <span className="text-lg font-bold tabular-nums text-blue-400">{pa}%</span>
+        <span className="text-lg font-bold tabular-nums text-[var(--text-secondary)]">{pa}%</span>
       </div>
     </div>
   )
@@ -220,7 +220,7 @@ function H2HRecord({ homeTeam, awayTeam, h2h }) {
       <div className="flex items-center justify-between text-xs mb-2">
         <span className="text-emerald-400 font-medium">{homeTeam}</span>
         <span className="text-gray-500">Draws</span>
-        <span className="text-blue-400 font-medium">{awayTeam}</span>
+        <span className="text-[var(--text-secondary)] font-medium">{awayTeam}</span>
       </div>
 
       {total > 0 ? (
@@ -228,13 +228,13 @@ function H2HRecord({ homeTeam, awayTeam, h2h }) {
           <div className="flex h-2.5 rounded-full overflow-hidden gap-px mb-2">
             <div className="bg-emerald-500 rounded-l-full" style={{ width: `${(h2h.home_wins / total) * 100}%` }} />
             <div className="bg-gray-600" style={{ width: `${(h2h.draws / total) * 100}%` }} />
-            <div className="bg-blue-500 rounded-r-full" style={{ width: `${(h2h.away_wins / total) * 100}%` }} />
+            <div className="bg-[var(--negative)] rounded-r-full" style={{ width: `${(h2h.away_wins / total) * 100}%` }} />
           </div>
 
           <div className="flex items-center justify-between text-sm font-bold mb-5">
             <span className="text-emerald-400 tabular-nums">{h2h.home_wins}</span>
             <span className="text-gray-500 tabular-nums">{h2h.draws}</span>
-            <span className="text-blue-400 tabular-nums">{h2h.away_wins}</span>
+            <span className="text-[var(--text-secondary)] tabular-nums">{h2h.away_wins}</span>
           </div>
         </>
       ) : (
@@ -261,13 +261,13 @@ function H2HRecord({ homeTeam, awayTeam, h2h }) {
                 >
                   <span className="text-gray-500 tabular-nums w-20 shrink-0">{m.date}</span>
                   <div className="flex items-center gap-2 flex-1 justify-center">
-                    <span className={`font-medium truncate max-w-[90px] text-right ${m.home_team === homeTeam ? 'text-emerald-400' : 'text-blue-400'}`}>
+                    <span className={`font-medium truncate max-w-[90px] text-right ${m.home_team === homeTeam ? 'text-emerald-400' : 'text-[var(--text-secondary)]'}`}>
                       {m.home_team}
                     </span>
                     <span className={`font-bold tabular-nums shrink-0 ${resultColor}`}>
                       {m.home_goals ?? '?'}–{m.away_goals ?? '?'}
                     </span>
-                    <span className={`font-medium truncate max-w-[90px] ${m.away_team === awayTeam ? 'text-blue-400' : 'text-emerald-400'}`}>
+                    <span className={`font-medium truncate max-w-[90px] ${m.away_team === awayTeam ? 'text-[var(--text-secondary)]' : 'text-emerald-400'}`}>
                       {m.away_team}
                     </span>
                   </div>
@@ -297,7 +297,7 @@ function StatRow({ label, homeVal, awayVal, higherIsBetter = true }) {
         {homeVal ?? '—'}
       </span>
       <span className="flex-1 text-center text-xs text-gray-500">{label}</span>
-      <span className={`w-10 text-left tabular-nums font-semibold text-sm ${awayLeads ? 'text-blue-400' : 'text-gray-300'}`}>
+      <span className={`w-10 text-left tabular-nums font-semibold text-sm ${awayLeads ? 'text-[var(--text-primary)]' : 'text-gray-300'}`}>
         {awayVal ?? '—'}
       </span>
     </div>
@@ -319,7 +319,7 @@ function SeasonStats({ homeTeam, awayTeam, homeProfile, awayProfile }) {
       <div className="flex items-center gap-3 mb-1 pb-2 border-b border-gray-800">
         <span className="w-10 text-right text-xs font-semibold text-emerald-400 truncate">{homeTeam}</span>
         <span className="flex-1" />
-        <span className="w-10 text-left text-xs font-semibold text-blue-400 truncate">{awayTeam}</span>
+        <span className="w-10 text-left text-xs font-semibold text-[var(--text-secondary)] truncate">{awayTeam}</span>
       </div>
 
       <StatRow label="Played"       homeVal={hs?.played}        awayVal={as_?.played}       />
@@ -465,7 +465,7 @@ export default function H2H() {
             </div>
             <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 text-center">
               <p className="text-xs text-gray-500 mb-1">{awayTeam} Elo</p>
-              <p className="text-2xl font-black font-mono text-blue-400 tabular-nums">{preview.away_elo}</p>
+              <p className="text-2xl font-black font-mono text-[var(--text-secondary)] tabular-nums">{preview.away_elo}</p>
             </div>
           </div>
 

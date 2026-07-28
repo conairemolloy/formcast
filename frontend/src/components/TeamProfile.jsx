@@ -228,7 +228,7 @@ export default function TeamProfile({
                         <td className="py-2.5 text-center">
                           <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${
                             m.venue === 'H'
-                              ? 'bg-blue-500/15 text-blue-400'
+                              ? 'bg-[var(--bg-overlay)] text-[var(--text-secondary)]'
                               : 'bg-orange-500/15 text-orange-400'
                           }`}>
                             {m.venue}
@@ -280,7 +280,7 @@ export default function TeamProfile({
 
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { label: 'Home', data: stats.home, color: 'text-blue-400' },
+                  { label: 'Home', data: stats.home, color: 'text-[var(--text-secondary)]' },
                   { label: 'Away', data: stats.away, color: 'text-orange-400' },
                 ].map(({ label, data: d, color }) => (
                   <div key={label} className="bg-gray-800/50 rounded-lg p-3">

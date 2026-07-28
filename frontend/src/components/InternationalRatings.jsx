@@ -10,8 +10,8 @@ const WC_2026_TEAMS = new Set(['Algeria','Argentina','Australia','Austria','Belg
 const CONF_TABS = ['WC 2026', 'All', 'UEFA', 'CONMEBOL', 'CONCACAF', 'CAF', 'AFC', 'OFC']
 
 const CONF_STYLE = {
-  'UEFA':             'bg-blue-500/20 text-blue-400',
-  'CONMEBOL':         'bg-yellow-500/20 text-yellow-500',
+  'UEFA':             'bg-[var(--bg-overlay)] text-[var(--text-secondary)]',
+  'CONMEBOL':         'bg-[var(--bg-overlay)] text-[var(--text-secondary)]',
   'CONCACAF':         'bg-red-500/20 text-red-400',
   'CAF':              'bg-orange-500/20 text-orange-400',
   'AFC':              'bg-violet-500/20 text-violet-400',

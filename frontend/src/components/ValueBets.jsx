@@ -19,7 +19,7 @@ function StatCard({ label, value, sub, tip }) {
 function EdgeBadge({ edge }) {
   if (edge > 0.10)
     return <span className="px-2 py-0.5 rounded text-xs font-medium bg-emerald-500/20 text-emerald-400">{(edge * 100).toFixed(1)}%</span>
-  return <span className="px-2 py-0.5 rounded text-xs font-medium bg-yellow-500/20 text-yellow-400">{(edge * 100).toFixed(1)}%</span>
+  return <span className="px-2 py-0.5 rounded text-xs font-medium bg-[var(--warning-subtle)] text-[var(--warning)]">{(edge * 100).toFixed(1)}%</span>
 }
 
 const OUTCOME_LABELS = { H: 'Home', D: 'Draw', A: 'Away' }

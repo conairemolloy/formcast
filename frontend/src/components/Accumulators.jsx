@@ -9,7 +9,7 @@ function LegPill({ home, away, outcome, odds, format }) {
     <span className="inline-flex items-center gap-1 bg-gray-800 rounded px-2 py-0.5 text-xs text-gray-300 mr-1 mb-1">
       <span className="font-medium text-white">{home} vs {away}</span>
       <span className="text-gray-500">·</span>
-      <span className="font-mono text-blue-400">{outcome ?? '—'}</span>
+      <span className="font-mono text-[var(--text-secondary)]">{outcome ?? '—'}</span>
       <span className="text-gray-600">@{odds != null ? formatOdds(odds, format) : '—'}</span>
     </span>
   )
@@ -376,10 +376,10 @@ export default function Accumulators() {
       </div>
 
       {/* Info banner */}
-      <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg px-4 py-3 flex items-start gap-3">
-        <span className="text-blue-400 text-sm mt-0.5">ℹ</span>
+      <div className="bg-[var(--brand-subtle)] border border-[var(--brand-border)] rounded-lg px-4 py-3 flex items-start gap-3">
+        <span className="text-[var(--brand)] text-sm mt-0.5">ℹ</span>
         <div>
-          <p className="text-sm font-medium text-blue-300">Historical Accumulator Tracker</p>
+          <p className="text-sm font-medium text-[var(--brand)]">Historical Accumulator Tracker</p>
           <p className="text-xs text-gray-400 mt-0.5">
             Historical accumulators built from value bets identified by the model.
             Each acca combines 2 or 3 legs with positive expected value. Results

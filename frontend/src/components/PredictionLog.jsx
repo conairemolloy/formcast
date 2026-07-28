@@ -35,9 +35,9 @@ function fmtPublished(ts) {
 // ── sub-components ────────────────────────────────────────────────────────────
 
 const OUTCOME_STYLE = {
-  H: 'bg-blue-500/20 text-blue-300 border border-blue-500/30',
-  D: 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30',
-  A: 'bg-purple-500/20 text-purple-300 border border-purple-500/30',
+  H: 'bg-[var(--bg-overlay)] text-[var(--text-secondary)] border border-[var(--border)]',
+  D: 'bg-[var(--bg-overlay)] text-[var(--text-secondary)] border border-[var(--border)]',
+  A: 'bg-[var(--bg-overlay)] text-[var(--text-secondary)] border border-[var(--border)]',
 }
 const OUTCOME_LABEL = { H: 'Home', D: 'Draw', A: 'Away' }
 

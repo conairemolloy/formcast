@@ -10,10 +10,10 @@ import MatchPreview from './MatchPreview'
 const LEAGUE_CLASSES = {
   EPL:         'bg-violet-500/20 text-violet-300',
   LaLiga:      'bg-orange-500/20 text-orange-300',
-  Bundesliga:  'bg-yellow-500/20 text-yellow-300',
-  SerieA:      'bg-blue-500/20 text-blue-300',
+  Bundesliga:  'bg-[var(--bg-overlay)] text-[var(--text-secondary)]',
+  SerieA:      'bg-[var(--bg-overlay)] text-[var(--text-secondary)]',
   Ligue1:      'bg-sky-500/20 text-sky-300',
-  Championship:'bg-purple-500/20 text-purple-300',
+  Championship:'bg-[var(--bg-overlay)] text-[var(--text-secondary)]',
   Ligue2:      'bg-cyan-500/20 text-cyan-300',
   SerieB:      'bg-indigo-500/20 text-indigo-300',
   Bundesliga2: 'bg-amber-500/20 text-amber-300',

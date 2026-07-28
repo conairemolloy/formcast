@@ -14,7 +14,7 @@ function initials(name, email) {
 
 const TIER_BADGE = {
   free:  'text-gray-400 bg-gray-700/80 border border-gray-600',
-  pro:   'text-blue-400 bg-blue-500/20 border border-blue-500/30',
+  pro:   'text-[var(--brand)] bg-[var(--brand-subtle)] border border-[var(--brand-border)]',
   elite: 'text-amber-400 bg-amber-500/20 border border-amber-500/30',
 }
 

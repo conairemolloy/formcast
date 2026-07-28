@@ -3,8 +3,8 @@ import api from '../api'
 import { Loader2, ChevronLeft } from 'lucide-react'
 
 const CONF_STYLE = {
-  'UEFA':             'bg-blue-500/20 text-blue-400',
-  'CONMEBOL':         'bg-yellow-500/20 text-yellow-500',
+  'UEFA':             'bg-[var(--bg-overlay)] text-[var(--text-secondary)]',
+  'CONMEBOL':         'bg-[var(--bg-overlay)] text-[var(--text-secondary)]',
   'CONCACAF':         'bg-red-500/20 text-red-400',
   'CAF':              'bg-orange-500/20 text-orange-400',
   'AFC':              'bg-violet-500/20 text-violet-400',
@@ -150,7 +150,7 @@ export default function InternationalTeamProfile({ team, eloRating, confederatio
                         <td className="py-2.5 text-center">
                           <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${
                             m.venue === 'H'
-                              ? 'bg-blue-500/15 text-blue-400'
+                              ? 'bg-[var(--bg-overlay)] text-[var(--text-secondary)]'
                               : m.venue === 'A'
                               ? 'bg-orange-500/15 text-orange-400'
                               : 'bg-gray-700/40 text-gray-400'

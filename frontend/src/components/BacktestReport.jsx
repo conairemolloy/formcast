@@ -236,7 +236,7 @@ export default function BacktestReport() {
             <p className="text-gray-300">The simulation uses historical opening odds — not prices you'd actually get. Bookmakers cut prices significantly before kickoff. It also bets on every match above 5% edge (3,800+ bets), which is unrealistic. A disciplined bettor would filter to 200–400 high-confidence selections per year.</p>
           </div>
           <div className="bg-gray-800/50 rounded p-3">
-            <p className="text-blue-400 font-medium mb-1">📊 What the numbers mean</p>
+            <p className="text-[var(--text-secondary)] font-medium mb-1">📊 What the numbers mean</p>
             <p className="text-gray-300">Hit rate (66.9%) means the model picks the correct winner in roughly 2 out of 3 non-draw matches. The Brier score measures probability accuracy — lower is better. These figures are measured on matches the model never saw during training.</p>
           </div>
         </div>
@@ -253,7 +253,7 @@ export default function BacktestReport() {
         <StatCard
           label="Brier Score"
           value={data.overall.brier_score.toFixed(4)}
-          color="text-blue-400"
+          color="text-[var(--text-secondary)]"
           sub="Lower is better"
         />
         <StatCard
@@ -592,7 +592,7 @@ export default function BacktestReport() {
               <StatCard
                 label="CLV+ Win Rate"
                 value={`${clvData.clv_win_rate.toFixed(1)}%`}
-                color="text-blue-400"
+                color="text-[var(--text-secondary)]"
                 sub="Win rate on CLV+ bets"
               />
               <StatCard
@@ -677,7 +677,7 @@ export default function BacktestReport() {
               <StatCard
                 label="Win Rate"
                 value={`${pnlData.win_rate.toFixed(1)}%`}
-                color="text-blue-400"
+                color="text-[var(--text-secondary)]"
                 sub="Correct predictions"
               />
             </div>

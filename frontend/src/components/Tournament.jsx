@@ -16,7 +16,7 @@ function PctBadge({ value, highColor, threshold = 50 }) {
   const active = value > threshold
   const colors = {
     green: 'bg-emerald-500/20 text-emerald-400',
-    blue:  'bg-blue-500/20 text-blue-400',
+    blue:  'bg-[var(--bg-overlay)] text-[var(--text-secondary)]',
     red:   'bg-red-500/20 text-red-400',
   }
   if (active) {
@@ -99,7 +99,7 @@ export default function Tournament() {
       </div>
 
       {seasonComplete && !loading && (
-        <div className="flex items-start gap-2 rounded-lg border border-yellow-500/30 bg-yellow-500/10 px-4 py-3 text-sm text-yellow-300">
+        <div className="flex items-start gap-2 rounded-lg border border-[var(--warning-border)] bg-[var(--warning-subtle)] px-4 py-3 text-sm text-[var(--warning)]">
           <span className="shrink-0">⚠</span>
           <span>Season complete — showing final standings. Re-run <code className="font-mono text-yellow-200">tournament_simulator.py</code> to update for next season.</span>
         </div>
@@ -158,7 +158,7 @@ export default function Tournament() {
                   const isChampion  = row.win_pct === 100
                   const isRelegated = row.relegation_pct === 100
                   const rowBg = isChampion
-                    ? 'bg-yellow-500/5'
+                    ? 'bg-[var(--warning-subtle)]'
                     : isRelegated
                     ? 'bg-red-500/5'
                     : ''

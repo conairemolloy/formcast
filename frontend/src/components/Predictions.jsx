@@ -80,7 +80,7 @@ export default function Predictions() {
       <h1 className="text-xl font-semibold text-white">Predictions</h1>
 
       <div className="flex items-start gap-2 text-xs text-gray-500 bg-gray-900/40 border border-gray-800 rounded-lg px-3 py-2.5">
-        <span className="text-blue-400 shrink-0">ℹ</span>
+        <span className="text-[var(--brand)] shrink-0">ℹ</span>
         <span>Predictions shown from 2019 onwards — earlier data was used to train the models.</span>
       </div>
 
@@ -211,7 +211,7 @@ export default function Predictions() {
                 <td className="px-4 py-2.5 text-right tabular-nums"><ProbCell value={row.p_draw} /></td>
                 <td className="px-4 py-2.5 text-right tabular-nums"><ProbCell value={row.p_away} /></td>
                 <td className="px-4 py-2.5 text-center">
-                  <span className="font-mono font-semibold text-blue-400">{row.predicted_result}</span>
+                  <span className="font-mono font-semibold text-[var(--text-secondary)]">{row.predicted_result}</span>
                 </td>
                 <td className="px-4 py-2.5 text-center">
                   <span className="font-mono font-semibold text-gray-300">{row.actual_result}</span>

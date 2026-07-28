@@ -11,21 +11,21 @@ const MODELS = [
     desc: 'Extends Elo with a confidence interval (RD) and consistency measure (σ). New teams start uncertain; certainty grows with more matches.',
     formula: 'E = 1 / (1 + exp(-g(φ) × (μ_A - μ_B)))',
     metric: 'Uncertainty-aware ratings',
-    metricColor: 'text-blue-400',
+    metricColor: 'text-[var(--text-secondary)]',
   },
   {
     name: 'Dixon-Coles',
     desc: 'Models the number of goals each team scores using Poisson distributions, with a correction for low-scoring matches near 0-0.',
     formula: 'P(x,y) = τ(x,y) × P(X=x) × P(Y=y)',
     metric: 'Full scoreline probabilities',
-    metricColor: 'text-blue-400',
+    metricColor: 'text-[var(--text-secondary)]',
   },
   {
     name: 'Bradley-Terry',
     desc: 'Estimates team strength from pairwise match outcomes using maximum likelihood. Every match is a comparison between two teams.',
     formula: 'P(A beats B) = β_A / (β_A + β_B)',
     metric: 'Schedule-adjusted ratings',
-    metricColor: 'text-blue-400',
+    metricColor: 'text-[var(--text-secondary)]',
   },
   {
     name: 'XGBoost',
@@ -224,7 +224,7 @@ export default function HowItWorks() {
           </div>
 
           <div className="flex items-start gap-2 text-xs text-gray-500 bg-gray-950 border border-gray-800 rounded-lg px-3 py-2.5">
-            <span className="text-blue-400 shrink-0">ℹ</span>
+            <span className="text-[var(--brand)] shrink-0">ℹ</span>
             <span>
               Walk-forward validation: the ensemble is trained only on data before each prediction date.
               Results after 2019 are used for evaluation — the 1993–2019 window is training only.

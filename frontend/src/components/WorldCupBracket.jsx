@@ -3,8 +3,8 @@ import api from '../api'
 import { Loader2 } from 'lucide-react'
 
 const CONF_STYLE = {
-  UEFA:             'bg-blue-500/20 text-blue-400',
-  CONMEBOL:         'bg-yellow-500/20 text-yellow-500',
+  UEFA:             'bg-[var(--bg-overlay)] text-[var(--text-secondary)]',
+  CONMEBOL:         'bg-[var(--bg-overlay)] text-[var(--text-secondary)]',
   CONCACAF:         'bg-red-500/20 text-red-400',
   CAF:              'bg-orange-500/20 text-orange-400',
   AFC:              'bg-violet-500/20 text-violet-400',
@@ -160,7 +160,7 @@ function ProjectedMatchCard({ label, match, accent, onTeamClick }) {
     : accent === 'amber'
     ? 'border-amber-500/40 ring-1 ring-amber-500/20'
     : accent === 'yellow'
-    ? 'border-yellow-400/50 ring-1 ring-yellow-400/20'
+    ? 'border-[var(--warning-border)] ring-1 ring-[var(--warning-border)]'
     : 'border-gray-700/60'
 
   const barClass = confirmed
@@ -168,7 +168,7 @@ function ProjectedMatchCard({ label, match, accent, onTeamClick }) {
     : accent === 'amber'
     ? 'h-full bg-amber-500 rounded-full'
     : accent === 'yellow'
-    ? 'h-full bg-yellow-400 rounded-full'
+    ? 'h-full bg-[var(--warning)] rounded-full'
     : 'h-full bg-emerald-600 rounded-full'
 
   const rows = [
@@ -185,7 +185,7 @@ function ProjectedMatchCard({ label, match, accent, onTeamClick }) {
         {confirmed ? (
           <span className="text-emerald-400">✓ Confirmed</span>
         ) : (
-          <span className={accent === 'amber' ? 'text-amber-400' : accent === 'yellow' ? 'text-yellow-400' : 'text-gray-500'}>
+          <span className={accent === 'amber' ? 'text-[var(--warning)]' : accent === 'yellow' ? 'text-[var(--warning)]' : 'text-gray-500'}>
             {label}
           </span>
         )}
@@ -220,10 +220,10 @@ function FinalColumn({ match, onTeamClick }) {
 
   return (
     <div
-      className="rounded-lg border border-yellow-400/50 ring-1 ring-yellow-400/20 overflow-hidden text-xs shrink-0"
+      className="rounded-lg border border-[var(--warning-border)] ring-1 ring-[var(--warning-border)] overflow-hidden text-xs shrink-0"
       style={{ minWidth: 220, maxWidth: 250 }}
     >
-      <div className="px-2 py-1 bg-gray-900/80 border-b border-gray-800 text-[10px] font-semibold uppercase tracking-wider text-yellow-400 text-center">
+      <div className="px-2 py-1 bg-gray-900/80 border-b border-gray-800 text-[10px] font-semibold uppercase tracking-wider text-[var(--warning)] text-center">
         Final — July 19
       </div>
       {rows.length === 0 && (
@@ -238,7 +238,7 @@ function FinalColumn({ match, onTeamClick }) {
           <span className="flex-1 font-medium text-gray-200 truncate">{t.name}</span>
           <div className="flex items-center gap-1 shrink-0">
             <div className="w-14 h-1.5 bg-gray-800 rounded-full overflow-hidden">
-              <div className="h-full bg-yellow-400 rounded-full" style={{ width: `${Math.min(t.pct, 100)}%` }} />
+              <div className="h-full bg-[var(--warning)] rounded-full" style={{ width: `${Math.min(t.pct, 100)}%` }} />
             </div>
             <span className="tabular-nums text-gray-400 text-[10px] w-9 text-right">{t.pct.toFixed(1)}%</span>
           </div>
@@ -344,12 +344,12 @@ function TitleOdds({ teamPaths }) {
           return (
             <div
               key={row.team}
-              className={`flex items-center gap-3 px-4 py-2 ${goldTier ? 'bg-yellow-900/10' : silverTier ? 'bg-gray-800/30' : ''}`}
+              className={`flex items-center gap-3 px-4 py-2 ${goldTier ? 'bg-[var(--warning-subtle)]' : silverTier ? 'bg-gray-800/30' : ''}`}
             >
               <span className="w-5 text-xs font-mono text-gray-500 shrink-0">
                 {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}`}
               </span>
-              <span className={`flex-1 text-sm font-medium truncate ${goldTier ? 'text-yellow-300' : silverTier ? 'text-gray-200' : 'text-gray-300'}`}>
+              <span className={`flex-1 text-sm font-medium truncate ${goldTier ? 'text-[var(--warning)]' : silverTier ? 'text-gray-200' : 'text-gray-300'}`}>
                 {row.team}
               </span>
               <span className={`text-[11px] px-1.5 py-0.5 rounded font-medium shrink-0 ${confStyle}`}>
@@ -358,11 +358,11 @@ function TitleOdds({ teamPaths }) {
               <div className="flex items-center gap-2 shrink-0">
                 <div className="w-20 h-1.5 bg-gray-800 rounded-full overflow-hidden">
                   <div
-                    className={goldTier ? 'h-full bg-yellow-400 rounded-full' : silverTier ? 'h-full bg-gray-400 rounded-full' : 'h-full bg-emerald-600 rounded-full'}
+                    className={goldTier ? 'h-full bg-[var(--warning)] rounded-full' : silverTier ? 'h-full bg-gray-400 rounded-full' : 'h-full bg-emerald-600 rounded-full'}
                     style={{ width: `${barPct}%` }}
                   />
                 </div>
-                <span className={`tabular-nums text-xs font-mono w-10 text-right ${goldTier ? 'text-yellow-300 font-semibold' : 'text-gray-400'}`}>
+                <span className={`tabular-nums text-xs font-mono w-10 text-right ${goldTier ? 'text-[var(--warning)] font-semibold' : 'text-gray-400'}`}>
                   {row.champion_pct.toFixed(1)}%
                 </span>
               </div>
