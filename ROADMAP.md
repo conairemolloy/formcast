@@ -61,7 +61,26 @@
 ## Pre-Launch Requirements (must be TRUE before charging)
 > These are not features — they're the gate to launching a paid product. Absence of any of these actively bites the day after launch.
 
-- [ ] **v1.0 Launch Definition** — an explicit, minimal checklist of what MUST be true to go live and take payment. Forces the scope decision that prevents building forever across 22 phases. Define the smallest cut people will pay for (likely: polished football multi-market value bets + Bet/Acca of the Day + trust/proof surfaces + Stripe + legal + staging). Everything else is post-launch. WRITE THIS FIRST — it governs prioritisation of everything else.
+- [ ] **v1.0 Launch Definition — FREE FIRST** — Strategic decision (July 2026): launch FREE, build audience, let the live track record prove the edge over the season, THEN flip on payment for a product people already trust. Removes Stripe/refund/legal-billing complexity from the critical path and is the stronger play for a trust product (don't ask strangers to pay before the edge is proven live).
+
+  **FREE v1.0 launches when ALL true:**
+  1. Polished football value-bets product (component audit + Value Bets page rebuild + Bet of the Day)
+  2. Multi-market as far as Odds API coverage/cost allows (recon-gated; goals/BTTS likely first)
+  3. LIVE, auto-settling, publicly-visible track record — THE centrepiece; free-first makes the proof the entire pitch. Settlement must be correct and automatic as real games finish
+  4. Ensemble-join reliability fixed — live bets come from the real 78-feature ensemble, not silent Elo fallback (see NEXT UP)
+  5. Clean landing + minimal signup + GENUINELY good mobile (not just "responsive" — the core land→Bet of the Day→signup flow is good on a phone, where most traffic lands)
+  6. Trust/proof surfaces visible (public proof page, track record, yesterday's result)
+  7. Legal minimum + responsible-gambling compliance footer + data-source commercial-licensing cleared (publishing betting content publicly even when free)
+  8. Staging environment + basic monitoring (Sentry/UptimeRobot) so free users don't hit broken deploys
+  9. Account basics: password reset, email change (subscription-cancellation deferred with payment)
+
+  **BUILT-BUT-DORMANT, ready to flip on post-launch:** Stripe integration, subscription tiers, pricing page, cancellation flow — wired but switched off.
+
+  **PAYWALL LINE DECIDED NOW (critical discipline):** design the free product knowing the eventual paywall, so monetising = ADDING a gate, never TAKING AWAY. Proposed line: Bet of the Day always free (the hook); full value-bets list + Acca of the Day + email alerts + multi-sport become Pro. Free launch either doesn't-yet-build or marks paid features "Pro — coming soon" — never gives then removes.
+
+  **NOT in v1.0 (post-launch):** other sports incl. GAA, in-play engine, email digests, accas, API tier, mobile app, Phases 13-22.
+
+  **TIMING:** build now → August; launch when season proves the live edge. The live track record is the gate, and it needs real fixtures.
 - [ ] **Legal foundation** — Terms of Service, Privacy Policy, refund/cancellation policy. Clarify legal standing: is this "betting advice"? In which jurisdictions? UK gambling-adjacent paid services have real regulatory rules. This is not the compliance footer — it's genuine pre-revenue legal work, likely needs actual legal advice. Getting it wrong can end the product.
 - [ ] **Data source commercial licensing audit** — football-data.co.uk, Understat, The Odds API, football-data.org, martj42 international dataset, etc. Several are "free for personal/non-commercial use." The moment we charge money, personal-use data may NOT be licensed for a paid product. Audit EVERY data source's commercial terms before monetising. Quiet landmine — could force paid data contracts or source changes.
 - [ ] **Staging / preview environment** — currently push-to-main deploys straight to production (Vercel/Railway). Fine with no users; unacceptable with paying customers (a bad push breaks the live product). Need a staging branch/environment to test before production. Infrastructure hygiene that becomes non-negotiable at launch.
