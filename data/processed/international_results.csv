@@ -41319,7 +41319,7 @@ date,home_team,away_team,home_score,away_score,result,tournament,city,country,ne
 2018-03-17,Iran,Sierra Leone,4,0,H,Friendly,Tehran,Iran,False,2018
 2018-03-21,Andorra,Liechtenstein,1,0,H,Friendly,La Línea de la Concepción,Spain,True,2018
 2018-03-21,Antigua and Barbuda,Bermuda,3,2,H,Friendly,St. John's,Antigua and Barbuda,False,2018
-2018-03-21,Iraq,Qatar,2,3,A,Friendly,Basra,Iraq,False,2018
+2018-03-21,Iraq,Qatar,2,3,A,International Friendship Championship,Basra,Iraq,False,2018
 2018-03-21,Jordan,Kuwait,1,0,H,Friendly,Amman,Jordan,False,2018
 2018-03-21,Laos,Cambodia,0,1,A,Friendly,Vientiane,Laos,False,2018
 2018-03-21,Madagascar,Togo,0,0,D,Friendly,Saint-Leu-la-Forêt,France,True,2018
@@ -41382,7 +41382,7 @@ date,home_team,away_team,home_score,away_score,result,tournament,city,country,ne
 2018-03-24,Kosovo,Madagascar,1,0,H,Friendly,Franconville,France,True,2018
 2018-03-24,Mauritania,Guinea,2,0,H,Friendly,Nouakchott,Mauritania,False,2018
 2018-03-24,Northern Ireland,South Korea,2,1,H,Friendly,Belfast,Northern Ireland,False,2018
-2018-03-24,Qatar,Syria,2,2,D,Friendly,Basra,Iraq,True,2018
+2018-03-24,Qatar,Syria,2,2,D,International Friendship Championship,Basra,Iraq,True,2018
 2018-03-24,Sweden,Chile,1,2,A,Friendly,Solna,Sweden,False,2018
 2018-03-24,Tahiti,New Caledonia,4,3,H,Friendly,Pirae,Tahiti,False,2018
 2018-03-24,Uganda,São Tomé and Príncipe,3,1,H,Friendly,Kampala,Uganda,False,2018
@@ -41421,7 +41421,7 @@ date,home_team,away_team,home_score,away_score,result,tournament,city,country,ne
 2018-03-27,Germany,Brazil,0,1,A,Friendly,Berlin,Germany,False,2018
 2018-03-27,Greece,Egypt,1,0,H,Friendly,Zürich,Switzerland,True,2018
 2018-03-27,Hungary,Scotland,0,1,A,Friendly,Budapest,Hungary,False,2018
-2018-03-27,Iraq,Syria,1,1,D,Friendly,Basra,Iraq,False,2018
+2018-03-27,Iraq,Syria,1,1,D,International Friendship Championship,Basra,Iraq,False,2018
 2018-03-27,Jordan,Vietnam,1,1,D,AFC Asian Cup qualification,Amman,Jordan,False,2018
 2018-03-27,North Korea,Hong Kong,2,0,H,AFC Asian Cup qualification,Pyongyang,North Korea,False,2018
 2018-03-27,Kosovo,Burkina Faso,2,0,H,Friendly,Franconville,France,True,2018
