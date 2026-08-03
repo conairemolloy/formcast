@@ -1,7 +1,28 @@
 match_date,match_time,league,home_team,away_team,p_home_elo,p_draw_elo,p_away_elo,p_home_ensemble,p_draw_ensemble,p_away_ensemble,predicted_outcome,is_international
-2026-07-29,22:30,Campeonato Brasileiro Série A,Mirassol,Clube do Remo,0.4308,0.2461,0.3231,0.4152,0.3241,0.2607,H,False
-2026-07-29,22:30,Campeonato Brasileiro Série A,Inter,CR Flamengo,0.6646,0.1822,0.1532,0.7577,0.1712,0.0711,H,False
-2026-07-30,00:30,Campeonato Brasileiro Série A,EC Vitória,SE Palmeiras,0.4308,0.2461,0.3231,0.4152,0.3241,0.2607,H,False
-2026-07-30,00:30,Campeonato Brasileiro Série A,Fluminense,EC Bahia,0.4308,0.2461,0.3231,0.4152,0.3241,0.2607,H,False
-2026-07-30,22:30,Campeonato Brasileiro Série A,SC Corinthians Paulista,CA Paranaense,0.4308,0.2461,0.3231,0.4152,0.3241,0.2607,H,False
-2026-07-31,00:30,Campeonato Brasileiro Série A,Coritiba FBC,Cruzeiro EC,0.4308,0.2461,0.3231,0.4152,0.3241,0.2607,H,False
+2026-08-07,18:00,Eredivisie,SC Cambuur-Leeuwarden,SBV Excelsior,0.4308,0.2461,0.3231,0.4148,0.3242,0.261,H,False
+2026-08-07,19:15,Primeira Liga,GD Estoril Praia,FC Famalicão,0.4308,0.2461,0.3231,0.4148,0.3242,0.261,H,False
+2026-08-08,14:30,Primeira Liga,CS Marítimo,Casa Pia AC,0.4308,0.2461,0.3231,0.4148,0.3242,0.261,H,False
+2026-08-08,14:30,Eredivisie,Annecy,Telstar 1963,0.3447,0.2551,0.4002,0.4186,0.3018,0.2797,H,False
+2026-08-08,16:45,Eredivisie,Go Ahead Eagles,Willem II Tilburg,0.4308,0.2461,0.3231,0.4148,0.3242,0.261,H,False
+2026-08-08,17:00,Primeira Liga,Vitória,FC Arouca,0.4308,0.2461,0.3231,0.4148,0.3242,0.261,H,False
+2026-08-08,18:00,Eredivisie,PSV,Fortuna Sittard,0.4308,0.2461,0.3231,0.4148,0.3242,0.261,H,False
+2026-08-08,19:00,Eredivisie,Lazio,ADO Den Haag,0.4613,0.2372,0.3015,0.5924,0.2801,0.1275,H,False
+2026-08-08,19:00,Campeonato Brasileiro Série A,Grêmio FBPA,São Paulo,0.4308,0.2461,0.3231,0.4148,0.3242,0.261,H,False
+2026-08-08,19:30,Primeira Liga,CF Estrela da Amadora,Sporting Clube de Portugal,0.4308,0.2461,0.3231,0.4148,0.3242,0.261,H,False
+2026-08-08,21:30,Campeonato Brasileiro Série A,Clube do Remo,CA Mineiro,0.4308,0.2461,0.3231,0.4148,0.3242,0.261,H,False
+2026-08-08,23:30,Campeonato Brasileiro Série A,Coritiba FBC,Chapecoense AF,0.4308,0.2461,0.3231,0.4148,0.3242,0.261,H,False
+2026-08-09,00:00,Campeonato Brasileiro Série A,Botafogo FR,Fluminense,0.4308,0.2461,0.3231,0.4148,0.3242,0.261,H,False
+2026-08-09,10:15,Eredivisie,Sparta Rotterdam,Feyenoord Rotterdam,0.4308,0.2461,0.3231,0.4148,0.3242,0.261,H,False
+2026-08-09,12:30,Eredivisie,FC Groningen,FC Utrecht,0.4308,0.2461,0.3231,0.4148,0.3242,0.261,H,False
+2026-08-09,12:30,Eredivisie,PEC Zwolle,AFC Ajax,0.4308,0.2461,0.3231,0.4148,0.3242,0.261,H,False
+2026-08-09,14:00,Campeonato Brasileiro Série A,Cruzeiro EC,Mirassol,0.4308,0.2461,0.3231,0.4148,0.3242,0.261,H,False
+2026-08-09,14:45,Eredivisie,SC Heerenveen,FC Twente '65,0.4308,0.2461,0.3231,0.4148,0.3242,0.261,H,False
+2026-08-09,17:00,Primeira Liga,FC Porto,FC Alverca,0.4308,0.2461,0.3231,0.4148,0.3242,0.261,H,False
+2026-08-09,19:00,Campeonato Brasileiro Série A,SE Palmeiras,Inter,0.2298,0.2096,0.5606,0.1928,0.2008,0.6064,A,False
+2026-08-09,19:00,Campeonato Brasileiro Série A,EC Bahia,CR Vasco da Gama,0.4308,0.2461,0.3231,0.4148,0.3242,0.261,H,False
+2026-08-09,19:30,Primeira Liga,Gil Vicente,Rio Ave,0.4308,0.2461,0.3231,0.4148,0.3242,0.261,H,False
+2026-08-09,19:30,Primeira Liga,Moreirense,Sporting Clube de Braga,0.4308,0.2461,0.3231,0.4148,0.3242,0.261,H,False
+2026-08-09,19:30,Primeira Liga,Sport Lisboa e Benfica,Académico de Viseu,0.4308,0.2461,0.3231,0.4148,0.3242,0.261,H,False
+2026-08-09,21:30,Campeonato Brasileiro Série A,Santos,CA Paranaense,0.4308,0.2461,0.3231,0.4148,0.3242,0.261,H,False
+2026-08-09,21:30,Campeonato Brasileiro Série A,RB Bragantino,SC Corinthians Paulista,0.4308,0.2461,0.3231,0.4148,0.3242,0.261,H,False
+2026-08-09,22:30,Campeonato Brasileiro Série A,CR Flamengo,EC Vitória,0.4308,0.2461,0.3231,0.4148,0.3242,0.261,H,False
