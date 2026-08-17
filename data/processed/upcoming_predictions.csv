@@ -1,52 +1,81 @@
 match_date,match_time,league,home_team,away_team,p_home_elo,p_draw_elo,p_away_elo,p_home_ensemble,p_draw_ensemble,p_away_ensemble,predicted_outcome,is_international
-2026-08-10,19:15,Primeira Liga,CD Santa Clara,CD Nacional,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
-2026-08-11,22:00,Copa Libertadores,Fluminense,CS Independiente Rivadavia,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
-2026-08-12,00:30,Copa Libertadores,Estudiantes de La Plata,CD Universidad Católica,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
-2026-08-12,00:30,Copa Libertadores,CD Tolima,CAR Independiente del Valle,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
-2026-08-12,22:00,Copa Libertadores,CA Platense,CD Coquimbo Unido,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
-2026-08-12,22:00,Copa Libertadores,SE Palmeiras,Club Cerro Porteño,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
-2026-08-13,00:30,Copa Libertadores,Cruzeiro EC,CR Flamengo,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
-2026-08-13,22:00,Copa Libertadores,Mirassol,LDU de Quito,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
-2026-08-14,00:30,Copa Libertadores,CA Rosario Central,SC Corinthians Paulista,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
-2026-08-14,18:00,Eredivisie,Telstar 1963,Sparta Rotterdam,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
-2026-08-14,19:00,Championship,Wolverhampton Wanderers,Blackburn,0.6628,0.1826,0.1546,0.5525,0.2906,0.1569,H,False
-2026-08-14,19:15,Primeira Liga,Sporting Clube de Portugal,Vitória,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
-2026-08-15,11:30,Championship,Bolton,Preston,0.3091,0.2403,0.4506,0.3024,0.2762,0.4214,A,False
-2026-08-15,14:00,Championship,Bristol City,Millwall,0.3171,0.2436,0.4393,0.317,0.2717,0.4113,A,False
-2026-08-15,14:00,Championship,Portsmouth,Angers,0.2959,0.235,0.4691,0.3131,0.2822,0.4047,A,False
-2026-08-15,14:00,Championship,Stoke,Swansea,0.3287,0.2484,0.4229,0.3345,0.2879,0.3776,A,False
-2026-08-15,14:00,Championship,Norwich,West Brom,0.5105,0.2233,0.2662,0.5026,0.2798,0.2176,H,False
-2026-08-15,14:00,Championship,Charlton,Derby,0.3404,0.2533,0.4063,0.3373,0.2775,0.3852,A,False
-2026-08-15,14:00,Championship,Middlesbrough,Lincoln,0.3197,0.2446,0.4357,0.4735,0.2913,0.2352,H,False
-2026-08-15,14:30,Eredivisie,Willem II Tilburg,Annecy,0.5262,0.219,0.2548,0.4228,0.3069,0.2703,H,False
-2026-08-15,14:30,Primeira Liga,FC Alverca,CF Estrela da Amadora,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
-2026-08-15,16:30,Championship,Sheffield United,Birmingham,0.445,0.2419,0.313,0.4582,0.2806,0.2612,H,False
-2026-08-15,16:45,Eredivisie,FC Utrecht,Lazio,0.4004,0.2551,0.3445,0.2372,0.2756,0.4871,A,False
-2026-08-15,17:00,Primeira Liga,Académico de Viseu,CD Santa Clara,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
-2026-08-15,17:30,Primera Division,Deportivo Alavés,Getafe,0.4371,0.2442,0.3186,0.2916,0.3189,0.3895,A,False
-2026-08-15,18:00,Eredivisie,SBV Excelsior,PSV,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
-2026-08-15,19:00,Eredivisie,Fortuna Sittard,SC Cambuur-Leeuwarden,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
-2026-08-15,19:30,Campeonato Brasileiro Série A,Fluminense,SE Palmeiras,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
-2026-08-15,19:30,Primera Division,Sevilla,Vallecano,0.3445,0.255,0.4005,0.351,0.3008,0.3482,H,False
-2026-08-15,19:30,Primeira Liga,Rio Ave,FC Porto,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
-2026-08-15,21:30,Campeonato Brasileiro Série A,CA Paranaense,RB Bragantino,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
-2026-08-16,00:00,Campeonato Brasileiro Série A,São Paulo,Coritiba FBC,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
-2026-08-16,10:15,Eredivisie,ADO Den Haag,FC Groningen,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
-2026-08-16,12:30,Championship,Watford,Southampton,0.2731,0.226,0.5009,0.2666,0.2542,0.4792,A,False
-2026-08-16,12:30,Eredivisie,FC Twente '65,PEC Zwolle,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
-2026-08-16,12:30,Eredivisie,Feyenoord Rotterdam,Go Ahead Eagles,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
-2026-08-16,14:00,Campeonato Brasileiro Série A,Chapecoense AF,EC Bahia,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
-2026-08-16,14:30,Primeira Liga,CD Nacional,GD Estoril Praia,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
-2026-08-16,14:45,Eredivisie,AFC Ajax,SC Heerenveen,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
-2026-08-16,15:00,Primera Division,Santander,Villarreal,0.3402,0.2532,0.4066,0.2496,0.2302,0.5202,A,False
-2026-08-16,15:00,Championship,Burnley,West Ham,0.3494,0.2572,0.3934,0.3289,0.2752,0.3959,A,False
-2026-08-16,17:00,Primeira Liga,FC Arouca,Moreirense,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
-2026-08-16,17:00,Primera Division,Barcelona,Levante,0.699,0.1734,0.1276,0.7415,0.169,0.0895,H,False
-2026-08-16,19:00,Campeonato Brasileiro Série A,CR Vasco da Gama,Santos,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
-2026-08-16,19:00,Campeonato Brasileiro Série A,CA Mineiro,Grêmio FBPA,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
-2026-08-16,19:30,Primeira Liga,Sporting Clube de Braga,Gil Vicente,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
-2026-08-16,19:30,Primeira Liga,FC Famalicão,CS Marítimo,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
-2026-08-16,19:30,Primera Division,Celta,Osasuna,0.5141,0.2223,0.2636,0.4929,0.2845,0.2226,H,False
-2026-08-16,21:30,Campeonato Brasileiro Série A,Mirassol,CR Flamengo,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
-2026-08-16,21:30,Campeonato Brasileiro Série A,EC Vitória,Botafogo FR,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
-2026-08-16,22:30,Campeonato Brasileiro Série A,SC Corinthians Paulista,Cruzeiro EC,0.4308,0.2461,0.3231,0.4138,0.3233,0.2628,H,False
+2026-08-17,19:00,Primera Division,RC Deportivo La Coruña,Elche,0.4445,0.2421,0.3134,0.3195,0.2943,0.3862,A,False
+2026-08-17,19:00,Championship,Cardiff,Wrexham,0.2657,0.2231,0.5112,0.3274,0.2747,0.3978,A,False
+2026-08-17,19:15,Primeira Liga,Casa Pia AC,Sport Lisboa e Benfica,0.4308,0.2461,0.3231,0.4138,0.3234,0.2628,H,False
+2026-08-17,23:00,Campeonato Brasileiro Série A,Inter,Clube do Remo,0.6646,0.1822,0.1532,0.7236,0.1949,0.0815,H,False
+2026-08-18,22:00,Copa Libertadores,CS Independiente Rivadavia,Fluminense,0.4308,0.2461,0.3231,0.4138,0.3234,0.2628,H,False
+2026-08-19,00:30,Copa Libertadores,CAR Independiente del Valle,CD Tolima,0.4308,0.2461,0.3231,0.4138,0.3234,0.2628,H,False
+2026-08-19,00:30,Copa Libertadores,CD Universidad Católica,Estudiantes de La Plata,0.4308,0.2461,0.3231,0.4138,0.3234,0.2628,H,False
+2026-08-19,19:00,Primera Division,Club Atlético de Madrid,Málaga,0.4308,0.2461,0.3231,0.4138,0.3234,0.2628,H,False
+2026-08-19,22:00,Copa Libertadores,Club Cerro Porteño,SE Palmeiras,0.4308,0.2461,0.3231,0.4138,0.3234,0.2628,H,False
+2026-08-19,22:00,Copa Libertadores,CD Coquimbo Unido,CA Platense,0.4308,0.2461,0.3231,0.4138,0.3234,0.2628,H,False
+2026-08-20,00:30,Copa Libertadores,CR Flamengo,Cruzeiro EC,0.4308,0.2461,0.3231,0.4138,0.3234,0.2628,H,False
+2026-08-20,19:00,Primera Division,Vallecano,Deportivo Alavés,0.4699,0.2348,0.2953,0.5632,0.288,0.1487,H,False
+2026-08-20,22:00,Copa Libertadores,LDU de Quito,Mirassol,0.4308,0.2461,0.3231,0.4138,0.3234,0.2628,H,False
+2026-08-21,00:30,Copa Libertadores,SC Corinthians Paulista,CA Rosario Central,0.4308,0.2461,0.3231,0.4138,0.3234,0.2628,H,False
+2026-08-21,18:45,Ligue 1,Marseille,Strasbourg,0.4554,0.2389,0.3056,0.5109,0.2622,0.2269,H,False
+2026-08-21,19:00,Primera Division,Betis,Sociedad,0.5472,0.2132,0.2396,0.554,0.2564,0.1895,H,False
+2026-08-21,19:00,Premier League,Arsenal,Coventry,0.707,0.1714,0.1216,0.6741,0.2288,0.0971,H,False
+2026-08-22,11:30,Championship,Lincoln,Portsmouth,0.6485,0.1863,0.1652,0.5401,0.2829,0.177,H,False
+2026-08-22,11:30,Premier League,Hull,Manchester,0.2778,0.2278,0.4944,0.4016,0.2904,0.308,H,False
+2026-08-22,11:30,Championship,Millwall,Norwich,0.5085,0.2239,0.2676,0.5148,0.277,0.2083,H,False
+2026-08-22,11:30,Championship,Birmingham,Bristol City,0.4393,0.2436,0.3171,0.4385,0.2869,0.2745,H,False
+2026-08-22,14:00,Championship,Angers,Bolton,0.715,0.1694,0.1156,0.632,0.2576,0.1104,H,False
+2026-08-22,14:00,Championship,Wrexham,Watford,0.583,0.2035,0.2135,0.5203,0.2806,0.1991,H,False
+2026-08-22,14:00,Premier League,Nottingham Forest,Leeds,0.3594,0.2615,0.3792,0.2611,0.2627,0.4762,A,False
+2026-08-22,14:00,Championship,Preston,Wolverhampton Wanderers,0.2267,0.2084,0.5649,0.3599,0.2971,0.343,H,False
+2026-08-22,14:00,Championship,Swansea,Sheffield Weds,0.6736,0.1798,0.1465,0.6686,0.217,0.1143,H,False
+2026-08-22,14:00,Championship,Blackburn,Middlesbrough,0.324,0.2464,0.4296,0.3225,0.2768,0.4007,A,False
+2026-08-22,14:00,Championship,Southampton,Stoke,0.6323,0.1905,0.1772,0.6483,0.2233,0.1284,H,False
+2026-08-22,14:00,Premier League,Ipswich,Sunderland,0.3365,0.2516,0.4119,0.3619,0.2681,0.3701,A,False
+2026-08-22,14:00,Premier League,Everton,Crystal Palace,0.4419,0.2429,0.3153,0.4242,0.2922,0.2835,H,False
+2026-08-22,14:00,Championship,West Ham,Charlton,0.6762,0.1792,0.1446,0.6273,0.2499,0.1227,H,False
+2026-08-22,14:00,Championship,Derby,Cardiff,0.5247,0.2194,0.2559,0.5216,0.2715,0.2069,H,False
+2026-08-22,14:30,Primeira Liga,CS Marítimo,Académico de Viseu,0.4308,0.2461,0.3231,0.4138,0.3234,0.2628,H,False
+2026-08-22,14:30,Eredivisie,Fortuna Sittard,Lazio,0.4004,0.2551,0.3445,0.2384,0.2773,0.4842,A,False
+2026-08-22,15:00,Primera Division,Athletic Club,Sevilla,0.4886,0.2295,0.282,0.3122,0.2868,0.401,A,False
+2026-08-22,15:15,Ligue 1,Lens,Auxerre,0.6001,0.199,0.2009,0.6178,0.2377,0.1445,H,False
+2026-08-22,16:30,Premier League,Brentford,Tottenham,0.5422,0.2146,0.2432,0.524,0.2763,0.1997,H,False
+2026-08-22,16:30,Serie A,Udinese,Como,0.294,0.2342,0.4718,0.2806,0.2645,0.455,A,False
+2026-08-22,16:30,Serie A,Inter,Monza,0.6694,0.1809,0.1497,0.7104,0.2048,0.0848,H,False
+2026-08-22,16:45,Eredivisie,Sparta Rotterdam,FC Utrecht,0.4308,0.2461,0.3231,0.4138,0.3234,0.2628,H,False
+2026-08-22,17:00,Primeira Liga,GD Estoril Praia,Rio Ave,0.4308,0.2461,0.3231,0.4138,0.3234,0.2628,H,False
+2026-08-22,17:30,Primera Division,Valencia,Celta,0.4204,0.2491,0.3304,0.399,0.2892,0.3118,H,False
+2026-08-22,18:45,Serie A,Genoa,Napoli,0.2507,0.2174,0.5319,0.2206,0.2351,0.5442,A,False
+2026-08-22,18:45,Ligue 1,Troyes,Paris FC,0.347,0.2561,0.3968,0.3122,0.2633,0.4246,A,False
+2026-08-22,18:45,Ligue 1,Nice,Lorient,0.3619,0.2625,0.3756,0.4527,0.2619,0.2854,H,False
+2026-08-22,18:45,Ligue 1,Toulouse,Lyon,0.3471,0.2561,0.3968,0.321,0.2701,0.4089,A,False
+2026-08-22,18:45,Serie A,Parma,Cagliari,0.4582,0.2381,0.3037,0.4134,0.3312,0.2554,H,False
+2026-08-22,18:45,Ligue 1,Le Mans,Brest,0.3988,0.2555,0.3457,0.3237,0.2628,0.4135,A,False
+2026-08-22,19:00,Campeonato Brasileiro Série A,Fluminense,Clube do Remo,0.4308,0.2461,0.3231,0.4138,0.3234,0.2628,H,False
+2026-08-22,19:00,Eredivisie,SC Heerenveen,PEC Zwolle,0.4308,0.2461,0.3231,0.4138,0.3234,0.2628,H,False
+2026-08-22,19:30,Primera Division,Barcelona,Real Madrid,0.4801,0.2319,0.288,0.4819,0.2765,0.2416,H,False
+2026-08-22,19:30,Primeira Liga,Sporting Clube de Portugal,FC Alverca,0.4308,0.2461,0.3231,0.4138,0.3234,0.2628,H,False
+2026-08-22,21:30,Campeonato Brasileiro Série A,Inter,CA Mineiro,0.6092,0.1966,0.1943,0.7236,0.1949,0.0815,H,False
+2026-08-22,23:30,Campeonato Brasileiro Série A,Cruzeiro EC,CR Flamengo,0.4308,0.2461,0.3231,0.4138,0.3234,0.2628,H,False
+2026-08-23,10:15,Eredivisie,Go Ahead Eagles,ADO Den Haag,0.4308,0.2461,0.3231,0.4138,0.3234,0.2628,H,False
+2026-08-23,11:00,Championship,West Brom,Burnley,0.312,0.2415,0.4465,0.3242,0.2674,0.4084,A,False
+2026-08-23,12:30,Eredivisie,PSV,FC Groningen,0.4308,0.2461,0.3231,0.4138,0.3234,0.2628,H,False
+2026-08-23,13:00,Premier League,Brighton,Aston Villa,0.3759,0.2624,0.3616,0.3413,0.2907,0.3681,A,False
+2026-08-23,13:00,Premier League,Manchester,Bournemouth,0.3198,0.2447,0.4355,0.2333,0.2519,0.5148,A,False
+2026-08-23,13:00,Ligue 1,Angers,Lille,0.1816,0.1921,0.6263,0.2375,0.2404,0.5221,A,False
+2026-08-23,14:30,Primeira Liga,Vitória,CD Nacional,0.4308,0.2461,0.3231,0.4138,0.3234,0.2628,H,False
+2026-08-23,14:45,Eredivisie,SC Cambuur-Leeuwarden,Feyenoord Rotterdam,0.4308,0.2461,0.3231,0.4138,0.3234,0.2628,H,False
+2026-08-23,15:00,Primera Division,Club Atlético de Madrid,Villarreal,0.309,0.2403,0.4507,0.2224,0.237,0.5406,A,False
+2026-08-23,15:15,Ligue 1,Le Havre,Monaco,0.3022,0.2375,0.4602,0.2732,0.2402,0.4867,A,False
+2026-08-23,15:30,Premier League,Newcastle,Liverpool,0.3461,0.2557,0.3982,0.3295,0.2641,0.4065,A,False
+2026-08-23,16:30,Serie A,Frosinone,Juventus,0.3479,0.2565,0.3957,0.2452,0.2419,0.5129,A,False
+2026-08-23,16:30,Serie A,Venezia,Lecce,0.5864,0.2026,0.211,0.4985,0.2662,0.2353,H,False
+2026-08-23,17:00,Primeira Liga,CD Santa Clara,FC Famalicão,0.4308,0.2461,0.3231,0.4138,0.3234,0.2628,H,False
+2026-08-23,17:30,Primera Division,Getafe,Santander,0.3807,0.261,0.3583,0.4648,0.293,0.2422,H,False
+2026-08-23,18:45,Serie A,Atalanta,Sassuolo,0.5419,0.2146,0.2434,0.565,0.2701,0.1649,H,False
+2026-08-23,18:45,Serie A,Torino,Milan,0.3003,0.2368,0.463,0.2568,0.2326,0.5106,A,False
+2026-08-23,18:45,Ligue 1,Paris Saint-Germain,Stade Rennais FC 1901,0.4308,0.2461,0.3231,0.4126,0.3236,0.2637,H,False
+2026-08-23,19:00,Campeonato Brasileiro Série A,RB Bragantino,Grêmio FBPA,0.4308,0.2461,0.3231,0.4138,0.3234,0.2628,H,False
+2026-08-23,19:00,Campeonato Brasileiro Série A,EC Vitória,EC Bahia,0.4308,0.2461,0.3231,0.4138,0.3234,0.2628,H,False
+2026-08-23,19:00,Campeonato Brasileiro Série A,SE Palmeiras,CR Vasco da Gama,0.4308,0.2461,0.3231,0.4138,0.3234,0.2628,H,False
+2026-08-23,19:30,Primeira Liga,FC Porto,FC Arouca,0.4308,0.2461,0.3231,0.4138,0.3234,0.2628,H,False
+2026-08-23,19:30,Primera Division,Elche,Barcelona,0.2387,0.2129,0.5484,0.1695,0.1684,0.6621,A,False
+2026-08-23,21:30,Campeonato Brasileiro Série A,Chapecoense AF,São Paulo,0.4308,0.2461,0.3231,0.4138,0.3234,0.2628,H,False
+2026-08-23,21:30,Campeonato Brasileiro Série A,Santos,Mirassol,0.4308,0.2461,0.3231,0.4138,0.3234,0.2628,H,False
+2026-08-23,22:30,Campeonato Brasileiro Série A,Coritiba FBC,SC Corinthians Paulista,0.4308,0.2461,0.3231,0.4138,0.3234,0.2628,H,False
