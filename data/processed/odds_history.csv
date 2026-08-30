@@ -61644,3 +61644,1592 @@ snapshot_timestamp,sport,league,home_team,away_team,commence_time,bookmaker,best
 2026-08-29T11:33:41Z,soccer_efl_champ,Championship,Watford,West Ham United,2026-08-29T14:00:00Z,unibet_se,4.5,3.95,1.68
 2026-08-29T11:33:41Z,soccer_efl_champ,Championship,Watford,West Ham United,2026-08-29T14:00:00Z,pmu_fr,4.25,3.8,1.64
 2026-08-29T11:33:41Z,soccer_efl_champ,Championship,Watford,West Ham United,2026-08-29T14:00:00Z,leovegas_se,4.7,4.1,1.72
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Leeds United,Brentford,2026-08-30T13:00:00Z,onexbet,2.83,3.45,2.68
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Leeds United,Brentford,2026-08-30T13:00:00Z,betfair_ex_eu,2.88,3.5,2.66
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Leeds United,Brentford,2026-08-30T13:00:00Z,betsson,2.8,3.3,2.55
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Leeds United,Brentford,2026-08-30T13:00:00Z,nordicbet,2.8,3.3,2.55
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Leeds United,Brentford,2026-08-30T13:00:00Z,unibet_fr,2.7,3.3,2.5
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Leeds United,Brentford,2026-08-30T13:00:00Z,winamax_fr,2.65,3.4,2.45
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Leeds United,Brentford,2026-08-30T13:00:00Z,betclic_fr,2.77,3.42,2.52
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Leeds United,Brentford,2026-08-30T13:00:00Z,winamax_de,2.65,3.45,2.5
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Leeds United,Brentford,2026-08-30T13:00:00Z,codere_it,2.75,3.4,2.6
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Leeds United,Brentford,2026-08-30T13:00:00Z,mybookieag,2.7,3.34,2.56
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Leeds United,Brentford,2026-08-30T13:00:00Z,sport888,2.62,3.25,2.5
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Leeds United,Brentford,2026-08-30T13:00:00Z,williamhill,2.7,3.25,2.5
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Leeds United,Brentford,2026-08-30T13:00:00Z,marathonbet,2.82,3.4,2.61
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Leeds United,Brentford,2026-08-30T13:00:00Z,everygame,2.7,3.3,2.6
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Leeds United,Brentford,2026-08-30T13:00:00Z,pinnacle,2.8,3.45,2.63
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Leeds United,Brentford,2026-08-30T13:00:00Z,pmu_fr,2.55,3.3,2.6
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Leeds United,Brentford,2026-08-30T13:00:00Z,unibet_nl,2.7,3.5,2.75
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Leeds United,Brentford,2026-08-30T13:00:00Z,unibet_se,2.65,3.45,2.7
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Leeds United,Brentford,2026-08-30T13:00:00Z,leovegas_se,2.6,3.35,2.65
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Leeds United,Brentford,2026-08-30T13:00:00Z,tipico_de,2.8,3.3,2.5
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Leeds United,Brentford,2026-08-30T13:00:00Z,matchbook,2.88,3.5,2.66
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Leeds United,Brentford,2026-08-30T13:00:00Z,gtbets,2.7,3.44,2.71
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Leeds United,Brentford,2026-08-30T13:00:00Z,coolbet,2.84,3.52,2.6
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Leeds United,Brentford,2026-08-30T13:00:00Z,betonlineag,2.76,3.44,2.62
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Leeds United,Brentford,2026-08-30T13:00:00Z,betanysports,2.76,3.44,2.62
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Chelsea,Brighton and Hove Albion,2026-08-30T13:00:00Z,onexbet,1.91,3.98,4.16
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Chelsea,Brighton and Hove Albion,2026-08-30T13:00:00Z,betfair_ex_eu,1.92,3.95,4.3
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Chelsea,Brighton and Hove Albion,2026-08-30T13:00:00Z,nordicbet,1.88,3.65,4.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Chelsea,Brighton and Hove Albion,2026-08-30T13:00:00Z,betsson,1.88,3.65,4.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Chelsea,Brighton and Hove Albion,2026-08-30T13:00:00Z,unibet_fr,1.8,3.8,3.9
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Chelsea,Brighton and Hove Albion,2026-08-30T13:00:00Z,betclic_fr,1.85,3.9,4.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Chelsea,Brighton and Hove Albion,2026-08-30T13:00:00Z,codere_it,1.87,3.85,3.9
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Chelsea,Brighton and Hove Albion,2026-08-30T13:00:00Z,winamax_fr,1.82,3.9,3.7
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Chelsea,Brighton and Hove Albion,2026-08-30T13:00:00Z,winamax_de,1.84,3.95,3.75
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Chelsea,Brighton and Hove Albion,2026-08-30T13:00:00Z,mybookieag,1.86,3.8,3.85
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Chelsea,Brighton and Hove Albion,2026-08-30T13:00:00Z,sport888,1.85,3.6,3.8
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Chelsea,Brighton and Hove Albion,2026-08-30T13:00:00Z,williamhill,1.85,3.7,3.8
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Chelsea,Brighton and Hove Albion,2026-08-30T13:00:00Z,marathonbet,1.88,3.92,4.1
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Chelsea,Brighton and Hove Albion,2026-08-30T13:00:00Z,everygame,1.85,3.75,3.9
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Chelsea,Brighton and Hove Albion,2026-08-30T13:00:00Z,pinnacle,1.89,3.9,4.09
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Chelsea,Brighton and Hove Albion,2026-08-30T13:00:00Z,unibet_nl,1.89,3.9,4.2
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Chelsea,Brighton and Hove Albion,2026-08-30T13:00:00Z,leovegas_se,1.85,3.75,4.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Chelsea,Brighton and Hove Albion,2026-08-30T13:00:00Z,unibet_se,1.91,3.9,4.2
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Chelsea,Brighton and Hove Albion,2026-08-30T13:00:00Z,pmu_fr,1.83,3.7,3.95
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Chelsea,Brighton and Hove Albion,2026-08-30T13:00:00Z,tipico_de,1.83,3.8,4.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Chelsea,Brighton and Hove Albion,2026-08-30T13:00:00Z,matchbook,1.92,3.95,4.3
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Chelsea,Brighton and Hove Albion,2026-08-30T13:00:00Z,gtbets,1.85,3.95,3.84
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Chelsea,Brighton and Hove Albion,2026-08-30T13:00:00Z,coolbet,1.9,3.88,4.22
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Chelsea,Brighton and Hove Albion,2026-08-30T13:00:00Z,betonlineag,1.89,3.85,4.05
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Chelsea,Brighton and Hove Albion,2026-08-30T13:00:00Z,betanysports,1.45,3.85,2.5
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Sunderland,Fulham,2026-08-30T13:00:00Z,nordicbet,2.42,3.25,3.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Sunderland,Fulham,2026-08-30T13:00:00Z,sport888,2.4,3.1,2.9
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Sunderland,Fulham,2026-08-30T13:00:00Z,onexbet,2.5,3.33,3.17
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Sunderland,Fulham,2026-08-30T13:00:00Z,winamax_de,2.35,3.3,2.9
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Sunderland,Fulham,2026-08-30T13:00:00Z,williamhill,2.4,3.1,3.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Sunderland,Fulham,2026-08-30T13:00:00Z,betsson,2.42,3.25,3.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Sunderland,Fulham,2026-08-30T13:00:00Z,winamax_fr,2.35,3.25,2.85
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Sunderland,Fulham,2026-08-30T13:00:00Z,unibet_fr,2.4,3.2,2.95
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Sunderland,Fulham,2026-08-30T13:00:00Z,betclic_fr,2.43,3.3,2.97
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Sunderland,Fulham,2026-08-30T13:00:00Z,mybookieag,2.42,3.22,2.97
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Sunderland,Fulham,2026-08-30T13:00:00Z,betfair_ex_eu,2.52,3.45,3.15
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Sunderland,Fulham,2026-08-30T13:00:00Z,marathonbet,2.46,3.28,3.12
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Sunderland,Fulham,2026-08-30T13:00:00Z,pinnacle,2.48,3.26,3.16
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Sunderland,Fulham,2026-08-30T13:00:00Z,leovegas_se,2.4,3.25,3.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Sunderland,Fulham,2026-08-30T13:00:00Z,unibet_nl,2.48,3.35,3.1
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Sunderland,Fulham,2026-08-30T13:00:00Z,unibet_se,2.48,3.35,3.1
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Sunderland,Fulham,2026-08-30T13:00:00Z,pmu_fr,2.38,3.2,2.95
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Sunderland,Fulham,2026-08-30T13:00:00Z,everygame,2.4,3.15,3.1
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Sunderland,Fulham,2026-08-30T13:00:00Z,tipico_de,2.35,3.2,3.1
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Sunderland,Fulham,2026-08-30T13:00:00Z,matchbook,2.52,3.45,3.15
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Sunderland,Fulham,2026-08-30T13:00:00Z,codere_it,2.44,3.25,3.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Sunderland,Fulham,2026-08-30T13:00:00Z,gtbets,2.5,3.31,3.03
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Sunderland,Fulham,2026-08-30T13:00:00Z,coolbet,2.5,3.4,3.05
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Sunderland,Fulham,2026-08-30T13:00:00Z,betonlineag,2.5,3.26,3.05
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Sunderland,Fulham,2026-08-30T13:00:00Z,betanysports,2.5,3.26,3.05
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester United,Ipswich Town,2026-08-30T15:30:00Z,winamax_fr,1.36,5.1,6.75
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester United,Ipswich Town,2026-08-30T15:30:00Z,betclic_fr,1.38,5.0,7.75
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester United,Ipswich Town,2026-08-30T15:30:00Z,mybookieag,1.38,5.0,7.4
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester United,Ipswich Town,2026-08-30T15:30:00Z,onexbet,1.41,5.33,8.3
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester United,Ipswich Town,2026-08-30T15:30:00Z,winamax_de,1.37,5.2,7.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester United,Ipswich Town,2026-08-30T15:30:00Z,betsson,1.4,4.85,7.6
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester United,Ipswich Town,2026-08-30T15:30:00Z,nordicbet,1.4,4.85,7.6
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester United,Ipswich Town,2026-08-30T15:30:00Z,unibet_fr,1.36,5.0,7.4
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester United,Ipswich Town,2026-08-30T15:30:00Z,sport888,1.36,4.8,7.5
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester United,Ipswich Town,2026-08-30T15:30:00Z,williamhill,1.36,4.8,7.5
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester United,Ipswich Town,2026-08-30T15:30:00Z,betfair_ex_eu,1.4,5.5,8.8
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester United,Ipswich Town,2026-08-30T15:30:00Z,marathonbet,1.39,5.25,8.2
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester United,Ipswich Town,2026-08-30T15:30:00Z,pinnacle,1.39,5.26,8.09
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester United,Ipswich Town,2026-08-30T15:30:00Z,leovegas_se,1.36,5.1,8.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester United,Ipswich Town,2026-08-30T15:30:00Z,unibet_nl,1.38,5.3,8.5
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester United,Ipswich Town,2026-08-30T15:30:00Z,unibet_se,1.38,5.3,8.5
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester United,Ipswich Town,2026-08-30T15:30:00Z,pmu_fr,1.35,4.9,8.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester United,Ipswich Town,2026-08-30T15:30:00Z,everygame,1.36,5.0,7.5
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester United,Ipswich Town,2026-08-30T15:30:00Z,tipico_de,1.33,5.5,7.8
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester United,Ipswich Town,2026-08-30T15:30:00Z,matchbook,1.4,5.5,8.8
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester United,Ipswich Town,2026-08-30T15:30:00Z,codere_it,1.39,5.0,7.6
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester United,Ipswich Town,2026-08-30T15:30:00Z,gtbets,1.43,4.95,7.47
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester United,Ipswich Town,2026-08-30T15:30:00Z,coolbet,1.39,5.4,8.5
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester United,Ipswich Town,2026-08-30T15:30:00Z,betonlineag,1.39,5.15,8.1
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester United,Ipswich Town,2026-08-30T15:30:00Z,betanysports,1.39,5.15,8.1
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Aston Villa,Arsenal,2026-08-31T19:00:00Z,betsson,6.8,4.1,1.5
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Aston Villa,Arsenal,2026-08-31T19:00:00Z,onexbet,6.81,4.52,1.54
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Aston Villa,Arsenal,2026-08-31T19:00:00Z,nordicbet,6.8,4.1,1.5
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Aston Villa,Arsenal,2026-08-31T19:00:00Z,betfair_ex_eu,7.2,4.5,1.55
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Aston Villa,Arsenal,2026-08-31T19:00:00Z,unibet_fr,6.4,4.5,1.47
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Aston Villa,Arsenal,2026-08-31T19:00:00Z,betclic_fr,6.4,4.5,1.47
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Aston Villa,Arsenal,2026-08-31T19:00:00Z,codere_it,6.4,4.5,1.49
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Aston Villa,Arsenal,2026-08-31T19:00:00Z,winamax_fr,5.9,4.3,1.48
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Aston Villa,Arsenal,2026-08-31T19:00:00Z,mybookieag,6.1,4.3,1.47
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Aston Villa,Arsenal,2026-08-31T19:00:00Z,winamax_de,6.0,4.4,1.49
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Aston Villa,Arsenal,2026-08-31T19:00:00Z,marathonbet,6.7,4.45,1.52
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Aston Villa,Arsenal,2026-08-31T19:00:00Z,pinnacle,6.82,4.45,1.5
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Aston Villa,Arsenal,2026-08-31T19:00:00Z,sport888,6.0,4.2,1.5
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Aston Villa,Arsenal,2026-08-31T19:00:00Z,williamhill,6.0,4.2,1.5
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Aston Villa,Arsenal,2026-08-31T19:00:00Z,unibet_se,7.0,4.4,1.53
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Aston Villa,Arsenal,2026-08-31T19:00:00Z,leovegas_se,6.75,4.25,1.49
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Aston Villa,Arsenal,2026-08-31T19:00:00Z,unibet_nl,7.0,4.4,1.51
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Aston Villa,Arsenal,2026-08-31T19:00:00Z,pmu_fr,6.5,4.1,1.48
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Aston Villa,Arsenal,2026-08-31T19:00:00Z,tipico_de,6.8,4.3,1.47
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Aston Villa,Arsenal,2026-08-31T19:00:00Z,coolbet,7.22,4.37,1.53
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Aston Villa,Arsenal,2026-08-31T19:00:00Z,everygame,6.25,4.1,1.45
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Aston Villa,Arsenal,2026-08-31T19:00:00Z,betanysports,6.25,4.3,1.52
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Aston Villa,Arsenal,2026-08-31T19:00:00Z,matchbook,7.2,4.5,1.55
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Aston Villa,Arsenal,2026-08-31T19:00:00Z,gtbets,6.44,4.18,1.53
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Aston Villa,Arsenal,2026-08-31T19:00:00Z,betonlineag,6.42,4.48,1.52
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Ipswich Town,Liverpool,2026-09-04T19:00:00Z,onexbet,5.07,4.51,1.68
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Ipswich Town,Liverpool,2026-09-04T19:00:00Z,unibet_fr,4.8,4.1,1.57
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Ipswich Town,Liverpool,2026-09-04T19:00:00Z,betclic_fr,4.8,4.1,1.57
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Ipswich Town,Liverpool,2026-09-04T19:00:00Z,mybookieag,4.8,4.1,1.6
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Ipswich Town,Liverpool,2026-09-04T19:00:00Z,winamax_fr,4.2,3.9,1.52
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Ipswich Town,Liverpool,2026-09-04T19:00:00Z,winamax_de,4.6,4.2,1.58
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Ipswich Town,Liverpool,2026-09-04T19:00:00Z,tipico_de,5.2,4.1,1.6
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Ipswich Town,Liverpool,2026-09-04T19:00:00Z,betfair_ex_eu,5.1,4.2,1.65
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Ipswich Town,Liverpool,2026-09-04T19:00:00Z,sport888,4.6,4.0,1.61
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Ipswich Town,Liverpool,2026-09-04T19:00:00Z,williamhill,4.6,4.2,1.62
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Ipswich Town,Liverpool,2026-09-04T19:00:00Z,marathonbet,5.0,4.45,1.65
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Ipswich Town,Liverpool,2026-09-04T19:00:00Z,nordicbet,5.1,4.15,1.62
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Ipswich Town,Liverpool,2026-09-04T19:00:00Z,betsson,5.1,4.15,1.62
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Ipswich Town,Liverpool,2026-09-04T19:00:00Z,pinnacle,4.57,4.44,1.64
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Ipswich Town,Liverpool,2026-09-04T19:00:00Z,leovegas_se,5.2,4.0,1.61
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Ipswich Town,Liverpool,2026-09-04T19:00:00Z,pmu_fr,5.2,4.0,1.61
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Ipswich Town,Liverpool,2026-09-04T19:00:00Z,unibet_se,5.2,4.0,1.61
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Ipswich Town,Liverpool,2026-09-04T19:00:00Z,unibet_nl,5.2,4.0,1.61
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Ipswich Town,Liverpool,2026-09-04T19:00:00Z,matchbook,5.2,4.2,1.65
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Ipswich Town,Liverpool,2026-09-04T19:00:00Z,gtbets,4.98,4.28,1.59
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Ipswich Town,Liverpool,2026-09-04T19:00:00Z,everygame,4.4,4.33,1.6
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Ipswich Town,Liverpool,2026-09-04T19:00:00Z,coolbet,5.0,4.3,1.62
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Newcastle United,Bournemouth,2026-09-05T11:30:00Z,onexbet,2.34,3.82,3.06
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Newcastle United,Bournemouth,2026-09-05T11:30:00Z,winamax_fr,2.05,3.35,2.7
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Newcastle United,Bournemouth,2026-09-05T11:30:00Z,winamax_de,2.15,3.65,2.85
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Newcastle United,Bournemouth,2026-09-05T11:30:00Z,betclic_fr,2.13,3.55,2.95
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Newcastle United,Bournemouth,2026-09-05T11:30:00Z,mybookieag,2.19,3.55,2.94
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Newcastle United,Bournemouth,2026-09-05T11:30:00Z,unibet_fr,2.1,3.5,2.9
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Newcastle United,Bournemouth,2026-09-05T11:30:00Z,betfair_ex_eu,2.3,3.85,3.15
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Newcastle United,Bournemouth,2026-09-05T11:30:00Z,tipico_de,2.15,3.7,3.1
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Newcastle United,Bournemouth,2026-09-05T11:30:00Z,sport888,2.2,3.5,2.9
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Newcastle United,Bournemouth,2026-09-05T11:30:00Z,williamhill,2.2,3.6,2.9
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Newcastle United,Bournemouth,2026-09-05T11:30:00Z,marathonbet,2.3,3.76,3.02
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Newcastle United,Bournemouth,2026-09-05T11:30:00Z,betsson,2.22,3.7,3.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Newcastle United,Bournemouth,2026-09-05T11:30:00Z,nordicbet,2.22,3.7,3.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Newcastle United,Bournemouth,2026-09-05T11:30:00Z,pinnacle,2.26,3.72,2.95
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Newcastle United,Bournemouth,2026-09-05T11:30:00Z,leovegas_se,2.3,3.6,2.85
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Newcastle United,Bournemouth,2026-09-05T11:30:00Z,unibet_nl,2.3,3.6,2.85
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Newcastle United,Bournemouth,2026-09-05T11:30:00Z,pmu_fr,2.3,3.6,2.85
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Newcastle United,Bournemouth,2026-09-05T11:30:00Z,unibet_se,2.3,3.6,2.85
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Newcastle United,Bournemouth,2026-09-05T11:30:00Z,matchbook,2.3,3.85,3.1
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Newcastle United,Bournemouth,2026-09-05T11:30:00Z,gtbets,2.3,3.64,2.95
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Newcastle United,Bournemouth,2026-09-05T11:30:00Z,everygame,2.2,3.6,2.85
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Newcastle United,Bournemouth,2026-09-05T11:30:00Z,coolbet,2.24,3.77,2.97
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brentford,Sunderland,2026-09-05T14:00:00Z,mybookieag,1.63,3.8,4.9
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brentford,Sunderland,2026-09-05T14:00:00Z,unibet_fr,1.58,3.7,4.8
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brentford,Sunderland,2026-09-05T14:00:00Z,winamax_fr,1.54,3.6,4.3
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brentford,Sunderland,2026-09-05T14:00:00Z,winamax_de,1.62,3.95,4.7
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brentford,Sunderland,2026-09-05T14:00:00Z,betclic_fr,1.6,3.83,4.95
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brentford,Sunderland,2026-09-05T14:00:00Z,tipico_de,1.65,3.8,5.2
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brentford,Sunderland,2026-09-05T14:00:00Z,betfair_ex_eu,1.7,3.8,5.4
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brentford,Sunderland,2026-09-05T14:00:00Z,sport888,1.67,3.7,4.8
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brentford,Sunderland,2026-09-05T14:00:00Z,williamhill,1.67,3.75,4.8
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brentford,Sunderland,2026-09-05T14:00:00Z,onexbet,1.74,4.0,5.28
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brentford,Sunderland,2026-09-05T14:00:00Z,marathonbet,1.71,3.94,5.2
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brentford,Sunderland,2026-09-05T14:00:00Z,betsson,1.68,3.75,5.3
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brentford,Sunderland,2026-09-05T14:00:00Z,nordicbet,1.68,3.75,5.3
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brentford,Sunderland,2026-09-05T14:00:00Z,pinnacle,1.67,3.86,5.05
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brentford,Sunderland,2026-09-05T14:00:00Z,unibet_se,1.63,3.85,5.25
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brentford,Sunderland,2026-09-05T14:00:00Z,pmu_fr,1.63,3.85,5.25
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brentford,Sunderland,2026-09-05T14:00:00Z,unibet_nl,1.63,3.85,5.25
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brentford,Sunderland,2026-09-05T14:00:00Z,leovegas_se,1.63,3.85,5.25
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brentford,Sunderland,2026-09-05T14:00:00Z,matchbook,1.7,3.95,5.3
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brentford,Sunderland,2026-09-05T14:00:00Z,gtbets,1.68,3.91,5.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brentford,Sunderland,2026-09-05T14:00:00Z,everygame,1.62,3.65,4.75
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brentford,Sunderland,2026-09-05T14:00:00Z,coolbet,1.66,3.9,5.25
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brighton and Hove Albion,Leeds United,2026-09-05T14:00:00Z,onexbet,1.89,3.8,4.47
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brighton and Hove Albion,Leeds United,2026-09-05T14:00:00Z,mybookieag,1.79,3.55,4.2
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brighton and Hove Albion,Leeds United,2026-09-05T14:00:00Z,unibet_fr,1.73,3.5,4.1
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brighton and Hove Albion,Leeds United,2026-09-05T14:00:00Z,winamax_de,1.78,3.65,4.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brighton and Hove Albion,Leeds United,2026-09-05T14:00:00Z,betclic_fr,1.75,3.55,4.2
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brighton and Hove Albion,Leeds United,2026-09-05T14:00:00Z,tipico_de,1.8,3.7,4.3
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brighton and Hove Albion,Leeds United,2026-09-05T14:00:00Z,betfair_ex_eu,1.89,3.0,4.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brighton and Hove Albion,Leeds United,2026-09-05T14:00:00Z,sport888,1.83,3.5,4.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brighton and Hove Albion,Leeds United,2026-09-05T14:00:00Z,williamhill,1.83,3.5,4.2
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brighton and Hove Albion,Leeds United,2026-09-05T14:00:00Z,winamax_fr,1.68,3.35,3.75
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brighton and Hove Albion,Leeds United,2026-09-05T14:00:00Z,marathonbet,1.86,3.74,4.4
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brighton and Hove Albion,Leeds United,2026-09-05T14:00:00Z,betsson,1.82,3.6,4.35
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brighton and Hove Albion,Leeds United,2026-09-05T14:00:00Z,nordicbet,1.82,3.6,4.35
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brighton and Hove Albion,Leeds United,2026-09-05T14:00:00Z,pinnacle,1.83,3.73,4.18
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brighton and Hove Albion,Leeds United,2026-09-05T14:00:00Z,pmu_fr,1.7,3.8,4.7
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brighton and Hove Albion,Leeds United,2026-09-05T14:00:00Z,leovegas_se,1.7,3.8,4.7
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brighton and Hove Albion,Leeds United,2026-09-05T14:00:00Z,unibet_nl,1.7,3.8,4.7
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brighton and Hove Albion,Leeds United,2026-09-05T14:00:00Z,unibet_se,1.7,3.8,4.7
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brighton and Hove Albion,Leeds United,2026-09-05T14:00:00Z,gtbets,1.83,3.64,4.37
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brighton and Hove Albion,Leeds United,2026-09-05T14:00:00Z,everygame,1.8,3.6,4.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Brighton and Hove Albion,Leeds United,2026-09-05T14:00:00Z,coolbet,1.83,3.7,4.3
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester City,Coventry City,2026-09-05T14:00:00Z,onexbet,1.24,7.5,13.2
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester City,Coventry City,2026-09-05T14:00:00Z,betclic_fr,1.17,6.9,11.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester City,Coventry City,2026-09-05T14:00:00Z,unibet_fr,1.16,6.5,10.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester City,Coventry City,2026-09-05T14:00:00Z,mybookieag,1.19,6.8,10.9
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester City,Coventry City,2026-09-05T14:00:00Z,winamax_fr,1.14,6.0,8.5
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester City,Coventry City,2026-09-05T14:00:00Z,winamax_de,1.18,7.25,10.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester City,Coventry City,2026-09-05T14:00:00Z,betfair_ex_eu,1.21,8.2,14.5
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester City,Coventry City,2026-09-05T14:00:00Z,tipico_de,1.17,7.8,13.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester City,Coventry City,2026-09-05T14:00:00Z,sport888,1.22,6.5,11.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester City,Coventry City,2026-09-05T14:00:00Z,williamhill,1.22,6.5,11.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester City,Coventry City,2026-09-05T14:00:00Z,marathonbet,1.22,7.4,13.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester City,Coventry City,2026-09-05T14:00:00Z,betsson,1.22,6.1,15.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester City,Coventry City,2026-09-05T14:00:00Z,nordicbet,1.22,6.1,15.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester City,Coventry City,2026-09-05T14:00:00Z,pinnacle,1.2,7.39,11.04
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester City,Coventry City,2026-09-05T14:00:00Z,unibet_nl,1.19,7.0,13.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester City,Coventry City,2026-09-05T14:00:00Z,unibet_se,1.19,7.0,13.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester City,Coventry City,2026-09-05T14:00:00Z,leovegas_se,1.19,7.0,13.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester City,Coventry City,2026-09-05T14:00:00Z,pmu_fr,1.19,7.0,13.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester City,Coventry City,2026-09-05T14:00:00Z,matchbook,1.21,8.0,15.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester City,Coventry City,2026-09-05T14:00:00Z,gtbets,1.22,7.1,11.17
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Manchester City,Coventry City,2026-09-05T14:00:00Z,everygame,1.18,7.0,10.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Fulham,Crystal Palace,2026-09-05T14:00:00Z,unibet_fr,2.15,3.2,3.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Fulham,Crystal Palace,2026-09-05T14:00:00Z,betclic_fr,2.17,3.3,3.05
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Fulham,Crystal Palace,2026-09-05T14:00:00Z,mybookieag,2.23,3.3,3.04
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Fulham,Crystal Palace,2026-09-05T14:00:00Z,winamax_fr,2.05,3.15,2.8
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Fulham,Crystal Palace,2026-09-05T14:00:00Z,winamax_de,2.2,3.35,3.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Fulham,Crystal Palace,2026-09-05T14:00:00Z,betfair_ex_eu,2.3,3.55,3.25
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Fulham,Crystal Palace,2026-09-05T14:00:00Z,tipico_de,2.2,3.3,3.3
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Fulham,Crystal Palace,2026-09-05T14:00:00Z,williamhill,2.25,3.3,3.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Fulham,Crystal Palace,2026-09-05T14:00:00Z,sport888,2.25,3.3,3.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Fulham,Crystal Palace,2026-09-05T14:00:00Z,onexbet,2.35,3.58,3.23
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Fulham,Crystal Palace,2026-09-05T14:00:00Z,marathonbet,2.31,3.52,3.18
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Fulham,Crystal Palace,2026-09-05T14:00:00Z,betsson,2.28,3.4,3.15
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Fulham,Crystal Palace,2026-09-05T14:00:00Z,nordicbet,2.28,3.4,3.15
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Fulham,Crystal Palace,2026-09-05T14:00:00Z,pinnacle,2.26,3.47,3.13
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Fulham,Crystal Palace,2026-09-05T14:00:00Z,pmu_fr,2.33,3.35,2.95
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Fulham,Crystal Palace,2026-09-05T14:00:00Z,leovegas_se,2.33,3.35,2.95
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Fulham,Crystal Palace,2026-09-05T14:00:00Z,unibet_se,2.33,3.35,2.95
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Fulham,Crystal Palace,2026-09-05T14:00:00Z,unibet_nl,2.33,3.35,2.95
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Fulham,Crystal Palace,2026-09-05T14:00:00Z,matchbook,2.3,3.5,3.3
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Fulham,Crystal Palace,2026-09-05T14:00:00Z,gtbets,2.28,3.41,3.13
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Fulham,Crystal Palace,2026-09-05T14:00:00Z,everygame,2.2,3.3,3.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Fulham,Crystal Palace,2026-09-05T14:00:00Z,coolbet,2.26,3.45,3.15
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Nottingham Forest,Tottenham Hotspur,2026-09-05T14:00:00Z,onexbet,2.67,3.5,2.81
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Nottingham Forest,Tottenham Hotspur,2026-09-05T14:00:00Z,betclic_fr,2.4,3.28,2.7
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Nottingham Forest,Tottenham Hotspur,2026-09-05T14:00:00Z,unibet_fr,2.35,3.2,2.65
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Nottingham Forest,Tottenham Hotspur,2026-09-05T14:00:00Z,mybookieag,2.48,3.28,2.7
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Nottingham Forest,Tottenham Hotspur,2026-09-05T14:00:00Z,winamax_fr,2.3,3.1,2.5
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Nottingham Forest,Tottenham Hotspur,2026-09-05T14:00:00Z,winamax_de,2.45,3.35,2.65
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Nottingham Forest,Tottenham Hotspur,2026-09-05T14:00:00Z,betfair_ex_eu,2.62,3.45,2.96
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Nottingham Forest,Tottenham Hotspur,2026-09-05T14:00:00Z,tipico_de,2.45,3.3,2.85
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Nottingham Forest,Tottenham Hotspur,2026-09-05T14:00:00Z,sport888,2.5,3.25,2.62
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Nottingham Forest,Tottenham Hotspur,2026-09-05T14:00:00Z,williamhill,2.5,3.25,2.7
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Nottingham Forest,Tottenham Hotspur,2026-09-05T14:00:00Z,marathonbet,2.63,3.44,2.77
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Nottingham Forest,Tottenham Hotspur,2026-09-05T14:00:00Z,betsson,2.58,3.35,2.75
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Nottingham Forest,Tottenham Hotspur,2026-09-05T14:00:00Z,nordicbet,2.58,3.35,2.75
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Nottingham Forest,Tottenham Hotspur,2026-09-05T14:00:00Z,pinnacle,2.55,3.46,2.72
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Nottingham Forest,Tottenham Hotspur,2026-09-05T14:00:00Z,unibet_nl,2.65,3.15,2.7
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Nottingham Forest,Tottenham Hotspur,2026-09-05T14:00:00Z,leovegas_se,2.65,3.15,2.7
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Nottingham Forest,Tottenham Hotspur,2026-09-05T14:00:00Z,pmu_fr,2.65,3.15,2.7
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Nottingham Forest,Tottenham Hotspur,2026-09-05T14:00:00Z,unibet_se,2.65,3.15,2.7
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Nottingham Forest,Tottenham Hotspur,2026-09-05T14:00:00Z,matchbook,2.62,3.5,2.96
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Nottingham Forest,Tottenham Hotspur,2026-09-05T14:00:00Z,gtbets,2.6,3.38,2.7
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Nottingham Forest,Tottenham Hotspur,2026-09-05T14:00:00Z,everygame,2.5,3.3,2.6
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Hull City,Aston Villa,2026-09-05T16:30:00Z,onexbet,4.26,3.84,1.92
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Hull City,Aston Villa,2026-09-05T16:30:00Z,winamax_fr,3.45,3.35,1.76
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Hull City,Aston Villa,2026-09-05T16:30:00Z,winamax_de,3.7,3.6,1.84
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Hull City,Aston Villa,2026-09-05T16:30:00Z,mybookieag,3.85,3.5,1.87
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Hull City,Aston Villa,2026-09-05T16:30:00Z,betclic_fr,3.83,3.53,1.83
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Hull City,Aston Villa,2026-09-05T16:30:00Z,unibet_fr,3.7,3.4,1.8
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Hull City,Aston Villa,2026-09-05T16:30:00Z,tipico_de,4.1,3.6,1.85
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Hull City,Aston Villa,2026-09-05T16:30:00Z,betfair_ex_eu,4.1,3.8,1.95
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Hull City,Aston Villa,2026-09-05T16:30:00Z,sport888,3.9,3.5,1.85
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Hull City,Aston Villa,2026-09-05T16:30:00Z,williamhill,3.9,3.5,1.85
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Hull City,Aston Villa,2026-09-05T16:30:00Z,marathonbet,4.2,3.78,1.89
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Hull City,Aston Villa,2026-09-05T16:30:00Z,nordicbet,4.2,3.55,1.88
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Hull City,Aston Villa,2026-09-05T16:30:00Z,betsson,4.2,3.55,1.88
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Hull City,Aston Villa,2026-09-05T16:30:00Z,pinnacle,4.11,3.69,1.85
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Hull City,Aston Villa,2026-09-05T16:30:00Z,unibet_se,3.9,3.55,1.89
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Hull City,Aston Villa,2026-09-05T16:30:00Z,unibet_nl,3.9,3.55,1.89
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Hull City,Aston Villa,2026-09-05T16:30:00Z,pmu_fr,3.9,3.55,1.89
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Hull City,Aston Villa,2026-09-05T16:30:00Z,leovegas_se,3.9,3.55,1.89
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Hull City,Aston Villa,2026-09-05T16:30:00Z,matchbook,4.1,3.85,1.9
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Hull City,Aston Villa,2026-09-05T16:30:00Z,gtbets,4.09,3.67,1.88
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Hull City,Aston Villa,2026-09-05T16:30:00Z,everygame,3.9,3.5,1.8
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Everton,Manchester United,2026-09-06T13:00:00Z,unibet_fr,2.75,3.2,2.2
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Everton,Manchester United,2026-09-06T13:00:00Z,onexbet,3.04,3.56,2.47
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Everton,Manchester United,2026-09-06T13:00:00Z,betclic_fr,2.87,3.37,2.25
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Everton,Manchester United,2026-09-06T13:00:00Z,mybookieag,2.86,3.36,2.31
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Everton,Manchester United,2026-09-06T13:00:00Z,betfair_ex_eu,2.86,3.55,2.5
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Everton,Manchester United,2026-09-06T13:00:00Z,winamax_fr,2.6,3.2,2.15
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Everton,Manchester United,2026-09-06T13:00:00Z,winamax_de,2.8,3.45,2.25
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Everton,Manchester United,2026-09-06T13:00:00Z,tipico_de,2.85,3.4,2.4
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Everton,Manchester United,2026-09-06T13:00:00Z,sport888,2.9,3.3,2.3
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Everton,Manchester United,2026-09-06T13:00:00Z,williamhill,2.9,3.3,2.3
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Everton,Manchester United,2026-09-06T13:00:00Z,marathonbet,2.99,3.5,2.43
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Everton,Manchester United,2026-09-06T13:00:00Z,nordicbet,2.95,3.4,2.35
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Everton,Manchester United,2026-09-06T13:00:00Z,betsson,2.95,3.4,2.35
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Everton,Manchester United,2026-09-06T13:00:00Z,pinnacle,2.91,3.45,2.4
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Everton,Manchester United,2026-09-06T13:00:00Z,pmu_fr,2.95,3.5,2.25
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Everton,Manchester United,2026-09-06T13:00:00Z,unibet_se,2.95,3.5,2.25
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Everton,Manchester United,2026-09-06T13:00:00Z,unibet_nl,2.95,3.5,2.25
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Everton,Manchester United,2026-09-06T13:00:00Z,leovegas_se,2.95,3.5,2.25
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Everton,Manchester United,2026-09-06T13:00:00Z,everygame,2.8,3.35,2.3
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Arsenal,Chelsea,2026-09-06T15:30:00Z,mybookieag,1.62,3.75,5.1
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Arsenal,Chelsea,2026-09-06T15:30:00Z,onexbet,1.74,3.83,5.58
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Arsenal,Chelsea,2026-09-06T15:30:00Z,unibet_fr,1.56,3.6,4.8
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Arsenal,Chelsea,2026-09-06T15:30:00Z,betclic_fr,1.59,3.75,5.1
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Arsenal,Chelsea,2026-09-06T15:30:00Z,betfair_ex_eu,1.68,3.8,5.2
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Arsenal,Chelsea,2026-09-06T15:30:00Z,winamax_fr,1.54,3.55,4.4
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Arsenal,Chelsea,2026-09-06T15:30:00Z,winamax_de,1.6,3.85,4.8
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Arsenal,Chelsea,2026-09-06T15:30:00Z,tipico_de,1.62,4.0,5.2
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Arsenal,Chelsea,2026-09-06T15:30:00Z,sport888,1.7,3.5,5.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Arsenal,Chelsea,2026-09-06T15:30:00Z,williamhill,1.7,3.5,5.0
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Arsenal,Chelsea,2026-09-06T15:30:00Z,marathonbet,1.71,3.78,5.5
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Arsenal,Chelsea,2026-09-06T15:30:00Z,nordicbet,1.65,3.8,5.3
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Arsenal,Chelsea,2026-09-06T15:30:00Z,betsson,1.65,3.8,5.3
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Arsenal,Chelsea,2026-09-06T15:30:00Z,pinnacle,1.67,3.62,5.56
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Arsenal,Chelsea,2026-09-06T15:30:00Z,unibet_se,1.63,3.85,5.2
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Arsenal,Chelsea,2026-09-06T15:30:00Z,pmu_fr,1.63,3.85,5.2
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Arsenal,Chelsea,2026-09-06T15:30:00Z,unibet_nl,1.63,3.85,5.2
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Arsenal,Chelsea,2026-09-06T15:30:00Z,leovegas_se,1.63,3.85,5.2
+2026-08-30T10:25:54Z,soccer_epl,Premier League,Arsenal,Chelsea,2026-09-06T15:30:00Z,everygame,1.62,3.45,5.25
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Madrid,Málaga,2026-08-30T15:00:00Z,unibet_fr,1.1,11.0,22.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Madrid,Málaga,2026-08-30T15:00:00Z,codere_it,1.08,10.0,22.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Madrid,Málaga,2026-08-30T15:00:00Z,onexbet,1.11,12.2,28.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Madrid,Málaga,2026-08-30T15:00:00Z,winamax_de,1.08,12.0,18.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Madrid,Málaga,2026-08-30T15:00:00Z,winamax_fr,1.07,11.5,17.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Madrid,Málaga,2026-08-30T15:00:00Z,betclic_fr,1.1,11.0,22.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Madrid,Málaga,2026-08-30T15:00:00Z,tipico_de,1.08,13.0,22.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Madrid,Málaga,2026-08-30T15:00:00Z,betfair_ex_eu,1.1,14.0,36.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Madrid,Málaga,2026-08-30T15:00:00Z,everygame,1.08,11.0,23.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Madrid,Málaga,2026-08-30T15:00:00Z,williamhill,1.1,11.0,23.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Madrid,Málaga,2026-08-30T15:00:00Z,marathonbet,1.1,11.5,27.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Madrid,Málaga,2026-08-30T15:00:00Z,matchbook,1.1,14.0,36.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Madrid,Málaga,2026-08-30T15:00:00Z,pinnacle,1.1,12.0,29.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Madrid,Málaga,2026-08-30T15:00:00Z,unibet_se,1.11,12.0,26.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Madrid,Málaga,2026-08-30T15:00:00Z,leovegas_se,1.07,10.0,20.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Madrid,Málaga,2026-08-30T15:00:00Z,unibet_nl,1.09,12.0,26.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Madrid,Málaga,2026-08-30T15:00:00Z,pmu_fr,1.08,10.5,21.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Madrid,Málaga,2026-08-30T15:00:00Z,nordicbet,1.1,8.4,33.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Madrid,Málaga,2026-08-30T15:00:00Z,betsson,1.1,8.4,33.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Madrid,Málaga,2026-08-30T15:00:00Z,betonlineag,1.09,12.25,27.5
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Madrid,Málaga,2026-08-30T15:00:00Z,coolbet,1.1,11.25,29.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Deportivo La Coruña,Valencia,2026-08-30T17:30:00Z,onexbet,2.69,3.09,3.13
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Deportivo La Coruña,Valencia,2026-08-30T17:30:00Z,betfair_ex_eu,2.68,3.1,3.2
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Deportivo La Coruña,Valencia,2026-08-30T17:30:00Z,betsson,2.55,2.92,3.05
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Deportivo La Coruña,Valencia,2026-08-30T17:30:00Z,nordicbet,2.55,2.92,3.05
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Deportivo La Coruña,Valencia,2026-08-30T17:30:00Z,unibet_fr,2.5,2.95,3.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Deportivo La Coruña,Valencia,2026-08-30T17:30:00Z,betclic_fr,2.57,2.95,3.12
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Deportivo La Coruña,Valencia,2026-08-30T17:30:00Z,codere_it,2.55,3.0,3.05
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Deportivo La Coruña,Valencia,2026-08-30T17:30:00Z,winamax_de,2.55,3.0,2.95
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Deportivo La Coruña,Valencia,2026-08-30T17:30:00Z,winamax_fr,2.5,2.95,2.9
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Deportivo La Coruña,Valencia,2026-08-30T17:30:00Z,everygame,2.6,2.95,3.05
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Deportivo La Coruña,Valencia,2026-08-30T17:30:00Z,marathonbet,2.64,3.04,3.08
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Deportivo La Coruña,Valencia,2026-08-30T17:30:00Z,williamhill,2.5,2.9,2.9
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Deportivo La Coruña,Valencia,2026-08-30T17:30:00Z,pinnacle,2.66,2.99,3.16
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Deportivo La Coruña,Valencia,2026-08-30T17:30:00Z,matchbook,2.68,3.1,3.2
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Deportivo La Coruña,Valencia,2026-08-30T17:30:00Z,pmu_fr,2.5,2.9,3.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Deportivo La Coruña,Valencia,2026-08-30T17:30:00Z,unibet_nl,2.63,3.05,3.15
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Deportivo La Coruña,Valencia,2026-08-30T17:30:00Z,betonlineag,2.58,3.02,3.16
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Deportivo La Coruña,Valencia,2026-08-30T17:30:00Z,unibet_se,2.63,3.05,3.15
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Deportivo La Coruña,Valencia,2026-08-30T17:30:00Z,leovegas_se,2.48,2.88,2.95
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Deportivo La Coruña,Valencia,2026-08-30T17:30:00Z,tipico_de,2.55,3.0,3.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Deportivo La Coruña,Valencia,2026-08-30T17:30:00Z,coolbet,2.57,3.05,3.2
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Celta Vigo,Athletic Bilbao,2026-08-30T19:30:00Z,onexbet,2.75,3.29,2.88
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Celta Vigo,Athletic Bilbao,2026-08-30T19:30:00Z,nordicbet,2.72,3.1,2.72
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Celta Vigo,Athletic Bilbao,2026-08-30T19:30:00Z,betsson,2.72,3.1,2.72
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Celta Vigo,Athletic Bilbao,2026-08-30T19:30:00Z,betclic_fr,2.68,3.18,2.75
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Celta Vigo,Athletic Bilbao,2026-08-30T19:30:00Z,unibet_fr,2.65,3.1,2.7
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Celta Vigo,Athletic Bilbao,2026-08-30T19:30:00Z,codere_it,2.7,3.15,2.75
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Celta Vigo,Athletic Bilbao,2026-08-30T19:30:00Z,winamax_de,2.65,3.2,2.65
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Celta Vigo,Athletic Bilbao,2026-08-30T19:30:00Z,winamax_fr,2.6,3.15,2.65
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Celta Vigo,Athletic Bilbao,2026-08-30T19:30:00Z,betfair_ex_eu,2.78,3.35,2.9
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Celta Vigo,Athletic Bilbao,2026-08-30T19:30:00Z,tipico_de,2.7,3.2,2.65
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Celta Vigo,Athletic Bilbao,2026-08-30T19:30:00Z,everygame,2.7,3.15,2.7
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Celta Vigo,Athletic Bilbao,2026-08-30T19:30:00Z,marathonbet,2.7,3.24,2.83
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Celta Vigo,Athletic Bilbao,2026-08-30T19:30:00Z,williamhill,2.6,3.1,2.75
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Celta Vigo,Athletic Bilbao,2026-08-30T19:30:00Z,pinnacle,2.76,3.27,2.78
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Celta Vigo,Athletic Bilbao,2026-08-30T19:30:00Z,matchbook,2.78,3.35,2.9
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Celta Vigo,Athletic Bilbao,2026-08-30T19:30:00Z,pmu_fr,2.6,3.1,2.75
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Celta Vigo,Athletic Bilbao,2026-08-30T19:30:00Z,unibet_nl,2.7,3.3,2.88
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Celta Vigo,Athletic Bilbao,2026-08-30T19:30:00Z,leovegas_se,2.55,3.05,2.7
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Celta Vigo,Athletic Bilbao,2026-08-30T19:30:00Z,unibet_se,2.7,3.3,2.88
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Celta Vigo,Athletic Bilbao,2026-08-30T19:30:00Z,betonlineag,2.72,3.24,2.79
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Celta Vigo,Athletic Bilbao,2026-08-30T19:30:00Z,coolbet,2.65,3.3,2.85
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,CA Osasuna,Getafe,2026-08-31T17:30:00Z,unibet_fr,2.15,2.9,3.8
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,CA Osasuna,Getafe,2026-08-31T17:30:00Z,codere_it,2.23,2.95,3.85
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,CA Osasuna,Getafe,2026-08-31T17:30:00Z,onexbet,2.27,3.1,3.98
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,CA Osasuna,Getafe,2026-08-31T17:30:00Z,winamax_de,2.15,2.95,3.7
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,CA Osasuna,Getafe,2026-08-31T17:30:00Z,winamax_fr,2.15,2.95,3.65
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,CA Osasuna,Getafe,2026-08-31T17:30:00Z,betclic_fr,2.18,2.93,3.83
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,CA Osasuna,Getafe,2026-08-31T17:30:00Z,betfair_ex_eu,2.26,3.05,4.2
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,CA Osasuna,Getafe,2026-08-31T17:30:00Z,tipico_de,2.15,2.95,3.9
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,CA Osasuna,Getafe,2026-08-31T17:30:00Z,betsson,2.15,2.92,3.95
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,CA Osasuna,Getafe,2026-08-31T17:30:00Z,nordicbet,2.15,2.92,3.95
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,CA Osasuna,Getafe,2026-08-31T17:30:00Z,williamhill,2.15,2.9,3.7
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,CA Osasuna,Getafe,2026-08-31T17:30:00Z,marathonbet,2.23,3.05,3.92
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,CA Osasuna,Getafe,2026-08-31T17:30:00Z,pinnacle,2.21,3.0,4.03
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,CA Osasuna,Getafe,2026-08-31T17:30:00Z,pmu_fr,2.12,2.95,3.75
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,CA Osasuna,Getafe,2026-08-31T17:30:00Z,unibet_se,2.2,3.1,3.95
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,CA Osasuna,Getafe,2026-08-31T17:30:00Z,leovegas_se,2.1,2.9,3.65
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,CA Osasuna,Getafe,2026-08-31T17:30:00Z,unibet_nl,2.18,3.1,3.95
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,CA Osasuna,Getafe,2026-08-31T17:30:00Z,everygame,2.1,2.85,3.75
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,CA Osasuna,Getafe,2026-08-31T17:30:00Z,matchbook,2.26,3.05,4.2
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,CA Osasuna,Getafe,2026-08-31T17:30:00Z,betonlineag,2.19,3.04,4.02
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,CA Osasuna,Getafe,2026-08-31T17:30:00Z,coolbet,2.2,3.0,4.1
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Barcelona,Rayo Vallecano,2026-08-31T19:30:00Z,unibet_fr,1.14,9.0,15.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Barcelona,Rayo Vallecano,2026-08-31T19:30:00Z,codere_it,1.15,8.6,15.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Barcelona,Rayo Vallecano,2026-08-31T19:30:00Z,onexbet,1.19,8.7,17.5
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Barcelona,Rayo Vallecano,2026-08-31T19:30:00Z,winamax_de,1.14,9.0,13.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Barcelona,Rayo Vallecano,2026-08-31T19:30:00Z,winamax_fr,1.13,8.5,12.5
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Barcelona,Rayo Vallecano,2026-08-31T19:30:00Z,betclic_fr,1.14,8.5,15.25
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Barcelona,Rayo Vallecano,2026-08-31T19:30:00Z,tipico_de,1.12,9.5,16.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Barcelona,Rayo Vallecano,2026-08-31T19:30:00Z,betfair_ex_eu,1.17,9.8,20.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Barcelona,Rayo Vallecano,2026-08-31T19:30:00Z,betsson,1.16,7.1,20.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Barcelona,Rayo Vallecano,2026-08-31T19:30:00Z,nordicbet,1.16,7.1,20.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Barcelona,Rayo Vallecano,2026-08-31T19:30:00Z,williamhill,1.17,7.5,15.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Barcelona,Rayo Vallecano,2026-08-31T19:30:00Z,marathonbet,1.17,8.5,17.25
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Barcelona,Rayo Vallecano,2026-08-31T19:30:00Z,pinnacle,1.16,8.71,16.47
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Barcelona,Rayo Vallecano,2026-08-31T19:30:00Z,unibet_se,1.17,8.5,17.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Barcelona,Rayo Vallecano,2026-08-31T19:30:00Z,unibet_nl,1.16,8.5,18.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Barcelona,Rayo Vallecano,2026-08-31T19:30:00Z,leovegas_se,1.14,7.5,14.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Barcelona,Rayo Vallecano,2026-08-31T19:30:00Z,pmu_fr,1.15,8.0,15.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Barcelona,Rayo Vallecano,2026-08-31T19:30:00Z,everygame,1.12,7.5,13.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Barcelona,Rayo Vallecano,2026-08-31T19:30:00Z,matchbook,1.17,9.8,21.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Barcelona,Rayo Vallecano,2026-08-31T19:30:00Z,betonlineag,1.16,8.89,17.5
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Barcelona,Rayo Vallecano,2026-08-31T19:30:00Z,coolbet,1.17,8.5,18.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Sociedad,Celta Vigo,2026-09-03T19:00:00Z,onexbet,2.25,3.56,3.46
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Sociedad,Celta Vigo,2026-09-03T19:00:00Z,betfair_ex_eu,2.18,3.4,3.55
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Sociedad,Celta Vigo,2026-09-03T19:00:00Z,matchbook,2.2,3.5,3.55
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Sociedad,Celta Vigo,2026-09-03T19:00:00Z,nordicbet,2.15,3.4,3.25
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Sociedad,Celta Vigo,2026-09-03T19:00:00Z,betsson,2.15,3.4,3.25
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Sociedad,Celta Vigo,2026-09-03T19:00:00Z,unibet_fr,2.05,3.4,3.2
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Sociedad,Celta Vigo,2026-09-03T19:00:00Z,betclic_fr,2.1,3.38,3.27
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Sociedad,Celta Vigo,2026-09-03T19:00:00Z,codere_it,2.16,3.45,3.35
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Sociedad,Celta Vigo,2026-09-03T19:00:00Z,winamax_de,2.05,3.45,3.15
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Sociedad,Celta Vigo,2026-09-03T19:00:00Z,winamax_fr,2.0,3.25,3.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Sociedad,Celta Vigo,2026-09-03T19:00:00Z,tipico_de,2.15,3.3,3.4
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Sociedad,Celta Vigo,2026-09-03T19:00:00Z,everygame,2.05,3.35,3.3
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Sociedad,Celta Vigo,2026-09-03T19:00:00Z,pinnacle,2.13,3.46,3.43
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Sociedad,Celta Vigo,2026-09-03T19:00:00Z,williamhill,2.15,3.3,3.25
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Sociedad,Celta Vigo,2026-09-03T19:00:00Z,marathonbet,2.21,3.5,3.4
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Sociedad,Celta Vigo,2026-09-03T19:00:00Z,leovegas_se,2.16,3.4,3.2
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Sociedad,Celta Vigo,2026-09-03T19:00:00Z,pmu_fr,2.16,3.4,3.2
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Sociedad,Celta Vigo,2026-09-03T19:00:00Z,unibet_nl,2.16,3.4,3.2
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Sociedad,Celta Vigo,2026-09-03T19:00:00Z,unibet_se,2.16,3.4,3.2
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Betis,Real Madrid,2026-09-04T19:00:00Z,onexbet,4.92,4.57,1.69
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Betis,Real Madrid,2026-09-04T19:00:00Z,betsson,4.65,4.15,1.62
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Betis,Real Madrid,2026-09-04T19:00:00Z,nordicbet,4.65,4.15,1.62
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Betis,Real Madrid,2026-09-04T19:00:00Z,unibet_fr,4.5,4.1,1.58
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Betis,Real Madrid,2026-09-04T19:00:00Z,betclic_fr,4.5,4.15,1.6
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Betis,Real Madrid,2026-09-04T19:00:00Z,betfair_ex_eu,5.0,4.7,1.67
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Betis,Real Madrid,2026-09-04T19:00:00Z,winamax_fr,4.1,4.0,1.54
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Betis,Real Madrid,2026-09-04T19:00:00Z,matchbook,5.0,4.7,1.67
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Betis,Real Madrid,2026-09-04T19:00:00Z,tipico_de,5.0,4.5,1.57
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Betis,Real Madrid,2026-09-04T19:00:00Z,everygame,4.5,4.1,1.6
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Betis,Real Madrid,2026-09-04T19:00:00Z,pinnacle,4.78,4.34,1.62
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Betis,Real Madrid,2026-09-04T19:00:00Z,williamhill,4.6,4.2,1.65
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Betis,Real Madrid,2026-09-04T19:00:00Z,marathonbet,4.85,4.5,1.66
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Betis,Real Madrid,2026-09-04T19:00:00Z,unibet_nl,4.7,4.2,1.63
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Betis,Real Madrid,2026-09-04T19:00:00Z,unibet_se,4.7,4.2,1.63
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Betis,Real Madrid,2026-09-04T19:00:00Z,leovegas_se,4.7,4.2,1.63
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Real Betis,Real Madrid,2026-09-04T19:00:00Z,pmu_fr,4.7,4.2,1.63
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Athletic Bilbao,Atlético Madrid,2026-09-05T14:15:00Z,codere_it,2.8,3.45,2.48
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Athletic Bilbao,Atlético Madrid,2026-09-05T14:15:00Z,betsson,2.82,3.4,2.45
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Athletic Bilbao,Atlético Madrid,2026-09-05T14:15:00Z,onexbet,2.91,3.64,2.52
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Athletic Bilbao,Atlético Madrid,2026-09-05T14:15:00Z,nordicbet,2.82,3.4,2.45
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Athletic Bilbao,Atlético Madrid,2026-09-05T14:15:00Z,everygame,2.7,3.4,2.35
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Athletic Bilbao,Atlético Madrid,2026-09-05T14:15:00Z,betclic_fr,2.75,3.33,2.35
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Athletic Bilbao,Atlético Madrid,2026-09-05T14:15:00Z,pinnacle,2.78,3.58,2.43
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Athletic Bilbao,Atlético Madrid,2026-09-05T14:15:00Z,betfair_ex_eu,2.82,3.4,2.46
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Athletic Bilbao,Atlético Madrid,2026-09-05T14:15:00Z,winamax_de,2.7,3.4,2.35
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Athletic Bilbao,Atlético Madrid,2026-09-05T14:15:00Z,winamax_fr,2.5,3.15,2.25
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Athletic Bilbao,Atlético Madrid,2026-09-05T14:15:00Z,williamhill,2.75,3.4,2.45
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Athletic Bilbao,Atlético Madrid,2026-09-05T14:15:00Z,tipico_de,2.85,3.3,2.45
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Athletic Bilbao,Atlético Madrid,2026-09-05T14:15:00Z,unibet_nl,2.9,3.3,2.38
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Athletic Bilbao,Atlético Madrid,2026-09-05T14:15:00Z,unibet_se,2.9,3.3,2.38
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Athletic Bilbao,Atlético Madrid,2026-09-05T14:15:00Z,leovegas_se,2.9,3.3,2.38
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Athletic Bilbao,Atlético Madrid,2026-09-05T14:15:00Z,pmu_fr,2.9,3.3,2.38
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Athletic Bilbao,Atlético Madrid,2026-09-05T14:15:00Z,marathonbet,2.86,3.58,2.48
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Rayo Vallecano,Real Racing Club de Santander,2026-09-05T16:30:00Z,onexbet,2.29,3.6,3.33
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Rayo Vallecano,Real Racing Club de Santander,2026-09-05T16:30:00Z,unibet_fr,2.1,3.3,3.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Rayo Vallecano,Real Racing Club de Santander,2026-09-05T16:30:00Z,betclic_fr,2.13,3.15,2.53
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Rayo Vallecano,Real Racing Club de Santander,2026-09-05T16:30:00Z,winamax_de,2.15,3.45,3.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Rayo Vallecano,Real Racing Club de Santander,2026-09-05T16:30:00Z,winamax_fr,2.05,3.2,2.8
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Rayo Vallecano,Real Racing Club de Santander,2026-09-05T16:30:00Z,betfair_ex_eu,2.3,3.5,3.55
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Rayo Vallecano,Real Racing Club de Santander,2026-09-05T16:30:00Z,tipico_de,2.2,3.3,3.3
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Rayo Vallecano,Real Racing Club de Santander,2026-09-05T16:30:00Z,everygame,2.15,3.35,3.05
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Rayo Vallecano,Real Racing Club de Santander,2026-09-05T16:30:00Z,pinnacle,2.24,3.48,3.17
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Rayo Vallecano,Real Racing Club de Santander,2026-09-05T16:30:00Z,williamhill,2.2,3.3,3.1
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Rayo Vallecano,Real Racing Club de Santander,2026-09-05T16:30:00Z,unibet_nl,2.12,3.4,3.35
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Rayo Vallecano,Real Racing Club de Santander,2026-09-05T16:30:00Z,leovegas_se,2.12,3.4,3.35
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Rayo Vallecano,Real Racing Club de Santander,2026-09-05T16:30:00Z,unibet_se,2.12,3.4,3.35
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Rayo Vallecano,Real Racing Club de Santander,2026-09-05T16:30:00Z,pmu_fr,2.12,3.4,3.35
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Rayo Vallecano,Real Racing Club de Santander,2026-09-05T16:30:00Z,marathonbet,2.25,3.54,3.28
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Villarreal,Deportivo La Coruña,2026-09-05T19:00:00Z,betsson,1.55,3.85,6.3
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Villarreal,Deportivo La Coruña,2026-09-05T19:00:00Z,onexbet,1.56,4.47,6.66
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Villarreal,Deportivo La Coruña,2026-09-05T19:00:00Z,nordicbet,1.55,3.85,6.3
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Villarreal,Deportivo La Coruña,2026-09-05T19:00:00Z,unibet_fr,1.48,4.0,5.6
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Villarreal,Deportivo La Coruña,2026-09-05T19:00:00Z,everygame,1.5,4.1,5.75
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Villarreal,Deportivo La Coruña,2026-09-05T19:00:00Z,betclic_fr,1.49,4.1,5.75
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Villarreal,Deportivo La Coruña,2026-09-05T19:00:00Z,pinnacle,1.53,4.27,5.96
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Villarreal,Deportivo La Coruña,2026-09-05T19:00:00Z,codere_it,1.54,4.2,6.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Villarreal,Deportivo La Coruña,2026-09-05T19:00:00Z,betfair_ex_eu,1.1,1.06,1.07
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Villarreal,Deportivo La Coruña,2026-09-05T19:00:00Z,winamax_de,1.5,4.2,5.5
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Villarreal,Deportivo La Coruña,2026-09-05T19:00:00Z,winamax_fr,1.44,3.85,5.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Villarreal,Deportivo La Coruña,2026-09-05T19:00:00Z,williamhill,1.5,4.2,6.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Villarreal,Deportivo La Coruña,2026-09-05T19:00:00Z,tipico_de,1.5,4.3,6.2
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Villarreal,Deportivo La Coruña,2026-09-05T19:00:00Z,unibet_nl,1.53,4.2,5.8
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Villarreal,Deportivo La Coruña,2026-09-05T19:00:00Z,pmu_fr,1.53,4.2,5.8
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Villarreal,Deportivo La Coruña,2026-09-05T19:00:00Z,leovegas_se,1.53,4.2,5.8
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Villarreal,Deportivo La Coruña,2026-09-05T19:00:00Z,unibet_se,1.53,4.2,5.8
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Villarreal,Deportivo La Coruña,2026-09-05T19:00:00Z,marathonbet,1.53,4.4,6.55
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Valencia,Barcelona,2026-09-06T14:15:00Z,onexbet,6.4,4.92,1.52
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Valencia,Barcelona,2026-09-06T14:15:00Z,betfair_ex_eu,6.0,5.2,1.47
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Valencia,Barcelona,2026-09-06T14:15:00Z,betsson,6.3,4.3,1.48
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Valencia,Barcelona,2026-09-06T14:15:00Z,nordicbet,6.3,4.3,1.48
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Valencia,Barcelona,2026-09-06T14:15:00Z,unibet_fr,5.5,4.3,1.42
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Valencia,Barcelona,2026-09-06T14:15:00Z,betclic_fr,5.9,4.6,1.35
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Valencia,Barcelona,2026-09-06T14:15:00Z,winamax_de,5.6,4.7,1.44
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Valencia,Barcelona,2026-09-06T14:15:00Z,winamax_fr,5.0,4.2,1.38
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Valencia,Barcelona,2026-09-06T14:15:00Z,tipico_de,6.5,5.2,1.4
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Valencia,Barcelona,2026-09-06T14:15:00Z,everygame,5.75,4.5,1.45
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Valencia,Barcelona,2026-09-06T14:15:00Z,pinnacle,6.01,4.74,1.47
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Valencia,Barcelona,2026-09-06T14:15:00Z,williamhill,5.8,4.5,1.5
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Valencia,Barcelona,2026-09-06T14:15:00Z,unibet_se,5.75,4.4,1.5
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Valencia,Barcelona,2026-09-06T14:15:00Z,pmu_fr,5.75,4.4,1.5
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Valencia,Barcelona,2026-09-06T14:15:00Z,leovegas_se,5.75,4.4,1.5
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Valencia,Barcelona,2026-09-06T14:15:00Z,unibet_nl,5.75,4.4,1.5
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Valencia,Barcelona,2026-09-06T14:15:00Z,marathonbet,6.3,4.85,1.5
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Alavés,CA Osasuna,2026-09-06T16:30:00Z,onexbet,2.33,3.27,3.58
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Alavés,CA Osasuna,2026-09-06T16:30:00Z,nordicbet,2.22,3.15,3.45
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Alavés,CA Osasuna,2026-09-06T16:30:00Z,betsson,2.22,3.15,3.45
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Alavés,CA Osasuna,2026-09-06T16:30:00Z,unibet_fr,2.1,2.95,3.2
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Alavés,CA Osasuna,2026-09-06T16:30:00Z,betclic_fr,2.15,3.05,3.35
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Alavés,CA Osasuna,2026-09-06T16:30:00Z,winamax_de,2.15,3.1,3.25
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Alavés,CA Osasuna,2026-09-06T16:30:00Z,winamax_fr,2.05,2.9,3.05
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Alavés,CA Osasuna,2026-09-06T16:30:00Z,betfair_ex_eu,1.42,1.08,1.55
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Alavés,CA Osasuna,2026-09-06T16:30:00Z,tipico_de,2.2,3.1,3.5
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Alavés,CA Osasuna,2026-09-06T16:30:00Z,everygame,2.2,2.95,3.4
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Alavés,CA Osasuna,2026-09-06T16:30:00Z,pinnacle,2.28,3.05,3.52
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Alavés,CA Osasuna,2026-09-06T16:30:00Z,williamhill,2.25,3.0,3.4
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Alavés,CA Osasuna,2026-09-06T16:30:00Z,pmu_fr,2.28,3.1,3.3
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Alavés,CA Osasuna,2026-09-06T16:30:00Z,leovegas_se,2.28,3.1,3.3
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Alavés,CA Osasuna,2026-09-06T16:30:00Z,unibet_se,2.28,3.1,3.3
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Alavés,CA Osasuna,2026-09-06T16:30:00Z,unibet_nl,2.28,3.1,3.3
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Alavés,CA Osasuna,2026-09-06T16:30:00Z,marathonbet,2.29,3.22,3.52
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Málaga,Levante,2026-09-06T16:30:00Z,betclic_fr,2.08,3.18,3.37
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Málaga,Levante,2026-09-06T16:30:00Z,onexbet,2.14,3.5,3.81
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Málaga,Levante,2026-09-06T16:30:00Z,codere_it,2.19,3.3,3.45
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Málaga,Levante,2026-09-06T16:30:00Z,unibet_fr,2.05,3.1,3.3
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Málaga,Levante,2026-09-06T16:30:00Z,betsson,2.15,3.2,3.45
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Málaga,Levante,2026-09-06T16:30:00Z,nordicbet,2.15,3.2,3.45
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Málaga,Levante,2026-09-06T16:30:00Z,everygame,2.1,3.15,3.35
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Málaga,Levante,2026-09-06T16:30:00Z,betfair_ex_eu,1.08,1.06,1.06
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Málaga,Levante,2026-09-06T16:30:00Z,tipico_de,2.2,3.2,3.4
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Málaga,Levante,2026-09-06T16:30:00Z,williamhill,2.05,3.3,3.6
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Espanyol,Sevilla,2026-09-06T19:00:00Z,onexbet,2.49,3.29,3.23
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Espanyol,Sevilla,2026-09-06T19:00:00Z,betsson,2.35,3.15,3.15
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Espanyol,Sevilla,2026-09-06T19:00:00Z,nordicbet,2.35,3.15,3.15
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Espanyol,Sevilla,2026-09-06T19:00:00Z,unibet_fr,2.25,3.0,2.95
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Espanyol,Sevilla,2026-09-06T19:00:00Z,betfair_ex_eu,1.41,1.14,1.41
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Espanyol,Sevilla,2026-09-06T19:00:00Z,betclic_fr,2.3,3.08,3.02
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Espanyol,Sevilla,2026-09-06T19:00:00Z,winamax_de,2.3,3.15,2.95
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Espanyol,Sevilla,2026-09-06T19:00:00Z,winamax_fr,2.2,2.95,2.75
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Espanyol,Sevilla,2026-09-06T19:00:00Z,tipico_de,2.45,2.95,3.2
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Espanyol,Sevilla,2026-09-06T19:00:00Z,everygame,2.25,3.15,3.05
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Espanyol,Sevilla,2026-09-06T19:00:00Z,pinnacle,2.32,3.29,3.18
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Espanyol,Sevilla,2026-09-06T19:00:00Z,marathonbet,2.45,3.24,3.18
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Espanyol,Sevilla,2026-09-06T19:00:00Z,williamhill,2.4,3.1,3.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Espanyol,Sevilla,2026-09-06T19:00:00Z,leovegas_se,2.48,3.05,3.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Espanyol,Sevilla,2026-09-06T19:00:00Z,unibet_se,2.48,3.05,3.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Espanyol,Sevilla,2026-09-06T19:00:00Z,pmu_fr,2.48,3.05,3.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Espanyol,Sevilla,2026-09-06T19:00:00Z,unibet_nl,2.48,3.05,3.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Getafe,Celta Vigo,2026-09-07T17:00:00Z,onexbet,2.79,2.99,3.11
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Getafe,Celta Vigo,2026-09-07T17:00:00Z,nordicbet,2.62,2.92,2.95
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Getafe,Celta Vigo,2026-09-07T17:00:00Z,betsson,2.62,2.92,2.95
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Getafe,Celta Vigo,2026-09-07T17:00:00Z,unibet_fr,2.45,2.75,2.9
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Getafe,Celta Vigo,2026-09-07T17:00:00Z,betclic_fr,2.48,2.82,2.93
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Getafe,Celta Vigo,2026-09-07T17:00:00Z,winamax_fr,2.35,2.7,2.7
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Getafe,Celta Vigo,2026-09-07T17:00:00Z,winamax_de,2.5,2.9,2.9
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Getafe,Celta Vigo,2026-09-07T17:00:00Z,betfair_ex_eu,1.42,1.09,1.42
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Getafe,Celta Vigo,2026-09-07T17:00:00Z,tipico_de,2.65,2.8,3.1
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Getafe,Celta Vigo,2026-09-07T17:00:00Z,everygame,2.55,2.75,2.95
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Getafe,Celta Vigo,2026-09-07T17:00:00Z,pinnacle,2.67,2.87,3.07
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Getafe,Celta Vigo,2026-09-07T17:00:00Z,marathonbet,2.74,2.94,3.06
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Getafe,Celta Vigo,2026-09-07T17:00:00Z,williamhill,2.62,2.8,3.0
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Getafe,Celta Vigo,2026-09-07T17:00:00Z,unibet_se,2.75,2.85,2.85
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Getafe,Celta Vigo,2026-09-07T17:00:00Z,leovegas_se,2.75,2.85,2.85
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Getafe,Celta Vigo,2026-09-07T17:00:00Z,pmu_fr,2.75,2.85,2.85
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Getafe,Celta Vigo,2026-09-07T17:00:00Z,unibet_nl,2.75,2.85,2.85
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Elche CF,Real Sociedad,2026-09-07T19:30:00Z,onexbet,2.73,3.54,2.73
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Elche CF,Real Sociedad,2026-09-07T19:30:00Z,nordicbet,2.55,3.3,2.72
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Elche CF,Real Sociedad,2026-09-07T19:30:00Z,betsson,2.55,3.3,2.72
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Elche CF,Real Sociedad,2026-09-07T19:30:00Z,unibet_fr,2.55,3.1,2.45
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Elche CF,Real Sociedad,2026-09-07T19:30:00Z,betclic_fr,2.6,3.22,2.47
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Elche CF,Real Sociedad,2026-09-07T19:30:00Z,winamax_fr,2.4,3.1,2.35
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Elche CF,Real Sociedad,2026-09-07T19:30:00Z,winamax_de,2.55,3.35,2.5
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Elche CF,Real Sociedad,2026-09-07T19:30:00Z,betfair_ex_eu,2.8,3.2,2.68
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Elche CF,Real Sociedad,2026-09-07T19:30:00Z,tipico_de,2.8,3.2,2.55
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Elche CF,Real Sociedad,2026-09-07T19:30:00Z,everygame,2.5,3.25,2.6
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Elche CF,Real Sociedad,2026-09-07T19:30:00Z,pinnacle,2.58,3.43,2.7
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Elche CF,Real Sociedad,2026-09-07T19:30:00Z,marathonbet,2.68,3.48,2.69
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Elche CF,Real Sociedad,2026-09-07T19:30:00Z,williamhill,2.6,3.3,2.62
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Elche CF,Real Sociedad,2026-09-07T19:30:00Z,leovegas_se,2.65,3.35,2.55
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Elche CF,Real Sociedad,2026-09-07T19:30:00Z,unibet_se,2.65,3.35,2.55
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Elche CF,Real Sociedad,2026-09-07T19:30:00Z,pmu_fr,2.65,3.35,2.55
+2026-08-30T10:25:54Z,soccer_spain_la_liga,La Liga,Elche CF,Real Sociedad,2026-09-07T19:30:00Z,unibet_nl,2.65,3.35,2.55
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Napoli,Como,2026-08-30T16:30:00Z,onexbet,2.65,3.15,3.12
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Napoli,Como,2026-08-30T16:30:00Z,betfair_ex_eu,2.68,3.15,3.2
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Napoli,Como,2026-08-30T16:30:00Z,unibet_fr,2.4,3.1,3.0
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Napoli,Como,2026-08-30T16:30:00Z,betclic_fr,2.55,3.0,3.08
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Napoli,Como,2026-08-30T16:30:00Z,codere_it,2.6,3.05,3.0
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Napoli,Como,2026-08-30T16:30:00Z,winamax_de,2.5,3.1,2.9
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Napoli,Como,2026-08-30T16:30:00Z,winamax_fr,2.5,3.05,2.85
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Napoli,Como,2026-08-30T16:30:00Z,tipico_de,2.55,3.0,3.0
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Napoli,Como,2026-08-30T16:30:00Z,sport888,2.5,2.9,2.9
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Napoli,Como,2026-08-30T16:30:00Z,williamhill,2.5,2.9,2.9
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Napoli,Como,2026-08-30T16:30:00Z,marathonbet,2.59,3.08,3.06
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Napoli,Como,2026-08-30T16:30:00Z,everygame,2.55,3.0,3.0
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Napoli,Como,2026-08-30T16:30:00Z,pinnacle,2.63,3.1,3.09
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Napoli,Como,2026-08-30T16:30:00Z,matchbook,2.68,3.15,3.2
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Napoli,Como,2026-08-30T16:30:00Z,unibet_nl,2.55,3.1,3.2
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Napoli,Como,2026-08-30T16:30:00Z,leovegas_se,2.4,2.9,3.0
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Napoli,Como,2026-08-30T16:30:00Z,pmu_fr,2.43,2.95,3.0
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Napoli,Como,2026-08-30T16:30:00Z,unibet_se,2.55,3.1,3.2
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Napoli,Como,2026-08-30T16:30:00Z,gtbets,2.48,3.0,3.03
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Napoli,Como,2026-08-30T16:30:00Z,betsson,2.55,3.0,2.95
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Napoli,Como,2026-08-30T16:30:00Z,nordicbet,2.55,3.0,2.95
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Napoli,Como,2026-08-30T16:30:00Z,betonlineag,2.62,3.05,3.08
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Napoli,Como,2026-08-30T16:30:00Z,betanysports,2.62,3.05,3.08
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Napoli,Como,2026-08-30T16:30:00Z,coolbet,2.6,3.1,3.1
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Inter Milan,2026-08-30T18:45:00Z,unibet_fr,7.8,4.5,1.37
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Inter Milan,2026-08-30T18:45:00Z,onexbet,8.3,4.93,1.44
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Inter Milan,2026-08-30T18:45:00Z,codere_it,8.2,4.7,1.4
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Inter Milan,2026-08-30T18:45:00Z,winamax_de,7.5,4.8,1.38
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Inter Milan,2026-08-30T18:45:00Z,winamax_fr,7.25,4.6,1.37
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Inter Milan,2026-08-30T18:45:00Z,betclic_fr,8.0,4.75,1.4
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Inter Milan,2026-08-30T18:45:00Z,betfair_ex_eu,9.6,4.9,1.44
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Inter Milan,2026-08-30T18:45:00Z,tipico_de,8.5,4.7,1.37
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Inter Milan,2026-08-30T18:45:00Z,sport888,7.0,4.4,1.4
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Inter Milan,2026-08-30T18:45:00Z,williamhill,7.5,4.5,1.4
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Inter Milan,2026-08-30T18:45:00Z,marathonbet,8.2,4.85,1.42
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Inter Milan,2026-08-30T18:45:00Z,pinnacle,8.2,4.83,1.42
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Inter Milan,2026-08-30T18:45:00Z,matchbook,9.6,4.9,1.44
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Inter Milan,2026-08-30T18:45:00Z,unibet_nl,9.0,4.75,1.42
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Inter Milan,2026-08-30T18:45:00Z,leovegas_se,8.0,4.35,1.36
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Inter Milan,2026-08-30T18:45:00Z,unibet_se,9.0,4.75,1.42
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Inter Milan,2026-08-30T18:45:00Z,pmu_fr,8.0,4.4,1.38
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Inter Milan,2026-08-30T18:45:00Z,gtbets,7.76,4.55,1.46
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Inter Milan,2026-08-30T18:45:00Z,everygame,8.0,4.6,1.4
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Inter Milan,2026-08-30T18:45:00Z,nordicbet,8.3,4.3,1.4
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Inter Milan,2026-08-30T18:45:00Z,betsson,8.3,4.3,1.4
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Inter Milan,2026-08-30T18:45:00Z,betonlineag,8.0,4.7,1.4
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Inter Milan,2026-08-30T18:45:00Z,betanysports,8.0,4.7,1.4
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Inter Milan,2026-08-30T18:45:00Z,coolbet,8.1,4.6,1.45
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lazio,Genoa,2026-08-30T18:45:00Z,onexbet,2.34,3.06,3.83
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lazio,Genoa,2026-08-30T18:45:00Z,betfair_ex_eu,2.38,3.1,3.8
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lazio,Genoa,2026-08-30T18:45:00Z,unibet_fr,2.1,3.0,3.7
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lazio,Genoa,2026-08-30T18:45:00Z,betclic_fr,2.22,2.93,3.63
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lazio,Genoa,2026-08-30T18:45:00Z,codere_it,2.27,2.95,3.7
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lazio,Genoa,2026-08-30T18:45:00Z,winamax_de,2.2,3.0,3.6
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lazio,Genoa,2026-08-30T18:45:00Z,winamax_fr,2.15,2.95,3.55
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lazio,Genoa,2026-08-30T18:45:00Z,tipico_de,2.25,2.95,3.6
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lazio,Genoa,2026-08-30T18:45:00Z,sport888,2.2,2.8,3.5
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lazio,Genoa,2026-08-30T18:45:00Z,williamhill,2.25,2.88,3.5
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lazio,Genoa,2026-08-30T18:45:00Z,marathonbet,2.29,2.99,3.74
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lazio,Genoa,2026-08-30T18:45:00Z,everygame,2.25,3.0,3.65
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lazio,Genoa,2026-08-30T18:45:00Z,pinnacle,2.3,3.05,3.77
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lazio,Genoa,2026-08-30T18:45:00Z,matchbook,2.38,3.1,3.85
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lazio,Genoa,2026-08-30T18:45:00Z,unibet_nl,2.23,3.05,4.0
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lazio,Genoa,2026-08-30T18:45:00Z,pmu_fr,2.14,2.88,3.75
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lazio,Genoa,2026-08-30T18:45:00Z,leovegas_se,2.12,2.88,3.7
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lazio,Genoa,2026-08-30T18:45:00Z,unibet_se,2.23,3.05,4.0
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lazio,Genoa,2026-08-30T18:45:00Z,gtbets,2.22,3.02,3.77
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lazio,Genoa,2026-08-30T18:45:00Z,betsson,2.32,2.92,3.55
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lazio,Genoa,2026-08-30T18:45:00Z,nordicbet,2.32,2.92,3.55
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lazio,Genoa,2026-08-30T18:45:00Z,betonlineag,2.3,3.0,3.75
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lazio,Genoa,2026-08-30T18:45:00Z,betanysports,2.3,3.0,3.75
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lazio,Genoa,2026-08-30T18:45:00Z,coolbet,2.3,3.1,3.8
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lecce,AS Roma,2026-08-31T16:30:00Z,codere_it,7.2,3.95,1.49
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lecce,AS Roma,2026-08-31T16:30:00Z,onexbet,7.95,4.43,1.5
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lecce,AS Roma,2026-08-31T16:30:00Z,unibet_fr,7.0,4.3,1.42
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lecce,AS Roma,2026-08-31T16:30:00Z,betclic_fr,7.0,4.25,1.46
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lecce,AS Roma,2026-08-31T16:30:00Z,winamax_de,6.5,4.4,1.46
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lecce,AS Roma,2026-08-31T16:30:00Z,winamax_fr,6.25,4.2,1.44
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lecce,AS Roma,2026-08-31T16:30:00Z,betfair_ex_eu,8.6,4.4,1.5
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lecce,AS Roma,2026-08-31T16:30:00Z,tipico_de,7.5,4.2,1.45
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lecce,AS Roma,2026-08-31T16:30:00Z,sport888,7.0,4.0,1.44
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lecce,AS Roma,2026-08-31T16:30:00Z,williamhill,7.0,4.0,1.44
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lecce,AS Roma,2026-08-31T16:30:00Z,pinnacle,7.68,4.37,1.47
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lecce,AS Roma,2026-08-31T16:30:00Z,marathonbet,7.8,4.33,1.47
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lecce,AS Roma,2026-08-31T16:30:00Z,leovegas_se,7.0,4.2,1.41
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lecce,AS Roma,2026-08-31T16:30:00Z,unibet_se,8.0,4.6,1.47
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lecce,AS Roma,2026-08-31T16:30:00Z,pmu_fr,7.0,4.2,1.42
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lecce,AS Roma,2026-08-31T16:30:00Z,unibet_nl,8.0,4.6,1.47
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lecce,AS Roma,2026-08-31T16:30:00Z,betsson,7.3,4.05,1.48
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lecce,AS Roma,2026-08-31T16:30:00Z,nordicbet,7.3,4.05,1.48
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lecce,AS Roma,2026-08-31T16:30:00Z,everygame,7.0,4.1,1.44
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lecce,AS Roma,2026-08-31T16:30:00Z,betanysports,5.81,3.8,1.65
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lecce,AS Roma,2026-08-31T16:30:00Z,coolbet,7.8,4.4,1.48
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lecce,AS Roma,2026-08-31T16:30:00Z,matchbook,8.8,4.4,1.5
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lecce,AS Roma,2026-08-31T16:30:00Z,gtbets,7.42,4.21,1.53
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Lecce,AS Roma,2026-08-31T16:30:00Z,betonlineag,7.8,4.35,1.48
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Atalanta BC,Bologna,2026-08-31T18:45:00Z,codere_it,1.9,3.6,4.0
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Atalanta BC,Bologna,2026-08-31T18:45:00Z,onexbet,1.95,3.73,4.26
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Atalanta BC,Bologna,2026-08-31T18:45:00Z,unibet_fr,1.82,3.6,4.0
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Atalanta BC,Bologna,2026-08-31T18:45:00Z,betclic_fr,1.87,3.6,4.0
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Atalanta BC,Bologna,2026-08-31T18:45:00Z,winamax_de,1.86,3.7,3.85
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Atalanta BC,Bologna,2026-08-31T18:45:00Z,winamax_fr,1.84,3.6,3.8
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Atalanta BC,Bologna,2026-08-31T18:45:00Z,tipico_de,1.85,3.6,4.1
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Atalanta BC,Bologna,2026-08-31T18:45:00Z,betfair_ex_eu,1.98,3.75,4.3
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Atalanta BC,Bologna,2026-08-31T18:45:00Z,sport888,1.85,3.4,3.9
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Atalanta BC,Bologna,2026-08-31T18:45:00Z,williamhill,1.85,3.5,4.0
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Atalanta BC,Bologna,2026-08-31T18:45:00Z,marathonbet,1.92,3.68,4.2
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Atalanta BC,Bologna,2026-08-31T18:45:00Z,pinnacle,1.92,3.66,4.15
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Atalanta BC,Bologna,2026-08-31T18:45:00Z,unibet_se,1.96,3.65,4.1
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Atalanta BC,Bologna,2026-08-31T18:45:00Z,pmu_fr,1.88,3.4,3.85
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Atalanta BC,Bologna,2026-08-31T18:45:00Z,leovegas_se,1.88,3.4,3.8
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Atalanta BC,Bologna,2026-08-31T18:45:00Z,unibet_nl,1.96,3.65,4.1
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Atalanta BC,Bologna,2026-08-31T18:45:00Z,betsson,1.9,3.45,4.1
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Atalanta BC,Bologna,2026-08-31T18:45:00Z,nordicbet,1.9,3.45,4.1
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Atalanta BC,Bologna,2026-08-31T18:45:00Z,everygame,1.85,3.45,3.85
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Atalanta BC,Bologna,2026-08-31T18:45:00Z,betanysports,1.89,3.74,4.09
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Atalanta BC,Bologna,2026-08-31T18:45:00Z,matchbook,1.98,3.75,4.3
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Atalanta BC,Bologna,2026-08-31T18:45:00Z,gtbets,1.88,3.69,4.05
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Atalanta BC,Bologna,2026-08-31T18:45:00Z,coolbet,1.92,3.65,4.25
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Atalanta BC,Bologna,2026-08-31T18:45:00Z,betonlineag,1.91,3.7,4.15
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Genoa,Como,2026-09-04T18:45:00Z,unibet_fr,4.7,3.4,1.72
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Genoa,Como,2026-09-04T18:45:00Z,onexbet,5.47,3.35,1.87
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Genoa,Como,2026-09-04T18:45:00Z,betclic_fr,4.65,3.32,1.74
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Genoa,Como,2026-09-04T18:45:00Z,winamax_de,4.4,3.4,1.76
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Genoa,Como,2026-09-04T18:45:00Z,winamax_fr,4.1,3.15,1.68
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Genoa,Como,2026-09-04T18:45:00Z,betfair_ex_eu,1.4,1.66,1.78
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Genoa,Como,2026-09-04T18:45:00Z,sport888,4.6,3.2,1.8
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Genoa,Como,2026-09-04T18:45:00Z,williamhill,4.75,3.2,1.8
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Genoa,Como,2026-09-04T18:45:00Z,tipico_de,5.7,3.2,1.75
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Genoa,Como,2026-09-04T18:45:00Z,marathonbet,5.35,3.28,1.83
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Genoa,Como,2026-09-04T18:45:00Z,unibet_se,4.75,3.4,1.78
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Genoa,Como,2026-09-04T18:45:00Z,pmu_fr,4.75,3.4,1.78
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Genoa,Como,2026-09-04T18:45:00Z,unibet_nl,4.75,3.4,1.78
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Genoa,Como,2026-09-04T18:45:00Z,leovegas_se,4.75,3.4,1.78
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Genoa,Como,2026-09-04T18:45:00Z,pinnacle,5.49,3.17,1.8
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Genoa,Como,2026-09-04T18:45:00Z,matchbook,5.1,3.0,1.78
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Genoa,Como,2026-09-04T18:45:00Z,gtbets,5.0,3.36,1.81
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Genoa,Como,2026-09-04T18:45:00Z,everygame,5.25,3.05,1.75
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Fiorentina,Torino,2026-09-05T13:00:00Z,betclic_fr,1.85,3.25,4.15
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Fiorentina,Torino,2026-09-05T13:00:00Z,unibet_fr,1.78,3.3,4.1
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Fiorentina,Torino,2026-09-05T13:00:00Z,onexbet,1.96,3.31,4.91
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Fiorentina,Torino,2026-09-05T13:00:00Z,winamax_de,1.8,3.2,4.5
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Fiorentina,Torino,2026-09-05T13:00:00Z,winamax_fr,1.72,3.0,4.2
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Fiorentina,Torino,2026-09-05T13:00:00Z,betfair_ex_eu,1.89,3.3,4.7
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Fiorentina,Torino,2026-09-05T13:00:00Z,sport888,1.85,3.2,4.2
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Fiorentina,Torino,2026-09-05T13:00:00Z,williamhill,1.91,3.2,4.2
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Fiorentina,Torino,2026-09-05T13:00:00Z,tipico_de,1.85,3.3,4.6
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Fiorentina,Torino,2026-09-05T13:00:00Z,marathonbet,1.92,3.24,4.8
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Fiorentina,Torino,2026-09-05T13:00:00Z,pmu_fr,1.87,3.4,4.3
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Fiorentina,Torino,2026-09-05T13:00:00Z,unibet_nl,1.87,3.4,4.3
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Fiorentina,Torino,2026-09-05T13:00:00Z,unibet_se,1.87,3.4,4.3
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Fiorentina,Torino,2026-09-05T13:00:00Z,leovegas_se,1.87,3.4,4.3
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Fiorentina,Torino,2026-09-05T13:00:00Z,pinnacle,1.88,3.16,4.93
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Fiorentina,Torino,2026-09-05T13:00:00Z,gtbets,1.88,3.3,4.64
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Fiorentina,Torino,2026-09-05T13:00:00Z,everygame,1.83,3.05,4.75
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Inter Milan,Napoli,2026-09-05T16:00:00Z,unibet_fr,1.64,3.5,4.7
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Inter Milan,Napoli,2026-09-05T16:00:00Z,onexbet,1.81,3.73,5.11
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Inter Milan,Napoli,2026-09-05T16:00:00Z,betclic_fr,1.69,3.5,4.7
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Inter Milan,Napoli,2026-09-05T16:00:00Z,winamax_de,1.7,3.6,4.5
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Inter Milan,Napoli,2026-09-05T16:00:00Z,winamax_fr,1.62,3.3,4.1
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Inter Milan,Napoli,2026-09-05T16:00:00Z,betfair_ex_eu,1.77,3.7,4.9
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Inter Milan,Napoli,2026-09-05T16:00:00Z,sport888,1.75,3.4,4.6
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Inter Milan,Napoli,2026-09-05T16:00:00Z,williamhill,1.75,3.4,4.6
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Inter Milan,Napoli,2026-09-05T16:00:00Z,tipico_de,1.72,3.7,4.8
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Inter Milan,Napoli,2026-09-05T16:00:00Z,marathonbet,1.77,3.65,5.0
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Inter Milan,Napoli,2026-09-05T16:00:00Z,leovegas_se,1.68,3.6,5.1
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Inter Milan,Napoli,2026-09-05T16:00:00Z,pmu_fr,1.68,3.6,5.1
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Inter Milan,Napoli,2026-09-05T16:00:00Z,unibet_se,1.68,3.6,5.1
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Inter Milan,Napoli,2026-09-05T16:00:00Z,unibet_nl,1.68,3.6,5.1
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Inter Milan,Napoli,2026-09-05T16:00:00Z,pinnacle,1.75,3.66,4.79
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Inter Milan,Napoli,2026-09-05T16:00:00Z,gtbets,1.77,3.56,4.88
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Inter Milan,Napoli,2026-09-05T16:00:00Z,everygame,1.7,3.5,4.6
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,AS Roma,Atalanta BC,2026-09-05T18:45:00Z,unibet_fr,1.8,3.4,3.9
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,AS Roma,Atalanta BC,2026-09-05T18:45:00Z,onexbet,1.96,3.66,4.29
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,AS Roma,Atalanta BC,2026-09-05T18:45:00Z,betclic_fr,1.86,3.37,3.93
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,AS Roma,Atalanta BC,2026-09-05T18:45:00Z,winamax_de,1.88,3.45,3.8
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,AS Roma,Atalanta BC,2026-09-05T18:45:00Z,winamax_fr,1.78,3.2,3.5
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,AS Roma,Atalanta BC,2026-09-05T18:45:00Z,betfair_ex_eu,1.95,3.5,4.3
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,AS Roma,Atalanta BC,2026-09-05T18:45:00Z,marathonbet,1.92,3.58,4.2
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,AS Roma,Atalanta BC,2026-09-05T18:45:00Z,sport888,1.91,3.3,3.9
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,AS Roma,Atalanta BC,2026-09-05T18:45:00Z,tipico_de,1.87,3.5,4.2
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,AS Roma,Atalanta BC,2026-09-05T18:45:00Z,williamhill,1.91,3.3,3.9
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,AS Roma,Atalanta BC,2026-09-05T18:45:00Z,pmu_fr,1.83,3.7,4.0
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,AS Roma,Atalanta BC,2026-09-05T18:45:00Z,unibet_nl,1.83,3.7,4.0
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,AS Roma,Atalanta BC,2026-09-05T18:45:00Z,unibet_se,1.83,3.7,4.0
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,AS Roma,Atalanta BC,2026-09-05T18:45:00Z,leovegas_se,1.83,3.7,4.0
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,AS Roma,Atalanta BC,2026-09-05T18:45:00Z,pinnacle,1.89,3.56,4.09
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,AS Roma,Atalanta BC,2026-09-05T18:45:00Z,gtbets,1.92,3.43,4.22
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,AS Roma,Atalanta BC,2026-09-05T18:45:00Z,everygame,1.83,3.4,3.9
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Frosinone,Venezia,2026-09-06T13:00:00Z,unibet_fr,2.7,3.2,2.25
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Frosinone,Venezia,2026-09-06T13:00:00Z,betclic_fr,2.73,3.25,2.4
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Frosinone,Venezia,2026-09-06T13:00:00Z,onexbet,2.89,3.46,2.63
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Frosinone,Venezia,2026-09-06T13:00:00Z,winamax_de,2.65,3.3,2.45
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Frosinone,Venezia,2026-09-06T13:00:00Z,winamax_fr,2.5,3.1,2.3
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Frosinone,Venezia,2026-09-06T13:00:00Z,betfair_ex_eu,1.09,1.09,1.1
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Frosinone,Venezia,2026-09-06T13:00:00Z,sport888,2.7,3.1,2.5
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Frosinone,Venezia,2026-09-06T13:00:00Z,tipico_de,2.9,3.1,2.55
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Frosinone,Venezia,2026-09-06T13:00:00Z,williamhill,2.75,3.1,2.5
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Frosinone,Venezia,2026-09-06T13:00:00Z,marathonbet,2.83,3.38,2.57
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Frosinone,Venezia,2026-09-06T13:00:00Z,leovegas_se,2.75,3.25,2.55
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Frosinone,Venezia,2026-09-06T13:00:00Z,unibet_se,2.75,3.25,2.55
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Frosinone,Venezia,2026-09-06T13:00:00Z,pmu_fr,2.75,3.25,2.55
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Frosinone,Venezia,2026-09-06T13:00:00Z,unibet_nl,2.75,3.25,2.55
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Frosinone,Venezia,2026-09-06T13:00:00Z,pinnacle,2.81,3.31,2.55
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Frosinone,Venezia,2026-09-06T13:00:00Z,everygame,2.7,3.15,2.45
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Parma,Monza,2026-09-06T13:00:00Z,winamax_de,2.25,3.1,3.1
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Parma,Monza,2026-09-06T13:00:00Z,winamax_fr,2.1,2.9,2.9
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Parma,Monza,2026-09-06T13:00:00Z,unibet_fr,2.1,3.0,3.2
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Parma,Monza,2026-09-06T13:00:00Z,onexbet,2.43,3.19,3.44
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Parma,Monza,2026-09-06T13:00:00Z,betclic_fr,2.22,3.03,3.22
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Parma,Monza,2026-09-06T13:00:00Z,betfair_ex_eu,2.5,3.15,3.35
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Parma,Monza,2026-09-06T13:00:00Z,sport888,2.3,3.0,3.2
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Parma,Monza,2026-09-06T13:00:00Z,tipico_de,2.35,3.1,3.2
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Parma,Monza,2026-09-06T13:00:00Z,williamhill,2.3,3.0,3.25
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Parma,Monza,2026-09-06T13:00:00Z,marathonbet,2.38,3.12,3.36
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Parma,Monza,2026-09-06T13:00:00Z,leovegas_se,2.3,3.05,3.25
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Parma,Monza,2026-09-06T13:00:00Z,unibet_nl,2.3,3.05,3.25
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Parma,Monza,2026-09-06T13:00:00Z,pmu_fr,2.3,3.05,3.25
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Parma,Monza,2026-09-06T13:00:00Z,unibet_se,2.3,3.05,3.25
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Parma,Monza,2026-09-06T13:00:00Z,pinnacle,2.34,3.09,3.34
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Parma,Monza,2026-09-06T13:00:00Z,everygame,2.25,2.95,3.25
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Bologna,Sassuolo,2026-09-06T16:00:00Z,betclic_fr,1.89,3.32,3.85
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Bologna,Sassuolo,2026-09-06T16:00:00Z,unibet_fr,1.8,3.3,3.8
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Bologna,Sassuolo,2026-09-06T16:00:00Z,onexbet,2.02,3.56,4.2
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Bologna,Sassuolo,2026-09-06T16:00:00Z,winamax_de,1.92,3.4,3.7
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Bologna,Sassuolo,2026-09-06T16:00:00Z,winamax_fr,1.82,3.15,3.45
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Bologna,Sassuolo,2026-09-06T16:00:00Z,betfair_ex_eu,2.0,1.31,1.38
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Bologna,Sassuolo,2026-09-06T16:00:00Z,marathonbet,1.97,3.48,4.1
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Bologna,Sassuolo,2026-09-06T16:00:00Z,sport888,1.91,3.3,3.8
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Bologna,Sassuolo,2026-09-06T16:00:00Z,tipico_de,1.9,3.5,4.0
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Bologna,Sassuolo,2026-09-06T16:00:00Z,williamhill,1.95,3.3,3.8
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Bologna,Sassuolo,2026-09-06T16:00:00Z,leovegas_se,1.88,3.45,4.1
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Bologna,Sassuolo,2026-09-06T16:00:00Z,unibet_nl,1.88,3.45,4.1
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Bologna,Sassuolo,2026-09-06T16:00:00Z,pmu_fr,1.88,3.45,4.1
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Bologna,Sassuolo,2026-09-06T16:00:00Z,unibet_se,1.88,3.45,4.1
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Bologna,Sassuolo,2026-09-06T16:00:00Z,pinnacle,1.94,3.49,4.0
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Bologna,Sassuolo,2026-09-06T16:00:00Z,everygame,1.9,3.35,3.85
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Juventus,AC Milan,2026-09-06T18:45:00Z,unibet_fr,1.92,3.2,3.5
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Juventus,AC Milan,2026-09-06T18:45:00Z,betclic_fr,2.02,3.22,3.53
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Juventus,AC Milan,2026-09-06T18:45:00Z,onexbet,2.19,3.35,3.83
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Juventus,AC Milan,2026-09-06T18:45:00Z,winamax_de,2.0,3.3,3.4
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Juventus,AC Milan,2026-09-06T18:45:00Z,winamax_fr,1.94,3.05,3.2
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Juventus,AC Milan,2026-09-06T18:45:00Z,betfair_ex_eu,2.22,3.4,3.7
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Juventus,AC Milan,2026-09-06T18:45:00Z,sport888,2.1,3.1,3.5
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Juventus,AC Milan,2026-09-06T18:45:00Z,tipico_de,2.05,3.4,3.6
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Juventus,AC Milan,2026-09-06T18:45:00Z,williamhill,2.1,3.1,3.6
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Juventus,AC Milan,2026-09-06T18:45:00Z,marathonbet,2.14,3.28,3.75
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Juventus,AC Milan,2026-09-06T18:45:00Z,unibet_nl,2.07,3.3,3.6
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Juventus,AC Milan,2026-09-06T18:45:00Z,pmu_fr,2.07,3.3,3.6
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Juventus,AC Milan,2026-09-06T18:45:00Z,unibet_se,2.07,3.3,3.6
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Juventus,AC Milan,2026-09-06T18:45:00Z,leovegas_se,2.07,3.3,3.6
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Juventus,AC Milan,2026-09-06T18:45:00Z,pinnacle,2.15,3.15,3.74
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Juventus,AC Milan,2026-09-06T18:45:00Z,everygame,2.1,3.05,3.6
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Lecce,2026-09-07T16:30:00Z,unibet_fr,2.0,3.0,3.5
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Lecce,2026-09-07T16:30:00Z,onexbet,2.25,3.21,3.85
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Lecce,2026-09-07T16:30:00Z,betclic_fr,2.08,2.98,3.53
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Lecce,2026-09-07T16:30:00Z,winamax_de,2.1,3.05,3.45
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Lecce,2026-09-07T16:30:00Z,winamax_fr,2.0,2.85,3.2
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Lecce,2026-09-07T16:30:00Z,betfair_ex_eu,2.12,3.2,4.2
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Lecce,2026-09-07T16:30:00Z,marathonbet,2.2,3.14,3.76
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Lecce,2026-09-07T16:30:00Z,sport888,2.15,2.9,3.5
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Lecce,2026-09-07T16:30:00Z,tipico_de,2.05,3.1,4.0
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Lecce,2026-09-07T16:30:00Z,williamhill,2.15,3.0,3.6
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Lecce,2026-09-07T16:30:00Z,leovegas_se,2.2,3.0,3.55
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Lecce,2026-09-07T16:30:00Z,pmu_fr,2.2,3.0,3.55
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Lecce,2026-09-07T16:30:00Z,unibet_nl,2.2,3.0,3.55
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Lecce,2026-09-07T16:30:00Z,unibet_se,2.2,3.0,3.55
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Lecce,2026-09-07T16:30:00Z,pinnacle,2.17,3.07,3.78
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Cagliari,Lecce,2026-09-07T16:30:00Z,everygame,2.1,2.95,3.65
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Udinese,Lazio,2026-09-07T18:45:00Z,unibet_fr,2.7,3.0,2.45
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Udinese,Lazio,2026-09-07T18:45:00Z,onexbet,2.87,3.15,2.87
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Udinese,Lazio,2026-09-07T18:45:00Z,betclic_fr,2.68,3.0,2.55
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Udinese,Lazio,2026-09-07T18:45:00Z,winamax_de,2.65,3.05,2.6
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Udinese,Lazio,2026-09-07T18:45:00Z,betfair_ex_eu,2.78,2.72,2.7
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Udinese,Lazio,2026-09-07T18:45:00Z,winamax_fr,2.45,2.85,2.45
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Udinese,Lazio,2026-09-07T18:45:00Z,marathonbet,2.8,3.08,2.8
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Udinese,Lazio,2026-09-07T18:45:00Z,sport888,2.7,2.9,2.7
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Udinese,Lazio,2026-09-07T18:45:00Z,tipico_de,2.9,2.9,2.7
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Udinese,Lazio,2026-09-07T18:45:00Z,williamhill,2.7,2.9,2.7
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Udinese,Lazio,2026-09-07T18:45:00Z,unibet_nl,2.6,3.1,2.8
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Udinese,Lazio,2026-09-07T18:45:00Z,unibet_se,2.6,3.1,2.8
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Udinese,Lazio,2026-09-07T18:45:00Z,pmu_fr,2.6,3.1,2.8
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Udinese,Lazio,2026-09-07T18:45:00Z,leovegas_se,2.6,3.1,2.8
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Udinese,Lazio,2026-09-07T18:45:00Z,pinnacle,2.79,3.1,2.71
+2026-08-30T10:25:54Z,soccer_italy_serie_a,Serie A,Udinese,Lazio,2026-09-07T18:45:00Z,everygame,2.7,3.0,2.6
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Freiburg,Werder Bremen,2026-08-30T13:30:00Z,pinnacle,1.84,3.76,4.55
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Freiburg,Werder Bremen,2026-08-30T13:30:00Z,winamax_de,1.8,3.85,4.1
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Freiburg,Werder Bremen,2026-08-30T13:30:00Z,nordicbet,1.85,3.6,4.1
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Freiburg,Werder Bremen,2026-08-30T13:30:00Z,winamax_fr,1.78,3.8,4.0
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Freiburg,Werder Bremen,2026-08-30T13:30:00Z,unibet_fr,1.8,3.6,4.1
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Freiburg,Werder Bremen,2026-08-30T13:30:00Z,betsson,1.85,3.6,4.1
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Freiburg,Werder Bremen,2026-08-30T13:30:00Z,onexbet,1.88,3.84,4.47
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Freiburg,Werder Bremen,2026-08-30T13:30:00Z,tipico_de,1.77,3.8,4.4
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Freiburg,Werder Bremen,2026-08-30T13:30:00Z,betclic_fr,1.81,3.78,4.25
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Freiburg,Werder Bremen,2026-08-30T13:30:00Z,coolbet,1.86,3.72,4.45
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Freiburg,Werder Bremen,2026-08-30T13:30:00Z,betfair_ex_eu,1.9,3.85,4.6
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Freiburg,Werder Bremen,2026-08-30T13:30:00Z,betonlineag,1.85,3.73,4.38
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Freiburg,Werder Bremen,2026-08-30T13:30:00Z,sport888,1.83,3.4,4.0
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Freiburg,Werder Bremen,2026-08-30T13:30:00Z,williamhill,1.83,3.5,4.0
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Freiburg,Werder Bremen,2026-08-30T13:30:00Z,leovegas_se,1.8,3.55,3.95
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Freiburg,Werder Bremen,2026-08-30T13:30:00Z,unibet_nl,1.85,3.8,4.2
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Freiburg,Werder Bremen,2026-08-30T13:30:00Z,pmu_fr,1.81,3.6,4.0
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Freiburg,Werder Bremen,2026-08-30T13:30:00Z,unibet_se,1.88,3.85,4.25
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Freiburg,Werder Bremen,2026-08-30T13:30:00Z,marathonbet,1.85,3.78,4.4
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Freiburg,Werder Bremen,2026-08-30T13:30:00Z,everygame,1.83,3.6,4.4
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Freiburg,Werder Bremen,2026-08-30T13:30:00Z,suprabets,1.82,3.62,4.4
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Freiburg,Werder Bremen,2026-08-30T13:30:00Z,matchbook,1.9,3.85,4.6
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Freiburg,Werder Bremen,2026-08-30T13:30:00Z,gtbets,1.91,3.56,4.11
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Augsburg,FC Schalke 04,2026-08-30T15:30:00Z,pinnacle,2.24,3.53,3.35
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Augsburg,FC Schalke 04,2026-08-30T15:30:00Z,unibet_fr,2.15,3.5,3.1
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Augsburg,FC Schalke 04,2026-08-30T15:30:00Z,codere_it,2.23,3.5,3.15
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Augsburg,FC Schalke 04,2026-08-30T15:30:00Z,onexbet,2.28,3.6,3.35
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Augsburg,FC Schalke 04,2026-08-30T15:30:00Z,tipico_de,2.1,3.5,3.4
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Augsburg,FC Schalke 04,2026-08-30T15:30:00Z,betclic_fr,2.22,3.55,3.17
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Augsburg,FC Schalke 04,2026-08-30T15:30:00Z,winamax_de,2.2,3.6,3.05
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Augsburg,FC Schalke 04,2026-08-30T15:30:00Z,winamax_fr,2.15,3.55,3.0
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Augsburg,FC Schalke 04,2026-08-30T15:30:00Z,betsson,2.22,3.4,3.2
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Augsburg,FC Schalke 04,2026-08-30T15:30:00Z,nordicbet,2.22,3.4,3.2
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Augsburg,FC Schalke 04,2026-08-30T15:30:00Z,suprabets,2.2,3.41,3.26
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Augsburg,FC Schalke 04,2026-08-30T15:30:00Z,coolbet,2.25,3.5,3.15
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Augsburg,FC Schalke 04,2026-08-30T15:30:00Z,betfair_ex_eu,2.28,3.6,3.45
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Augsburg,FC Schalke 04,2026-08-30T15:30:00Z,betonlineag,2.24,3.5,3.3
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Augsburg,FC Schalke 04,2026-08-30T15:30:00Z,sport888,2.2,3.3,3.1
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Augsburg,FC Schalke 04,2026-08-30T15:30:00Z,williamhill,2.2,3.3,3.1
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Augsburg,FC Schalke 04,2026-08-30T15:30:00Z,everygame,2.2,3.4,3.25
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Augsburg,FC Schalke 04,2026-08-30T15:30:00Z,leovegas_se,2.18,3.4,3.0
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Augsburg,FC Schalke 04,2026-08-30T15:30:00Z,unibet_nl,2.25,3.6,3.1
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Augsburg,FC Schalke 04,2026-08-30T15:30:00Z,pmu_fr,2.2,3.4,3.0
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Augsburg,FC Schalke 04,2026-08-30T15:30:00Z,unibet_se,2.3,3.65,3.15
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Augsburg,FC Schalke 04,2026-08-30T15:30:00Z,marathonbet,2.24,3.54,3.3
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Augsburg,FC Schalke 04,2026-08-30T15:30:00Z,matchbook,2.28,3.6,3.45
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Augsburg,FC Schalke 04,2026-08-30T15:30:00Z,gtbets,2.18,3.71,3.11
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,VfB Stuttgart,1. FC Köln,2026-09-04T18:30:00Z,winamax_fr,1.35,4.9,5.2
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,VfB Stuttgart,1. FC Köln,2026-09-04T18:30:00Z,betclic_fr,1.39,5.4,6.1
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,VfB Stuttgart,1. FC Köln,2026-09-04T18:30:00Z,unibet_fr,1.37,5.1,5.8
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,VfB Stuttgart,1. FC Köln,2026-09-04T18:30:00Z,winamax_de,1.37,5.0,5.3
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,VfB Stuttgart,1. FC Köln,2026-09-04T18:30:00Z,tipico_de,1.4,5.7,6.0
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,VfB Stuttgart,1. FC Köln,2026-09-04T18:30:00Z,onexbet,1.48,5.18,6.75
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,VfB Stuttgart,1. FC Köln,2026-09-04T18:30:00Z,coolbet,1.43,5.5,6.75
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,VfB Stuttgart,1. FC Köln,2026-09-04T18:30:00Z,sport888,1.4,4.6,6.0
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,VfB Stuttgart,1. FC Köln,2026-09-04T18:30:00Z,williamhill,1.4,4.75,6.0
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,VfB Stuttgart,1. FC Köln,2026-09-04T18:30:00Z,betfair_ex_eu,1.41,1.12,1.21
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,VfB Stuttgart,1. FC Köln,2026-09-04T18:30:00Z,marathonbet,1.45,5.2,6.65
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,VfB Stuttgart,1. FC Köln,2026-09-04T18:30:00Z,nordicbet,1.43,4.55,6.8
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,VfB Stuttgart,1. FC Köln,2026-09-04T18:30:00Z,betsson,1.43,4.55,6.8
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,VfB Stuttgart,1. FC Köln,2026-09-04T18:30:00Z,suprabets,1.44,4.7,5.5
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,VfB Stuttgart,1. FC Köln,2026-09-04T18:30:00Z,pmu_fr,1.43,4.8,5.75
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,VfB Stuttgart,1. FC Köln,2026-09-04T18:30:00Z,unibet_se,1.47,5.25,6.25
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,VfB Stuttgart,1. FC Köln,2026-09-04T18:30:00Z,leovegas_se,1.42,4.8,5.75
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,VfB Stuttgart,1. FC Köln,2026-09-04T18:30:00Z,unibet_nl,1.47,5.25,6.25
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,VfB Stuttgart,1. FC Köln,2026-09-04T18:30:00Z,gtbets,1.47,4.98,6.22
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,VfB Stuttgart,1. FC Köln,2026-09-04T18:30:00Z,everygame,1.44,4.75,5.5
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Bayer Leverkusen,Union Berlin,2026-09-05T13:30:00Z,winamax_fr,1.42,4.1,4.7
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Bayer Leverkusen,Union Berlin,2026-09-05T13:30:00Z,betclic_fr,1.48,4.55,5.6
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Bayer Leverkusen,Union Berlin,2026-09-05T13:30:00Z,tipico_de,1.47,5.0,5.7
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Bayer Leverkusen,Union Berlin,2026-09-05T13:30:00Z,unibet_fr,1.46,4.4,5.4
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Bayer Leverkusen,Union Berlin,2026-09-05T13:30:00Z,winamax_de,1.44,4.2,4.8
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Bayer Leverkusen,Union Berlin,2026-09-05T13:30:00Z,onexbet,1.53,4.88,6.3
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Bayer Leverkusen,Union Berlin,2026-09-05T13:30:00Z,coolbet,1.48,5.0,6.5
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Bayer Leverkusen,Union Berlin,2026-09-05T13:30:00Z,sport888,1.44,4.5,5.5
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Bayer Leverkusen,Union Berlin,2026-09-05T13:30:00Z,williamhill,1.44,4.5,5.5
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Bayer Leverkusen,Union Berlin,2026-09-05T13:30:00Z,betfair_ex_eu,1.51,5.0,5.8
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Bayer Leverkusen,Union Berlin,2026-09-05T13:30:00Z,marathonbet,1.51,4.8,6.2
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Bayer Leverkusen,Union Berlin,2026-09-05T13:30:00Z,betsson,1.52,4.15,5.9
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Bayer Leverkusen,Union Berlin,2026-09-05T13:30:00Z,nordicbet,1.52,4.15,5.9
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Bayer Leverkusen,Union Berlin,2026-09-05T13:30:00Z,suprabets,1.49,4.3,5.4
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Bayer Leverkusen,Union Berlin,2026-09-05T13:30:00Z,pmu_fr,1.44,4.5,6.0
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Bayer Leverkusen,Union Berlin,2026-09-05T13:30:00Z,unibet_se,1.49,4.9,6.5
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Bayer Leverkusen,Union Berlin,2026-09-05T13:30:00Z,leovegas_se,1.43,4.5,5.8
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Bayer Leverkusen,Union Berlin,2026-09-05T13:30:00Z,unibet_nl,1.49,4.9,6.5
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Bayer Leverkusen,Union Berlin,2026-09-05T13:30:00Z,gtbets,1.51,4.6,5.89
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Bayer Leverkusen,Union Berlin,2026-09-05T13:30:00Z,everygame,1.5,4.33,5.5
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,TSG Hoffenheim,Borussia Dortmund,2026-09-05T13:30:00Z,tipico_de,2.8,3.8,2.3
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,TSG Hoffenheim,Borussia Dortmund,2026-09-05T13:30:00Z,unibet_fr,2.45,3.7,2.35
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,TSG Hoffenheim,Borussia Dortmund,2026-09-05T13:30:00Z,winamax_de,2.55,3.8,2.05
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,TSG Hoffenheim,Borussia Dortmund,2026-09-05T13:30:00Z,onexbet,2.69,4.01,2.53
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,TSG Hoffenheim,Borussia Dortmund,2026-09-05T13:30:00Z,winamax_fr,2.5,3.7,2.05
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,TSG Hoffenheim,Borussia Dortmund,2026-09-05T13:30:00Z,betclic_fr,2.65,3.8,2.33
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,TSG Hoffenheim,Borussia Dortmund,2026-09-05T13:30:00Z,coolbet,2.6,4.2,2.45
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,TSG Hoffenheim,Borussia Dortmund,2026-09-05T13:30:00Z,sport888,2.5,3.6,2.4
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,TSG Hoffenheim,Borussia Dortmund,2026-09-05T13:30:00Z,williamhill,2.6,3.7,2.4
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,TSG Hoffenheim,Borussia Dortmund,2026-09-05T13:30:00Z,betfair_ex_eu,1.31,1.09,2.36
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,TSG Hoffenheim,Borussia Dortmund,2026-09-05T13:30:00Z,marathonbet,2.65,3.95,2.49
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,TSG Hoffenheim,Borussia Dortmund,2026-09-05T13:30:00Z,betsson,2.65,3.6,2.45
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,TSG Hoffenheim,Borussia Dortmund,2026-09-05T13:30:00Z,nordicbet,2.65,3.6,2.45
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,TSG Hoffenheim,Borussia Dortmund,2026-09-05T13:30:00Z,suprabets,2.55,3.63,2.37
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,TSG Hoffenheim,Borussia Dortmund,2026-09-05T13:30:00Z,pmu_fr,2.55,3.75,2.38
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,TSG Hoffenheim,Borussia Dortmund,2026-09-05T13:30:00Z,leovegas_se,2.5,3.7,2.38
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,TSG Hoffenheim,Borussia Dortmund,2026-09-05T13:30:00Z,unibet_se,2.65,4.0,2.5
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,TSG Hoffenheim,Borussia Dortmund,2026-09-05T13:30:00Z,unibet_nl,2.63,3.95,2.48
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,TSG Hoffenheim,Borussia Dortmund,2026-09-05T13:30:00Z,gtbets,2.62,3.85,2.45
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,TSG Hoffenheim,Borussia Dortmund,2026-09-05T13:30:00Z,everygame,2.55,3.65,2.35
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Borussia Monchengladbach,Elversberg,2026-09-05T13:30:00Z,tipico_de,1.7,4.2,4.4
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Borussia Monchengladbach,Elversberg,2026-09-05T13:30:00Z,unibet_fr,1.57,4.0,4.6
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Borussia Monchengladbach,Elversberg,2026-09-05T13:30:00Z,winamax_de,1.56,3.9,4.2
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Borussia Monchengladbach,Elversberg,2026-09-05T13:30:00Z,onexbet,1.67,4.26,5.53
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Borussia Monchengladbach,Elversberg,2026-09-05T13:30:00Z,winamax_fr,1.54,3.8,4.1
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Borussia Monchengladbach,Elversberg,2026-09-05T13:30:00Z,betclic_fr,1.6,4.2,4.85
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Borussia Monchengladbach,Elversberg,2026-09-05T13:30:00Z,coolbet,1.62,4.4,5.5
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Borussia Monchengladbach,Elversberg,2026-09-05T13:30:00Z,sport888,1.61,3.9,5.0
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Borussia Monchengladbach,Elversberg,2026-09-05T13:30:00Z,williamhill,1.62,3.9,5.0
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Borussia Monchengladbach,Elversberg,2026-09-05T13:30:00Z,marathonbet,1.64,4.2,5.45
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Borussia Monchengladbach,Elversberg,2026-09-05T13:30:00Z,betfair_ex_eu,1.69,4.1,4.7
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Borussia Monchengladbach,Elversberg,2026-09-05T13:30:00Z,betsson,1.65,4.05,4.65
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Borussia Monchengladbach,Elversberg,2026-09-05T13:30:00Z,nordicbet,1.65,4.05,4.65
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Borussia Monchengladbach,Elversberg,2026-09-05T13:30:00Z,suprabets,1.58,3.97,4.9
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Borussia Monchengladbach,Elversberg,2026-09-05T13:30:00Z,pmu_fr,1.6,4.1,4.75
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Borussia Monchengladbach,Elversberg,2026-09-05T13:30:00Z,leovegas_se,1.6,4.0,4.7
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Borussia Monchengladbach,Elversberg,2026-09-05T13:30:00Z,unibet_se,1.66,4.35,5.1
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Borussia Monchengladbach,Elversberg,2026-09-05T13:30:00Z,unibet_nl,1.66,4.35,5.1
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Borussia Monchengladbach,Elversberg,2026-09-05T13:30:00Z,matchbook,1.62,3.7,4.1
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Borussia Monchengladbach,Elversberg,2026-09-05T13:30:00Z,gtbets,1.62,4.14,5.17
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Borussia Monchengladbach,Elversberg,2026-09-05T13:30:00Z,everygame,1.57,4.0,5.0
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Werder Bremen,RB Leipzig,2026-09-05T13:30:00Z,winamax_fr,2.85,3.5,1.92
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Werder Bremen,RB Leipzig,2026-09-05T13:30:00Z,betclic_fr,3.25,3.78,2.02
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Werder Bremen,RB Leipzig,2026-09-05T13:30:00Z,unibet_fr,3.0,3.7,2.05
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Werder Bremen,RB Leipzig,2026-09-05T13:30:00Z,winamax_de,2.95,3.55,1.94
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Werder Bremen,RB Leipzig,2026-09-05T13:30:00Z,tipico_de,3.3,3.8,2.05
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Werder Bremen,RB Leipzig,2026-09-05T13:30:00Z,onexbet,3.4,3.96,2.13
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Werder Bremen,RB Leipzig,2026-09-05T13:30:00Z,sport888,3.1,3.6,2.0
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Werder Bremen,RB Leipzig,2026-09-05T13:30:00Z,williamhill,3.2,3.7,2.05
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Werder Bremen,RB Leipzig,2026-09-05T13:30:00Z,betfair_ex_eu,1.44,1.1,2.1
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Werder Bremen,RB Leipzig,2026-09-05T13:30:00Z,marathonbet,3.34,3.9,2.1
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Werder Bremen,RB Leipzig,2026-09-05T13:30:00Z,betsson,3.45,3.6,2.02
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Werder Bremen,RB Leipzig,2026-09-05T13:30:00Z,nordicbet,3.45,3.6,2.02
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Werder Bremen,RB Leipzig,2026-09-05T13:30:00Z,suprabets,3.14,3.66,2.01
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Werder Bremen,RB Leipzig,2026-09-05T13:30:00Z,unibet_se,3.4,4.0,2.08
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Werder Bremen,RB Leipzig,2026-09-05T13:30:00Z,leovegas_se,3.15,3.7,1.97
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Werder Bremen,RB Leipzig,2026-09-05T13:30:00Z,unibet_nl,3.35,3.95,2.05
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Werder Bremen,RB Leipzig,2026-09-05T13:30:00Z,pmu_fr,3.2,3.75,2.0
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Werder Bremen,RB Leipzig,2026-09-05T13:30:00Z,gtbets,3.29,3.82,2.07
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Werder Bremen,RB Leipzig,2026-09-05T13:30:00Z,everygame,3.15,3.65,2.0
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Paderborn,SC Freiburg,2026-09-05T13:30:00Z,onexbet,2.92,3.63,2.51
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Paderborn,SC Freiburg,2026-09-05T13:30:00Z,unibet_fr,2.6,3.4,2.35
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Paderborn,SC Freiburg,2026-09-05T13:30:00Z,winamax_fr,2.5,3.25,2.2
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Paderborn,SC Freiburg,2026-09-05T13:30:00Z,tipico_de,2.9,3.4,2.4
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Paderborn,SC Freiburg,2026-09-05T13:30:00Z,winamax_de,2.55,3.3,2.25
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Paderborn,SC Freiburg,2026-09-05T13:30:00Z,betclic_fr,2.82,3.48,2.33
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Paderborn,SC Freiburg,2026-09-05T13:30:00Z,sport888,2.75,3.3,2.38
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Paderborn,SC Freiburg,2026-09-05T13:30:00Z,williamhill,2.8,3.3,2.4
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Paderborn,SC Freiburg,2026-09-05T13:30:00Z,betfair_ex_eu,1.56,1.65,1.38
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Paderborn,SC Freiburg,2026-09-05T13:30:00Z,marathonbet,2.88,3.58,2.47
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Paderborn,SC Freiburg,2026-09-05T13:30:00Z,betsson,2.75,3.45,2.42
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Paderborn,SC Freiburg,2026-09-05T13:30:00Z,nordicbet,2.75,3.45,2.42
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Paderborn,SC Freiburg,2026-09-05T13:30:00Z,suprabets,2.75,3.33,2.35
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Paderborn,SC Freiburg,2026-09-05T13:30:00Z,unibet_se,2.85,3.7,2.45
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Paderborn,SC Freiburg,2026-09-05T13:30:00Z,unibet_nl,2.85,3.7,2.45
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Paderborn,SC Freiburg,2026-09-05T13:30:00Z,pmu_fr,2.7,3.45,2.35
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Paderborn,SC Freiburg,2026-09-05T13:30:00Z,leovegas_se,2.7,3.45,2.33
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Paderborn,SC Freiburg,2026-09-05T13:30:00Z,gtbets,2.83,3.52,2.42
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,SC Paderborn,SC Freiburg,2026-09-05T13:30:00Z,everygame,2.75,3.35,2.35
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,FC Schalke 04,Bayern Munich,2026-09-05T16:30:00Z,winamax_fr,7.0,5.5,1.2
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,FC Schalke 04,Bayern Munich,2026-09-05T16:30:00Z,betclic_fr,8.75,6.25,1.26
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,FC Schalke 04,Bayern Munich,2026-09-05T16:30:00Z,tipico_de,11.0,6.8,1.22
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,FC Schalke 04,Bayern Munich,2026-09-05T16:30:00Z,unibet_fr,7.4,5.8,1.26
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,FC Schalke 04,Bayern Munich,2026-09-05T16:30:00Z,winamax_de,7.25,5.8,1.21
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,FC Schalke 04,Bayern Munich,2026-09-05T16:30:00Z,onexbet,9.85,6.35,1.32
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,FC Schalke 04,Bayern Munich,2026-09-05T16:30:00Z,sport888,8.5,5.5,1.29
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,FC Schalke 04,Bayern Munich,2026-09-05T16:30:00Z,williamhill,8.5,5.8,1.29
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,FC Schalke 04,Bayern Munich,2026-09-05T16:30:00Z,betfair_ex_eu,11.5,7.6,1.26
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,FC Schalke 04,Bayern Munich,2026-09-05T16:30:00Z,marathonbet,9.7,6.25,1.3
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,FC Schalke 04,Bayern Munich,2026-09-05T16:30:00Z,betsson,10.5,5.7,1.27
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,FC Schalke 04,Bayern Munich,2026-09-05T16:30:00Z,nordicbet,10.5,5.7,1.27
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,FC Schalke 04,Bayern Munich,2026-09-05T16:30:00Z,suprabets,7.7,5.7,1.28
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,FC Schalke 04,Bayern Munich,2026-09-05T16:30:00Z,pmu_fr,9.5,6.0,1.24
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,FC Schalke 04,Bayern Munich,2026-09-05T16:30:00Z,unibet_se,11.0,6.75,1.27
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,FC Schalke 04,Bayern Munich,2026-09-05T16:30:00Z,leovegas_se,9.5,6.0,1.23
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,FC Schalke 04,Bayern Munich,2026-09-05T16:30:00Z,unibet_nl,10.5,6.5,1.26
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,FC Schalke 04,Bayern Munich,2026-09-05T16:30:00Z,gtbets,8.45,6.18,1.3
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,FC Schalke 04,Bayern Munich,2026-09-05T16:30:00Z,everygame,7.5,5.75,1.28
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Hamburger SV,FSV Mainz 05,2026-09-06T13:30:00Z,betclic_fr,2.45,3.55,2.63
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Hamburger SV,FSV Mainz 05,2026-09-06T13:30:00Z,unibet_fr,2.35,3.4,2.5
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Hamburger SV,FSV Mainz 05,2026-09-06T13:30:00Z,winamax_fr,2.3,3.3,2.35
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Hamburger SV,FSV Mainz 05,2026-09-06T13:30:00Z,coolbet,2.65,3.75,2.6
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Hamburger SV,FSV Mainz 05,2026-09-06T13:30:00Z,tipico_de,2.5,3.6,2.65
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Hamburger SV,FSV Mainz 05,2026-09-06T13:30:00Z,winamax_de,2.35,3.35,2.4
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Hamburger SV,FSV Mainz 05,2026-09-06T13:30:00Z,onexbet,2.64,3.7,2.73
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Hamburger SV,FSV Mainz 05,2026-09-06T13:30:00Z,sport888,2.5,3.4,2.5
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Hamburger SV,FSV Mainz 05,2026-09-06T13:30:00Z,williamhill,2.5,3.4,2.6
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Hamburger SV,FSV Mainz 05,2026-09-06T13:30:00Z,marathonbet,2.6,3.64,2.68
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Hamburger SV,FSV Mainz 05,2026-09-06T13:30:00Z,betfair_ex_eu,2.44,1.55,1.4
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Hamburger SV,FSV Mainz 05,2026-09-06T13:30:00Z,betsson,2.52,3.45,2.65
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Hamburger SV,FSV Mainz 05,2026-09-06T13:30:00Z,nordicbet,2.52,3.45,2.65
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Hamburger SV,FSV Mainz 05,2026-09-06T13:30:00Z,suprabets,2.47,3.41,2.55
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Hamburger SV,FSV Mainz 05,2026-09-06T13:30:00Z,unibet_se,2.6,3.7,2.7
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Hamburger SV,FSV Mainz 05,2026-09-06T13:30:00Z,leovegas_se,2.48,3.45,2.55
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Hamburger SV,FSV Mainz 05,2026-09-06T13:30:00Z,unibet_nl,2.6,3.65,2.65
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Hamburger SV,FSV Mainz 05,2026-09-06T13:30:00Z,pmu_fr,2.48,3.45,2.55
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Hamburger SV,FSV Mainz 05,2026-09-06T13:30:00Z,everygame,2.45,3.4,2.55
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Eintracht Frankfurt,Augsburg,2026-09-06T15:30:00Z,tipico_de,1.9,4.0,3.6
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Eintracht Frankfurt,Augsburg,2026-09-06T15:30:00Z,unibet_fr,1.83,3.7,3.3
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Eintracht Frankfurt,Augsburg,2026-09-06T15:30:00Z,winamax_de,1.84,3.7,3.1
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Eintracht Frankfurt,Augsburg,2026-09-06T15:30:00Z,winamax_fr,1.82,3.65,3.05
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Eintracht Frankfurt,Augsburg,2026-09-06T15:30:00Z,onexbet,2.01,4.17,3.6
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Eintracht Frankfurt,Augsburg,2026-09-06T15:30:00Z,betclic_fr,1.9,3.93,3.45
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Eintracht Frankfurt,Augsburg,2026-09-06T15:30:00Z,sport888,1.95,3.8,3.3
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Eintracht Frankfurt,Augsburg,2026-09-06T15:30:00Z,williamhill,1.95,3.9,3.3
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Eintracht Frankfurt,Augsburg,2026-09-06T15:30:00Z,betfair_ex_eu,1.31,1.09,1.44
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Eintracht Frankfurt,Augsburg,2026-09-06T15:30:00Z,marathonbet,1.98,4.1,3.54
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Eintracht Frankfurt,Augsburg,2026-09-06T15:30:00Z,betsson,1.98,3.6,3.55
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Eintracht Frankfurt,Augsburg,2026-09-06T15:30:00Z,nordicbet,1.98,3.6,3.55
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Eintracht Frankfurt,Augsburg,2026-09-06T15:30:00Z,suprabets,1.88,3.79,3.41
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Eintracht Frankfurt,Augsburg,2026-09-06T15:30:00Z,pmu_fr,1.88,3.8,3.45
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Eintracht Frankfurt,Augsburg,2026-09-06T15:30:00Z,unibet_se,1.94,4.1,3.7
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Eintracht Frankfurt,Augsburg,2026-09-06T15:30:00Z,unibet_nl,1.93,4.0,3.65
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Eintracht Frankfurt,Augsburg,2026-09-06T15:30:00Z,leovegas_se,1.87,3.8,3.45
+2026-08-30T10:25:54Z,soccer_germany_bundesliga,Bundesliga,Eintracht Frankfurt,Augsburg,2026-09-06T15:30:00Z,everygame,1.9,3.75,3.4
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Paris FC,Nice,2026-08-30T13:00:00Z,winamax_de,2.0,3.4,3.55
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Paris FC,Nice,2026-08-30T13:00:00Z,winamax_fr,2.0,3.4,3.55
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Paris FC,Nice,2026-08-30T13:00:00Z,unibet_fr,1.98,3.4,3.8
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Paris FC,Nice,2026-08-30T13:00:00Z,tipico_de,1.97,3.4,3.7
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Paris FC,Nice,2026-08-30T13:00:00Z,onexbet,2.12,3.5,3.86
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Paris FC,Nice,2026-08-30T13:00:00Z,betclic_fr,2.05,3.4,3.7
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Paris FC,Nice,2026-08-30T13:00:00Z,betfair_ex_eu,2.14,3.5,3.95
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Paris FC,Nice,2026-08-30T13:00:00Z,sport888,2.05,3.2,3.5
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Paris FC,Nice,2026-08-30T13:00:00Z,williamhill,2.05,3.25,3.6
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Paris FC,Nice,2026-08-30T13:00:00Z,everygame,2.05,3.35,3.75
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Paris FC,Nice,2026-08-30T13:00:00Z,suprabets,2.05,3.33,3.74
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Paris FC,Nice,2026-08-30T13:00:00Z,pinnacle,2.1,3.42,3.84
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Paris FC,Nice,2026-08-30T13:00:00Z,marathonbet,2.09,3.45,3.8
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Paris FC,Nice,2026-08-30T13:00:00Z,coolbet,2.1,3.38,3.84
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Paris FC,Nice,2026-08-30T13:00:00Z,unibet_nl,2.06,3.4,3.7
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Paris FC,Nice,2026-08-30T13:00:00Z,pmu_fr,2.04,3.35,3.6
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Paris FC,Nice,2026-08-30T13:00:00Z,unibet_se,2.1,3.5,3.8
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Paris FC,Nice,2026-08-30T13:00:00Z,leovegas_se,2.1,3.5,3.8
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Paris FC,Nice,2026-08-30T13:00:00Z,gtbets,2.1,3.38,3.61
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Paris FC,Nice,2026-08-30T13:00:00Z,nordicbet,2.08,3.3,3.7
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Paris FC,Nice,2026-08-30T13:00:00Z,betsson,2.08,3.3,3.7
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Paris FC,Nice,2026-08-30T13:00:00Z,betonlineag,2.06,3.41,3.89
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Paris FC,Nice,2026-08-30T13:00:00Z,codere_it,2.07,3.35,3.7
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Rennes,Le Mans FC,2026-08-30T15:15:00Z,tipico_de,1.37,5.2,6.7
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Rennes,Le Mans FC,2026-08-30T15:15:00Z,onexbet,1.46,5.08,7.41
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Rennes,Le Mans FC,2026-08-30T15:15:00Z,unibet_fr,1.4,5.0,6.8
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Rennes,Le Mans FC,2026-08-30T15:15:00Z,betfair_ex_eu,1.46,5.2,8.0
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Rennes,Le Mans FC,2026-08-30T15:15:00Z,winamax_fr,1.41,5.0,6.25
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Rennes,Le Mans FC,2026-08-30T15:15:00Z,winamax_de,1.41,5.0,6.25
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Rennes,Le Mans FC,2026-08-30T15:15:00Z,sport888,1.4,4.6,6.5
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Rennes,Le Mans FC,2026-08-30T15:15:00Z,williamhill,1.4,4.6,6.5
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Rennes,Le Mans FC,2026-08-30T15:15:00Z,suprabets,1.42,4.9,6.8
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Rennes,Le Mans FC,2026-08-30T15:15:00Z,pinnacle,1.44,5.07,7.11
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Rennes,Le Mans FC,2026-08-30T15:15:00Z,marathonbet,1.44,5.0,7.3
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Rennes,Le Mans FC,2026-08-30T15:15:00Z,coolbet,1.44,5.0,7.25
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Rennes,Le Mans FC,2026-08-30T15:15:00Z,unibet_nl,1.43,4.9,6.75
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Rennes,Le Mans FC,2026-08-30T15:15:00Z,leovegas_se,1.44,5.1,7.0
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Rennes,Le Mans FC,2026-08-30T15:15:00Z,unibet_se,1.44,5.1,7.0
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Rennes,Le Mans FC,2026-08-30T15:15:00Z,pmu_fr,1.42,4.8,6.75
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Rennes,Le Mans FC,2026-08-30T15:15:00Z,gtbets,1.45,4.74,6.76
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Rennes,Le Mans FC,2026-08-30T15:15:00Z,everygame,1.4,5.0,6.75
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Rennes,Le Mans FC,2026-08-30T15:15:00Z,betsson,1.43,4.55,7.3
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Rennes,Le Mans FC,2026-08-30T15:15:00Z,nordicbet,1.43,4.55,7.3
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Rennes,Le Mans FC,2026-08-30T15:15:00Z,betonlineag,1.43,5.05,7.12
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Rennes,Le Mans FC,2026-08-30T15:15:00Z,betclic_fr,1.42,5.0,6.75
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,Rennes,Le Mans FC,2026-08-30T15:15:00Z,codere_it,1.43,5.0,6.6
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,AS Monaco,Marseille,2026-08-30T18:45:00Z,codere_it,2.25,3.6,3.05
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,AS Monaco,Marseille,2026-08-30T18:45:00Z,unibet_fr,2.25,3.65,3.05
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,AS Monaco,Marseille,2026-08-30T18:45:00Z,coolbet,2.28,3.65,3.23
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,AS Monaco,Marseille,2026-08-30T18:45:00Z,betclic_fr,2.23,3.65,3.05
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,AS Monaco,Marseille,2026-08-30T18:45:00Z,betfair_ex_eu,2.3,3.75,3.25
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,AS Monaco,Marseille,2026-08-30T18:45:00Z,tipico_de,2.15,3.5,3.1
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,AS Monaco,Marseille,2026-08-30T18:45:00Z,sport888,2.2,3.4,2.9
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,AS Monaco,Marseille,2026-08-30T18:45:00Z,winamax_fr,2.15,3.65,2.9
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,AS Monaco,Marseille,2026-08-30T18:45:00Z,winamax_de,2.2,3.7,2.95
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,AS Monaco,Marseille,2026-08-30T18:45:00Z,williamhill,2.2,3.4,3.0
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,AS Monaco,Marseille,2026-08-30T18:45:00Z,onexbet,2.29,3.72,3.23
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,AS Monaco,Marseille,2026-08-30T18:45:00Z,suprabets,2.19,3.58,3.13
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,AS Monaco,Marseille,2026-08-30T18:45:00Z,pinnacle,2.25,3.65,3.23
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,AS Monaco,Marseille,2026-08-30T18:45:00Z,marathonbet,2.25,3.66,3.18
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,AS Monaco,Marseille,2026-08-30T18:45:00Z,pmu_fr,2.28,3.5,2.88
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,AS Monaco,Marseille,2026-08-30T18:45:00Z,unibet_se,2.35,3.7,3.0
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,AS Monaco,Marseille,2026-08-30T18:45:00Z,leovegas_se,2.35,3.7,3.0
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,AS Monaco,Marseille,2026-08-30T18:45:00Z,unibet_nl,2.32,3.6,2.95
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,AS Monaco,Marseille,2026-08-30T18:45:00Z,gtbets,2.26,3.72,3.07
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,AS Monaco,Marseille,2026-08-30T18:45:00Z,everygame,2.2,3.6,3.15
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,AS Monaco,Marseille,2026-08-30T18:45:00Z,betsson,2.22,3.45,3.15
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,AS Monaco,Marseille,2026-08-30T18:45:00Z,nordicbet,2.22,3.45,3.15
+2026-08-30T10:25:54Z,soccer_france_ligue_one,Ligue 1,AS Monaco,Marseille,2026-08-30T18:45:00Z,betonlineag,2.23,3.66,3.18
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Lincoln City,Blackburn Rovers,2026-09-01T18:45:00Z,winamax_fr,2.1,3.25,2.75
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Lincoln City,Blackburn Rovers,2026-09-01T18:45:00Z,codere_it,2.28,3.5,3.05
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Lincoln City,Blackburn Rovers,2026-09-01T18:45:00Z,coolbet,2.25,3.5,3.1
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Lincoln City,Blackburn Rovers,2026-09-01T18:45:00Z,onexbet,2.25,3.4,3.04
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Lincoln City,Blackburn Rovers,2026-09-01T18:45:00Z,winamax_de,2.15,3.4,2.85
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Lincoln City,Blackburn Rovers,2026-09-01T18:45:00Z,unibet_fr,2.1,3.25,2.85
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Lincoln City,Blackburn Rovers,2026-09-01T18:45:00Z,betclic_fr,2.08,3.22,2.85
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Lincoln City,Blackburn Rovers,2026-09-01T18:45:00Z,betfair_ex_eu,2.38,3.55,3.15
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Lincoln City,Blackburn Rovers,2026-09-01T18:45:00Z,gtbets,2.28,3.56,2.9
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Lincoln City,Blackburn Rovers,2026-09-01T18:45:00Z,marathonbet,2.23,3.4,3.04
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Lincoln City,Blackburn Rovers,2026-09-01T18:45:00Z,sport888,2.25,3.25,3.0
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Lincoln City,Blackburn Rovers,2026-09-01T18:45:00Z,williamhill,2.25,3.25,3.0
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Lincoln City,Blackburn Rovers,2026-09-01T18:45:00Z,matchbook,2.42,3.6,3.15
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Lincoln City,Blackburn Rovers,2026-09-01T18:45:00Z,pinnacle,2.28,3.45,3.11
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Lincoln City,Blackburn Rovers,2026-09-01T18:45:00Z,tipico_de,2.2,3.4,2.95
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Lincoln City,Blackburn Rovers,2026-09-01T18:45:00Z,betonlineag,2.28,3.46,3.11
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Lincoln City,Blackburn Rovers,2026-09-01T18:45:00Z,nordicbet,2.23,3.4,3.17
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Lincoln City,Blackburn Rovers,2026-09-01T18:45:00Z,betsson,2.23,3.4,3.17
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Lincoln City,Blackburn Rovers,2026-09-01T18:45:00Z,pmu_fr,2.25,3.25,2.85
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Lincoln City,Blackburn Rovers,2026-09-01T18:45:00Z,unibet_se,2.3,3.35,2.95
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Lincoln City,Blackburn Rovers,2026-09-01T18:45:00Z,unibet_nl,2.3,3.35,2.95
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Lincoln City,Blackburn Rovers,2026-09-01T18:45:00Z,leovegas_se,2.38,3.45,3.05
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Bolton Wanderers,2026-09-01T18:45:00Z,winamax_de,1.62,3.75,4.4
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Bolton Wanderers,2026-09-01T18:45:00Z,unibet_fr,1.6,3.55,4.4
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Bolton Wanderers,2026-09-01T18:45:00Z,codere_it,1.7,3.9,4.9
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Bolton Wanderers,2026-09-01T18:45:00Z,winamax_fr,1.58,3.6,4.2
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Bolton Wanderers,2026-09-01T18:45:00Z,coolbet,1.72,3.85,4.75
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Bolton Wanderers,2026-09-01T18:45:00Z,betclic_fr,1.59,3.58,4.35
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Bolton Wanderers,2026-09-01T18:45:00Z,betfair_ex_eu,1.71,4.1,5.1
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Bolton Wanderers,2026-09-01T18:45:00Z,onexbet,1.68,3.84,4.74
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Bolton Wanderers,2026-09-01T18:45:00Z,gtbets,1.65,3.89,4.88
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Bolton Wanderers,2026-09-01T18:45:00Z,marathonbet,1.66,3.84,4.8
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Bolton Wanderers,2026-09-01T18:45:00Z,sport888,1.67,3.75,4.6
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Bolton Wanderers,2026-09-01T18:45:00Z,williamhill,1.67,3.75,4.6
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Bolton Wanderers,2026-09-01T18:45:00Z,matchbook,1.71,4.1,5.1
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Bolton Wanderers,2026-09-01T18:45:00Z,pinnacle,1.67,3.98,4.91
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Bolton Wanderers,2026-09-01T18:45:00Z,tipico_de,1.6,3.9,4.8
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Bolton Wanderers,2026-09-01T18:45:00Z,betonlineag,1.67,4.03,4.95
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Bolton Wanderers,2026-09-01T18:45:00Z,nordicbet,1.69,3.83,4.87
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Bolton Wanderers,2026-09-01T18:45:00Z,betsson,1.69,3.83,4.87
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Bolton Wanderers,2026-09-01T18:45:00Z,leovegas_se,1.71,3.95,5.0
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Bolton Wanderers,2026-09-01T18:45:00Z,pmu_fr,1.64,3.65,4.5
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Bolton Wanderers,2026-09-01T18:45:00Z,unibet_nl,1.67,3.8,4.75
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Bolton Wanderers,2026-09-01T18:45:00Z,unibet_se,1.67,3.8,4.75
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Preston North End,Bristol City,2026-09-01T18:45:00Z,unibet_fr,2.4,3.15,2.55
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Preston North End,Bristol City,2026-09-01T18:45:00Z,winamax_fr,2.3,3.1,2.4
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Preston North End,Bristol City,2026-09-01T18:45:00Z,winamax_de,2.4,3.3,2.55
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Preston North End,Bristol City,2026-09-01T18:45:00Z,onexbet,2.49,3.25,2.75
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Preston North End,Bristol City,2026-09-01T18:45:00Z,coolbet,2.55,3.5,2.7
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Preston North End,Bristol City,2026-09-01T18:45:00Z,codere_it,2.6,3.4,2.7
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Preston North End,Bristol City,2026-09-01T18:45:00Z,betclic_fr,2.38,3.05,2.53
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Preston North End,Bristol City,2026-09-01T18:45:00Z,betfair_ex_eu,2.56,3.45,2.8
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Preston North End,Bristol City,2026-09-01T18:45:00Z,gtbets,2.6,3.42,2.74
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Preston North End,Bristol City,2026-09-01T18:45:00Z,marathonbet,2.49,3.25,2.75
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Preston North End,Bristol City,2026-09-01T18:45:00Z,sport888,2.5,3.2,2.7
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Preston North End,Bristol City,2026-09-01T18:45:00Z,williamhill,2.5,3.2,2.7
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Preston North End,Bristol City,2026-09-01T18:45:00Z,pinnacle,2.54,3.35,2.8
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Preston North End,Bristol City,2026-09-01T18:45:00Z,tipico_de,2.55,3.0,2.75
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Preston North End,Bristol City,2026-09-01T18:45:00Z,matchbook,2.58,3.5,2.82
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Preston North End,Bristol City,2026-09-01T18:45:00Z,betonlineag,2.56,3.36,2.77
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Preston North End,Bristol City,2026-09-01T18:45:00Z,nordicbet,2.51,3.29,2.81
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Preston North End,Bristol City,2026-09-01T18:45:00Z,betsson,2.51,3.29,2.81
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Preston North End,Bristol City,2026-09-01T18:45:00Z,leovegas_se,2.55,3.4,2.85
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Preston North End,Bristol City,2026-09-01T18:45:00Z,pmu_fr,2.4,3.2,2.65
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Preston North End,Bristol City,2026-09-01T18:45:00Z,unibet_se,2.48,3.3,2.75
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Preston North End,Bristol City,2026-09-01T18:45:00Z,unibet_nl,2.48,3.3,2.75
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Derby County,2026-09-01T18:45:00Z,winamax_fr,2.1,3.15,2.8
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Derby County,2026-09-01T18:45:00Z,codere_it,2.3,3.35,3.15
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Derby County,2026-09-01T18:45:00Z,coolbet,2.3,3.4,3.15
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Derby County,2026-09-01T18:45:00Z,onexbet,2.21,3.28,3.23
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Derby County,2026-09-01T18:45:00Z,winamax_de,2.15,3.25,2.95
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Derby County,2026-09-01T18:45:00Z,unibet_fr,2.15,3.1,2.95
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Derby County,2026-09-01T18:45:00Z,betclic_fr,2.1,3.1,2.93
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Derby County,2026-09-01T18:45:00Z,betfair_ex_eu,2.42,3.3,3.25
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Derby County,2026-09-01T18:45:00Z,gtbets,2.23,3.32,3.21
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Derby County,2026-09-01T18:45:00Z,marathonbet,2.19,3.28,3.22
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Derby County,2026-09-01T18:45:00Z,sport888,2.2,3.25,3.1
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Derby County,2026-09-01T18:45:00Z,williamhill,2.2,3.25,3.1
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Derby County,2026-09-01T18:45:00Z,matchbook,2.4,3.35,3.25
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Derby County,2026-09-01T18:45:00Z,pinnacle,2.26,3.35,3.24
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Derby County,2026-09-01T18:45:00Z,tipico_de,2.2,3.2,3.1
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Derby County,2026-09-01T18:45:00Z,betonlineag,2.25,3.41,3.2
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Derby County,2026-09-01T18:45:00Z,nordicbet,2.27,3.29,3.2
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Derby County,2026-09-01T18:45:00Z,betsson,2.27,3.29,3.2
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Derby County,2026-09-01T18:45:00Z,unibet_nl,2.12,3.3,3.35
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Derby County,2026-09-01T18:45:00Z,unibet_se,2.12,3.3,3.35
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Derby County,2026-09-01T18:45:00Z,leovegas_se,2.18,3.4,3.45
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Derby County,2026-09-01T18:45:00Z,pmu_fr,2.08,3.2,3.25
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Watford,2026-09-01T18:45:00Z,unibet_fr,1.79,3.35,3.6
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Watford,2026-09-01T18:45:00Z,codere_it,1.92,3.65,3.9
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Watford,2026-09-01T18:45:00Z,winamax_fr,1.78,3.4,3.45
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Watford,2026-09-01T18:45:00Z,coolbet,1.9,3.6,4.0
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Watford,2026-09-01T18:45:00Z,betclic_fr,1.78,3.35,3.6
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Watford,2026-09-01T18:45:00Z,betfair_ex_eu,1.95,3.8,4.2
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Watford,2026-09-01T18:45:00Z,onexbet,1.89,3.58,3.87
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Watford,2026-09-01T18:45:00Z,gtbets,1.92,3.51,3.8
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Watford,2026-09-01T18:45:00Z,marathonbet,1.87,3.58,3.88
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Watford,2026-09-01T18:45:00Z,sport888,1.91,3.5,3.75
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Watford,2026-09-01T18:45:00Z,williamhill,1.91,3.5,3.75
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Watford,2026-09-01T18:45:00Z,matchbook,1.95,3.8,4.2
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Watford,2026-09-01T18:45:00Z,pinnacle,1.88,3.71,3.95
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Watford,2026-09-01T18:45:00Z,tipico_de,1.77,3.6,4.1
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Watford,2026-09-01T18:45:00Z,betonlineag,1.88,3.74,3.97
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Watford,2026-09-01T18:45:00Z,nordicbet,1.9,3.48,4.12
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Watford,2026-09-01T18:45:00Z,betsson,1.9,3.48,4.12
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Watford,2026-09-01T18:45:00Z,leovegas_se,1.88,3.75,4.2
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Watford,2026-09-01T18:45:00Z,unibet_se,1.83,3.6,4.0
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Watford,2026-09-01T18:45:00Z,pmu_fr,1.79,3.5,3.9
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Watford,2026-09-01T18:45:00Z,unibet_nl,1.83,3.6,4.0
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Wolverhampton Wanderers,2026-09-01T18:45:00Z,unibet_fr,1.89,3.3,3.35
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Wolverhampton Wanderers,2026-09-01T18:45:00Z,winamax_fr,1.88,3.3,3.2
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Wolverhampton Wanderers,2026-09-01T18:45:00Z,winamax_de,1.94,3.45,3.3
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Wolverhampton Wanderers,2026-09-01T18:45:00Z,onexbet,1.96,3.55,3.63
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Wolverhampton Wanderers,2026-09-01T18:45:00Z,coolbet,2.0,3.6,3.6
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Wolverhampton Wanderers,2026-09-01T18:45:00Z,codere_it,2.03,3.55,3.6
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Wolverhampton Wanderers,2026-09-01T18:45:00Z,betclic_fr,1.85,3.3,3.35
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Wolverhampton Wanderers,2026-09-01T18:45:00Z,betfair_ex_eu,2.04,3.7,3.85
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Wolverhampton Wanderers,2026-09-01T18:45:00Z,gtbets,1.94,3.55,3.76
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Wolverhampton Wanderers,2026-09-01T18:45:00Z,marathonbet,1.94,3.55,3.64
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Wolverhampton Wanderers,2026-09-01T18:45:00Z,sport888,2.0,3.4,3.6
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Wolverhampton Wanderers,2026-09-01T18:45:00Z,williamhill,2.0,3.4,3.6
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Wolverhampton Wanderers,2026-09-01T18:45:00Z,pinnacle,1.97,3.66,3.68
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Wolverhampton Wanderers,2026-09-01T18:45:00Z,matchbook,2.04,3.75,3.9
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Wolverhampton Wanderers,2026-09-01T18:45:00Z,tipico_de,1.9,3.5,3.6
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Wolverhampton Wanderers,2026-09-01T18:45:00Z,betonlineag,1.97,3.66,3.7
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Wolverhampton Wanderers,2026-09-01T18:45:00Z,nordicbet,1.99,3.51,3.72
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Wolverhampton Wanderers,2026-09-01T18:45:00Z,betsson,1.99,3.51,3.72
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Wolverhampton Wanderers,2026-09-01T18:45:00Z,unibet_nl,2.0,3.5,3.5
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Wolverhampton Wanderers,2026-09-01T18:45:00Z,leovegas_se,2.06,3.65,3.6
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Wolverhampton Wanderers,2026-09-01T18:45:00Z,pmu_fr,1.94,3.4,3.35
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Wolverhampton Wanderers,2026-09-01T18:45:00Z,unibet_se,2.0,3.5,3.5
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Southampton,2026-09-01T19:00:00Z,winamax_fr,2.25,3.2,2.55
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Southampton,2026-09-01T19:00:00Z,winamax_de,2.3,3.3,2.65
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Southampton,2026-09-01T19:00:00Z,unibet_fr,2.3,3.15,2.65
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Southampton,2026-09-01T19:00:00Z,betclic_fr,2.25,3.15,2.65
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Southampton,2026-09-01T19:00:00Z,coolbet,2.42,3.35,2.9
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Southampton,2026-09-01T19:00:00Z,codere_it,2.47,3.4,2.85
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Southampton,2026-09-01T19:00:00Z,betfair_ex_eu,2.58,3.5,2.86
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Southampton,2026-09-01T19:00:00Z,onexbet,2.45,3.26,2.8
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Southampton,2026-09-01T19:00:00Z,gtbets,2.37,3.4,2.9
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Southampton,2026-09-01T19:00:00Z,marathonbet,2.45,3.26,2.8
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Southampton,2026-09-01T19:00:00Z,sport888,2.4,3.2,2.8
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Southampton,2026-09-01T19:00:00Z,williamhill,2.4,3.2,2.8
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Southampton,2026-09-01T19:00:00Z,pinnacle,2.49,3.36,2.85
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Southampton,2026-09-01T19:00:00Z,tipico_de,2.5,3.4,2.55
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Southampton,2026-09-01T19:00:00Z,matchbook,2.6,3.6,2.86
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Southampton,2026-09-01T19:00:00Z,betonlineag,2.49,3.36,2.85
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Southampton,2026-09-01T19:00:00Z,nordicbet,2.51,3.38,2.75
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Southampton,2026-09-01T19:00:00Z,betsson,2.51,3.38,2.75
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Southampton,2026-09-01T19:00:00Z,leovegas_se,2.45,3.55,2.85
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Southampton,2026-09-01T19:00:00Z,unibet_se,2.38,3.45,2.75
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Southampton,2026-09-01T19:00:00Z,pmu_fr,2.33,3.3,2.7
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Southampton,2026-09-01T19:00:00Z,unibet_nl,2.38,3.45,2.75
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Stoke City,Norwich City,2026-09-01T19:00:00Z,winamax_de,2.75,3.4,2.2
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Stoke City,Norwich City,2026-09-01T19:00:00Z,unibet_fr,2.8,3.25,2.15
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Stoke City,Norwich City,2026-09-01T19:00:00Z,betclic_fr,2.77,3.25,2.13
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Stoke City,Norwich City,2026-09-01T19:00:00Z,coolbet,2.9,3.6,2.35
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Stoke City,Norwich City,2026-09-01T19:00:00Z,codere_it,3.0,3.5,2.32
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Stoke City,Norwich City,2026-09-01T19:00:00Z,betfair_ex_eu,3.05,3.65,2.4
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Stoke City,Norwich City,2026-09-01T19:00:00Z,winamax_fr,2.65,3.3,2.1
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Stoke City,Norwich City,2026-09-01T19:00:00Z,onexbet,2.97,3.4,2.29
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Stoke City,Norwich City,2026-09-01T19:00:00Z,gtbets,2.97,3.41,2.3
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Stoke City,Norwich City,2026-09-01T19:00:00Z,marathonbet,2.96,3.4,2.27
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Stoke City,Norwich City,2026-09-01T19:00:00Z,sport888,2.9,3.3,2.3
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Stoke City,Norwich City,2026-09-01T19:00:00Z,williamhill,2.9,3.3,2.3
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Stoke City,Norwich City,2026-09-01T19:00:00Z,matchbook,3.05,3.7,2.42
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Stoke City,Norwich City,2026-09-01T19:00:00Z,pinnacle,3.03,3.48,2.31
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Stoke City,Norwich City,2026-09-01T19:00:00Z,tipico_de,2.95,3.2,2.3
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Stoke City,Norwich City,2026-09-01T19:00:00Z,betonlineag,3.03,3.48,2.31
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Stoke City,Norwich City,2026-09-01T19:00:00Z,nordicbet,3.07,3.41,2.28
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Stoke City,Norwich City,2026-09-01T19:00:00Z,betsson,3.07,3.41,2.28
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Stoke City,Norwich City,2026-09-01T19:00:00Z,leovegas_se,3.05,3.5,2.35
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Stoke City,Norwich City,2026-09-01T19:00:00Z,unibet_se,2.95,3.4,2.3
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Stoke City,Norwich City,2026-09-01T19:00:00Z,pmu_fr,2.85,3.25,2.23
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Stoke City,Norwich City,2026-09-01T19:00:00Z,unibet_nl,2.95,3.4,2.3
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Queens Park Rangers,Cardiff City,2026-09-02T18:45:00Z,unibet_fr,1.81,3.4,3.5
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Queens Park Rangers,Cardiff City,2026-09-02T18:45:00Z,winamax_fr,1.78,3.35,3.25
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Queens Park Rangers,Cardiff City,2026-09-02T18:45:00Z,winamax_de,1.84,3.6,3.5
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Queens Park Rangers,Cardiff City,2026-09-02T18:45:00Z,onexbet,1.92,3.72,3.59
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Queens Park Rangers,Cardiff City,2026-09-02T18:45:00Z,coolbet,1.92,3.75,3.85
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Queens Park Rangers,Cardiff City,2026-09-02T18:45:00Z,codere_it,1.94,3.7,3.8
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Queens Park Rangers,Cardiff City,2026-09-02T18:45:00Z,betfair_ex_eu,1.36,2.08,1.33
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Queens Park Rangers,Cardiff City,2026-09-02T18:45:00Z,gtbets,1.94,3.64,3.78
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Queens Park Rangers,Cardiff City,2026-09-02T18:45:00Z,marathonbet,1.9,3.72,3.6
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Queens Park Rangers,Cardiff City,2026-09-02T18:45:00Z,sport888,1.91,3.5,3.7
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Queens Park Rangers,Cardiff City,2026-09-02T18:45:00Z,williamhill,1.91,3.5,3.7
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Queens Park Rangers,Cardiff City,2026-09-02T18:45:00Z,tipico_de,1.8,3.6,3.9
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Queens Park Rangers,Cardiff City,2026-09-02T18:45:00Z,pinnacle,1.93,3.95,3.56
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Queens Park Rangers,Cardiff City,2026-09-02T18:45:00Z,betonlineag,1.93,3.95,3.6
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Queens Park Rangers,Cardiff City,2026-09-02T18:45:00Z,matchbook,1.9,3.7,3.9
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Queens Park Rangers,Cardiff City,2026-09-02T18:45:00Z,betclic_fr,1.83,3.45,3.28
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Queens Park Rangers,Cardiff City,2026-09-02T18:45:00Z,unibet_nl,2.04,3.45,3.45
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Queens Park Rangers,Cardiff City,2026-09-02T18:45:00Z,leovegas_se,2.08,3.55,3.6
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Queens Park Rangers,Cardiff City,2026-09-02T18:45:00Z,unibet_se,2.04,3.45,3.45
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Queens Park Rangers,Cardiff City,2026-09-02T18:45:00Z,pmu_fr,1.97,3.3,3.35
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Bromwich Albion,Charlton Athletic,2026-09-02T18:45:00Z,winamax_fr,1.62,3.3,4.0
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Bromwich Albion,Charlton Athletic,2026-09-02T18:45:00Z,winamax_de,1.68,3.55,4.3
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Bromwich Albion,Charlton Athletic,2026-09-02T18:45:00Z,onexbet,1.76,3.6,4.51
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Bromwich Albion,Charlton Athletic,2026-09-02T18:45:00Z,unibet_fr,1.65,3.35,4.4
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Bromwich Albion,Charlton Athletic,2026-09-02T18:45:00Z,betclic_fr,1.64,3.33,4.35
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Bromwich Albion,Charlton Athletic,2026-09-02T18:45:00Z,coolbet,1.78,3.6,4.75
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Bromwich Albion,Charlton Athletic,2026-09-02T18:45:00Z,codere_it,1.76,3.65,4.8
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Bromwich Albion,Charlton Athletic,2026-09-02T18:45:00Z,betfair_ex_eu,1.81,3.6,5.0
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Bromwich Albion,Charlton Athletic,2026-09-02T18:45:00Z,gtbets,1.74,3.59,4.61
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Bromwich Albion,Charlton Athletic,2026-09-02T18:45:00Z,marathonbet,1.74,3.6,4.55
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Bromwich Albion,Charlton Athletic,2026-09-02T18:45:00Z,sport888,1.75,3.5,4.6
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Bromwich Albion,Charlton Athletic,2026-09-02T18:45:00Z,williamhill,1.75,3.5,4.6
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Bromwich Albion,Charlton Athletic,2026-09-02T18:45:00Z,matchbook,1.8,3.7,4.9
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Bromwich Albion,Charlton Athletic,2026-09-02T18:45:00Z,pinnacle,1.76,3.75,4.55
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Bromwich Albion,Charlton Athletic,2026-09-02T18:45:00Z,tipico_de,1.75,3.5,4.3
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Bromwich Albion,Charlton Athletic,2026-09-02T18:45:00Z,betonlineag,1.74,3.83,4.65
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Bromwich Albion,Charlton Athletic,2026-09-02T18:45:00Z,unibet_nl,1.81,3.5,4.25
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Bromwich Albion,Charlton Athletic,2026-09-02T18:45:00Z,leovegas_se,1.85,3.6,4.4
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Bromwich Albion,Charlton Athletic,2026-09-02T18:45:00Z,pmu_fr,1.78,3.35,4.1
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Bromwich Albion,Charlton Athletic,2026-09-02T18:45:00Z,unibet_se,1.81,3.5,4.25
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Millwall,Wrexham AFC,2026-09-02T18:45:00Z,winamax_de,2.05,3.25,3.2
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Millwall,Wrexham AFC,2026-09-02T18:45:00Z,unibet_fr,2.0,3.15,3.2
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Millwall,Wrexham AFC,2026-09-02T18:45:00Z,codere_it,2.17,3.35,3.45
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Millwall,Wrexham AFC,2026-09-02T18:45:00Z,winamax_fr,1.96,3.05,3.0
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Millwall,Wrexham AFC,2026-09-02T18:45:00Z,coolbet,2.08,3.5,3.5
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Millwall,Wrexham AFC,2026-09-02T18:45:00Z,betclic_fr,2.23,2.88,2.65
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Millwall,Wrexham AFC,2026-09-02T18:45:00Z,betfair_ex_eu,2.16,3.45,3.55
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Millwall,Wrexham AFC,2026-09-02T18:45:00Z,onexbet,2.09,3.34,3.45
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Millwall,Wrexham AFC,2026-09-02T18:45:00Z,gtbets,2.09,3.49,3.49
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Millwall,Wrexham AFC,2026-09-02T18:45:00Z,marathonbet,2.07,3.34,3.45
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Millwall,Wrexham AFC,2026-09-02T18:45:00Z,sport888,2.1,3.2,3.4
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Millwall,Wrexham AFC,2026-09-02T18:45:00Z,williamhill,2.1,3.2,3.4
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Millwall,Wrexham AFC,2026-09-02T18:45:00Z,pinnacle,2.11,3.4,3.54
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Millwall,Wrexham AFC,2026-09-02T18:45:00Z,matchbook,2.16,3.5,3.55
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Millwall,Wrexham AFC,2026-09-02T18:45:00Z,tipico_de,2.0,3.3,3.5
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Millwall,Wrexham AFC,2026-09-02T18:45:00Z,betonlineag,2.12,3.42,3.5
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Millwall,Wrexham AFC,2026-09-02T18:45:00Z,nordicbet,2.12,3.38,3.44
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Millwall,Wrexham AFC,2026-09-02T18:45:00Z,betsson,2.12,3.38,3.44
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Millwall,Wrexham AFC,2026-09-02T18:45:00Z,unibet_nl,2.1,3.35,3.35
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Millwall,Wrexham AFC,2026-09-02T18:45:00Z,unibet_se,2.1,3.35,3.35
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Millwall,Wrexham AFC,2026-09-02T18:45:00Z,pmu_fr,2.06,3.2,3.25
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Millwall,Wrexham AFC,2026-09-02T18:45:00Z,leovegas_se,2.17,3.45,3.5
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Burnley,Middlesbrough,2026-09-02T19:00:00Z,winamax_fr,2.3,3.15,2.4
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Burnley,Middlesbrough,2026-09-02T19:00:00Z,winamax_de,2.4,3.35,2.5
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Burnley,Middlesbrough,2026-09-02T19:00:00Z,onexbet,2.51,3.42,2.62
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Burnley,Middlesbrough,2026-09-02T19:00:00Z,unibet_fr,2.4,3.2,2.5
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Burnley,Middlesbrough,2026-09-02T19:00:00Z,betclic_fr,2.33,3.2,2.5
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Burnley,Middlesbrough,2026-09-02T19:00:00Z,coolbet,2.65,3.5,2.6
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Burnley,Middlesbrough,2026-09-02T19:00:00Z,codere_it,2.55,3.45,2.7
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Burnley,Middlesbrough,2026-09-02T19:00:00Z,betfair_ex_eu,2.74,3.6,2.72
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Burnley,Middlesbrough,2026-09-02T19:00:00Z,gtbets,2.44,3.59,2.63
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Burnley,Middlesbrough,2026-09-02T19:00:00Z,marathonbet,2.51,3.42,2.62
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Burnley,Middlesbrough,2026-09-02T19:00:00Z,sport888,2.5,3.3,2.62
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Burnley,Middlesbrough,2026-09-02T19:00:00Z,williamhill,2.5,3.3,2.62
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Burnley,Middlesbrough,2026-09-02T19:00:00Z,matchbook,2.76,3.6,2.72
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Burnley,Middlesbrough,2026-09-02T19:00:00Z,pinnacle,2.54,3.55,2.67
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Burnley,Middlesbrough,2026-09-02T19:00:00Z,tipico_de,2.65,3.3,2.45
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Burnley,Middlesbrough,2026-09-02T19:00:00Z,betonlineag,2.57,3.52,2.65
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Burnley,Middlesbrough,2026-09-02T19:00:00Z,leovegas_se,2.63,3.4,2.75
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Burnley,Middlesbrough,2026-09-02T19:00:00Z,pmu_fr,2.48,3.15,2.6
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Burnley,Middlesbrough,2026-09-02T19:00:00Z,unibet_se,2.55,3.3,2.65
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Burnley,Middlesbrough,2026-09-02T19:00:00Z,unibet_nl,2.55,3.3,2.65
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Preston North End,Blackburn Rovers,2026-09-05T11:30:00Z,unibet_fr,2.45,3.0,2.5
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Preston North End,Blackburn Rovers,2026-09-05T11:30:00Z,coolbet,2.6,3.4,2.7
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Preston North End,Blackburn Rovers,2026-09-05T11:30:00Z,winamax_fr,2.35,3.0,2.4
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Preston North End,Blackburn Rovers,2026-09-05T11:30:00Z,winamax_de,2.5,3.2,2.55
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Preston North End,Blackburn Rovers,2026-09-05T11:30:00Z,betclic_fr,2.42,3.03,2.53
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Preston North End,Blackburn Rovers,2026-09-05T11:30:00Z,onexbet,2.58,3.25,2.65
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Preston North End,Blackburn Rovers,2026-09-05T11:30:00Z,marathonbet,2.58,3.25,2.65
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Preston North End,Blackburn Rovers,2026-09-05T11:30:00Z,sport888,2.6,3.1,2.7
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Preston North End,Blackburn Rovers,2026-09-05T11:30:00Z,williamhill,2.6,3.1,2.7
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Preston North End,Blackburn Rovers,2026-09-05T11:30:00Z,gtbets,2.6,3.28,2.7
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Stoke City,Charlton Athletic,2026-09-05T11:30:00Z,unibet_fr,1.98,2.95,3.25
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Stoke City,Charlton Athletic,2026-09-05T11:30:00Z,coolbet,2.15,3.3,3.5
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Stoke City,Charlton Athletic,2026-09-05T11:30:00Z,winamax_fr,1.94,2.95,3.1
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Stoke City,Charlton Athletic,2026-09-05T11:30:00Z,winamax_de,2.0,3.2,3.3
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Stoke City,Charlton Athletic,2026-09-05T11:30:00Z,betclic_fr,1.97,3.03,3.3
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Stoke City,Charlton Athletic,2026-09-05T11:30:00Z,onexbet,2.16,3.18,3.44
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Stoke City,Charlton Athletic,2026-09-05T11:30:00Z,marathonbet,2.14,3.18,3.44
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Stoke City,Charlton Athletic,2026-09-05T11:30:00Z,sport888,2.15,3.0,3.5
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Stoke City,Charlton Athletic,2026-09-05T11:30:00Z,williamhill,2.15,3.0,3.5
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Stoke City,Charlton Athletic,2026-09-05T11:30:00Z,gtbets,2.16,3.21,3.5
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Lincoln City,Southampton,2026-09-05T11:30:00Z,winamax_fr,3.75,3.4,1.62
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Lincoln City,Southampton,2026-09-05T11:30:00Z,winamax_de,4.0,3.7,1.7
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Lincoln City,Southampton,2026-09-05T11:30:00Z,unibet_fr,3.95,3.4,1.66
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Lincoln City,Southampton,2026-09-05T11:30:00Z,coolbet,4.4,3.85,1.78
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Lincoln City,Southampton,2026-09-05T11:30:00Z,betclic_fr,4.05,3.5,1.65
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Lincoln City,Southampton,2026-09-05T11:30:00Z,onexbet,4.27,3.65,1.79
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Lincoln City,Southampton,2026-09-05T11:30:00Z,marathonbet,4.3,3.65,1.77
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Lincoln City,Southampton,2026-09-05T11:30:00Z,sport888,4.2,3.5,1.8
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Lincoln City,Southampton,2026-09-05T11:30:00Z,williamhill,4.2,3.5,1.8
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Lincoln City,Southampton,2026-09-05T11:30:00Z,gtbets,4.3,3.69,1.79
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Millwall,Bolton Wanderers,2026-09-05T14:00:00Z,winamax_fr,1.45,3.5,4.9
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Millwall,Bolton Wanderers,2026-09-05T14:00:00Z,winamax_de,1.52,3.85,5.4
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Millwall,Bolton Wanderers,2026-09-05T14:00:00Z,unibet_fr,1.48,3.5,5.3
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Millwall,Bolton Wanderers,2026-09-05T14:00:00Z,coolbet,1.57,4.0,6.25
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Millwall,Bolton Wanderers,2026-09-05T14:00:00Z,betclic_fr,1.48,3.58,5.5
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Millwall,Bolton Wanderers,2026-09-05T14:00:00Z,onexbet,1.58,3.82,5.78
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Millwall,Bolton Wanderers,2026-09-05T14:00:00Z,marathonbet,1.56,3.82,5.9
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Millwall,Bolton Wanderers,2026-09-05T14:00:00Z,sport888,1.6,3.7,5.75
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Millwall,Bolton Wanderers,2026-09-05T14:00:00Z,williamhill,1.6,3.7,5.8
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Millwall,Bolton Wanderers,2026-09-05T14:00:00Z,gtbets,1.59,3.84,5.87
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Burnley,Bristol City,2026-09-05T14:00:00Z,winamax_fr,1.7,3.35,3.45
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Burnley,Bristol City,2026-09-05T14:00:00Z,unibet_fr,1.73,3.35,3.6
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Burnley,Bristol City,2026-09-05T14:00:00Z,coolbet,1.9,3.6,4.0
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Burnley,Bristol City,2026-09-05T14:00:00Z,betclic_fr,1.73,3.45,3.7
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Burnley,Bristol City,2026-09-05T14:00:00Z,winamax_de,1.78,3.65,3.7
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Burnley,Bristol City,2026-09-05T14:00:00Z,onexbet,1.84,3.64,4.03
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Burnley,Bristol City,2026-09-05T14:00:00Z,marathonbet,1.82,3.64,4.05
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Burnley,Bristol City,2026-09-05T14:00:00Z,sport888,1.85,3.4,4.0
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Burnley,Bristol City,2026-09-05T14:00:00Z,williamhill,1.85,3.4,4.0
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Burnley,Bristol City,2026-09-05T14:00:00Z,gtbets,1.85,3.66,4.03
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Burnley,Bristol City,2026-09-05T14:00:00Z,nordicbet,1.85,3.63,4.14
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Burnley,Bristol City,2026-09-05T14:00:00Z,betsson,1.85,3.63,4.14
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Cardiff City,2026-09-05T14:00:00Z,winamax_fr,2.3,3.0,2.4
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Cardiff City,2026-09-05T14:00:00Z,winamax_de,2.4,3.25,2.6
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Cardiff City,2026-09-05T14:00:00Z,unibet_fr,2.35,3.05,2.55
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Cardiff City,2026-09-05T14:00:00Z,coolbet,2.55,3.4,2.75
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Cardiff City,2026-09-05T14:00:00Z,betclic_fr,2.35,3.08,2.57
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Cardiff City,2026-09-05T14:00:00Z,onexbet,2.55,3.22,2.71
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Cardiff City,2026-09-05T14:00:00Z,marathonbet,2.55,3.22,2.71
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Cardiff City,2026-09-05T14:00:00Z,sport888,2.5,3.1,2.7
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Cardiff City,2026-09-05T14:00:00Z,williamhill,2.5,3.1,2.7
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Cardiff City,2026-09-05T14:00:00Z,gtbets,2.57,3.27,2.74
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Cardiff City,2026-09-05T14:00:00Z,nordicbet,2.58,3.31,2.72
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Portsmouth,Cardiff City,2026-09-05T14:00:00Z,betsson,2.58,3.31,2.72
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Derby County,2026-09-05T14:00:00Z,winamax_fr,1.2,4.6,7.75
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Derby County,2026-09-05T14:00:00Z,winamax_de,1.24,5.3,8.5
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Derby County,2026-09-05T14:00:00Z,unibet_fr,1.22,4.6,8.7
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Derby County,2026-09-05T14:00:00Z,coolbet,1.3,5.0,12.0
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Derby County,2026-09-05T14:00:00Z,betclic_fr,1.28,4.55,6.6
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Derby County,2026-09-05T14:00:00Z,onexbet,1.29,5.05,10.6
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Derby County,2026-09-05T14:00:00Z,marathonbet,1.28,5.05,10.75
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Derby County,2026-09-05T14:00:00Z,sport888,1.3,4.8,10.0
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Derby County,2026-09-05T14:00:00Z,williamhill,1.3,4.8,10.0
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Derby County,2026-09-05T14:00:00Z,gtbets,1.3,5.24,10.19
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Derby County,2026-09-05T14:00:00Z,nordicbet,1.31,4.81,11.68
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Ham United,Derby County,2026-09-05T14:00:00Z,betsson,1.31,4.81,11.68
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Queens Park Rangers,Middlesbrough,2026-09-05T14:00:00Z,winamax_fr,3.05,3.15,1.86
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Queens Park Rangers,Middlesbrough,2026-09-05T14:00:00Z,winamax_de,3.3,3.4,1.96
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Queens Park Rangers,Middlesbrough,2026-09-05T14:00:00Z,unibet_fr,3.2,3.2,1.91
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Queens Park Rangers,Middlesbrough,2026-09-05T14:00:00Z,coolbet,3.5,3.6,2.05
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Queens Park Rangers,Middlesbrough,2026-09-05T14:00:00Z,betclic_fr,3.27,3.23,1.9
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Queens Park Rangers,Middlesbrough,2026-09-05T14:00:00Z,onexbet,3.42,3.42,2.07
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Queens Park Rangers,Middlesbrough,2026-09-05T14:00:00Z,marathonbet,3.42,3.42,2.05
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Queens Park Rangers,Middlesbrough,2026-09-05T14:00:00Z,sport888,3.4,3.3,2.05
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Queens Park Rangers,Middlesbrough,2026-09-05T14:00:00Z,williamhill,3.4,3.3,2.05
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Queens Park Rangers,Middlesbrough,2026-09-05T14:00:00Z,gtbets,3.46,3.44,2.08
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Queens Park Rangers,Middlesbrough,2026-09-05T14:00:00Z,nordicbet,3.7,3.4,2.03
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Queens Park Rangers,Middlesbrough,2026-09-05T14:00:00Z,betsson,3.7,3.4,2.03
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Norwich City,2026-09-05T14:00:00Z,winamax_fr,2.05,3.15,2.65
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Norwich City,2026-09-05T14:00:00Z,unibet_fr,2.15,3.15,2.75
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Norwich City,2026-09-05T14:00:00Z,coolbet,2.35,3.5,2.95
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Norwich City,2026-09-05T14:00:00Z,winamax_de,2.2,3.35,2.8
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Norwich City,2026-09-05T14:00:00Z,betclic_fr,2.12,3.2,2.8
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Norwich City,2026-09-05T14:00:00Z,onexbet,2.35,3.38,2.89
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Norwich City,2026-09-05T14:00:00Z,marathonbet,2.33,3.38,2.88
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Norwich City,2026-09-05T14:00:00Z,sport888,2.3,3.3,2.9
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Norwich City,2026-09-05T14:00:00Z,williamhill,2.3,3.3,2.9
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Norwich City,2026-09-05T14:00:00Z,gtbets,2.35,3.4,2.94
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Norwich City,2026-09-05T14:00:00Z,nordicbet,2.27,3.47,3.05
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Sheffield United,Norwich City,2026-09-05T14:00:00Z,betsson,2.27,3.47,3.05
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Bromwich Albion,Watford,2026-09-05T14:00:00Z,winamax_fr,1.84,3.1,3.25
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Bromwich Albion,Watford,2026-09-05T14:00:00Z,unibet_fr,1.88,3.1,3.4
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Bromwich Albion,Watford,2026-09-05T14:00:00Z,coolbet,2.05,3.5,3.6
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Bromwich Albion,Watford,2026-09-05T14:00:00Z,betclic_fr,1.87,3.15,3.47
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Bromwich Albion,Watford,2026-09-05T14:00:00Z,onexbet,2.03,3.34,3.63
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Bromwich Albion,Watford,2026-09-05T14:00:00Z,marathonbet,2.01,3.34,3.64
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Bromwich Albion,Watford,2026-09-05T14:00:00Z,sport888,2.05,3.25,3.6
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Bromwich Albion,Watford,2026-09-05T14:00:00Z,williamhill,2.05,3.25,3.6
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Bromwich Albion,Watford,2026-09-05T14:00:00Z,gtbets,2.04,3.36,3.66
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Bromwich Albion,Watford,2026-09-05T14:00:00Z,nordicbet,2.03,3.4,3.7
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,West Bromwich Albion,Watford,2026-09-05T14:00:00Z,betsson,2.03,3.4,3.7
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Wrexham AFC,2026-09-05T19:00:00Z,winamax_fr,2.25,3.05,2.45
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Wrexham AFC,2026-09-05T19:00:00Z,winamax_de,2.4,3.25,2.6
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Wrexham AFC,2026-09-05T19:00:00Z,unibet_fr,2.35,3.05,2.55
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Wrexham AFC,2026-09-05T19:00:00Z,coolbet,2.55,3.5,2.7
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Wrexham AFC,2026-09-05T19:00:00Z,betclic_fr,2.32,3.1,2.58
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Wrexham AFC,2026-09-05T19:00:00Z,marathonbet,2.53,3.3,2.68
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Wrexham AFC,2026-09-05T19:00:00Z,onexbet,2.53,3.3,2.68
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Wrexham AFC,2026-09-05T19:00:00Z,sport888,2.5,3.25,2.7
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Wrexham AFC,2026-09-05T19:00:00Z,williamhill,2.5,3.25,2.7
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Wrexham AFC,2026-09-05T19:00:00Z,gtbets,2.54,3.32,2.74
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Wrexham AFC,2026-09-05T19:00:00Z,nordicbet,2.43,3.3,2.92
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Swansea City,Wrexham AFC,2026-09-05T19:00:00Z,betsson,2.43,3.3,2.92
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Wolverhampton Wanderers,2026-09-06T11:00:00Z,winamax_fr,2.55,3.05,2.15
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Wolverhampton Wanderers,2026-09-06T11:00:00Z,winamax_de,2.75,3.25,2.3
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Wolverhampton Wanderers,2026-09-06T11:00:00Z,coolbet,2.9,3.4,2.45
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Wolverhampton Wanderers,2026-09-06T11:00:00Z,betclic_fr,2.67,2.95,2.28
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Wolverhampton Wanderers,2026-09-06T11:00:00Z,unibet_fr,2.7,3.05,2.25
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Wolverhampton Wanderers,2026-09-06T11:00:00Z,onexbet,2.87,3.22,2.45
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Wolverhampton Wanderers,2026-09-06T11:00:00Z,sport888,2.88,3.1,2.45
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Wolverhampton Wanderers,2026-09-06T11:00:00Z,williamhill,2.88,3.1,2.45
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Wolverhampton Wanderers,2026-09-06T11:00:00Z,betfair_ex_eu,1.06,1.06,1.06
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Wolverhampton Wanderers,2026-09-06T11:00:00Z,marathonbet,2.86,3.22,2.43
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Wolverhampton Wanderers,2026-09-06T11:00:00Z,nordicbet,2.92,3.3,2.43
+2026-08-30T10:25:54Z,soccer_efl_champ,Championship,Birmingham City,Wolverhampton Wanderers,2026-09-06T11:00:00Z,betsson,2.92,3.3,2.43
