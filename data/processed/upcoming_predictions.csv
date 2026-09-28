@@ -1,1 +1,3 @@
 match_date,match_time,league,home_team,away_team,p_home_elo,p_draw_elo,p_away_elo,p_home_ensemble,p_draw_ensemble,p_away_ensemble,predicted_outcome,is_international
+2026-10-02,23:00,Campeonato Brasileiro Série A,São Paulo,Santos,0.4308,0.2461,0.3231,0.415,0.3242,0.2608,H,False
+2026-10-03,21:30,Campeonato Brasileiro Série A,CA Mineiro,RB Bragantino,0.4308,0.2461,0.3231,0.415,0.3242,0.2608,H,False
