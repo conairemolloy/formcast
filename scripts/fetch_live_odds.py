@@ -8,18 +8,24 @@ Output: data/processed/live_value_bets.csv
 import os
 import sys
 import math
+import unicodedata
 import requests
 import pandas as pd
 from datetime import datetime, timezone
+
+from dotenv import load_dotenv
+
+load_dotenv()  # local dev; in CI the key comes from the ODDS_API_KEY secret
 
 # ---------------------------------------------------------------------------
 # Config
 # ---------------------------------------------------------------------------
 
-ODDS_API_KEY = "9f8647c1b9d7c4cfb5ae36821445e7bb"
+ODDS_API_KEY = os.environ.get("ODDS_API_KEY", "")
 ODDS_BASE    = "https://api.the-odds-api.com/v4"
 HOME_ADV     = 50    # same as elo_model.py
 VALUE_EDGE   = 0.05  # 5% minimum edge
+DEFAULT_ELO  = 1500.0  # rating given to a team we couldn't resolve
 
 SPORTS = [
     "soccer_epl",
@@ -87,6 +93,27 @@ _ODDS_TO_ELO: dict[str, str] = {
     "Brentford":                 "Brentford",
     "Burnley":                   "Burnley",
     "Bournemouth":               "Bournemouth",
+    "Brighton and Hove Albion":  "Brighton",
+    "Leeds United":              "Leeds",
+    "Ipswich Town":              "Ipswich",
+    "Coventry City":             "Coventry",
+    "Hull City":                 "Hull",
+    # Championship (pinned so they never depend on fuzzy matching —
+    # "Queens Park Rangers" previously fuzzy-matched Scottish "Rangers")
+    "Queens Park Rangers":       "QPR",
+    "Birmingham City":           "Birmingham",
+    "Blackburn Rovers":          "Blackburn",
+    "Bolton Wanderers":          "Bolton",
+    "Cardiff City":              "Cardiff",
+    "Charlton Athletic":         "Charlton",
+    "Derby County":              "Derby",
+    "Norwich City":              "Norwich",
+    "Preston North End":         "Preston",
+    "Stoke City":                "Stoke",
+    "Swansea City":              "Swansea",
+    "West Bromwich Albion":      "West Brom",
+    "Wrexham AFC":               "Wrexham",
+    "Lincoln City":              "Lincoln",   # promoted 2026-27; exists once 2026-27 is ingested
     # Spain
     "Atletico Madrid":           "Ath Madrid",
     "Atlético Madrid":           "Ath Madrid",
@@ -94,7 +121,20 @@ _ODDS_TO_ELO: dict[str, str] = {
     "Real Madrid":               "Real Madrid",
     "Barcelona":                 "Barcelona",
     "Villarreal":                "Villarreal",
-    "Real Sociedad":             "Real Sociedad",
+    "Real Sociedad":             "Sociedad",   # canonical is "Sociedad"; "Real Sociedad" doesn't exist
+    "Athletic Bilbao":           "Ath Bilbao",
+    "Alavés":                    "Alaves",
+    "Alaves":                    "Alaves",
+    "Deportivo La Coruña":       "La Coruna",
+    "Deportivo La Coruna":       "La Coruna",
+    "Málaga":                    "Malaga",
+    "Malaga":                    "Malaga",
+    "Espanyol":                  "Espanol",
+    "Celta Vigo":                "Celta",
+    "CA Osasuna":                "Osasuna",
+    "Elche CF":                  "Elche",
+    "Real Racing Club de Santander": "Santander",
+    "Rayo Vallecano":            "Vallecano",
     "Sevilla":                   "Sevilla",
     "Real Betis":                "Betis",
     "Valencia":                  "Valencia",
@@ -111,6 +151,7 @@ _ODDS_TO_ELO: dict[str, str] = {
     "Roma":                      "Roma",
     "AS Roma":                   "Roma",
     "Atalanta":                  "Atalanta",
+    "Atalanta BC":               "Atalanta",
     "Fiorentina":                "Fiorentina",
     "Torino":                    "Torino",
     "Udinese":                   "Udinese",
@@ -134,6 +175,14 @@ _ODDS_TO_ELO: dict[str, str] = {
     "Mainz":                     "Mainz",
     "Mainz 05":                  "Mainz",
     "Union Berlin":              "Union Berlin",
+    "1. FC Köln":                "FC Koln",
+    "FC Koln":                   "FC Koln",
+    "Hamburger SV":              "Hamburg",
+    "FC Schalke 04":             "Schalke 04",
+    "FSV Mainz 05":              "Mainz",
+    "SC Freiburg":               "Freiburg",
+    "SC Paderborn":              "Paderborn",
+    "TSG Hoffenheim":            "Hoffenheim",
     "Heidenheim":                "Heidenheim",
     # France
     "Paris Saint Germain":       "Paris SG",
@@ -142,6 +191,9 @@ _ODDS_TO_ELO: dict[str, str] = {
     "Olympique Marseille":       "Marseille",
     "Stade Rennais":             "Rennes",
     "Monaco":                    "Monaco",
+    "AS Monaco":                 "Monaco",
+    "RC Lens":                   "Lens",
+    "Le Mans FC":                "Le Mans",
     "Lille":                     "Lille",
     "Lens":                      "Lens",
     "Reims":                     "Reims",
@@ -179,13 +231,30 @@ def _resolve_team(odds_name: str, elo_index: dict[str, float]) -> tuple[str, flo
     if odds_name in elo_index:
         return odds_name, elo_index[odds_name]
 
-    # 3. Case-insensitive substring match
-    lower = odds_name.lower()
-    for team, rating in elo_index.items():
-        if team.lower() in lower or lower in team.lower():
-            return team, rating
+    # 3. Accent/case-insensitive exact match
+    folded = _fold(odds_name)
+    for team in sorted(elo_index):
+        if _fold(team) == folded:
+            return team, elo_index[team]
 
-    return odds_name, 1500.0
+    # 4. Substring match. Deterministic: closest length wins, ties alphabetical
+    #    (dict order used to decide the winner when several teams matched).
+    if len(folded) >= 4:
+        matches = sorted(
+            (t for t in elo_index
+             if len(_fold(t)) >= 4 and (_fold(t) in folded or folded in _fold(t))),
+            key=lambda t: (abs(len(_fold(t)) - len(folded)), t),
+        )
+        if matches:
+            return matches[0], elo_index[matches[0]]
+
+    return odds_name, DEFAULT_ELO
+
+
+def _fold(name: str) -> str:
+    """Lower-case and strip accents so 'Alavés' compares equal to 'Alaves'."""
+    decomposed = unicodedata.normalize("NFKD", name or "")
+    return "".join(c for c in decomposed if not unicodedata.combining(c)).lower().strip()
 
 
 # ---------------------------------------------------------------------------
@@ -281,7 +350,10 @@ def _load_ensemble_index(data_dir: str) -> tuple[dict[str, dict], dict]:
     }
     index: dict[str, dict] = {}
     for _, row in df.iterrows():
-        key = f"{row.get('match_date','').strip()}|{row.get('home_team','').strip()}|{row.get('away_team','').strip()}"
+        # Predictions made on default ratings (team not recognised) are not usable.
+        if str(row.get("teams_resolved", "True")).strip().lower() == "false":
+            continue
+        key =f"{row.get('match_date','').strip()}|{row.get('home_team','').strip()}|{row.get('away_team','').strip()}"
         try:
             index[key] = {
                 "p_home": float(row["p_home_ensemble"]),
@@ -294,6 +366,12 @@ def _load_ensemble_index(data_dir: str) -> tuple[dict[str, dict], dict]:
 
 
 def main():
+    # Fail loudly: without a key every request 401s, and we'd otherwise
+    # overwrite live_value_bets.csv with an empty file and commit it.
+    if not ODDS_API_KEY:
+        print("ERROR: ODDS_API_KEY is not set — export it or add it to .env", file=sys.stderr)
+        sys.exit(1)
+
     base_dir    = os.path.dirname(os.path.abspath(__file__))
     data_dir    = os.path.normpath(os.path.join(base_dir, "..", "data", "processed"))
     ratings_path = os.path.join(data_dir, "elo_ratings.csv")
@@ -321,6 +399,7 @@ def main():
     _join_total = 0
     _join_hits  = 0
     _join_misses: list[tuple[str, str]] = []  # (ens_key, match_date_str)
+    _suppressed: list[tuple[str, str, str, str, float]] = []  # (reason, league, home, away, edge)
 
     for sport in SPORTS:
         league = LEAGUE_LABELS[sport]
@@ -394,6 +473,24 @@ def main():
             candidates = [(o, e, od, p) for o, e, od, p in candidates if e is not None and e > VALUE_EDGE]
             candidates.sort(key=lambda x: -x[1])
 
+            # Safety guard: only publish a value bet when the probabilities are
+            # trustworthy. Club fixtures need a real ensemble prediction; any
+            # fixture needs both teams resolved to a rating (an unresolved team
+            # sits at 1500 and produces nonsense edges, e.g. Osasuna at +38%).
+            # International fixtures are Elo-only by design, so they only need
+            # the teams resolved. Suppressed rows keep their probabilities for
+            # reference but carry no value_* fields, so the API won't serve them.
+            teams_ok = home_canon in active_elo_index and away_canon in active_elo_index
+            if not teams_ok:
+                confidence = "elo_estimate_unresolved_team"
+            elif sport not in INTERNATIONAL_SPORTS and model_used != "ensemble":
+                confidence = "elo_estimate_no_ensemble"
+            else:
+                confidence = "ok"
+            if confidence != "ok" and candidates:
+                _suppressed.append((confidence, league, home_raw, away_raw, candidates[0][1]))
+                candidates = []
+
             value_outcome = value_edge = value_odds = value_p_model = value_bookmaker = None
             if candidates:
                 value_outcome, value_edge, value_odds, value_p_model = candidates[0]
@@ -423,6 +520,7 @@ def main():
                 "value_p_model":    value_p_model,
                 "value_bookmaker":  value_bookmaker,
                 "model":            model_used,
+                "confidence":       confidence,
             })
 
     # ---- Ensemble join diagnostics ----------------------------------------
@@ -463,6 +561,11 @@ def main():
         print(f"\n  All {len(_join_misses)} misses: upcoming_predictions.csv is empty "
               "— run predict_upcoming.py first.")
 
+    if _suppressed:
+        print(f"\n  SUPPRESSED {len(_suppressed)} value bets (low-confidence Elo estimates, not published):")
+        for _reason, _lg, _h, _a, _e in sorted(_suppressed, key=lambda x: -x[4]):
+            print(f"    {_lg:14s} {_h} vs {_a}  edge={_e:.1%}  [{_reason}]")
+
     if not rows:
         print("\nNo fixtures found — writing empty file")
         out_df = pd.DataFrame(columns=[
@@ -471,6 +574,7 @@ def main():
             "best_home_odds", "best_draw_odds", "best_away_odds",
             "edge_home", "edge_draw", "edge_away",
             "value_outcome", "value_edge", "value_odds", "value_p_model", "value_bookmaker", "model",
+            "confidence",
         ])
         out_df.to_csv(out_path, index=False)
         return

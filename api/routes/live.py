@@ -6,15 +6,20 @@ from math import exp, factorial
 
 import pandas as pd
 import httpx
+from dotenv import load_dotenv
 from flask import Blueprint, jsonify, request
 
 from .markets import _lookup_corners, _lookup_cards, _lookup_btts, _lookup_goals
 
 live_bp = Blueprint("live", __name__)
 
-FDATA_API_KEY = "3edbe9850f784e8a86328acaabfd9561"
+load_dotenv()  # local dev; on Railway the key comes from service variables
+
+FDATA_API_KEY = os.environ.get("FDATA_API_KEY", "")
 FDATA_BASE = "https://api.football-data.org/v4"
 HEADERS = {"X-Auth-Token": FDATA_API_KEY}
+FDATA_MAX_SPAN_DAYS = 10   # football-data.org limit on dateFrom→dateTo per /matches call
+UPCOMING_MAX_DAYS = 30     # hard cap on /api/live/upcoming?days=
 
 _ELO_RATINGS: dict[str, float] = {}
 _INTL_ELO_RATINGS: dict[str, float] = {}
@@ -648,6 +653,8 @@ def _goals_model(home_form: dict, away_form: dict) -> dict:
 
 
 def _fetch(url: str, params: dict | None = None) -> dict:
+    if not FDATA_API_KEY:
+        raise RuntimeError("FDATA_API_KEY is not set on the server")
     resp = httpx.get(url, headers=HEADERS, params=params, timeout=10)
     resp.raise_for_status()
     return resp.json()
@@ -711,22 +718,53 @@ def live_today():
 
 @live_bp.get("/live/upcoming")
 def live_upcoming():
-    cached = _cache_get("live_upcoming")
+    # ?days=N widens the window (default 7 keeps the frontend unchanged).
+    # predict_upcoming.py asks for ~3 weeks so its predictions cover the
+    # whole odds window, including international-break weeks.
+    try:
+        days = int(request.args.get("days", 7))
+    except ValueError:
+        return _err("days must be an integer", 400)
+    days = max(1, min(days, UPCOMING_MAX_DAYS))
+
+    cache_key = f"live_upcoming:{days}"
+    cached = _cache_get(cache_key)
     if cached is not None:
         return _ok(cached)
 
+    # football-data.org caps /matches at ~10 days per request, so fetch in chunks.
+    # Its dateTo only partly includes the final day (dateTo=29th returned 1 of
+    # 35 matches on the 29th), so chunks overlap by a day, the last chunk runs
+    # one day past `end`, and duplicates are dropped by match id.
     today = date.today()
-    date_to = (today + timedelta(days=7)).isoformat()
+    end = today + timedelta(days=days)
+    matches: list[dict] = []
+    seen_ids: set = set()
+    chunk_start = today
     try:
-        data = _fetch(
-            f"{FDATA_BASE}/matches",
-            params={"dateFrom": today.isoformat(), "dateTo": date_to, "status": "SCHEDULED,TIMED"},
-        )
+        while chunk_start <= end:
+            chunk_end = min(chunk_start + timedelta(days=FDATA_MAX_SPAN_DAYS - 1),
+                            end + timedelta(days=1))
+            data = _fetch(
+                f"{FDATA_BASE}/matches",
+                params={
+                    "dateFrom": chunk_start.isoformat(),
+                    "dateTo":   chunk_end.isoformat(),
+                    "status":   "SCHEDULED,TIMED",
+                },
+            )
+            for m in data.get("matches", []):
+                mid = m.get("id")
+                if mid is not None and mid in seen_ids:
+                    continue
+                seen_ids.add(mid)
+                matches.append(m)
+            chunk_start = chunk_end  # overlap: re-fetch the partially covered day
     except (httpx.HTTPError, Exception) as exc:
         return _err(f"football-data.org error: {exc}")
 
-    records = [r for r in (_parse_match(m, inplay=False) for m in data.get("matches", [])) if r is not None]
-    _cache_set("live_upcoming", records)
+    records = [r for r in (_parse_match(m, inplay=False) for m in matches) if r is not None]
+    _cache_set(cache_key, records)
     return _ok(records)
 
 

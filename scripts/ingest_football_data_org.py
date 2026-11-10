@@ -2,9 +2,14 @@ import os
 import time
 import requests
 import pandas as pd
+from dotenv import load_dotenv
+
+load_dotenv()
 
 API_BASE = "https://api.football-data.org/v4"
-API_TOKEN = "3edbe9850f784e8a86328acaabfd9561"
+API_TOKEN = os.environ.get("FDATA_API_KEY", "")
+if not API_TOKEN:
+    raise SystemExit("FDATA_API_KEY is not set — export it or add it to .env")
 SLEEP_BETWEEN_REQUESTS = 7  # stay under 10 req/min
 
 COMPETITIONS = ["CL", "WC", "EC", "ELC", "DED", "PD", "FL1", "BL1"]

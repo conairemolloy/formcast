@@ -19,6 +19,7 @@ import os
 import re
 import sys
 import time
+import unicodedata
 from collections import defaultdict
 from datetime import datetime, timedelta
 
@@ -37,12 +38,16 @@ from ensemble_v2 import (  # noqa: E402
     _sigmoid,
     _dc_attack, _dc_defence, _dc_probs,
 )
+from fix_team_names import TEAM_NAME_MAP  # noqa: E402  football-data.org name → canonical
 
 # ─── Config ──────────────────────────────────────────────────────────────────
 UPCOMING_URL = os.environ.get(
     "FORMCAST_API_URL",
     "https://web-production-eb371.up.railway.app/api/live/upcoming"
 )
+# Must cover the full odds window in fetch_live_odds.py (bookmakers list
+# ~3 weeks ahead). Older API deploys ignore the param and return 7 days.
+UPCOMING_DAYS = int(os.environ.get("UPCOMING_DAYS", "21"))
 
 BASE_DIR   = os.path.normpath(os.path.join(os.path.dirname(__file__), ".."))
 DATA_DIR   = os.path.join(BASE_DIR, "data", "processed")
@@ -52,6 +57,7 @@ MODELS_DIR = os.path.join(BASE_DIR, "models")
 COMP_TO_LEAGUE: dict[str, str] = {
     "Premier League":       "EPL",
     "La Liga":              "LaLiga",
+    "Primera Division":     "LaLiga",   # football-data.org's name for La Liga
     "Serie A":              "SerieA",
     "Bundesliga":           "Bundesliga",
     "Ligue 1":              "Ligue1",
@@ -72,6 +78,7 @@ DEFAULT_LEAGUE = "EPL"
 RESULT_INV = {0: "A", 1: "D", 2: "H"}
 
 _SUFFIX_RE = re.compile(r"\s+(United FC|City FC|FC|AFC|CF|SC|BC)$", re.IGNORECASE)
+_GENTLE_SUFFIX_RE = re.compile(r"\s+(FC|AFC|CF|SC|BC)$", re.IGNORECASE)
 
 
 def _strip_suffix(name: str) -> str:
@@ -196,18 +203,61 @@ def _prematch_probs(
 
 # ─── Team name resolution ────────────────────────────────────────────────────
 
-def _resolve_team(name: str, known_teams: set[str]) -> str:
-    """Map an API team name to the canonical name used in results.csv."""
+def _fold(name: str) -> str:
+    """Lower-case and strip accents so 'Alavés' compares equal to 'Alaves'."""
+    decomposed = unicodedata.normalize("NFKD", name or "")
+    return "".join(c for c in decomposed if not unicodedata.combining(c)).lower().strip()
+
+
+def _resolve_team(name: str, known_teams: set[str], fuzzy: bool = True) -> str:
+    """Map a football-data.org team name to the canonical name used in results.csv.
+
+    Order: explicit map → exact → gentle suffix strip → aggressive suffix strip
+    → accent/case-insensitive exact → deterministic substring match.
+    fuzzy=False skips the substring step; use it wherever a wrong guess would
+    be written permanently (prediction log, settlement).
+    Returns the input unchanged if nothing matches (caller treats that as unresolved).
+    """
+    # 1. Explicit football-data.org → canonical map. Must come before any suffix
+    #    stripping: _SUFFIX_RE turns both "Manchester City FC" and
+    #    "Manchester United FC" into "Manchester".
+    mapped = TEAM_NAME_MAP.get(name)
+    if mapped in known_teams:
+        return mapped
     if name in known_teams:
         return name
-    lower = name.lower()
-    for t in known_teams:
-        if t.lower() == lower:
-            return t
-    for t in known_teams:
-        if t.lower() in lower or lower in t.lower():
-            return t
-    return name  # return as-is; will get default ratings
+
+    # 2. Strip only club-type suffixes first ("Bristol City FC" → "Bristol City"),
+    #    then the aggressive strip ("Coventry City FC" → "Coventry").
+    for cand in (_GENTLE_SUFFIX_RE.sub("", name).strip(), _strip_suffix(name)):
+        mapped = TEAM_NAME_MAP.get(cand)
+        if mapped in known_teams:
+            return mapped
+        if cand in known_teams:
+            return cand
+
+    # 3. Accent/case-insensitive exact match.
+    folded_known = {}
+    for t in sorted(known_teams):
+        folded_known.setdefault(_fold(t), t)
+    for cand in (name, _GENTLE_SUFFIX_RE.sub("", name), _strip_suffix(name)):
+        hit = folded_known.get(_fold(cand))
+        if hit:
+            return hit
+
+    # 4. Substring fallback. Deterministic: closest length wins, ties broken
+    #    alphabetically (iterating a set directly changed winners run to run).
+    query = _fold(_GENTLE_SUFFIX_RE.sub("", name))
+    if fuzzy and len(query) >= 4:
+        matches = sorted(
+            (t for f, t in folded_known.items() if len(f) >= 4 and (f in query or query in f)),
+            key=lambda t: (abs(len(_fold(t)) - len(query)), t),
+        )
+        if matches:
+            print(f"  NOTE: fuzzy team match '{name}' → '{matches[0]}'")
+            return matches[0]
+
+    return name  # unresolved; will get default ratings
 
 
 # ─── Club prediction path ────────────────────────────────────────────────────
@@ -406,12 +456,12 @@ def main() -> None:
     print(f"  Done. Tracked {len(known_teams)} teams.\n")
 
     # Fetch upcoming fixtures with retry / exponential backoff
-    print(f"Fetching upcoming fixtures from {UPCOMING_URL}...")
+    print(f"Fetching upcoming fixtures from {UPCOMING_URL} (days={UPCOMING_DAYS})...")
     _retry_delays = [5, 15, 30]
     matches = None
     for _attempt in range(len(_retry_delays) + 1):
         try:
-            resp = httpx.get(UPCOMING_URL, timeout=30)
+            resp = httpx.get(UPCOMING_URL, params={"days": UPCOMING_DAYS}, timeout=60)
             resp.raise_for_status()
             matches = resp.json().get("data", [])
             print(f"  {len(matches)} fixtures returned\n")
@@ -441,11 +491,12 @@ def main() -> None:
             "match_date", "match_time", "league", "home_team", "away_team",
             "p_home_elo", "p_draw_elo", "p_away_elo",
             "p_home_ensemble", "p_draw_ensemble", "p_away_ensemble",
-            "predicted_outcome", "is_international",
+            "predicted_outcome", "is_international", "teams_resolved",
         ]).to_csv(out_path, index=False)
         return
 
     rows = []
+    unresolved_teams: set[str] = set()
 
     for m in matches:
         home_raw       = m.get("home_team", "")
@@ -504,6 +555,7 @@ def main() -> None:
                 "p_away_ensemble":   round(p_ens_a, 4),
                 "predicted_outcome": max(probs, key=probs.get),
                 "is_international":  True,
+                "teams_resolved":    home_display in international_elo and away_display in international_elo,
             })
         else:
             # Club fixture
@@ -512,8 +564,13 @@ def main() -> None:
             league_code = COMP_TO_LEAGUE.get(competition, DEFAULT_LEAGUE)
             season      = _current_season(match_date)
 
-            home = _resolve_team(_strip_suffix(home_raw), known_teams)
-            away = _resolve_team(_strip_suffix(away_raw), known_teams)
+            # Pass the raw API name: the resolver handles suffix stripping itself,
+            # after the explicit map (pre-stripping collapsed Man City/Man United).
+            home = _resolve_team(home_raw, known_teams)
+            away = _resolve_team(away_raw, known_teams)
+            for _raw, _res in ((home_raw, home), (away_raw, away)):
+                if _res not in known_teams:
+                    unresolved_teams.add(f"{_raw} [{competition}]")
 
             result = predict_club_fixture(
                 state, home, away, match_date, league_code, season,
@@ -536,9 +593,17 @@ def main() -> None:
                 "p_away_ensemble":   result["p_away_ensemble"],
                 "predicted_outcome": result["predicted_outcome"],
                 "is_international":  False,
+                "teams_resolved":    home in known_teams and away in known_teams,
             })
 
     out_df = pd.DataFrame(rows)
+
+    if unresolved_teams:
+        print(f"\n  WARNING: {len(unresolved_teams)} club team names did not resolve "
+              f"(predicted on default ratings, marked teams_resolved=False):")
+        for _t in sorted(unresolved_teams):
+            print(f"    {_t}")
+        print()
 
     # Merge weather display columns if upcoming_weather.csv is available.
     # Weather is display-only — it is NOT a model input.

@@ -12,15 +12,19 @@ Run BEFORE elo_model.py so predictions are locked in with pre-retrain ratings.
 import csv
 import hashlib
 import os
-import re
+import sys
 from datetime import datetime, timezone
 
 import pandas as pd
 import httpx
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from predict_upcoming import _resolve_team  # noqa: E402
+
 # ── Paths ─────────────────────────────────────────────────────────────────────
 BASE_DIR = os.path.normpath(os.path.join(os.path.dirname(__file__), ".."))
 LOG_CSV  = os.path.join(BASE_DIR, "data", "processed", "prediction_log.csv")
+RESULTS_CSV = os.path.join(BASE_DIR, "data", "processed", "results.csv")
 
 # ── API ───────────────────────────────────────────────────────────────────────
 UPCOMING_URL = "https://web-production-eb371.up.railway.app/api/live/upcoming"
@@ -32,11 +36,22 @@ LOG_COLS = [
     "actual_result", "correct", "settled_at",
 ]
 
-_SUFFIX_RE = re.compile(r" (United FC|FC|AFC|CF|SC|BC)$", re.IGNORECASE)
+def _load_known_teams() -> set[str]:
+    """Canonical team names (results.csv) that logged names should resolve to."""
+    if not os.path.exists(RESULTS_CSV):
+        return set()
+    df = pd.read_csv(RESULTS_CSV, usecols=["home_team", "away_team"], dtype=str)
+    return set(df["home_team"].dropna()) | set(df["away_team"].dropna())
 
 
-def _strip_suffix(name: str) -> str:
-    return _SUFFIX_RE.sub("", name or "").strip()
+def _canonical(name: str, known_teams: set[str]) -> str:
+    """Resolve an API team name to its results.csv name so the logged (and
+    hashed) name is what settlement looks up. Strict: no fuzzy guessing,
+    because whatever is written here is permanent. Unresolved names (e.g.
+    leagues results.csv doesn't cover) are logged exactly as the API sent them."""
+    name = (name or "").strip()
+    resolved = _resolve_team(name, known_teams, fuzzy=False)
+    return resolved if resolved in known_teams else name
 
 
 def _make_hash(
@@ -58,17 +73,25 @@ def _fetch_upcoming() -> list[dict]:
     return resp.json().get("data", [])
 
 
-def _load_existing_keys() -> set[str]:
+def _load_existing_keys(known_teams: set[str]) -> set[str]:
+    """Keys of fixtures already logged — both as logged and as resolved, so a
+    fixture logged under an old raw name ("Coventry City") isn't logged again
+    under its canonical name ("Coventry")."""
     if not os.path.exists(LOG_CSV):
         return set()
-    df = pd.read_csv(LOG_CSV, usecols=["match_date", "home_team", "away_team"], dtype=str)
-    return {f"{r.match_date}|{r.home_team}|{r.away_team}" for r in df.itertuples()}
+    df = pd.read_csv(LOG_CSV, usecols=["match_date", "home_team", "away_team"], dtype=str).fillna("")
+    keys: set[str] = set()
+    for r in df.itertuples():
+        keys.add(f"{r.match_date}|{r.home_team}|{r.away_team}")
+        keys.add(f"{r.match_date}|{_canonical(r.home_team, known_teams)}|{_canonical(r.away_team, known_teams)}")
+    return keys
 
 
 def main() -> None:
     print("Loading existing prediction log...")
-    existing_keys = _load_existing_keys()
-    print(f"  {len(existing_keys)} existing predictions")
+    known_teams = _load_known_teams()
+    existing_keys = _load_existing_keys(known_teams)
+    print(f"  {len(existing_keys)} existing fixture keys (logged + canonical names)")
 
     print(f"Fetching upcoming fixtures from {UPCOMING_URL}...")
     try:
@@ -83,8 +106,10 @@ def main() -> None:
     new_rows: list[dict] = []
 
     for m in matches:
-        home_team  = _strip_suffix(m.get("home_team", ""))
-        away_team  = _strip_suffix(m.get("away_team", ""))
+        # Canonical names are what get logged AND hashed, so settlement can
+        # match them directly against results.csv.
+        home_team  = _canonical(m.get("home_team", ""), known_teams)
+        away_team  = _canonical(m.get("away_team", ""), known_teams)
         match_date = m.get("match_date", "")
         match_time = m.get("match_time", "")
         league     = m.get("competition", "")
