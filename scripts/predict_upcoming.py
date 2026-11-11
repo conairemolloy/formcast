@@ -470,6 +470,7 @@ def main() -> None:
     if not matches:
         print("No upcoming fixtures — writing empty file.")
         pd.DataFrame(columns=[
+            "match_id",
             "match_date", "match_time", "league", "home_team", "away_team",
             "p_home_elo", "p_draw_elo", "p_away_elo",
             "p_home_ensemble", "p_draw_ensemble", "p_away_ensemble",
@@ -486,6 +487,7 @@ def main() -> None:
         match_date_str = m.get("match_date", "")
         match_time     = m.get("match_time", "")
         competition    = m.get("competition", "")
+        match_id       = m.get("match_id")  # football-data.org id: exact join key for the API
 
         if not home_raw or not away_raw or not match_date_str:
             continue
@@ -524,6 +526,7 @@ def main() -> None:
 
             probs = {"H": p_ens_h, "D": p_ens_d, "A": p_ens_a}
             rows.append({
+                "match_id":          match_id,
                 "match_date":        match_date_str,
                 "match_time":        match_time,
                 "league":            competition,
@@ -562,6 +565,7 @@ def main() -> None:
                 global_mean_home=global_mean_home, btl_global_mean=btl_global_mean,
             )
             rows.append({
+                "match_id":          match_id,
                 "match_date":        match_date_str,
                 "match_time":        match_time,
                 "league":            competition,
