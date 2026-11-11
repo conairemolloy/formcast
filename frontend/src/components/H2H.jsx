@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import api from '../api'
+import { currentSeason } from '../season'
 import { Loader2, ArrowRight } from 'lucide-react'
 import {
   LineChart, Line, XAxis, YAxis, Tooltip,
@@ -311,7 +312,7 @@ function SeasonStats({ homeTeam, awayTeam, homeProfile, awayProfile }) {
   return (
     <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 md:p-5">
       <h2 className="text-sm font-semibold text-white mb-1">
-        {homeProfile?.season ?? '2025-26'} Season Stats
+        {homeProfile?.season ?? currentSeason()} Season Stats
       </h2>
       <p className="text-xs text-gray-500 mb-4">Highlighted values show the leading team</p>
 

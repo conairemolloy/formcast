@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import api from '../api'
+import { recentSeasons } from '../season'
 import { Loader2 } from 'lucide-react'
 
 const LEAGUES = [
@@ -20,11 +21,10 @@ const LEAGUES = [
   { id: 'EC',           label: 'Euros' },
 ]
 
+// Current season first (derived from today's date), then the three before it.
 const SEASONS = [
-  { id: null,      label: 'All' },
-  { id: '2025-26', label: '2025-26' },
-  { id: '2024-25', label: '2024-25' },
-  { id: '2023-24', label: '2023-24' },
+  { id: null, label: 'All' },
+  ...recentSeasons(4).map(s => ({ id: s, label: s })),
 ]
 
 function fmt(val) {
