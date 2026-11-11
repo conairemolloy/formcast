@@ -1,6 +1,15 @@
 # FormCast — Sports Prediction Platform
 ### Elo + Glicko-2 + Dixon-Coles + BTL + XGBoost + Neural Ensemble
-*Last updated: July 2026*
+*Last updated: November 2026*
+
+---
+
+## Session Log — November 2026 (foundation repair)
+- [x] Ensemble-join reliability FIXED — live value bets now 100% from the real 78-feature ensemble (was falling back to stale Elo on team-name misses / date-window mismatch). Root cause was two bugs: 7-day prediction window vs 21-day odds window, and suffix-strip collapsing "Man City"/"Man United" to "Manchester". Verified 108/108 join in live pipeline run.
+- [x] Prediction settlement FIXED — 608 of 617 covered-league predictions now settle (was 0 — whole season's track record was empty). Name-resolution mismatch between publish (football-data.org names) and settle (football-data.co.uk names). Log hashes preserved, never rewritten.
+- [x] Stale-season data FIXED — model was frozen on May 2026 data; added 2026-27 season ingestion (1,210 matches, 11 leagues). Model now current.
+- [x] Leaked API keys ROTATED + moved to env vars — football-data.org and Odds API keys were hardcoded in public repo since May 2026; rotated both, moved to Railway/GitHub secrets + .env, fail-loud if unset. (Completes much of Phase 11 "Secrets management".)
+- **NEW CURRENT NUMBERS (supersede stale ones below):** 2026-27 live-season backtest 64.4% (n=913); 608 settled predictions; 100% ensemble join; ~128k matches + 2026-27.
 
 ---
 
@@ -12,15 +21,15 @@
 - Team profile pages: Elo history, form, season stats, H2H
 - H2H comparison tool
 - Tournament simulator (Monte Carlo, 100k simulations)
-- Value Bets: live upcoming + historical track record (3,525 bets)
+- Value Bets: live upcoming (100% ensemble) + historical track record
 - Accumulators: historical tracker (708 accas)
-- Backtest: 68.7% hit rate, Brier 0.156, CLV +0.19
+- Backtest: 64.4% hit rate on 2026-27 live season (n=913); historical walk-forward ~67% non-draw
 - How It Works: methodology, models, glossary
 - GitHub Actions weekly automation (Monday 6am UTC)
 - Mobile responsive
 - Ensemble predictions pipeline — XGBoost + meta-learner saved, predict_upcoming.py ready for August
 - Walk-forward ensemble backtest — 66.79% hit rate (non-draw) vs 66.71% Elo baseline across 20k matches 2020-2024
-- SHA256 prediction log — 27 predictions published, auto-settles after each gameweek
+- SHA256 prediction log — 1,100+ predictions published, 608 settled, auto-settles after each gameweek
 - Dropdown navigation — 4 groups with hover dropdowns (Analysis, Predictions, Betting, Learn)
 - User accounts — Supabase Auth, signup/login/logout, FREE tier badge
 - Watchlist — save favourite teams, bookmark icon on ratings page, form dots on watchlist cards
@@ -38,14 +47,16 @@
 
 ---
 
-## NEXT UP — Priority Queue (July 2026)
+## NEXT UP — Priority Queue (updated November 2026)
 > Work through in order before starting Phase 3+.
+
+- [ ] **CRITICAL DECISION — public hit-rate framing (50% vs 64.4% vs 68.7%)** — three different numbers measure three different things and a visitor seeing them together loses trust: logged predictions settle at ~50% (3-way H/D/A, Elo-based from the Railway API, not the ensemble); the live 2026-27 ensemble backtest is 64.4% (n=913); the old marketing figure is 68.7% (non-draw, optimised Elo). Before ANY public proof page or email tips, decide ONE honest headline framing. Options: (a) lead with 64.4% current-season ensemble accuracy clearly labelled; (b) report ROI/CLV on value bets instead of raw accuracy; (c) log ensemble (not Railway-Elo) predictions going forward so the track record reflects the real model. GATES the free-first launch — the whole pitch is the honest track record.
 
 **Pre-design blockers (do before any brand-facing surface)**
 - [ ] **Project naming & brand decision** — "FormCast" is football-specific ("form" is a football/racing term) which fights the multi-sport future, and may have existing domain/brand conflicts. Decide a proper product name that: conveys trust/accuracy + multi-sport breadth + quant/edge positioning (read as ANALYTICS/data company, closer to a Bloomberg terminal than a betting site — NOT "tipster" or "gambling"); has a clean available .com or .io; short, sayable, not confusable with existing betting brands. Blocks: custom domain purchase, landing page copy, logo, all brand-facing design. Do this BEFORE the landing page redesign so the brand is settled before brand-facing surfaces are built. [Options being brainstormed]
 
-**August readiness (~1 week of evenings)**
-- [ ] **Live value bets: ensemble-join reliability (was "Elo-only")** — fetch_live_odds.py already bridges to ensemble predictions via upcoming_predictions.csv, but falls back to stale Elo SILENTLY on team-name key misses. Root cause: two divergent name-resolution pipelines — odds API → _ODDS_TO_ELO (sparse, top-leagues-only, missing most Championship/Serie B/etc) vs football-data → results.csv canonical. Instrumentation added to log hit/miss rate per run. NEXT: (1) measure real miss rate once season fixtures populate [instrumentation live], (2) fix by unifying to ONE canonical team-name resolver (single-source-of-truth, same principle as feature pipeline) rather than extending the sparse _ODDS_TO_ELO dict, (3) also unify the two divergent Elo fallback formulas (fetch_live_odds HOME_ADV=50 + own draw formula vs predict_upcoming's — they disagree), (4) emit prediction_uncertainty from predict_upcoming.py (one line — meta_proba already computed) so live Bet of the Day gets edge×confidence ranking. Off-season note: miss-rate measurement only meaningful once upcoming fixtures exist.
+**Infrastructure & monitoring (still outstanding)**
+- [x] **DONE (fixed Nov 2026, see Session Log)** **Live value bets: ensemble-join reliability (was "Elo-only")** — fetch_live_odds.py already bridges to ensemble predictions via upcoming_predictions.csv, but falls back to stale Elo SILENTLY on team-name key misses. Root cause: two divergent name-resolution pipelines — odds API → _ODDS_TO_ELO (sparse, top-leagues-only, missing most Championship/Serie B/etc) vs football-data → results.csv canonical. Instrumentation added to log hit/miss rate per run. NEXT: (1) measure real miss rate once season fixtures populate [instrumentation live], (2) fix by unifying to ONE canonical team-name resolver (single-source-of-truth, same principle as feature pipeline) rather than extending the sparse _ODDS_TO_ELO dict, (3) also unify the two divergent Elo fallback formulas (fetch_live_odds HOME_ADV=50 + own draw formula vs predict_upcoming's — they disagree), (4) emit prediction_uncertainty from predict_upcoming.py (one line — meta_proba already computed) so live Bet of the Day gets edge×confidence ranking. Off-season note: miss-rate measurement only meaningful once upcoming fixtures exist.
 - [ ] Sentry error monitoring (15 min signup; silent failures already cost 3 weeks once)
 - [ ] UptimeRobot on /api/health (15 min signup)
 - [ ] OPENWEATHER_API_KEY as GitHub Actions secret + local .env (unblocks weather column in predictions)
@@ -140,9 +151,8 @@
 
 ---
 
-## Off-Season Status (May–July 2026)
-European leagues finished. Pipeline fully built and tested.
-Live value bets already bridge to the ensemble where team names resolve; the fix is making that join reliable (see NEXT UP). Fuller fixture coverage from August when leagues restart.
+## Season Status (November 2026)
+European leagues mid-season. Pipeline healthy and current: 2026-27 data ingested, all models retraining weekly, live value bets 100% ensemble-backed, track record settling (608 predictions). Live 2026-27 ensemble backtest: 64.4% (n=913).
 
 ---
 
@@ -477,6 +487,23 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 ### Pre-Launch Compliance
 - [ ] Responsible gambling & compliance footer — UK betting-advice norms: 18+ notice, BeGambleAware/GamCare links, "past performance does not guarantee future results" disclaimer, clear "not financial advice" framing. Cheap to add, bad to miss pre-launch. Also review affiliate/advertising compliance if bookmaker links are used.
 
+### Visual Assessment — November 2026 (live site reviewed)
+- Confirmed: the Dashboard is an infinite flat list of ~40 equal-weight value-bet rows — exactly the "60 rows on login" the Core Product Principle warns against. No focal point, no ranking, no curation.
+- Confirmed: Value Bets page is already card-based (3-col grid, Model%/odds/edge/implied) — good foundation, close to right.
+- Confirmed: visual design foundation (emerald-on-black, restraint, typography) is SOLID — needs curation/hierarchy, NOT a from-scratch redesign.
+- **#1 PHASE 6 PRIORITY:** the "Value Bets editorial hierarchy (Bet of the Day)" item is THE next build — kill the flat list, lead with ONE Bet of the Day hero + shortlist + collapsed full list. This single change fixes the "too much stuff" problem across dashboard + value bets.
+- NOTE: DESIGN.md is open to revision to match current taste (clean/minimal/restrained-motion); treat it as updatable, not fixed.
+
+---
+
+## Parked Technical Fixes (found Nov 2026, not yet done)
+- [ ] Uncovered-league filter — ~394 logged predictions are for leagues results.csv can't settle (Brazil, Eredivisie, Primeira Liga, Champions League, Libertadores) — predicted on default 1500 ratings (noise, not forecasts). One-line filter in publish_predictions.py to stop logging them; show existing ones as "not tracked" not "pending".
+- [ ] Rescheduled-match void rule — ~9 predictions stuck unsettled because the match moved dates; bookmakers void bets not played within ~48-72h. Add a void status.
+- [ ] Stale xG — ingest_xg_data.py stops at 2024-25; no xG for 2025-26 or 2026-27, those features use defaults. Extend or confirm Understat has current data.
+- [ ] Hardcoded "2025-26" in display spots — live.py:536/810 (team profile current-season stats), tournament_simulator.py:22/177 (TODAY="2026-05-21" simulates last season), frontend Matches.jsx/H2H.jsx/Tournament.jsx season labels. Make season dynamic.
+- [ ] Investigate the Nov 8 2026 FAILED Railway deploy (daily international update) — glance at logs.
+- [ ] Node 20 / Ubuntu deprecation warnings in GitHub Actions — bump actions/checkout@v4→v5, setup-python@v5→v6 sometime.
+
 ---
 
 ## Phase 7 — UX & Design Polish
@@ -578,6 +605,8 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Bet tracking / "I placed this" — let users mark value bets they actually took, building a personal P&L and bet history. Strong stickiness/retention feature (their own track record living in the app). Powered by existing settle/results logic. Likely post-launch polish but design the value-bet card to accommodate a "track this bet" action so it's not retrofitted.
 - [ ] Onboarding email sequence — first-week emails converting signup → active user ("how to read a value bet", "your first Bet of the Day"). Distinct from the daily digest; known retention lever.
 - [ ] Product analytics & funnel observability — beyond Sentry (errors): which features get used, where users drop off in signup, what converts free→paid (PostHog). Can't improve what you can't see; guides all post-launch decisions.
+
+> NOTE: Odds API free tier = 500 credits/month. Weekly pipeline is fine; DAILY multi-sport odds refresh would exceed it — paid tier needed before daily cadence or multi-market expansion at scale.
 
 ---
 
