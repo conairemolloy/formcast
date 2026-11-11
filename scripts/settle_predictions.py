@@ -30,7 +30,8 @@ from datetime import datetime, timezone
 import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from predict_upcoming import COMP_TO_LEAGUE, _fold, _resolve_team  # noqa: E402
+from league_coverage import league_code as _league_code  # noqa: E402
+from predict_upcoming import _fold, _resolve_team  # noqa: E402
 
 BASE_DIR    = os.path.normpath(os.path.join(os.path.dirname(__file__), ".."))
 LOG_CSV     = os.path.join(BASE_DIR, "data", "processed", "prediction_log.csv")
@@ -42,18 +43,6 @@ LOG_COLS = [
     "predicted_outcome", "published_at", "hash",
     "actual_result", "correct", "settled_at",
 ]
-
-# results.csv league codes are the values of COMP_TO_LEAGUE; a logged league
-# may already be a code, or a football-data.org competition name.
-_LEAGUE_CODES = set(COMP_TO_LEAGUE.values())
-
-
-def _league_code(logged_league: str) -> str | None:
-    lg = (logged_league or "").strip()
-    if lg in _LEAGUE_CODES:
-        return lg
-    return COMP_TO_LEAGUE.get(lg)
-
 
 def _plausibly_same(loose_name: str, canonical: str) -> bool:
     """Loose check that an unresolved logged name could be this canonical team.

@@ -13,12 +13,14 @@ import csv
 import hashlib
 import os
 import sys
+from collections import Counter
 from datetime import datetime, timezone
 
 import pandas as pd
 import httpx
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from league_coverage import is_covered_league  # noqa: E402
 from predict_upcoming import _resolve_team  # noqa: E402
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
@@ -104,8 +106,15 @@ def main() -> None:
 
     published_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     new_rows: list[dict] = []
+    skipped_uncovered: Counter[str] = Counter()
 
     for m in matches:
+        # Only log leagues results.csv covers — anything else can never settle
+        # (and is predicted on default ratings), so it would sit as PENDING forever.
+        if not is_covered_league(m.get("competition", "")):
+            skipped_uncovered[m.get("competition", "") or "(blank)"] += 1
+            continue
+
         # Canonical names are what get logged AND hashed, so settlement can
         # match them directly against results.csv.
         home_team  = _canonical(m.get("home_team", ""), known_teams)
@@ -156,6 +165,11 @@ def main() -> None:
             "settled_at":    "",
         })
         existing_keys.add(key)
+
+    if skipped_uncovered:
+        print(f"  Skipped {sum(skipped_uncovered.values())} fixtures in uncovered leagues (can't settle):")
+        for lg, n in skipped_uncovered.most_common():
+            print(f"    {lg}: {n}")
 
     if not new_rows:
         print("No new predictions to publish.")

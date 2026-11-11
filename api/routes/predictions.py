@@ -1,8 +1,15 @@
 import math
 import os
+import sys
 from datetime import datetime, timezone
 from flask import Blueprint, jsonify, request, current_app
 import pandas as pd
+
+# The API runs with api/ on sys.path; add the repo root so scripts/ is importable.
+_REPO_ROOT = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", ".."))
+if _REPO_ROOT not in sys.path:
+    sys.path.insert(0, _REPO_ROOT)
+from scripts.league_coverage import is_covered_league  # noqa: E402
 
 predictions_bp = Blueprint("predictions", __name__)
 
@@ -105,22 +112,35 @@ def get_prediction_log():
         return jsonify({
             "success": True,
             "data": [],
-            "summary": {"total": 0, "correct": 0, "hit_rate": None, "leagues": [], "date_from": None, "date_to": None},
+            "summary": {"total": 0, "correct": 0, "settled": 0, "tracked": 0, "pending": 0, "not_tracked": 0,
+                        "hit_rate": None, "leagues": [], "date_from": None, "date_to": None},
             "meta": {"count": 0, "generated_at": datetime.now(timezone.utc).isoformat()},
         })
 
     df = pd.read_csv(PREDICTION_LOG_CSV, dtype=str).fillna("")
     df = df.sort_values("match_date", ascending=False)
 
-    settled = df[df["correct"].isin(["0", "1"])]
-    total     = len(df)
-    correct   = int((settled["correct"] == "1").sum())
-    n_settled = len(settled)
-    hit_rate  = round(correct / n_settled, 4) if n_settled > 0 else None
-    leagues   = sorted(df["league"].replace("", pd.NA).dropna().unique().tolist())
-    dates     = df["match_date"].replace("", pd.NA).dropna()
-    date_from = str(dates.min()) if len(dates) else None
-    date_to   = str(dates.max()) if len(dates) else None
+    # Status is derived, never written back — the CSV (and every row hash) is untouched.
+    # Leagues results.csv doesn't cover can never settle, so they're "not tracked"
+    # rather than "pending" and are kept out of the tracked totals.
+    is_settled = df["correct"].isin(["0", "1"])
+    covered    = df["league"].map(is_covered_league)
+    df["status"] = "pending"
+    df.loc[~covered, "status"] = "not_tracked"
+    df.loc[is_settled, "status"] = "settled"
+
+    tracked     = df[df["status"] != "not_tracked"]
+    settled     = df[is_settled]
+    total       = len(tracked)
+    n_pending   = int((df["status"] == "pending").sum())
+    not_tracked = int((df["status"] == "not_tracked").sum())
+    correct     = int((settled["correct"] == "1").sum())
+    n_settled   = len(settled)
+    hit_rate    = round(correct / n_settled, 4) if n_settled > 0 else None
+    leagues     = sorted(tracked["league"].replace("", pd.NA).dropna().unique().tolist())
+    dates       = tracked["match_date"].replace("", pd.NA).dropna()
+    date_from   = str(dates.min()) if len(dates) else None
+    date_to     = str(dates.max()) if len(dates) else None
 
     records = []
     for row in df.to_dict(orient="records"):
@@ -131,6 +151,9 @@ def get_prediction_log():
         "data": records,
         "summary": {
             "total":    total,
+            "tracked":  total,
+            "pending":  n_pending,
+            "not_tracked": not_tracked,
             "correct":  correct,
             "settled":  n_settled,
             "hit_rate": hit_rate,
@@ -138,7 +161,7 @@ def get_prediction_log():
             "date_from": date_from,
             "date_to":   date_to,
         },
-        "meta": {"count": total, "generated_at": datetime.now(timezone.utc).isoformat()},
+        "meta": {"count": len(records), "generated_at": datetime.now(timezone.utc).isoformat()},
     })
 
 

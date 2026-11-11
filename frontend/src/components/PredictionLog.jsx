@@ -50,7 +50,15 @@ function OutcomeBadge({ outcome }) {
   )
 }
 
-function CorrectBadge({ correct, actual }) {
+function CorrectBadge({ correct, actual, status }) {
+  if (status === 'not_tracked') return (
+    <span
+      title="League not covered by our results data, so this prediction can't be settled"
+      className="px-2 py-0.5 rounded text-xs font-medium bg-gray-900 text-gray-600 border border-gray-800 whitespace-nowrap cursor-help"
+    >
+      NOT TRACKED
+    </span>
+  )
   if (!actual) return <span className="px-2 py-0.5 rounded text-xs font-medium bg-gray-800 text-gray-500 border border-gray-700">PENDING</span>
   if (correct === '1') return <span className="text-emerald-400 font-bold text-base">✓</span>
   return <span className="text-red-400 font-bold text-base">✗</span>
@@ -158,7 +166,7 @@ export default function PredictionLog() {
   const [error,   setError]   = useState(null)
 
   const [leagueFilter,  setLeagueFilter]  = useState('all')
-  const [statusFilter,  setStatusFilter]  = useState('all')  // all | pending | correct | incorrect
+  const [statusFilter,  setStatusFilter]  = useState('all')  // all | pending | not_tracked | correct | incorrect
   const [showHashInfo,  setShowHashInfo]  = useState(false)
 
   useEffect(() => {
@@ -179,7 +187,8 @@ export default function PredictionLog() {
   const filtered = useMemo(() => {
     return data.filter(row => {
       if (leagueFilter !== 'all' && row.league !== leagueFilter) return false
-      if (statusFilter === 'pending'   && row.actual_result)            return false
+      if (statusFilter === 'pending'     && row.status !== 'pending')     return false
+      if (statusFilter === 'not_tracked' && row.status !== 'not_tracked') return false
       if (statusFilter === 'correct'   && row.correct !== '1')          return false
       if (statusFilter === 'incorrect' && row.correct !== '0')          return false
       return true
@@ -248,8 +257,11 @@ export default function PredictionLog() {
         <div className="flex flex-wrap gap-3">
           <StatCard
             label="Total predictions"
-            value={summary.total?.toLocaleString()}
-            sub={summary.leagues?.length ? `${summary.leagues.length} leagues` : undefined}
+            value={(summary.tracked ?? summary.total)?.toLocaleString()}
+            sub={[
+              summary.leagues?.length ? `${summary.leagues.length} leagues` : null,
+              summary.not_tracked ? `+${summary.not_tracked.toLocaleString()} not tracked` : null,
+            ].filter(Boolean).join(' · ') || undefined}
           />
           <StatCard
             label="Hit rate"
@@ -284,6 +296,7 @@ export default function PredictionLog() {
           {[
             { value: 'all',       label: 'All' },
             { value: 'pending',   label: 'Pending' },
+            { value: 'not_tracked', label: 'Not tracked' },
             { value: 'correct',   label: '✓ Correct' },
             { value: 'incorrect', label: '✗ Incorrect' },
           ].map(opt => (
@@ -371,7 +384,7 @@ export default function PredictionLog() {
                     }
                   </td>
                   <td className="px-3 py-2.5 text-center">
-                    <CorrectBadge correct={row.correct} actual={row.actual_result} />
+                    <CorrectBadge correct={row.correct} actual={row.actual_result} status={row.status} />
                   </td>
                   <td className="px-3 py-2.5">
                     <HashCell hash={row.hash} />

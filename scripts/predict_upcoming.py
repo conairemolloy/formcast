@@ -53,26 +53,8 @@ BASE_DIR   = os.path.normpath(os.path.join(os.path.dirname(__file__), ".."))
 DATA_DIR   = os.path.join(BASE_DIR, "data", "processed")
 MODELS_DIR = os.path.join(BASE_DIR, "models")
 
-# API competition name → internal league code used in results.csv
-COMP_TO_LEAGUE: dict[str, str] = {
-    "Premier League":       "EPL",
-    "La Liga":              "LaLiga",
-    "Primera Division":     "LaLiga",   # football-data.org's name for La Liga
-    "Serie A":              "SerieA",
-    "Bundesliga":           "Bundesliga",
-    "Ligue 1":              "Ligue1",
-    "Championship":         "Championship",
-    # Second tiers and other competitions present in results.csv
-    "2. Bundesliga":        "Bundesliga2",
-    "Bundesliga 2":         "Bundesliga2",
-    "Ligue 2":              "Ligue2",
-    "Scottish Premiership": "ScottishPrem",
-    "Scottish Premier League": "ScottishPrem",
-    "Serie B":              "SerieB",
-    "Segunda División":     "Segunda",
-    "La Liga 2":            "Segunda",
-    "Segunda Division":     "Segunda",
-}
+# API competition name → results.csv league code (shared with settle/publish/API)
+from league_coverage import COMP_TO_LEAGUE  # noqa: E402
 DEFAULT_LEAGUE = "EPL"
 
 RESULT_INV = {0: "A", 1: "D", 2: "H"}
