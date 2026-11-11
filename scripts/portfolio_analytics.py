@@ -17,9 +17,14 @@ Outputs
 
 import json
 import os
+import sys
 
 import numpy as np
 import pandas as pd
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from fixture_matching import FixtureMatcher  # noqa: E402
+from league_coverage import league_code as _league_code  # noqa: E402
 
 BASE_DIR = os.path.normpath(os.path.join(os.path.dirname(__file__), ".."))
 DATA_DIR = os.path.join(BASE_DIR, "data", "processed")
@@ -50,6 +55,11 @@ def _load_prediction_log_bets() -> pd.DataFrame:
     Load settled rows from prediction_log.csv, enrich with odds from results.csv,
     then identify value bets (edge > EDGE_THRESHOLD) across all three outcomes.
     Returns empty DataFrame when no settled rows exist (e.g. early in the season).
+
+    Fixtures are found with the same FixtureMatcher settle_predictions.py uses
+    (logged names are often full API names, e.g. "Olympique Lyonnais" vs
+    results.csv "Lyon"). Output keeps the LOGGED home_team/away_team, which the
+    row's SHA-256 hash covers; resolved names are only in home_canon/away_canon.
     """
     log_path     = os.path.join(DATA_DIR, "prediction_log.csv")
     results_path = os.path.join(DATA_DIR, "results.csv")
@@ -62,19 +72,41 @@ def _load_prediction_log_bets() -> pd.DataFrame:
     if settled.empty:
         return pd.DataFrame()
 
-    results = pd.read_csv(results_path, parse_dates=["match_date"], low_memory=False)
     odds_cols = ["home_odds", "draw_odds", "away_odds"]
-    results   = results[["match_date", "home_team", "away_team"] + odds_cols].dropna(
-        subset=odds_cols
-    )
+    results = pd.read_csv(
+        results_path,
+        usecols=["match_date", "home_team", "away_team", "result", "league"] + odds_cols,
+        dtype=str,
+        low_memory=False,
+    ).dropna(subset=["match_date", "home_team", "away_team", "result"])
+    for col in ("match_date", "home_team", "away_team", "league"):
+        results[col] = results[col].str.strip()
+    for col in odds_cols:
+        results[col] = pd.to_numeric(results[col], errors="coerce")
 
-    settled["match_date"] = pd.to_datetime(settled["match_date"])
-    for col in ["p_home", "p_draw", "p_away"]:
-        settled[col] = pd.to_numeric(settled[col], errors="coerce")
+    # Find each settled row's fixture, then attach that fixture's odds and
+    # canonical names to the logged row (logged names are left untouched).
+    matcher = FixtureMatcher(results)
+    attach: dict[str, list] = {c: [] for c in odds_cols + ["home_canon", "away_canon"]}
+    for r in settled.itertuples():
+        lg = _league_code(r.league)
+        res_idx = matcher.match(r.match_date, lg, r.home_team, r.away_team)[1] if lg else None
+        for c in odds_cols:
+            attach[c].append(results.at[res_idx, c] if res_idx is not None else np.nan)
+        attach["home_canon"].append(results.at[res_idx, "home_team"] if res_idx is not None else None)
+        attach["away_canon"].append(results.at[res_idx, "away_team"] if res_idx is not None else None)
+    for c, vals in attach.items():
+        settled[c] = vals
 
-    merged = settled.merge(results, on=["match_date", "home_team", "away_team"], how="inner")
+    n_settled = len(settled)
+    merged = settled.dropna(subset=odds_cols).copy()
+    print(f"  prediction_log: {len(merged)}/{n_settled} settled rows matched to results.csv odds")
     if merged.empty:
         return pd.DataFrame()
+
+    merged["match_date"] = pd.to_datetime(merged["match_date"])
+    for col in ["p_home", "p_draw", "p_away"]:
+        merged[col] = pd.to_numeric(merged[col], errors="coerce")
 
     merged["imp_h"]     = 1.0 / merged["home_odds"]
     merged["imp_d"]     = 1.0 / merged["draw_odds"]
@@ -105,8 +137,10 @@ def _load_prediction_log_bets() -> pd.DataFrame:
             rows.append({
                 "match_date":     r["match_date"],
                 "league":         r["league"],
-                "home_team":      r["home_team"],
+                "home_team":      r["home_team"],   # logged name (hashed)
                 "away_team":      r["away_team"],
+                "home_canon":     r["home_canon"],  # results.csv name, for dedup only
+                "away_canon":     r["away_canon"],
                 "outcome":        outcome,
                 "p_model":        round(p_model, 4),
                 "odds":           round(odds, 3),
@@ -140,13 +174,23 @@ def load_all_bets() -> pd.DataFrame:
     parts    = [df for df in [backtest, live] if not df.empty]
     combined = pd.concat(parts, ignore_index=True)
 
+    # Dedup on canonical names: live rows keep their logged (often full API)
+    # names, backtest rows already use results.csv names.
+    for side in ("home", "away"):
+        canon = f"{side}_canon"
+        if canon not in combined.columns:
+            combined[canon] = combined[f"{side}_team"]
+        else:
+            combined[canon] = combined[canon].fillna(combined[f"{side}_team"])
+
     # Keep backtest record when both sources have the same (date, fixture, outcome)
     combined = (
         combined
         .sort_values(["match_date", "source"])       # "backtest" < "prediction_log" alphabetically
         .drop_duplicates(
-            subset=["match_date", "home_team", "away_team", "outcome"], keep="first"
+            subset=["match_date", "home_canon", "away_canon", "outcome"], keep="first"
         )
+        .drop(columns=["home_canon", "away_canon"])
         .sort_values("match_date")
         .reset_index(drop=True)
     )

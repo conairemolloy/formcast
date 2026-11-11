@@ -9,14 +9,10 @@ Run AFTER backtest.py so results.csv is up to date.
 
 Matching rules (a wrong settlement is worse than an unsettled one):
   * The logged team names are NEVER changed — each row's SHA256 hash covers
-    them. Names are resolved to results.csv canonical names only to build the
-    lookup; only actual_result / correct / settled_at are ever written.
-  * Names are resolved strictly (explicit map, exact, suffix strip, accent
-    fold — no fuzzy substring guessing).
-  * If one team doesn't resolve (e.g. "Manchester" / "Sheffield" from an old
-    suffix-stripping bug), the fixture is found by date + league + the OTHER,
-    exactly-resolved team, and the loose name must still plausibly be that
-    team. Settles only if exactly one fixture fits; otherwise left unsettled.
+    them. Only actual_result / correct / settled_at are ever written.
+  * Fixtures are found with fixture_matching.FixtureMatcher (strict name
+    resolution + opponent-anchored fallback), shared with
+    portfolio_analytics.py so both see the same fixture for every row.
   * Leagues results.csv doesn't cover are left unsettled.
 
 Usage: python scripts/settle_predictions.py [--dry-run]
@@ -31,7 +27,7 @@ import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from league_coverage import league_code as _league_code  # noqa: E402
-from predict_upcoming import _fold, _resolve_team  # noqa: E402
+from fixture_matching import FixtureMatcher  # noqa: E402
 
 BASE_DIR    = os.path.normpath(os.path.join(os.path.dirname(__file__), ".."))
 LOG_CSV     = os.path.join(BASE_DIR, "data", "processed", "prediction_log.csv")
@@ -43,16 +39,6 @@ LOG_COLS = [
     "predicted_outcome", "published_at", "hash",
     "actual_result", "correct", "settled_at",
 ]
-
-def _plausibly_same(loose_name: str, canonical: str) -> bool:
-    """Loose check that an unresolved logged name could be this canonical team.
-    Only used when the opponent is already pinned exactly, so it just needs to
-    reject an obviously different club, not pick between candidates."""
-    a, b = _fold(loose_name), _fold(canonical)
-    if not a or not b:
-        return False
-    return a in b or b in a or a[:3] == b[:3]
-
 
 def main(dry_run: bool = False) -> dict:
     if not os.path.exists(LOG_CSV):
@@ -75,21 +61,8 @@ def main(dry_run: bool = False) -> dict:
     for col in ("match_date", "home_team", "away_team", "result", "league"):
         results[col] = results[col].str.strip()
 
-    known_teams = set(results["home_team"]) | set(results["away_team"])
     latest_result = results["match_date"].max()
-
-    # (date, league) → list of (home, away, result)
-    by_day: dict[tuple[str, str], list[tuple[str, str, str]]] = {}
-    for r in results.itertuples(index=False):
-        by_day.setdefault((r.match_date, r.league), []).append((r.home_team, r.away_team, r.result))
-
-    _strict_cache: dict[str, str | None] = {}
-
-    def strict(name: str) -> str | None:
-        if name not in _strict_cache:
-            res = _resolve_team(name, known_teams, fuzzy=False)
-            _strict_cache[name] = res if res in known_teams else None
-        return _strict_cache[name]
+    matcher = FixtureMatcher(results)
 
     stats: Counter = Counter()
     unsettled_examples: dict[str, list[str]] = {}
@@ -113,29 +86,16 @@ def main(dry_run: bool = False) -> dict:
             note("not_played_yet", row)
             continue
 
-        home = strict(row["home_team"].strip())
-        away = strict(row["away_team"].strip())
-        if home is None and away is None:
-            note("both_teams_unresolved", row)
+        status, res_idx = matcher.match(match_date, lg, row["home_team"], row["away_team"])
+        if res_idx is None:
+            note(status, row)
             continue
 
-        candidates = [
-            (h, a, res) for h, a, res in by_day.get((match_date, lg), [])
-            if (h == home if home else _plausibly_same(row["home_team"], h))
-            and (a == away if away else _plausibly_same(row["away_team"], a))
-        ]
-        if len(candidates) > 1:
-            note("ambiguous", row)
-            continue
-        if not candidates:
-            note("no_result_found", row)  # postponed, date mismatch, or wrong league
-            continue
-
-        actual = candidates[0][2]
+        actual = results.at[res_idx, "result"]
         log.at[idx, "actual_result"] = actual
         log.at[idx, "correct"]       = "1" if row["predicted_outcome"] == actual else "0"
         log.at[idx, "settled_at"]    = settled_at
-        stats["settled_exact" if home and away else "settled_anchored"] += 1
+        stats[f"settled_{status}"] += 1
 
     settled = stats["settled_exact"] + stats["settled_anchored"]
     print(f"Settled {settled} predictions "
