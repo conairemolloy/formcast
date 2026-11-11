@@ -2,8 +2,12 @@
 """
 Monte Carlo tournament simulator for the top 5 European soccer leagues.
 
-Simulates remaining 2024-25 matches using Elo-based H/D/A probabilities.
+Simulates the remaining matches of the CURRENT season (derived from today's
+date via season_utils.current_season) using Elo-based H/D/A probabilities.
 Elo is updated after each simulated match (K=16, home advantage=50 pts).
+
+results.csv only contains played matches, so remaining fixtures are derived
+from the double round-robin: every ordered (home, away) pairing not yet played.
 
 Draw probability model:
     raw_p_home = 1 / (1 + 10^(-(elo_diff + 50) / 400))
@@ -13,13 +17,17 @@ Draw probability model:
 """
 
 import time
+from datetime import date
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
+from season_utils import current_season, previous_season
+
 # ── Configuration ─────────────────────────────────────────────────────────────
-TODAY = "2026-05-21"
+TODAY = date.today().isoformat()
+SEASON = current_season(date.today())
 N_SIMS = 100_000
 K = 16          # Elo K-factor
 HOME_ADV = 50   # Home advantage in Elo points
@@ -138,7 +146,7 @@ def print_table(
     row_fmt = "{:<4} {:<22} {:>4}  {:>+5}  {:>6}  {:>6}  {:>6}  {:>7}"
 
     print(f"\n{'─' * width}")
-    print(f"  {league} 2025-26  |  N={N_SIMS:,} Monte Carlo simulations")
+    print(f"  {league} {SEASON}  |  N={N_SIMS:,} Monte Carlo simulations")
     print(f"{'─' * width}")
     print(hdr_fmt.format("Pos", "Team", "Pts", "GD", "Win%", "Top4%", "Top6%", "Rel%"))
     print(f"{'─' * width}")
@@ -170,25 +178,44 @@ def main() -> None:
 
     for league in LEAGUES:
         league_size = LEAGUE_SIZES[league]
-        print(f"\n[{league}] Loading 2025-26 season data...", flush=True)
+        print(f"\n[{league}] Loading {SEASON} season data...", flush=True)
         t0 = time.perf_counter()
 
         season_df = results_df[
-            (results_df["season"] == "2025-26") & (results_df["league"] == league)
+            (results_df["season"] == SEASON) & (results_df["league"] == league)
         ].copy()
 
         # Played = result recorded AND date on or before today
-        played    = season_df[
+        played = season_df[
             season_df["result"].notna() & (season_df["match_date"] <= TODAY)
         ]
-        remaining = season_df[
-            (season_df["match_date"] > TODAY) | season_df["result"].isna()
-        ]
 
-        # Enumerate teams (stable sort for reproducibility)
-        teams   = sorted(set(season_df["home_team"]) | set(season_df["away_team"]))
+        # Enumerate teams (stable sort for reproducibility). Early in the season
+        # not every team may have played yet — fall back to last season's list.
+        teams = sorted(set(played["home_team"]) | set(played["away_team"]))
+        if len(teams) < league_size:
+            prev = results_df[
+                (results_df["season"] == previous_season(SEASON))
+                & (results_df["league"] == league)
+            ]
+            prev_teams = sorted(set(prev["home_team"]) | set(prev["away_team"]))
+            print(
+                f"[{league}] WARNING: only {len(teams)}/{league_size} teams have "
+                f"played in {SEASON}; using {previous_season(SEASON)} team list "
+                f"(promoted/relegated sides may be wrong until all have played).",
+                flush=True,
+            )
+            # Keep anyone who has played this season; fill the rest from last season
+            teams = sorted(set(teams) | set(prev_teams))
         team_ix = {t: i for i, t in enumerate(teams)}
         T       = len(teams)
+
+        # Remaining = double round-robin pairings not yet played
+        played_pairs = set(zip(played["home_team"], played["away_team"]))
+        remaining_pairs = [
+            (h, a) for h in teams for a in teams
+            if h != a and (h, a) not in played_pairs
+        ]
 
         # Build current standings from played matches
         pts = np.zeros(T, dtype=np.float64)
@@ -212,10 +239,7 @@ def main() -> None:
         elo = np.array([elo_lookup.get(t, DEFAULT_ELO) for t in teams], dtype=np.float64)
 
         # Remaining matches as index pairs
-        rem_list = [
-            (team_ix[row.home_team], team_ix[row.away_team])
-            for row in remaining.itertuples(index=False)
-        ]
+        rem_list = [(team_ix[h], team_ix[a]) for h, a in remaining_pairs]
 
         n_played = len(played)
         n_rem    = len(rem_list)
@@ -236,6 +260,9 @@ def main() -> None:
         for t, team in enumerate(teams):
             all_rows.append({
                 "league":          league,
+                "season":          SEASON,
+                "matches_played":  n_played,
+                "matches_remaining": n_rem,
                 "team":            team,
                 "current_pts":     int(pts[t]),
                 "current_gd":      int(gd[t]),

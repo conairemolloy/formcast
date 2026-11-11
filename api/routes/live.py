@@ -11,6 +11,14 @@ from flask import Blueprint, jsonify, request
 
 from .markets import _lookup_corners, _lookup_cards, _lookup_btts, _lookup_goals
 
+# The API runs with api/ on sys.path; add the repo root so scripts/ is importable.
+import sys
+from pathlib import Path
+_REPO_ROOT = str(Path(__file__).resolve().parents[2])
+if _REPO_ROOT not in sys.path:
+    sys.path.insert(0, _REPO_ROOT)
+from scripts.season_utils import current_season  # noqa: E402
+
 live_bp = Blueprint("live", __name__)
 
 load_dotenv()  # local dev; on Railway the key comes from service variables
@@ -533,7 +541,6 @@ def _h2h_stats(home: str, away: str) -> dict:
 # Season corners / cards markets
 # ---------------------------------------------------------------------------
 
-_CURRENT_SEASON   = "2025-26"
 _MIN_DATA_MATCHES = 5
 
 
@@ -549,7 +556,7 @@ def _team_season_avg(team: str, col_home: str, col_away: str) -> float | None:
     df = _RESULTS_DF
     mask = (
         ((df["home_team"] == team) | (df["away_team"] == team)) &
-        (df["season"] == _CURRENT_SEASON)
+        (df["season"] == current_season(date.today()))
     )
     season_df = df[mask]
     valid = season_df[season_df[col_home].notna() & season_df[col_away].notna()]
@@ -807,8 +814,8 @@ def team_profile():
         })
 
     # Current season stats
-    current_season = "2025-26"
-    szn = team_df[team_df["season"] == current_season]
+    season = current_season(date.today())
+    szn = team_df[team_df["season"] == season]
     gf = gc = wins = draws = losses = 0
     h_s = {"wins": 0, "draws": 0, "losses": 0, "gf": 0, "ga": 0}
     a_s = {"wins": 0, "draws": 0, "losses": 0, "gf": 0, "ga": 0}
@@ -864,7 +871,7 @@ def team_profile():
 
     return jsonify({"success": True, "data": {
         "last_10": last_10,
-        "season":  current_season,
+        "season":  season,
         "stats":   stats,
         "h2h":     h2h,
     }}), 200

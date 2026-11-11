@@ -50,21 +50,14 @@ export default function Tournament() {
       .finally(() => setLoading(false))
   }, [league])
 
-  const seasonComplete = useMemo(() =>
-    rows.length > 0 && rows.every(r =>
-      r.win_pct === 0 || r.win_pct === 1 ||
-      r.win_pct === null || r.win_pct === undefined
-    )
-  , [rows])
+  const season = rows[0]?.season ?? null
 
   const matchStats = useMemo(() => {
-    if (rows.length === 0) return null
-    const teamCount = rows.length
-    const totalMatches = teamCount === 20 ? 380 : 306
-    const totalPts = rows.reduce((s, r) => s + r.current_pts, 0)
-    const played = Math.round(totalPts / 2.65)
-    return { played, remaining: Math.max(0, totalMatches - played) }
+    if (rows.length === 0 || rows[0].matches_played == null) return null
+    return { played: rows[0].matches_played, remaining: rows[0].matches_remaining }
   }, [rows])
+
+  const seasonComplete = matchStats?.remaining === 0
 
   return (
     <div className="space-y-5">
@@ -72,11 +65,11 @@ export default function Tournament() {
       <div>
         <div className="flex items-baseline gap-3">
           <h1 className="text-xl font-semibold text-white">Tournament Simulator</h1>
-          <span className="text-sm text-gray-500 font-mono">2025-26</span>
+          {season && <span className="text-sm text-gray-500 font-mono">{season}</span>}
         </div>
         {matchStats && (
           <p className="text-xs text-gray-500 mt-0.5">
-            ~{matchStats.played} matches played · ~{matchStats.remaining} remaining
+            {matchStats.played} matches played · {matchStats.remaining} remaining
           </p>
         )}
       </div>
