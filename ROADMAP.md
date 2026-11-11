@@ -468,11 +468,11 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 ### Key Page Redesigns
 - [ ] **Full site remodel — "bring it to life + findability" (Nov 2026 direction)** — the whole-site UX pass the Core Product Principle demands. GOALS: (1) users can actually FIND what they want — nav/IA restructured around what people come for, not a feature dump across 5 dropdowns; (2) every screen leads with ONE thing, progressive disclosure, kill flat lists (dashboard especially); (3) "bring it to life" — restrained, purposeful motion only (edge meter fill, numbers ticking, probability bars on load) — NOT decorative animation, which cuts against a trust/quant product; (4) consistency — replicate the Backtest page's honest plain-English framing and the Ratings/H2H visual quality across weaker pages; (5) DESIGN.md is OPEN TO REVISION to match current taste (clean/minimal/modern/restrained-motion) — treat as updatable, rewrite as output of the remodel. Precedes/absorbs the individual page-redesign items below. Mobile-first throughout.
 
-### Design Direction & Tooling (Nov 2026 — in progress)
+### Design Direction & Tooling (Nov 2026 — direction mostly locked)
 
 **GOAL — escape the "obviously AI-designed" look.** Shown to real people (Nov 2026): impressive but "a lot of stuff, hard to show everything" and "looks obviously designed by Claude". The makeover must be deliberately branded, not default-generated. The AI tell is a COMBINATION — breaking it needs all of:
-- [ ] Palette — moving AWAY from the default dark+emerald (the #1 AI tell). Leaning DIRECTION E: cool light "paper" (#f4f6f9-ish) + deep blue accent (#1f4ea3-ish) — sharp, credible, fintech/analytics feel. Accent not 100% locked (deep blue vs steel/indigo — preview before deciding). Possible hybrid: light brand/marketing surfaces + refined dark mode for data-heavy pages (ratings, backtest). DECIDE via preview.
-- [ ] Typography — a DISTINCTIVE typeface is the single biggest de-genericise lever (default system sans = AI tell). Pick a real font (free Google Fonts fine). Open question: clean neutral grotesk throughout, vs characterful display face for headlines + clean sans for body/data. Preview both.
+- [x] **Palette — DECIDED (Nov 2026 landing-page preview session): DARK.** Warm near-black ink base (~#111214 — warm-tinted blacks, NOT cold grey) + soft blue accent (~#3b74d4). All-dark across the product — no light or hybrid mode needed. Clearly away from the old dark+emerald (the #1 AI tell). Feel: premium/editorial, NOT a cold Bloomberg terminal. (Supersedes the earlier "Direction E" light-paper + deep-blue lean.)
+- [ ] **Typography — STILL OPEN (the single biggest "de-AI" lever).** Default system sans = AI tell. Can't be decided in preview tools — choose at BUILD time (v0 / in the repo) with real fonts loaded. Candidates: distinctive serif for headlines (e.g. Fraunces, Instrument Serif) + clean grotesk for body/data. Preview in v0 before locking.
 - [ ] Layout — break the "uniform grid of equal rounded cards" tell. Editorial/asymmetric: real hero, varied density, some full-bleed, bordered-not-boxed, confident spacing contrast (big where it matters, tight elsewhere).
 - [ ] Voice/copy — opinionated and specific, not generic AI copy. E.g. "We make Villa 68%. The book says 49%." not "Track your favourite teams". Bake the honesty angle in ("logged — win or lose").
 - NOTE: the last 20% (exact font, logo, brand details) is taste-driven and iterative — needs Conaire's eye, not one-pass generation. Treat as: propose specific direction → react → sharpen → THEN into DESIGN.md → build. DESIGN.md gets rewritten around this, not patched.
@@ -484,7 +484,22 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - Skip Bolt.new / Lovable — same generic shadcn output, messy to integrate into the existing repo; v0 does it cleaner.
 - WORKFLOW: lock direction → generate in v0 with a direction-specific prompt → preview → if liked, copy into repo + refine with Claude Code. Optionally mock in Figma/Framer first.
 
-**LANDING PAGE — build FIRST (new, high-priority).** Currently a logged-out visitor gets the Dashboard + a sign-in modal — NO real landing page. A proper landing page is the biggest "now I get it in 5 seconds" lever and the thing to show people. Needs: one clear headline (what this IS), the proof numbers huge (hit rate / CLV / bets logged — use the agreed honest framing; see the CRITICAL hit-rate framing decision at the top of NEXT UP, which GATES this landing page), a live Bet of the Day as the demo, one clear CTA, below-fold how-it-works + track record. Built in the locked design direction. (Supersedes/absorbs the existing "Landing page redesign" item.)
+**LANDING PAGE — build FIRST (new, high-priority).** Currently a logged-out visitor gets the Dashboard + a sign-in modal — NO real landing page. A proper landing page is the biggest "now I get it in 5 seconds" lever and the thing to show people. Built in the locked design direction. (Supersedes/absorbs the existing "Landing page redesign" item.)
+
+- [x] **Structure — DECIDED: CLOSED FRONT DOOR.** Logged-out nav is ONLY: About · How it works · Log in · Sign up free. No browsable product nav when logged out — product nav + full features appear only AFTER login. Sections, top to bottom:
+  1. **Hero** — the promise + ROI proof numbers + sign-up CTA.
+  2. **Gated Bet of the Day teaser** — generic "sign up to unlock" block, NOT a live pick card.
+  3. **About** — founder photo + bio (the trust differentiator vs anonymous tipsters).
+  4. **How it works** — 3 plain steps.
+  5. **Feature grid** — "Everything inside, once you're in": promote breadth, one line per feature, no data shown.
+  6. **Email capture** — collect addresses now; the Resend digest gets built later (Phase 10).
+- [x] **Headline framing — DECIDED: ROI-LED.** "+X% return per bet, logged" is the headline number — the one metric a normal person can interpret on their own. Accuracy (64.4% non-draw) and CLV sit below it, clearly labelled. This RESOLVES part of the CRITICAL hit-rate framing decision (top of NEXT UP) — option (b). ⚠️ Confirm the REAL ROI figure from the 608 settled bets before it ships.
+- [x] **Freemium on landing — DECIDED: Bet of the Day gated behind signup** (teaser only on the landing page). Drives signups + the email list over anonymous browsing. ⚠️ FLAG: this revises the earlier "Bet of the Day FREE / visible logged-out" freemium decision in the Value Bets editorial hierarchy item below, and the "live Bet of the Day as the demo" idea in the Multi-sport nav/IA item — reconcile those when building (Bet of the Day stays free, but free = free with an account).
+
+**STILL OPEN (landing page):**
+- [ ] Typeface — see Typography above; choose at build in v0 with real fonts.
+- [ ] Real ROI number — pull from the settled track record (608 settled bets) before the hero ships.
+- [ ] Founder photo + bio — placeholders for now.
 
 ### Key Page Redesigns (continued)
 - [ ] **Multi-sport framework (structural, build during remodel)** — design the nav, URL structure (/football/..., sport switcher), data shape and component props to ASSUME multiple sports from the start, even though only football ships. Football first, GAA/tennis/etc as visible "coming soon". Cheap now, expensive to retrofit. (Expands the existing "Multi-sport-ready navigation & IA" item below — see it for the journey/nav detail.)
