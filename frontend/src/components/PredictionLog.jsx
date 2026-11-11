@@ -162,7 +162,7 @@ export default function PredictionLog() {
   const [showHashInfo,  setShowHashInfo]  = useState(false)
 
   useEffect(() => {
-    api.get('/predictions/log')
+    api.get('/api/predictions/log')
       .then(r => {
         setData(r.data.data ?? [])
         setSummary(r.data.summary ?? null)
