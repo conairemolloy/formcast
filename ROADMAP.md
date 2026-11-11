@@ -13,6 +13,25 @@
 
 ---
 
+## Live Site Bugs & Findings — November 2026 QA sweep
+> From a full page-by-page walkthrough of the live site. Technical fixes are also tracked in "Parked Technical Fixes".
+
+**🔴 Real bugs (broken / wrong — fix before any launch/trust push):**
+- [ ] **Prediction Log page — 404, completely broken** — "Failed to load: Request failed with status code 404". This IS the public track record page — the centrepiece of the free-first trust strategy. Data settled fine (608 predictions) but the page calls a dead API endpoint. HIGHEST priority of the bugs — the trust page doesn't load.
+- [ ] **Tournament Simulator — stuck on last season (2025-26), functionally dead** — header shows "2025-26 · ~381 matches played · ~0 remaining", simulating a FINISHED prior season (100%/0% probabilities). Root cause: hardcoded TODAY="2026-05-21" (tournament_simulator.py:22) + "2025-26" (line 177). Whole feature is useless until made season-dynamic. Not cosmetic — a full page is wrong.
+- [ ] **Three different public hit-rate numbers across the site (confirmed live)** — Predictions page shows 48.8% (10,058 shown / 4,906 correct, 3-way), Backtest page shows 66.2% (non-draw), plus 64.4%/68.7% in materials. A visitor browsing sees 48.8% on one page and 66.2% on another with no explanation. This is the trust-eroding inconsistency the "hit-rate framing decision" (top of NEXT UP) must resolve — now confirmed it's live across multiple pages, not hypothetical.
+- [ ] **H2H "2025-26 Season Stats" heading** — hardcoded last-season label (same bug family as Tournament). Shows last season's stats.
+
+**🟢 What's GOOD (strong pages — the standard to match, do NOT redesign away):**
+- Backtest page — excellent; the "What's working / Why P&L looks negative / What the numbers mean" plain-English boxes are the honest trust-building tone to replicate site-wide. THE model page.
+- Ratings (club + international) — clean, current, well-designed (Bayern 2060, Spain 2277).
+- H2H — strong; beautiful Elo history chart, win-prob bar.
+- Matches, Match Research, Value Bets (card grid) — functional, current, close to right.
+
+**🟡 Known/polish:** No landing page (logged-out = Dashboard + sign-in modal, not a conversion page); Dashboard flat-list (= #1 Phase 6 editorial-hierarchy priority); bare "Loading…" spinners instead of skeletons.
+
+---
+
 ## Currently Live
 - Dashboard with live value bets, upcoming fixtures, top ratings
 - Live match tracker with real-time probabilities (football-data.org)
@@ -447,6 +466,8 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Icon consistency — single icon library throughout (lucide-react already imported, ensure nothing uses ad-hoc alternatives)
 
 ### Key Page Redesigns
+- [ ] **Full site remodel — "bring it to life + findability" (Nov 2026 direction)** — the whole-site UX pass the Core Product Principle demands. GOALS: (1) users can actually FIND what they want — nav/IA restructured around what people come for, not a feature dump across 5 dropdowns; (2) every screen leads with ONE thing, progressive disclosure, kill flat lists (dashboard especially); (3) "bring it to life" — restrained, purposeful motion only (edge meter fill, numbers ticking, probability bars on load) — NOT decorative animation, which cuts against a trust/quant product; (4) consistency — replicate the Backtest page's honest plain-English framing and the Ratings/H2H visual quality across weaker pages; (5) DESIGN.md is OPEN TO REVISION to match current taste (clean/minimal/modern/restrained-motion) — treat as updatable, rewrite as output of the remodel. Precedes/absorbs the individual page-redesign items below. Mobile-first throughout.
+- [ ] **Multi-sport framework (structural, build during remodel)** — design the nav, URL structure (/football/..., sport switcher), data shape and component props to ASSUME multiple sports from the start, even though only football ships. Football first, GAA/tennis/etc as visible "coming soon". Cheap now, expensive to retrofit. (Expands the existing "Multi-sport-ready navigation & IA" item below — see it for the journey/nav detail.)
 - [ ] Dashboard redesign — hero metric strip (value bets identified, hit rate, CLV) → live value bets → upcoming fixtures → ratings snapshot. Each section visually distinct with clear heading
 - [ ] Value Bets page redesign — card layout instead of table rows, visual edge meter, bookmaker logo/name prominent, Kelly stake displayed clearly
 - [ ] Value Bets editorial hierarchy (Bet of the Day) — the value bets surface is curated, not a flat list. Three tiers: (1) BET OF THE DAY — single highest-conviction pick, hero treatment, emerald-bordered card, full edge meter + plain-language "model sees X%, book implies Y%" + Kelly/book/odds row. Ranked by EDGE × CONFIDENCE, not raw edge (raw-edge sort surfaces noisy longshots — wrong thing to headline; confidence-weighting protects trust positioning). (2) TODAY'S TOP VALUE — next 3-4 strongest as compact edge-meter cards. (3) FULL LIST — complete filterable list below ("View all N →"). All odds render in the user's chosen format (decimal/fractional/American) via the Tier 6 oddsFormat preference. FREEMIUM DECISION: Bet of the Day is FREE / visible logged-out (daily proof + marketing/screenshot asset + retention hook); full list + shortlist paywalled. Off-season: hero pulls from World Cup module so it's never empty.
@@ -500,7 +521,11 @@ including shots, corners and cards. Live at formcast-blush.vercel.app.
 - [ ] Uncovered-league filter — ~394 logged predictions are for leagues results.csv can't settle (Brazil, Eredivisie, Primeira Liga, Champions League, Libertadores) — predicted on default 1500 ratings (noise, not forecasts). One-line filter in publish_predictions.py to stop logging them; show existing ones as "not tracked" not "pending".
 - [ ] Rescheduled-match void rule — ~9 predictions stuck unsettled because the match moved dates; bookmakers void bets not played within ~48-72h. Add a void status.
 - [ ] Stale xG — ingest_xg_data.py stops at 2024-25; no xG for 2025-26 or 2026-27, those features use defaults. Extend or confirm Understat has current data.
-- [ ] Hardcoded "2025-26" in display spots — live.py:536/810 (team profile current-season stats), tournament_simulator.py:22/177 (TODAY="2026-05-21" simulates last season), frontend Matches.jsx/H2H.jsx/Tournament.jsx season labels. Make season dynamic.
+- [ ] **Prediction Log page 404** — page calls a dead API endpoint; settled data (608) exists but the public track record page doesn't load. Find the endpoint the frontend calls vs what the API serves and fix. HIGHEST priority (see QA sweep).
+- [ ] Hardcoded "2025-26" season (one bug family — fix with a single dynamic current-season helper) — confirmed live in QA sweep:
+  - **Tournament Simulator (functionally dead, not cosmetic)** — tournament_simulator.py:22 TODAY="2026-05-21" + line 177 "2025-26"; page simulates the finished 2025-26 season (~381 played, ~0 remaining, 100%/0% probabilities).
+  - **H2H "2025-26 Season Stats"** — heading + stats show last season (H2H.jsx label + live.py:536/810 team current-season stats).
+  - Other labels — Matches.jsx / Tournament.jsx season labels.
 - [ ] Investigate the Nov 8 2026 FAILED Railway deploy (daily international update) — glance at logs.
 - [ ] Node 20 / Ubuntu deprecation warnings in GitHub Actions — bump actions/checkout@v4→v5, setup-python@v5→v6 sometime.
 
