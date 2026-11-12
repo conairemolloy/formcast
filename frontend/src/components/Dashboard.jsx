@@ -242,10 +242,10 @@ function RatingRow({ team, rank }) {
 // ---------------------------------------------------------------------------
 
 const MODEL_STATS = [
-  { label: 'Hit Rate',   value: '68.7%',    color: 'text-emerald-400' },
-  { label: 'Brier',      value: '0.156',    color: 'text-[var(--text-secondary)]' },
-  { label: 'Mean CLV',   value: '+19.0%',   color: 'text-emerald-400' },
-  { label: 'Matches',    value: '128,797',  color: 'text-gray-300' },
+  { label: 'Hit Rate · 26-27 non-draw', value: '64.4%',    color: 'text-emerald-400' },
+  { label: 'Brier',                     value: '0.156',    color: 'text-[var(--text-secondary)]' },
+  { label: 'Settled',                   value: '608',      color: 'text-gray-300' },
+  { label: 'Matches',                   value: '128,797',  color: 'text-gray-300' },
 ]
 
 function ModelPerf({ onNavigate }) {

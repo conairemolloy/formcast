@@ -81,20 +81,6 @@ const FeatImportTooltip = ({ active, payload, label }) => {
   )
 }
 
-const ClvTooltip = ({ active, payload }) => {
-  if (!active || !payload?.length) return null
-  const d = payload[0]?.payload
-  if (!d) return null
-  return (
-    <div className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm space-y-0.5">
-      <p className="text-gray-400">Match {d.match_number}</p>
-      <p className={d.cumulative_clv >= 0 ? 'text-emerald-400' : 'text-red-400'}>
-        CLV {d.cumulative_clv >= 0 ? '+' : ''}{d.cumulative_clv.toFixed(3)}
-      </p>
-    </div>
-  )
-}
-
 const PnlTooltip = ({ active, payload }) => {
   if (!active || !payload?.length) return null
   const d = payload[0]?.payload
@@ -114,7 +100,6 @@ export default function BacktestReport() {
   const [calibData, setCalibData]           = useState(null)
   const [hlData, setHlData]                 = useState(null)
   const [pnlData, setPnlData]               = useState(null)
-  const [clvData, setClvData]               = useState(null)
   const [dmData, setDmData]                 = useState(null)
   const [featImportance, setFeatImportance] = useState(null)
   const [loading, setLoading]               = useState(true)
@@ -125,14 +110,12 @@ export default function BacktestReport() {
       api.get('/api/backtest'),
       api.get('/api/backtest/calibration'),
       api.get('/api/backtest/pnl'),
-      api.get('/api/backtest/clv'),
     ])
-      .then(([backtestRes, calibRes, pnlRes, clvRes]) => {
+      .then(([backtestRes, calibRes, pnlRes]) => {
         setData(backtestRes.data.data)
         setCalibData(calibRes.data.data.bins)
         setHlData(calibRes.data.data)
         setPnlData(pnlRes.data.data)
-        setClvData(clvRes.data.data)
       })
       .catch(() => setError('Failed to load backtest data'))
       .finally(() => setLoading(false))
@@ -229,7 +212,7 @@ export default function BacktestReport() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
           <div className="bg-gray-800/50 rounded p-3">
             <p className="text-emerald-400 font-medium mb-1">✓ What's working</p>
-            <p className="text-gray-300">The model consistently beats the bookmaker's final price before kickoff — this is called Closing Line Value (CLV) and is the gold standard measure of a profitable betting model. Our +18.4% CLV means we find genuine value before markets close.</p>
+            <p className="text-gray-300">The ensemble beats our Elo baseline on matches it never saw in training (~67.0% vs 66.7% non-draw walk-forward), and its probabilities are well-calibrated (ECE 0.013).</p>
           </div>
           <div className="bg-gray-800/50 rounded p-3">
             <p className="text-amber-400 font-medium mb-1">⚠ Why P&amp;L looks negative</p>
@@ -487,7 +470,7 @@ export default function BacktestReport() {
       <div className="bg-gray-900 border border-gray-800 rounded-xl p-3 md:p-5">
         <h2 className="text-base font-semibold text-white mb-1">Model Comparison</h2>
         <p className="text-xs text-gray-500 mb-1">
-          Hit rates below are 3-outcome (H/D/A) on the ensemble holdout. Elo binary hit rate (non-draw only) is 68.7% — see charts above.
+          Hit rates below are 3-outcome (H/D/A) on the ensemble holdout.
         </p>
         <p className="text-xs text-gray-600 mb-4">
           Evaluated on 2024–2026 holdout ({(dmData?.n_matches ?? 10099).toLocaleString()} matches)
@@ -563,85 +546,6 @@ export default function BacktestReport() {
         </div>
       )}
 
-      {/* Closing Line Value (CLV) */}
-      {clvData && (() => {
-        const clvTrending = clvData.clv_chart.length > 1 &&
-          clvData.clv_chart[clvData.clv_chart.length - 1].cumulative_clv >= clvData.clv_chart[0].cumulative_clv
-        const clvColor = clvTrending ? '#10b981' : '#ef4444'
-        return (
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-3 md:p-5">
-            <h2 className="text-base font-semibold text-white mb-1">Closing Line Value (CLV) Analysis</h2>
-            <p className="text-xs text-gray-500 mb-4">
-              CLV measures whether our pre-match odds beat the bookmaker's final price.
-              Positive CLV is the gold standard indicator of a profitable model.
-            </p>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
-              <StatCard
-                label="Mean CLV"
-                value={`${clvData.mean_clv >= 0 ? '+' : ''}${(clvData.mean_clv * 100).toFixed(2)}%`}
-                color={clvData.mean_clv >= 0 ? 'text-emerald-400' : 'text-red-400'}
-                sub="Avg edge vs closing line"
-              />
-              <StatCard
-                label="Positive CLV Bets"
-                value={clvData.positive_clv_bets.toLocaleString()}
-                color="text-gray-300"
-                sub="Bets beating closing price"
-              />
-              <StatCard
-                label="CLV+ Win Rate"
-                value={`${clvData.clv_win_rate.toFixed(1)}%`}
-                color="text-[var(--text-secondary)]"
-                sub="Win rate on CLV+ bets"
-              />
-              <StatCard
-                label="CLV+ ROI"
-                value={`${clvData.clv_roi >= 0 ? '+' : ''}${clvData.clv_roi.toFixed(2)}%`}
-                color={clvData.clv_roi >= 0 ? 'text-emerald-400' : 'text-red-400'}
-                sub="ROI on CLV+ bets only"
-              />
-            </div>
-
-            <h3 className="text-sm font-medium text-gray-400 mb-3">Cumulative Closing Line Value</h3>
-            <ResponsiveContainer width="100%" height={240}>
-              <LineChart data={clvData.clv_chart} margin={{ top: 8, right: 16, bottom: 8, left: 0 }}>
-                <XAxis
-                  dataKey="match_number"
-                  tick={{ fill: '#6b7280', fontSize: 11 }}
-                  axisLine={false}
-                  tickLine={false}
-                  tickFormatter={v => v.toLocaleString()}
-                  label={{ value: 'Match number', position: 'insideBottom', offset: -4, fill: '#6b7280', fontSize: 11 }}
-                />
-                <YAxis
-                  tick={{ fill: '#6b7280', fontSize: 11 }}
-                  axisLine={false}
-                  tickLine={false}
-                  width={44}
-                  tickFormatter={v => v.toFixed(1)}
-                />
-                <Tooltip content={<ClvTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.08)' }} />
-                <ReferenceLine y={0} stroke="#4b5563" strokeDasharray="5 4" />
-                <Line
-                  type="monotone"
-                  dataKey="cumulative_clv"
-                  stroke={clvColor}
-                  strokeWidth={2}
-                  dot={false}
-                  activeDot={{ r: 4, fill: clvColor, stroke: clvColor }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-
-            <p className="mt-3 text-xs text-center text-gray-600">
-              Positive cumulative CLV confirms the model identifies value before markets close,
-              even when flat-stake ROI appears negative due to bookmaker margins on historical data.
-            </p>
-          </div>
-        )
-      })()}
-
       {/* Value Bets P&L */}
       {pnlData && (() => {
         const positive = pnlData.final_pnl >= 0
@@ -650,7 +554,7 @@ export default function BacktestReport() {
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-3 md:p-5">
             <div className="text-xs text-gray-400 mb-3 bg-gray-800/30 rounded p-3 border border-gray-700/50">
               <p className="text-gray-300 font-medium mb-1">Why does this show a loss?</p>
-              <p>This simulation bets £1 on every match where our model finds more than 5% edge — that's over 3,800 bets across 2.5 years, or about 8 per day. In reality, no bettor would back every single selection. The negative result comes from three things: (1) historical odds include bookmaker margin already baked in, (2) too many bets dilute the genuine edges with noise, and (3) average odds of 3.27 means mostly backing underdogs where variance is high. The CLV chart above this section is a better measure of model quality.</p>
+              <p>This simulation bets £1 on every match where our model finds more than 5% edge — that's over 3,800 bets across 2.5 years, or about 8 per day. In reality, no bettor would back every single selection. The negative result comes from three things: (1) historical odds include bookmaker margin already baked in, (2) too many bets dilute the genuine edges with noise, and (3) average odds of 3.27 means mostly backing underdogs where variance is high.</p>
             </div>
             <h2 className="text-base font-semibold text-white mb-1">Value Bets P&amp;L Simulation</h2>
             <p className="text-xs text-gray-500 mb-4">£1 flat stake on value bets only (EV &gt; 5%)</p>
@@ -718,8 +622,6 @@ export default function BacktestReport() {
               </p>
               <p className="text-xs text-center text-gray-500">
                 ⚠ Note: Negative ROI reflects historical odds which include bookmaker margin.
-                Mean CLV of +0.19 indicates the model consistently finds value before markets close —
-                the stronger signal of genuine edge.
               </p>
             </div>
           </div>

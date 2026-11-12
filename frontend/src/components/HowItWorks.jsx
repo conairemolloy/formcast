@@ -3,8 +3,8 @@ const MODELS = [
     name: 'Elo Rating',
     desc: 'Dynamic strength rating updated after every result. Teams gain points for wins, lose for losses, with larger swings for upsets.',
     formula: 'E(A) = 1 / (1 + 10^(-(R_A - R_B) / 400))',
-    metric: '68.7% binary hit rate',
-    metricColor: 'text-emerald-400',
+    metric: 'Dynamic strength rating, updated every match',
+    metricColor: 'text-[var(--text-secondary)]',
   },
   {
     name: 'Glicko-2',
@@ -58,10 +58,6 @@ const GLOSSARY = [
   {
     term: 'Expected Value (EV)',
     def: 'EV = P_model × odds − 1. Positive means the bet is underpriced relative to the true probability.',
-  },
-  {
-    term: 'Closing Line Value',
-    def: 'How much better our odds were than the bookmaker\'s final price. Positive CLV is the gold-standard indicator of genuine edge.',
   },
   {
     term: 'Walk-Forward Testing',

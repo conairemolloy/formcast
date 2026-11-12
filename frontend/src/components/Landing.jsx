@@ -37,10 +37,10 @@ const USE_CASES = [
 ]
 
 const STATS = [
-  { value: '68.7%',    label: 'Hit Rate',       color: '#10b981' },
-  { value: '0.156',    label: 'Brier Score',     color: '#3b82f6' },
-  { value: '+19%',     label: 'Mean CLV',        color: '#10b981' },
-  { value: '128,797',  label: 'Matches',         color: '#3b82f6' },
+  { value: '1,110+',   label: 'Published pre-kickoff', color: '#10b981' },
+  { value: '608',      label: 'Settled & verified',    color: '#10b981' },
+  { value: '0.156',    label: 'Brier Score',           color: '#3b82f6' },
+  { value: '128,797',  label: 'Matches',               color: '#3b82f6' },
 ]
 
 const STEPS = [
@@ -119,7 +119,8 @@ export default function Landing({ onNavigate }) {
             AI-powered match intelligence across{' '}
             <span className="text-white font-semibold">14 competitions</span>.{' '}
             <span className="text-white font-semibold">128,797</span> matches trained.{' '}
-            <span className="text-emerald-400 font-semibold">68.7%</span> prediction accuracy.
+            <span className="text-emerald-400 font-semibold">1,110+</span> predictions published before kickoff, SHA-256 hashed.{' '}
+            <span className="text-white font-semibold">608</span> settled (as of Nov 2026).
           </p>
 
           <div className="flex items-center justify-center gap-3 flex-wrap mb-6">
@@ -137,10 +138,6 @@ export default function Landing({ onNavigate }) {
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
-
-          <p className="text-xs text-gray-600 font-mono">
-            68.7% hit rate · Mean CLV +19% · 128,797 matches
-          </p>
         </div>
       </section>
 
