@@ -1,6 +1,25 @@
 # FormCast — Sports Prediction Platform
 ### Elo + Glicko-2 + Dixon-Coles + BTL + XGBoost + Neural Ensemble
-*Last updated: November 2026*
+*Last updated: November 2026 (ensemble-in-production session)*
+
+---
+
+## Session Log — Nov 12 2026 (ensemble finally in production)
+
+> **This section supersedes the stale "50.3% / 59-of-608 / negative-ROI" framing in NEXT UP and the QA sweep below.** Those numbers described the OLD state (plain-Elo logged predictions, broken odds-join). Five commits tonight changed the facts:
+
+- [x] **Odds-join fixed: 59/608 → 608/608 settled predictions now matched to odds.** New scripts/fixture_matching.py — one shared FixtureMatcher (strict name resolve + opponent-anchored fallback, no name-only fuzzy) used by BOTH settle_predictions and portfolio_analytics, so they always agree on the fixture. The "only 59 of 608 got odds" blocker that gated any honest ROI measurement is CLEARED. (commit 7a35e7d)
+- [x] **The live endpoint served plain Elo, never the ensemble — ROOT CAUSE of the whole stale track record.** api/routes/live.py _prematch_probs is 3 lines of Elo arithmetic (loads no models). Every logged prediction to date was Elo, with broken name resolution defaulting ~15/144 teams to 1500 (Ath Bilbao priced at 6% to beat Espanyol). The 78-feature ensemble we built was NEVER what production logged.
+- [x] **Ensemble now logged, not Elo.** predict_upcoming writes match_id to upcoming_predictions.csv (commit 0aab732); publish_predictions looks up ensemble probs by match_id and logs them tagged source=ensemble, falling back to Elo (source=elo) only for unresolved/international/missing/stale fixtures (commit dbad933). New scripts/log_schema.py holds shared LOG_COLS so settle no longer strips the column. source is a PLAIN column, NOT in the hash — _make_hash recipe byte-identical for every row, all 1110 existing hashes verified unchanged. (commits dbad933, babf6d4)
+- [x] **CI reordered** — publish now runs AFTER predict_upcoming so it reads this week's ensemble (commit 9cb6d15). Verified no intermediate step reads prediction_log.csv; no leakage (results.csv is played matches only).
+
+**CURRENT HONEST STATE (what the landing page / proof page can claim):**
+- The verifiable record is REAL and now reflects (from ~Nov 14, when fixtures re-enter the 7-day window) the ensemble, not Elo: "1,110+ predictions published before kickoff, timestamped + SHA-256 hashed; 608 settled." This is a STRONGER trust claim than before because the record is about to be the real model.
+- **We still do NOT know if the ensemble has a live betting edge.** The earlier negative result (−7% ROI, log loss 1.036 vs book 0.967) measured ELO, not the ensemble — it says nothing about the real model. The ensemble's live edge is UNMEASURED until ensemble rows accumulate (~Nov 14+). So: still lead with TRANSPARENCY + the verified record, NOT an ROI or win-rate headline. (This resolves, at source, the CRITICAL hit-rate-framing decision in NEXT UP: option (c) — "log ensemble not Railway-Elo going forward" — is now DONE.)
+- The multi-market edge (corners/cards/goals/BTTS) remains entirely unmeasured and is the next real question — plausibly where the edge lives.
+
+**NEXT (decided):** (1) Full site remodel — design track, doesn't touch the model: DESIGN.md, landing page, About/bio, How It Works, escape the "obviously Claude-designed" look. (2) Multi-market value-testing — same settle+edge measurement as 1X2 but for the four market models. Remodel first (no model risk); edge-testing gets richer as ensemble rows accumulate.
+- [ ] Parked tonight: the endpoint's broken Elo name-resolution (~15/144 at 1500 default) — same name bug, third location; makes source=elo fallback rows + displayed Elo unreliable. Fix so the endpoint and the ensemble CSV agree on names.
 
 ---
 
@@ -71,7 +90,8 @@
 ## NEXT UP — Priority Queue (updated November 2026)
 > Work through in order before starting Phase 3+.
 
-- [ ] **CRITICAL DECISION — public hit-rate framing (50% vs 64.4% vs 68.7%)** — three different numbers measure three different things and a visitor seeing them together loses trust: logged predictions settle at ~50% (3-way H/D/A, Elo-based from the Railway API, not the ensemble); the live 2026-27 ensemble backtest is 64.4% (n=913); the old marketing figure is 68.7% (non-draw, optimised Elo). Before ANY public proof page or email tips, decide ONE honest headline framing. Options: (a) lead with 64.4% current-season ensemble accuracy clearly labelled; (b) report ROI/CLV on value bets instead of raw accuracy; (c) log ensemble (not Railway-Elo) predictions going forward so the track record reflects the real model. GATES the free-first launch — the whole pitch is the honest track record.
+- [ ] ⚠️ SUPERSEDED Nov 12 2026 — see top Session Log: ensemble is now logged (option c done); odds-join fixed (608/608). Re-decide framing against ensemble rows once they accumulate.
+  **CRITICAL DECISION — public hit-rate framing (50% vs 64.4% vs 68.7%)** — three different numbers measure three different things and a visitor seeing them together loses trust: logged predictions settle at ~50% (3-way H/D/A, Elo-based from the Railway API, not the ensemble); the live 2026-27 ensemble backtest is 64.4% (n=913); the old marketing figure is 68.7% (non-draw, optimised Elo). Before ANY public proof page or email tips, decide ONE honest headline framing. Options: (a) lead with 64.4% current-season ensemble accuracy clearly labelled; (b) report ROI/CLV on value bets instead of raw accuracy; (c) log ensemble (not Railway-Elo) predictions going forward so the track record reflects the real model. GATES the free-first launch — the whole pitch is the honest track record.
   - **⚠️ UPDATE (Nov 2026) — option (b) REJECTED for now: ROI CANNOT BE THE HEADLINE** (confirmed by portfolio_analytics on live prediction-log data):
     - Live value-bet ROI is **NEGATIVE: −7.2% flat** (45 bets, 35.6% hit rate); half-Kelly £1,000 → £627, Sharpe −2.9. All-predictions flat ROI +1.1% = indistinguishable from zero (95% CI −27% to +30%).
     - Sample is tiny AND biased: only **59 of 608** settled predictions got odds attached, due to the settlement name-mapping bug (now HIGH PRIORITY — see Parked Technical Fixes). Bundesliga 0 matched, Ligue 1 1.
