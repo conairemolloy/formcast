@@ -43,9 +43,6 @@ jobs:
         run: python scripts/merge_xg_features.py
         continue-on-error: true
 
-      - name: Publish predictions (pre-retrain)
-        run: python scripts/publish_predictions.py
-
       - name: Run ELO model
         run: python scripts/elo_model.py
 
@@ -87,6 +84,9 @@ jobs:
 
       - name: Generate ensemble predictions for upcoming fixtures
         run: python scripts/predict_upcoming.py
+
+      - name: Publish predictions (ensemble)
+        run: python scripts/publish_predictions.py
 
       - name: Log odds snapshot
         run: python scripts/log_odds_snapshot.py
