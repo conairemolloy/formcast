@@ -33,12 +33,7 @@ BASE_DIR    = os.path.normpath(os.path.join(os.path.dirname(__file__), ".."))
 LOG_CSV     = os.path.join(BASE_DIR, "data", "processed", "prediction_log.csv")
 RESULTS_CSV = os.path.join(BASE_DIR, "data", "processed", "results.csv")
 
-LOG_COLS = [
-    "match_date", "match_time", "league", "home_team", "away_team",
-    "home_elo", "away_elo", "p_home", "p_draw", "p_away",
-    "predicted_outcome", "published_at", "hash",
-    "actual_result", "correct", "settled_at",
-]
+from log_schema import LOG_COLS  # noqa: E402  shared with publish_predictions.py
 
 def main(dry_run: bool = False) -> dict:
     if not os.path.exists(LOG_CSV):
