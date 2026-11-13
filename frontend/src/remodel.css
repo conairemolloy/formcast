@@ -1,0 +1,95 @@
+/*
+ * Remodel tokens — frontend/DESIGN.md §2–3.
+ *
+ * Scoped to `.remodel` (not :root) on purpose: index.css already defines a
+ * global `--border` for the old emerald system, and redefining it at :root
+ * would restyle every existing page. Once the remodel replaces the old pages,
+ * these move to :root and index.css's old tokens are deleted.
+ */
+.remodel {
+  --background:         #171e19;
+  --foreground:         #f1eee4;
+  --card:               #1c2420;
+  --muted:              #222c25;
+  --secondary:          #26302a;
+  --accent:             #26302a;
+  --muted-foreground:   #a5aca2;
+  --border:             rgba(241, 238, 228, 0.13);
+  --input:              rgba(241, 238, 228, 0.15);
+  --primary:            #ed5238;
+  --primary-foreground: #171e19;
+  --ring:               #ed7559;
+
+  /* Fraunces / mono faces aren't loaded yet — fallbacks until integration. */
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-mono:    ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  background: var(--background);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: 0.625rem;
+  padding: 64px 16px;
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+}
+
+.remodel-inner {
+  width: 100%;
+  max-width: 40rem;
+  margin: 0 auto;
+}
+
+.remodel-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--primary);
+  margin: 0 0 16px;
+}
+
+.remodel-heading {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(28px, 6vw, 56px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--foreground);
+  margin: 0 0 16px;
+}
+
+.remodel-heading em {
+  font-style: italic;
+  color: var(--primary);
+}
+
+.remodel-body {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--muted-foreground);
+  margin: 0;
+}
+
+.remodel-photo {
+  width: 160px;
+  aspect-ratio: 4 / 5;
+  border: 1px dashed var(--input);
+  border-radius: 0.625rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+  margin: 0 0 24px;
+}
+
+.remodel-note {
+  font-size: 0.8125rem;
+  color: var(--muted-foreground);
+  opacity: 0.7;
+  margin: 48px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}

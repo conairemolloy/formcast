@@ -25,6 +25,9 @@ import MatchResearch from './components/MatchResearch'
 import InternationalRatings from './components/InternationalRatings'
 import InternationalTeamProfile from './components/InternationalTeamProfile'
 import WorldCupBracket from './components/WorldCupBracket'
+import LandingNew from './components/LandingNew'
+import About from './components/About'
+import ProofPage from './components/ProofPage'
 
 const NAV_GROUPS = [
   {
@@ -66,6 +69,15 @@ const NAV_GROUPS = [
       { id: 'prediction-log', label: 'Prediction Log' },
     ],
   },
+  // Remodel placeholders (DESIGN.md) — dev server only, never shown in production builds.
+  ...(import.meta.env.DEV ? [{
+    label: 'Remodel',
+    items: [
+      { id: 'landing-new', label: 'Landing (new)' },
+      { id: 'about',       label: 'About' },
+      { id: 'proof',       label: 'Proof' },
+    ],
+  }] : []),
 ]
 
 function NavDropdown({ group, active, onNav }) {
@@ -333,6 +345,9 @@ function App() {
 
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-6">
         {active === 'landing'        && <Landing onNavigate={handleNav} />}
+        {active === 'landing-new'    && <LandingNew />}
+        {active === 'about'          && <About />}
+        {active === 'proof'          && <ProofPage />}
         {active === 'dashboard'      && <Dashboard onNavigate={handleNav} />}
         {active === 'ratings'        && !selectedTeam && (
           <RatingsTable
