@@ -28,6 +28,7 @@ import WorldCupBracket from './components/WorldCupBracket'
 import LandingNew from './components/LandingNew'
 import About from './components/About'
 import ProofPage from './components/ProofPage'
+import './shell.css'
 
 const NAV_GROUPS = [
   {
@@ -104,11 +105,8 @@ function NavDropdown({ group, active, onNav }) {
   return (
     <div className="relative" onMouseEnter={enter} onMouseLeave={leave}>
       <button
-        className={`flex items-center gap-1 px-3 py-1.5 rounded text-sm font-medium transition-colors ${
-          isActive
-            ? 'text-emerald-400'
-            : 'text-gray-400 hover:text-white'
-        }`}
+        data-active={isActive}
+        className="fc-nav-item flex items-center gap-1 px-3 py-1.5 rounded text-sm font-medium transition-colors"
       >
         {group.label}
         <ChevronDown
@@ -117,16 +115,13 @@ function NavDropdown({ group, active, onNav }) {
       </button>
 
       {open && (
-        <div className="absolute top-full left-0 mt-1.5 bg-gray-900 border border-gray-800 rounded-xl shadow-xl z-50 min-w-[168px] py-1.5 overflow-hidden">
+        <div className="fc-panel absolute top-full left-0 mt-1.5 rounded-xl shadow-xl z-50 min-w-[168px] py-1.5 overflow-hidden">
           {group.items.map(item => (
             <button
               key={item.id}
               onClick={() => pick(item.id)}
-              className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
-                active === item.id
-                  ? 'text-emerald-400 bg-emerald-500/10'
-                  : 'text-gray-400 hover:bg-gray-800 hover:text-white'
-              }`}
+              data-active={active === item.id}
+              className="fc-nav-item fc-panel-item w-full text-left px-4 py-2.5 text-sm transition-colors"
             >
               {item.label}
             </button>
@@ -209,15 +204,15 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white flex flex-col">
-      <header className="bg-gray-900 border-b border-gray-800 sticky top-0 z-50">
+    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col">
+      <header className="fc-shell sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between gap-4">
           {/* Logo */}
           <button
             onClick={() => handleNav('dashboard')}
-            className="flex items-center gap-2 text-white font-bold text-lg tracking-tight hover:text-emerald-400 transition-colors shrink-0"
+            className="fc-logo flex items-center gap-2 font-bold text-lg tracking-tight transition-colors shrink-0"
           >
-            <BarChart2 className="w-5 h-5 text-emerald-400" />
+            <BarChart2 className="fc-logo-mark w-5 h-5" />
             FormCast
           </button>
 
@@ -225,11 +220,8 @@ function App() {
           <nav className="hidden md:flex items-center gap-1">
             <button
               onClick={() => handleNav('dashboard')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-sm font-medium transition-colors ${
-                active === 'dashboard'
-                  ? 'text-emerald-400'
-                  : 'text-gray-400 hover:text-white'
-              }`}
+              data-active={active === 'dashboard'}
+              className="fc-nav-item flex items-center gap-1.5 px-3 py-1.5 rounded text-sm font-medium transition-colors"
             >
               <LayoutDashboard className="w-3.5 h-3.5" />
               Dashboard
@@ -257,7 +249,7 @@ function App() {
               ) : (
                 <button
                   onClick={() => setShowAuth(true)}
-                  className="hidden md:flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-400 hover:text-white border border-gray-700 hover:border-gray-600 rounded-lg transition-colors"
+                  className="fc-outline-btn hidden md:flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-lg transition-colors"
                 >
                   <LogIn className="w-4 h-4" />
                   Sign In
@@ -267,7 +259,7 @@ function App() {
 
             {/* Hamburger */}
             <button
-              className="md:hidden p-2 text-gray-400 hover:text-white transition-colors"
+              className="fc-icon-btn md:hidden p-2 transition-colors"
               onClick={() => setMenuOpen(o => !o)}
               aria-label="Toggle menu"
             >
@@ -278,14 +270,11 @@ function App() {
 
         {/* Mobile menu */}
         {menuOpen && (
-          <div className="md:hidden border-t border-gray-800 bg-gray-900 px-2 py-2 space-y-0.5">
+          <div className="fc-mobile-menu md:hidden px-2 py-2 space-y-0.5">
             <button
               onClick={() => handleNav('dashboard')}
-              className={`w-full text-left flex items-center gap-2.5 px-4 py-2.5 rounded text-sm font-medium transition-colors ${
-                active === 'dashboard'
-                  ? 'bg-emerald-500/20 text-emerald-400'
-                  : 'text-gray-400 hover:text-white hover:bg-gray-800'
-              }`}
+              data-active={active === 'dashboard'}
+              className="fc-nav-item fc-panel-item w-full text-left flex items-center gap-2.5 px-4 py-2.5 rounded text-sm font-medium transition-colors"
             >
               <LayoutDashboard className="w-4 h-4" />
               Dashboard
@@ -293,18 +282,15 @@ function App() {
 
             {NAV_GROUPS.map(group => (
               <div key={group.label}>
-                <p className="px-4 pt-3 pb-1 text-[9px] font-mono text-gray-600 uppercase tracking-[0.18em] select-none">
+                <p className="fc-group-label px-4 pt-3 pb-1 text-[9px] font-mono uppercase tracking-[0.18em] select-none">
                   {group.label}
                 </p>
                 {group.items.map(({ id, label }) => (
                   <button
                     key={id}
                     onClick={() => handleNav(id)}
-                    className={`w-full text-left flex items-center px-6 py-2.5 rounded text-sm font-medium transition-colors ${
-                      active === id
-                        ? 'bg-emerald-500/20 text-emerald-400'
-                        : 'text-gray-400 hover:text-white hover:bg-gray-800'
-                    }`}
+                    data-active={active === id}
+                    className="fc-nav-item fc-panel-item w-full text-left flex items-center px-6 py-2.5 rounded text-sm font-medium transition-colors"
                   >
                     {label}
                   </button>
@@ -313,18 +299,18 @@ function App() {
             ))}
 
             {/* Mobile auth */}
-            <div className="border-t border-gray-800 mt-2 pt-2">
+            <div className="fc-divider mt-2 pt-2">
               {user ? (
                 <>
                   <button
                     onClick={() => handleNav('watchlist')}
-                    className="w-full text-left px-4 py-2.5 text-sm text-gray-400 hover:text-white hover:bg-gray-800 rounded transition-colors"
+                    className="fc-nav-item fc-panel-item w-full text-left px-4 py-2.5 text-sm rounded transition-colors"
                   >
                     My Watchlist
                   </button>
                   <button
                     onClick={() => handleNav('settings')}
-                    className="w-full text-left px-4 py-2.5 text-sm text-gray-400 hover:text-white hover:bg-gray-800 rounded transition-colors"
+                    className="fc-nav-item fc-panel-item w-full text-left px-4 py-2.5 text-sm rounded transition-colors"
                   >
                     Settings
                   </button>
@@ -332,7 +318,7 @@ function App() {
               ) : (
                 <button
                   onClick={() => { setMenuOpen(false); setShowAuth(true) }}
-                  className="w-full text-left flex items-center gap-2 px-4 py-2.5 text-sm text-emerald-400 font-medium"
+                  className="fc-mobile-signin w-full text-left flex items-center gap-2 px-4 py-2.5 text-sm font-medium transition-colors"
                 >
                   <LogIn className="w-4 h-4" />
                   Sign In

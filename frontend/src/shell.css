@@ -1,0 +1,74 @@
+/*
+ * App shell (header / nav / mobile menu) — DESIGN.md §2 tokens.
+ *
+ * The new tokens live on :root under their DESIGN.md names, alongside the old
+ * emerald tokens in index.css (--brand, --bg-base, --text-primary…), which
+ * stay for un-migrated pages.
+ *
+ * Exception: --border. index.css already defines a global --border that ~29
+ * old-page rules depend on, so the hairline version is scoped to .fc-shell
+ * (the <header>) only. It moves to :root when the old pages are retired.
+ */
+:root {
+  --background:         #171e19;
+  --foreground:         #f1eee4;
+  --card:               #1c2420;
+  --muted:              #222c25;
+  --secondary:          #26302a;
+  --accent:             #26302a;
+  --muted-foreground:   #a5aca2;
+  --input:              rgba(241, 238, 228, 0.15);
+  --primary:            #ed5238;
+  --primary-foreground: #171e19;
+  --ring:               #ed7559;
+}
+
+.fc-shell {
+  --border: rgba(241, 238, 228, 0.13);
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  color: var(--foreground);
+}
+
+/* Logo */
+.fc-logo { color: var(--foreground); }
+.fc-logo:hover { color: var(--primary); }
+.fc-logo-mark { color: var(--primary); }
+
+/* Nav items (desktop top level, dropdown rows, mobile rows) */
+.fc-nav-item { color: var(--muted-foreground); }
+.fc-nav-item:hover { color: var(--foreground); }
+.fc-nav-item[data-active='true'],
+.fc-nav-item[data-active='true']:hover { color: var(--primary); }
+
+/* Rows inside panels get a warm hover surface + coral-tinted active surface */
+.fc-panel-item:hover { background: var(--secondary); }
+.fc-panel-item[data-active='true'] {
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+}
+
+/* Dropdown panel + mobile menu surface */
+.fc-panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+.fc-mobile-menu {
+  background: var(--card);
+  border-top: 1px solid var(--border);
+}
+.fc-divider { border-top: 1px solid var(--border); }
+.fc-group-label { color: var(--muted-foreground); opacity: 0.7; }
+
+/* Sign In button + hamburger */
+.fc-outline-btn {
+  color: var(--foreground);
+  border: 1px solid var(--input);
+}
+.fc-outline-btn:hover {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+.fc-icon-btn { color: var(--foreground); }
+.fc-icon-btn:hover { color: var(--primary); }
+.fc-mobile-signin { color: var(--primary); }
+.fc-mobile-signin:hover { color: var(--ring); }
