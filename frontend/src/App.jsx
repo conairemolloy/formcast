@@ -343,9 +343,10 @@ function App() {
         )}
       </header>
 
-      <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-6">
+      {/* The remodelled landing is full-bleed — skip the padded, max-width frame. */}
+      <main className={active === 'landing-new' ? 'flex-1 w-full' : 'flex-1 max-w-7xl mx-auto w-full px-4 py-6'}>
         {active === 'landing'        && <Landing onNavigate={handleNav} />}
-        {active === 'landing-new'    && <LandingNew />}
+        {active === 'landing-new'    && <LandingNew onNavigate={handleNav} onShowAuth={() => setShowAuth(true)} />}
         {active === 'about'          && <About />}
         {active === 'proof'          && <ProofPage />}
         {active === 'dashboard'      && <Dashboard onNavigate={handleNav} />}
