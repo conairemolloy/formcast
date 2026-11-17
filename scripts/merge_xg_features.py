@@ -7,8 +7,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from ingest_guard import fail  # noqa: E402
 
 # Share of big-5 results inside the xG date window that must pick up xG.
-# Currently ~80% (TEAM_NAME_MAP gaps); a sudden drop means a rename/format
-# break upstream and must fail CI rather than silently feed defaults.
+# Currently ~99% with the full TEAM_NAME_MAP; a sudden drop means a rename or
+# format break upstream and must fail CI rather than silently feed defaults.
 MIN_WINDOW_JOIN_RATE = 0.75
 
 TEAM_NAME_MAP = {
@@ -88,6 +88,33 @@ TEAM_NAME_MAP = {
     "Salernitana": "Salernitana",
     "Spezia": "Spezia",
     "Cremonese": "Cremonese",
+    # Understat spellings verified against results.csv by fixture (date, league,
+    # opponent) agreement: each pair matched 100% of its resolvable fixtures.
+    "Queens Park Rangers": "QPR",
+    "Arminia Bielefeld": "Bielefeld",
+    "Borussia M.Gladbach": "M'gladbach",
+    "FC Heidenheim": "Heidenheim",
+    "Fortuna Duesseldorf": "Fortuna Dusseldorf",
+    "Greuther Fuerth": "Greuther Furth",
+    "Hamburger SV": "Hamburg",
+    "Hannover 96": "Hannover",
+    "Hertha Berlin": "Hertha",
+    "Mainz 05": "Mainz",
+    "Nuernberg": "Nurnberg",
+    "RasenBallsport Leipzig": "RB Leipzig",
+    "St. Pauli": "St Pauli",
+    "Deportivo La Coruna": "La Coruna",
+    "Espanyol": "Espanol",
+    "Real Sociedad": "Sociedad",
+    "Real Valladolid": "Valladolid",
+    "SD Huesca": "Huesca",
+    "Sporting Gijon": "Sp Gijon",
+    "Clermont Foot": "Clermont",
+    "GFC Ajaccio": "Ajaccio GFCO",  # Gazelec; AC Ajaccio is "Ajaccio" in both
+    "Paris Saint Germain": "Paris SG",
+    "SC Bastia": "Bastia",
+    "Parma Calcio 1913": "Parma",  # results.csv uses "Parma" across the 2015 refounding
+    "SPAL 2013": "Spal",
 }
 
 XG_PATH = "data/processed/xg_data.csv"
