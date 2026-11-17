@@ -35,11 +35,15 @@ jobs:
       - name: Fix team names
         run: python scripts/fix_team_names.py
 
+      # xG failures must turn the run red, but must not block predictions:
+      # these steps continue, and the final step fails the run if either broke.
       - name: Ingest xG data (Understat)
+        id: xg_ingest
         run: python scripts/ingest_xg_data.py
         continue-on-error: true
 
       - name: Merge xG features into results
+        id: xg_merge
         run: python scripts/merge_xg_features.py
         continue-on-error: true
 
@@ -122,3 +126,9 @@ jobs:
             git commit -m "chore: weekly data update $(date -u +'%Y-%m-%d')"
             git push
           fi
+
+      - name: Fail run if xG ingest/merge failed
+        if: steps.xg_ingest.outcome == 'failure' || steps.xg_merge.outcome == 'failure'
+        run: |
+          echo "::error title=xG pipeline::ingest=${{ steps.xg_ingest.outcome }} merge=${{ steps.xg_merge.outcome }} — see those steps' logs"
+          exit 1

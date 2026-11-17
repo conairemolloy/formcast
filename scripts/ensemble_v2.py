@@ -39,6 +39,12 @@ FORM_WINDOW = 5
 EWM_ALPHA = 0.4
 LATE_EWM_ALPHA = 0.6
 DECAY = 0.85   # exponential decay weight for rolling windows (xG, goals, clean sheets)
+# xG older than this (relative to the match being predicted) is treated as
+# missing -> the 1.3 / 0.0 defaults. Stops a data gap (e.g. a dead xG feed, or
+# a team returning from a lower league) freezing months-old xG as "current form".
+# 120 rather than 90 so the last weeks of the previous season survive the
+# summer break (late May -> mid Aug is ~85 days).
+XG_MAX_AGE_DAYS = 120
 
 G2_SCALE = 173.7178
 G2_INITIAL_PHI = 200.0 / G2_SCALE
@@ -340,9 +346,10 @@ def _team_features(
             break
     unbeaten = min(unbeaten, 15)
 
-    home_xg_hist = [h for h in hist if h.get("is_home") is True  and h.get("xg_scored") is not None]
-    away_xg_hist = [h for h in hist if h.get("is_home") is False and h.get("xg_scored") is not None]
-    all_xg_hist  = [h for h in hist if h.get("xg_scored") is not None]
+    xg_cut       = match_date - timedelta(days=XG_MAX_AGE_DAYS)
+    all_xg_hist  = [h for h in hist if h.get("xg_scored") is not None and h["date"] >= xg_cut]
+    home_xg_hist = [h for h in all_xg_hist if h.get("is_home") is True]
+    away_xg_hist = [h for h in all_xg_hist if h.get("is_home") is False]
 
     fw_hxg     = home_xg_hist[-FORM_WINDOW:]
     fw_axg     = away_xg_hist[-FORM_WINDOW:]

@@ -1,4 +1,15 @@
+import os
+import sys
+
 import pandas as pd
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from ingest_guard import fail  # noqa: E402
+
+# Share of big-5 results inside the xG date window that must pick up xG.
+# Currently ~80% (TEAM_NAME_MAP gaps); a sudden drop means a rename/format
+# break upstream and must fail CI rather than silently feed defaults.
+MIN_WINDOW_JOIN_RATE = 0.75
 
 TEAM_NAME_MAP = {
     "Manchester City": "Man City",
@@ -79,8 +90,14 @@ TEAM_NAME_MAP = {
     "Cremonese": "Cremonese",
 }
 
-results = pd.read_csv("data/processed/results.csv")
-xg = pd.read_csv("data/processed/xg_data.csv")
+XG_PATH = "data/processed/xg_data.csv"
+if not os.path.exists(XG_PATH):
+    fail("xG merge", f"{XG_PATH} not found — run scripts/ingest_xg_data.py first")
+
+results = pd.read_csv("data/processed/results.csv", dtype={"referee": str})
+xg = pd.read_csv(XG_PATH)
+if xg.empty:
+    fail("xG merge", f"{XG_PATH} is empty")
 
 xg = xg.copy()
 xg["home_team"] = xg["home_team"].replace(TEAM_NAME_MAP)
@@ -139,6 +156,20 @@ if unmatched_mask.any():
     print(team_counts.head(20).to_string())
 else:
     print("\nAll matches joined successfully — no unmatched teams.")
+
+# Coverage where it matters: big-5 rows inside the xG date window.
+in_window = (
+    merged["league"].isin(xg["league"].unique())
+    & (merged["match_date"] >= xg["match_date"].min())
+    & (merged["match_date"] <= xg["match_date"].max())
+)
+window_rate = merged.loc[in_window, "home_xg"].notna().mean() if in_window.any() else 0.0
+print(f"\nxG-window join rate (big-5, {xg['match_date'].min()}..{xg['match_date'].max()}): "
+      f"{window_rate:.1%} of {int(in_window.sum()):,} rows")
+if window_rate < MIN_WINDOW_JOIN_RATE:
+    fail("xG merge", f"xG-window join rate {window_rate:.1%} < {MIN_WINDOW_JOIN_RATE:.0%} — "
+                     f"team-name or format break between xg_data.csv and results.csv. "
+                     f"results_with_xg.csv NOT written.")
 
 merged.to_csv("data/processed/results_with_xg.csv", index=False)
 print(f"\nSaved {len(merged):,} rows to data/processed/results_with_xg.csv")

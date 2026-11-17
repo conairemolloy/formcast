@@ -15,6 +15,21 @@ def current_season(d: date) -> str:
     return f"{y - 1}-{str(y)[-2:]}"
 
 
+def season_start_year(d: date) -> int:
+    """Calendar year the season containing `d` started in (2026-11-17 -> 2026)."""
+    return d.year if d.month >= 7 else d.year - 1
+
+
+def in_active_season(d: date) -> bool:
+    """True when European top-flight league matches are being played.
+
+    Sep 1 – May 31. Excludes June–August so the summer break (and the first
+    couple of weeks of a new season, before data has accumulated) never trips
+    freshness checks. International breaks (~2 weeks) fit inside a 14-day limit.
+    """
+    return d.month >= 9 or d.month <= 5
+
+
 def previous_season(season: str) -> str:
     """'2026-27' -> '2025-26'."""
     start = int(season[:4]) - 1
