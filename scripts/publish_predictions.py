@@ -45,6 +45,31 @@ UPCOMING_URL = "https://web-production-eb371.up.railway.app/api/live/upcoming"
 
 ENSEMBLE_COLS = ("p_home_ensemble", "p_draw_ensemble", "p_away_ensemble")
 
+# Kickoff guard: a fixture is only logged if it kicks off more than this far
+# after publish time. Covers clock skew between the runner and the API, and
+# the gap between published_at being stamped and the commit landing, so a
+# fixture kicking off "in 1 minute" can't end up looking like a late log.
+KICKOFF_BUFFER = timedelta(minutes=5)
+
+
+def _now() -> datetime:
+    """Current UTC time (a function so tests can pin it)."""
+    return datetime.now(timezone.utc)
+
+
+def _kickoff_utc(match_date, match_time) -> datetime | None:
+    """Kickoff as an aware UTC datetime, or None if it can't be determined.
+    Both fields are slices of football-data.org's utcDate (YYYY-MM-DD / HH:MM),
+    so they are UTC by construction."""
+    d = str(match_date or "").strip()
+    t = str(match_time or "").strip()
+    if not d or not t or t.lower() in ("nan", "none"):
+        return None
+    try:
+        return datetime.strptime(f"{d} {t}", "%Y-%m-%d %H:%M").replace(tzinfo=timezone.utc)
+    except ValueError:
+        return None
+
 def _load_known_teams() -> set[str]:
     """Canonical team names (results.csv) that logged names should resolve to."""
     if not os.path.exists(RESULTS_CSV):
@@ -195,9 +220,13 @@ def main() -> None:
     ensemble_lookup = _load_ensemble_lookup(UPCOMING_PREDICTIONS_CSV)
     print(f"  {len(ensemble_lookup)} fixtures with ensemble probabilities (by match_id)")
 
-    published_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    now = _now()
+    published_at = now.strftime("%Y-%m-%dT%H:%M:%SZ")
+    cutoff = now + KICKOFF_BUFFER
     new_rows: list[dict] = []
     skipped_uncovered: Counter[str] = Counter()
+    skipped_started: list[str] = []
+    skipped_no_kickoff: list[str] = []
 
     for m in matches:
         # Only log leagues results.csv covers — anything else can never settle
@@ -215,6 +244,18 @@ def main() -> None:
         league     = m.get("competition", "")
         home_elo   = m.get("home_elo", "")
         away_elo   = m.get("away_elo", "")
+
+        # Pre-kickoff guarantee: never log a fixture that has started (or
+        # starts within KICKOFF_BUFFER). If kickoff can't be determined, skip
+        # too — a missed prediction is better than a possibly-late one.
+        desc = f"{match_date or '?'} {match_time or '??:??'} {home_team} vs {away_team} ({league})"
+        kickoff = _kickoff_utc(match_date, match_time)
+        if kickoff is None:
+            skipped_no_kickoff.append(desc)
+            continue
+        if kickoff <= cutoff:
+            skipped_started.append(desc)
+            continue
 
         ens = _ensemble_probs(ensemble_lookup.get(_match_id_key(m.get("match_id"))))
         if ens is not None:
@@ -268,6 +309,17 @@ def main() -> None:
         print(f"  Skipped {sum(skipped_uncovered.values())} fixtures in uncovered leagues (can't settle):")
         for lg, n in skipped_uncovered.most_common():
             print(f"    {lg}: {n}")
+
+    if skipped_started:
+        print(f"  Skipped {len(skipped_started)} fixture(s) already started or kicking off "
+              f"within {int(KICKOFF_BUFFER.total_seconds() // 60)} min of {published_at} (not logged):")
+        for d in skipped_started:
+            print(f"    {d}")
+    if skipped_no_kickoff:
+        print(f"  WARNING: Skipped {len(skipped_no_kickoff)} fixture(s) with missing/unparseable "
+              f"kickoff time — can't prove pre-kickoff, so NOT logged:")
+        for d in skipped_no_kickoff:
+            print(f"    {d}")
 
     src_counts = Counter(r["source"] for r in new_rows)
     print(f"  New rows by source: ensemble={src_counts['ensemble']}  elo={src_counts['elo']}")
