@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { ArrowRight, BarChart2, Lock, Shield } from 'lucide-react'
 import '../remodel.css'
+import InfoTip from './InfoTip'
 
 // Remodelled landing (frontend/DESIGN.md). The reference page every other
 // remodelled page matches. Lives at 'landing-new' alongside Landing.jsx until
@@ -8,11 +9,17 @@ import '../remodel.css'
 //
 // Claims on this page follow DESIGN.md §8 / ROADMAP "Current State & Honest
 // Claims": no ROI, no CLV, no bare hit-rate, team count is 440+ / 11 leagues.
+//
+// InfoTips (glossary.js) sit where a term FIRST appears for a new visitor —
+// once each, never on the hero.
 
 const STATS = [
-  { value: '1,110+', label: 'Predictions published pre-kickoff' },
-  { value: '608',    label: 'Bets settled this season' },
-  { value: '128k',   label: 'Matches modelled' },
+  // 1,168 of 1,170 log rows. The other 2 (Copa Libertadores, first publish run
+  // 2026-05-26) were published 51 min after kickoff — match_time is UTC (from
+  // football-data.org utcDate). Both are untracked-league rows and never settle.
+  { value: '1,168',  label: 'Predictions published pre-kickoff' },
+  { value: '608',    label: 'Predictions settled this season', tip: 'settled' },
+  { value: '128k',   label: 'Matches in our database',         tip: 'matches-modelled' },
 ]
 
 const NOT_A_TIPSTER = [
@@ -25,25 +32,25 @@ const NOT_A_TIPSTER = [
 const STEPS = [
   {
     title: 'Model the match',
-    body: 'Seven independent models — Elo, Glicko-2, Dixon-Coles, Bradley-Terry, XGBoost, a neural net and an LSTM — each read the game on their own terms.',
+    body: 'Five models — Elo, Glicko-2, Dixon-Coles, XGBoost and a dedicated draw classifier — each read the game on their own terms.',
   },
   {
     title: 'Price the outcome',
-    body: 'A meta-learner blends the seven into one probability per outcome, weighted by how each model has actually performed in that league.',
+    body: <>A single meta-learner — a logistic regression trained only on predictions each model made before seeing the result — blends the five into one probability<InfoTip term="model" /> per outcome.</>,
   },
   {
     title: 'Show the difference',
-    body: 'Our number goes next to the bookmaker’s. Where the gap is real, that’s the edge — published before kick-off, logged win or lose.',
+    body: <>Our number goes next to the bookmaker’s<InfoTip term="book-price" />. Where the gap is real, that’s the edge — timestamped and sealed when published, logged win or lose.</>,
   },
 ]
 
 const FEATURES = [
   { title: 'Today’s tips',               body: 'The day’s best value bets, ranked by edge.' },
   { title: 'Value bets',                 body: 'Every price where our probability beats the market’s, with the gap shown.' },
-  { title: 'Verified track record',      body: 'Every call sealed pre-kickoff and settled in public.' },
+  { title: 'Verified track record',      body: 'Every call timestamped and sealed, and settled in public where we track results.' },
   { title: 'Team ratings',               body: '440+ teams across 11 leagues, rated after every match.' },
   { title: 'Accumulators',               body: 'Multi-leg builds from the value card, with the combined probability shown.' },
-  { title: 'International football hub', body: 'National-team ratings and World Cup 2026 bracket simulations.' },
+  { title: 'International football hub', body: 'National-team ratings, plus World Cup 2026 results and the bracket.' },
 ]
 
 const pad = n => String(n).padStart(2, '0')
@@ -93,8 +100,8 @@ export default function LandingNew({ onNavigate, onShowAuth }) {
               The odds are a <em>starting point.</em>
             </h1>
             <p className="rl-lede">
-              Seven independent models find the mispricing hiding in the market.
-              Every call is published before kick-off. Every result stays on record.
+              Five models find the mispricing hiding in the market.
+              Every call is timestamped and sealed. Every result stays on record.
             </p>
             <div className="rl-cta-row">
               <PrimaryButton onClick={signUp}>Sign up free</PrimaryButton>
@@ -126,7 +133,7 @@ export default function LandingNew({ onNavigate, onShowAuth }) {
           <dl className="rl-stat-grid">
             {STATS.map(s => (
               <div key={s.label} className="rl-stat">
-                <dt className="rl-stat-label">{s.label}</dt>
+                <dt className="rl-stat-label">{s.label}{s.tip && <InfoTip term={s.tip} />}</dt>
                 <dd className="rl-stat-value">{s.value}</dd>
               </div>
             ))}
@@ -151,7 +158,9 @@ export default function LandingNew({ onNavigate, onShowAuth }) {
           <div>
             <Eyebrow>Today’s tips</Eyebrow>
             <h2 className="rl-display">Today’s tips are live.</h2>
-            <p className="rl-body rl-body--fg">Today’s best value bets, ranked by edge.</p>
+            <p className="rl-body rl-body--fg">
+              Today’s best value bets<InfoTip term="value-bet" />, ranked by edge<InfoTip term="edge" />.
+            </p>
             <p className="rl-body">Football now — more sports coming. Pick the ones you follow.</p>
           </div>
           <div className="rl-locked">
@@ -177,7 +186,7 @@ export default function LandingNew({ onNavigate, onShowAuth }) {
             </h2>
             <p className="rl-body">
               Data and risk analyst with a maths and finance background. Built the
-              seven-model ensemble solo. No tipping service — just a model, and every
+              five-model ensemble solo. No tipping service — just a model, and every
               result logged publicly.
             </p>
           </div>
@@ -188,7 +197,7 @@ export default function LandingNew({ onNavigate, onShowAuth }) {
       <section className="rl-section rl-rule">
         <div className="rl-container">
           <Eyebrow>01 — A better read on the game</Eyebrow>
-          <h2 className="rl-display">One match. Seven points of view.</h2>
+          <h2 className="rl-display">One match. Five points of view.</h2>
           <ol className="rl-steps">
             {STEPS.map((s, i) => (
               <li key={s.title} className="rl-step">
@@ -217,10 +226,11 @@ export default function LandingNew({ onNavigate, onShowAuth }) {
             <div className="rl-proof-item">
               <Shield className="rl-proof-icon" aria-hidden="true" />
               <div>
-                <h3 className="rl-h3">Sealed before kick-off</h3>
+                <h3 className="rl-h3">Sealed and timestamped</h3>
                 <p className="rl-body">
-                  Every prediction gets a SHA-256 fingerprint and a timestamp before
-                  the first whistle. Change a single digit afterwards and the
+                  Every prediction gets a SHA-256 fingerprint and a timestamp when
+                  it’s published — all but two so far before the first whistle, and
+                  every settled one. Change a single digit afterwards and the
                   fingerprint no longer matches.
                 </p>
               </div>

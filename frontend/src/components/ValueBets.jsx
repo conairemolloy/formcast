@@ -213,22 +213,26 @@ export default function ValueBets() {
       <div className="bg-[var(--brand-subtle)] border border-[var(--brand-border)] rounded-lg px-4 py-3 flex items-start gap-3">
         <span className="text-[var(--brand)] text-sm mt-0.5">ℹ</span>
         <div>
-          <p className="text-sm font-medium text-[var(--brand)]">Historical Track Record</p>
+          <p className="text-sm font-medium text-[var(--brand)]">Backtest simulation — these bets were not placed live</p>
           <p className="text-xs text-gray-400 mt-0.5">
-            These are historical bets identified by the model where our probability
-            exceeded the implied odds probability by 5%+. Results shown are actual
-            outcomes — this is the model's track record.
+            Simulated bets on past matches (from 30 Mar 2024) where the model's probability
+            exceeded the bookmaker's margin-adjusted implied probability by 5%+, priced at
+            Bet365 pre-match odds. Results are the real match outcomes; the bets themselves
+            were never published or placed.
           </p>
         </div>
       </div>
 
       {/* Overall summary */}
       {summary && (
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-3 gap-4">
           <StatCard label="Total Bets" value={summary.total_bets} />
-          <StatCard label="Win Rate"   value={summary.win_rate != null ? `${(summary.win_rate * 100).toFixed(1)}%` : null} />
+          <StatCard label="Bet Win Rate" value={summary.win_rate != null ? `${(summary.win_rate * 100).toFixed(1)}%` : null} />
+          {/* TODO(decision): ROI display conflicts with the DESIGN.md §8 no-ROI rule.
+              Kept for now (it is an honest backtest loss) pending a separate decision. */}
           <StatCard label="ROI / Bet"  value={summary.roi != null ? `${summary.roi > 0 ? '+' : ''}${summary.roi.toFixed(3)}` : null} />
-          <StatCard label="Mean CLV"   value={summary.mean_clv != null ? summary.mean_clv.toFixed(4) : null} sub="Closing line value" tip="Closing Line Value — how much better our odds were than the final bookmaker price before kickoff. Positive CLV is the strongest indicator of a profitable betting model." />
+          {/* "Mean CLV" removed: value_bets.csv `clv` is log(p_model / implied) — the
+              model's own edge, not closing-line value (no closing odds exist). */}
         </div>
       )}
 

@@ -14,15 +14,6 @@ const LEAGUE_COLORS = {
   Ligue1:     '#ef4444',
 }
 
-// Brier scores have no live API source — kept as reference values
-const MODEL_BRIER = {
-  'Ensemble v2':    0.177,
-  'XGBoost':        0.178,
-  'Elo (baseline)': 0.162,
-  'Glicko-2':       0.174,
-  'Dixon-Coles':    0.191,
-}
-
 function StatCard({ label, value, color, sub }) {
   return (
     <div className="bg-gray-900 border border-gray-800 rounded-xl p-3 md:p-5">
@@ -149,7 +140,6 @@ export default function BacktestReport() {
   const seasonData = data.by_season.map(s => ({
     ...s,
     hit_rate_pct: +(s.hit_rate * 100).toFixed(1),
-    baseline_pct: 66.7,
   }))
   const seasonMin = seasonData.length
     ? Math.min(Math.floor(Math.min(...seasonData.map(s => s.hit_rate_pct))) - 3, 63)
@@ -167,23 +157,15 @@ export default function BacktestReport() {
     count:   d.count,
   }))
 
-  // Ensemble and Elo hit rates come from the live DM test endpoint;
-  // XGB/G2/DC hit rates have no dedicated API so use reference values.
+  // Only API-fed rows (DM test endpoint, ensemble_backtest_predictions.csv).
+  // Per-model XGB/G2/DC hit rates and per-model Brier scores were hard-coded
+  // and wrong-scale — removed until ensemble_v2.py emits real per-model
+  // holdout metrics (planned follow-up).
   const comparisonRows = dmData ? [
-    { model: 'Ensemble v2',    hitRate: dmData.ensemble_hit_rate, brier: MODEL_BRIER['Ensemble v2'],    predictions: dmData.n_matches },
-    { model: 'XGBoost',        hitRate: 49.07,                    brier: MODEL_BRIER['XGBoost'],        predictions: dmData.n_matches },
-    { model: 'Elo (baseline)', hitRate: dmData.elo_hit_rate,      brier: MODEL_BRIER['Elo (baseline)'], predictions: dmData.n_matches },
-    { model: 'Glicko-2',      hitRate: 47.55,                    brier: MODEL_BRIER['Glicko-2'],      predictions: dmData.n_matches },
-    { model: 'Dixon-Coles',   hitRate: 46.95,                    brier: MODEL_BRIER['Dixon-Coles'],   predictions: dmData.n_matches },
-  ] : [
-    { model: 'Ensemble v2',    hitRate: 49.35, brier: 0.177, predictions: 10099 },
-    { model: 'XGBoost',        hitRate: 49.07, brier: 0.178, predictions: 10099 },
-    { model: 'Elo (baseline)', hitRate: 49.05, brier: 0.162, predictions: 10099 },
-    { model: 'Glicko-2',      hitRate: 47.55, brier: 0.174, predictions: 10099 },
-    { model: 'Dixon-Coles',   hitRate: 46.95, brier: 0.191, predictions: 10099 },
-  ]
-  const bestHitRate = Math.max(...comparisonRows.map(m => m.hitRate))
-  const bestBrier   = Math.min(...comparisonRows.map(m => m.brier))
+    { model: 'Ensemble',       hitRate: dmData.ensemble_hit_rate, predictions: dmData.n_matches },
+    { model: 'Elo (baseline)', hitRate: dmData.elo_hit_rate,      predictions: dmData.n_matches },
+  ] : []
+  const bestHitRate = comparisonRows.length ? Math.max(...comparisonRows.map(m => m.hitRate)) : null
 
   const ModelDot = (props) => {
     const { cx, cy, payload } = props
@@ -212,15 +194,15 @@ export default function BacktestReport() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
           <div className="bg-gray-800/50 rounded p-3">
             <p className="text-emerald-400 font-medium mb-1">✓ What's working</p>
-            <p className="text-gray-300">The ensemble beats our Elo baseline on matches it never saw in training (~67.0% vs 66.7% non-draw walk-forward), and its probabilities are well-calibrated (ECE 0.013).</p>
+            <p className="text-gray-300">The ensemble beats our Elo baseline on matches it never saw in training (66.9% vs 66.1% non-draw, 2020–25 walk-forward backtest). Calibration is not yet good — see the Hosmer-Lemeshow test below.</p>
           </div>
           <div className="bg-gray-800/50 rounded p-3">
             <p className="text-amber-400 font-medium mb-1">⚠ Why P&amp;L looks negative</p>
-            <p className="text-gray-300">The simulation uses historical opening odds — not prices you'd actually get. Bookmakers cut prices significantly before kickoff. It also bets on every match above 5% edge (3,800+ bets), which is unrealistic. A disciplined bettor would filter to 200–400 high-confidence selections per year.</p>
+            <p className="text-gray-300">The simulation uses Bet365 pre-match odds, which include the bookmaker's margin. It also bets on every match above 5% edge (3,983 bets), which is unrealistic — no bettor would back every selection.</p>
           </div>
           <div className="bg-gray-800/50 rounded p-3">
             <p className="text-[var(--text-secondary)] font-medium mb-1">📊 What the numbers mean</p>
-            <p className="text-gray-300">Hit rate (66.9%) means the model picks the correct winner in roughly 2 out of 3 non-draw matches. The Brier score measures probability accuracy — lower is better. These figures are measured on matches the model never saw during training.</p>
+            <p className="text-gray-300">The ensemble's non-draw hit rate (66.9%) means it picks the correct winner in roughly 2 out of 3 non-draw matches. The cards below are the Elo baseline model. The Brier score measures probability accuracy — lower is better. These figures are measured on matches the model never saw during training.</p>
           </div>
         </div>
       </div>
@@ -286,7 +268,7 @@ export default function BacktestReport() {
       {/* Walk-forward accuracy line chart */}
       <div className="bg-gray-900 border border-gray-800 rounded-xl p-3 md:p-5">
         <h2 className="text-base font-semibold text-white mb-1">Walk-Forward Hit Rate by Season</h2>
-        <p className="text-xs text-gray-500 mb-4">Non-draw matches. Dashed line = 66.7% Elo long-run baseline.</p>
+        <p className="text-xs text-gray-500 mb-4">Elo model, non-draw matches.</p>
         <ResponsiveContainer width="100%" height={220}>
           <LineChart data={seasonData} margin={{ top: 8, right: 16, bottom: 8, left: 0 }}>
             <XAxis dataKey="season" tick={{ fill: '#9ca3af', fontSize: 12 }} axisLine={false} tickLine={false} />
@@ -313,16 +295,6 @@ export default function BacktestReport() {
               strokeWidth={2}
               dot={{ r: 4, fill: '#10b981', stroke: '#10b981' }}
               activeDot={{ r: 6, fill: '#34d399', stroke: '#10b981' }}
-            />
-            <Line
-              name="Elo Baseline (66.7%)"
-              type="monotone"
-              dataKey="baseline_pct"
-              stroke="#6b7280"
-              strokeWidth={1.5}
-              strokeDasharray="5 4"
-              dot={false}
-              activeDot={false}
             />
           </LineChart>
         </ResponsiveContainer>
@@ -451,9 +423,7 @@ export default function BacktestReport() {
                     {dmData.p_value < 0.05 ? (dmData.ensemble_better ? '✓' : '✗') : '—'}
                   </span>
                   <span className={`text-sm ${dmData.p_value < 0.05 ? (dmData.ensemble_better ? 'text-emerald-400' : 'text-red-400') : 'text-gray-400'}`}>
-                    {dmData.p_value > 0.05
-                      ? "The ensemble outperforms the Elo baseline (49.0% vs 48.8% accuracy). The gap is real but needs more data to clear the formal 95% confidence threshold — on our binary win/loss backtest the gap is clearer at 66.9% vs 66.7% across 20,000 matches."
-                      : dmData.interpretation}
+                    {dmData.interpretation}
                   </span>
                 </div>
               </div>
@@ -466,22 +436,22 @@ export default function BacktestReport() {
         </div>
       )}
 
-      {/* Model comparison table */}
+      {/* Model comparison table — API-fed rows only */}
+      {comparisonRows.length > 0 && (
       <div className="bg-gray-900 border border-gray-800 rounded-xl p-3 md:p-5">
         <h2 className="text-base font-semibold text-white mb-1">Model Comparison</h2>
         <p className="text-xs text-gray-500 mb-1">
-          Hit rates below are 3-outcome (H/D/A) on the ensemble holdout.
+          Hit rates below are 3-outcome (H/D/A).
         </p>
         <p className="text-xs text-gray-600 mb-4">
-          Evaluated on 2024–2026 holdout ({(dmData?.n_matches ?? 10099).toLocaleString()} matches)
+          Walk-forward backtest, Aug 2020 – Jun 2025 ({dmData.n_matches.toLocaleString()} matches)
         </p>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm min-w-[380px]">
+          <table className="w-full text-sm min-w-[300px]">
             <thead>
               <tr className="text-gray-500 text-xs border-b border-gray-800">
                 <th className="text-left pb-2 font-medium">Model</th>
                 <th className="text-right pb-2 font-medium">Hit Rate</th>
-                <th className="text-right pb-2 font-medium">Brier Score</th>
                 <th className="text-right pb-2 font-medium">Predictions</th>
               </tr>
             </thead>
@@ -492,9 +462,6 @@ export default function BacktestReport() {
                   <td className={`py-2.5 text-right tabular-nums font-medium ${row.hitRate === bestHitRate ? 'text-emerald-400' : 'text-gray-400'}`}>
                     {row.hitRate.toFixed(2)}%
                   </td>
-                  <td className={`py-2.5 text-right tabular-nums font-medium ${row.brier === bestBrier ? 'text-emerald-400' : 'text-gray-400'}`}>
-                    {row.brier.toFixed(3)}
-                  </td>
                   <td className="py-2.5 text-right tabular-nums text-gray-500">
                     {row.predictions.toLocaleString()}
                   </td>
@@ -504,6 +471,7 @@ export default function BacktestReport() {
           </table>
         </div>
       </div>
+      )}
 
       {/* Feature Importance */}
       {featImportance && (
@@ -554,7 +522,7 @@ export default function BacktestReport() {
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-3 md:p-5">
             <div className="text-xs text-gray-400 mb-3 bg-gray-800/30 rounded p-3 border border-gray-700/50">
               <p className="text-gray-300 font-medium mb-1">Why does this show a loss?</p>
-              <p>This simulation bets £1 on every match where our model finds more than 5% edge — that's over 3,800 bets across 2.5 years, or about 8 per day. In reality, no bettor would back every single selection. The negative result comes from three things: (1) historical odds include bookmaker margin already baked in, (2) too many bets dilute the genuine edges with noise, and (3) average odds of 3.27 means mostly backing underdogs where variance is high.</p>
+              <p>This simulation bets £1 on every match where our model finds more than 5% edge — that's 3,983 bets across about 2.6 years, or about 4 per day. In reality, no bettor would back every single selection. The negative result comes from three things: (1) Bet365 pre-match odds include bookmaker margin already baked in, (2) too many bets dilute the genuine edges with noise, and (3) average odds of 3.34 means mostly backing underdogs where variance is high.</p>
             </div>
             <h2 className="text-base font-semibold text-white mb-1">Value Bets P&amp;L Simulation</h2>
             <p className="text-xs text-gray-500 mb-4">£1 flat stake on value bets only (EV &gt; 5%)</p>
@@ -572,6 +540,8 @@ export default function BacktestReport() {
                 color="text-gray-300"
                 sub="Value bets identified"
               />
+              {/* TODO(decision): ROI display conflicts with the DESIGN.md §8 no-ROI rule.
+                  Kept for now (it is an honest backtest loss) pending a separate decision. */}
               <StatCard
                 label="ROI"
                 value={`${pnlData.roi >= 0 ? '+' : ''}${pnlData.roi.toFixed(2)}%`}
@@ -579,10 +549,10 @@ export default function BacktestReport() {
                 sub="Return on investment"
               />
               <StatCard
-                label="Win Rate"
+                label="Bet Win Rate"
                 value={`${pnlData.win_rate.toFixed(1)}%`}
                 color="text-[var(--text-secondary)]"
-                sub="Correct predictions"
+                sub="Share of simulated bets that won"
               />
             </div>
 

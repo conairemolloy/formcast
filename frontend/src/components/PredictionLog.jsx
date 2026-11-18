@@ -116,7 +116,7 @@ function HashCell({ hash }) {
             </div>
 
             <p className="text-xs text-gray-400 leading-relaxed">
-              This hash proves the prediction was published before the match kicked off.
+              This hash proves the prediction and its publish timestamp were sealed at publication and not altered afterwards.
               It was computed from the prediction data and a UTC timestamp using SHA-256.
               Any change to the probabilities, outcome, or timestamp would produce a completely different hash.
             </p>
@@ -225,7 +225,7 @@ export default function PredictionLog() {
           </span>
         </div>
         <p className="text-sm text-gray-400">
-          Every prediction published before kickoff. SHA-256 hashed and timestamped.{' '}
+          Each prediction is SHA-256 hashed and timestamped when published — every settled prediction before kick-off.{' '}
           <button
             className="text-emerald-400 underline underline-offset-2 hover:text-emerald-300"
             onClick={() => setShowHashInfo(v => !v)}
@@ -243,9 +243,9 @@ export default function PredictionLog() {
               at which the prediction was published.
             </p>
             <p>
-              Because the hash is computed and stored <em>before kickoff</em>, anyone can
-              independently verify that the probabilities and predicted outcome were not altered
-              after the result was known. Just reconstruct the input string and check that
+              Because the hash is computed and stored <em>at publication</em>, anyone can
+              independently verify that the probabilities, predicted outcome and publish timestamp
+              were not altered afterwards. Just reconstruct the input string and check that
               SHA-256 produces the same digest.
             </p>
           </div>

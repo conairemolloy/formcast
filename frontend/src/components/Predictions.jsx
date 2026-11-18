@@ -81,7 +81,7 @@ export default function Predictions() {
 
       <div className="flex items-start gap-2 text-xs text-gray-500 bg-gray-900/40 border border-gray-800 rounded-lg px-3 py-2.5">
         <span className="text-[var(--brand)] shrink-0">ℹ</span>
-        <span>Predictions shown from 2019 onwards — earlier data was used to train the models.</span>
+        <span>Holdout predictions from 30 Mar 2024. The model was trained on earlier matches.</span>
       </div>
 
       {/* Summary stats */}

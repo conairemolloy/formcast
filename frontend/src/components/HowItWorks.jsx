@@ -21,39 +21,25 @@ const MODELS = [
     metricColor: 'text-[var(--text-secondary)]',
   },
   {
-    name: 'Bradley-Terry',
-    desc: 'Estimates team strength from pairwise match outcomes using maximum likelihood. Every match is a comparison between two teams.',
-    formula: 'P(A beats B) = β_A / (β_A + β_B)',
-    metric: 'Schedule-adjusted ratings',
+    name: 'XGBoost',
+    desc: 'Gradient-boosted decision trees trained on 78 engineered features including form, fatigue, H2H history, and xG statistics.',
+    formula: 'F(x) = Σ f_k(x),  minimising log-loss',
+    metric: 'Feature-driven H/D/A probabilities',
     metricColor: 'text-[var(--text-secondary)]',
   },
   {
-    name: 'XGBoost',
-    desc: 'Gradient-boosted decision trees trained on 48 engineered features including form, fatigue, H2H history, and xG statistics.',
-    formula: 'F(x) = Σ f_k(x),  minimising log-loss',
-    metric: '52.5% 3-outcome hit rate',
-    metricColor: 'text-emerald-400',
-  },
-  {
-    name: 'Neural Network',
-    desc: 'A deep feedforward network with 5 layers trained on the same 48 features. Learns non-linear relationships the tree models miss.',
-    formula: 'Dense(256) → BN → Dropout → Dense(128) → Softmax(3)',
-    metric: '53.1% 3-outcome hit rate',
-    metricColor: 'text-emerald-400',
-  },
-  {
-    name: 'LSTM',
-    desc: "A recurrent network that reads each team's last 5 matches as a sequence, capturing momentum and form trajectories.",
-    formula: 'h_t = LSTM(x_t, h_{t-1}) → Dense(3)',
-    metric: '53.3% 3-outcome hit rate',
-    metricColor: 'text-emerald-400',
+    name: 'Draw Classifier',
+    desc: 'A dedicated binary gradient-boosted model, trained on 13 draw-relevant features, that estimates only the chance of a draw — the hardest outcome to call. Its output is one of the inputs the meta-learner blends.',
+    formula: 'P(draw) = XGB_binary(x_draw)',
+    metric: 'Specialist draw probability',
+    metricColor: 'text-[var(--text-secondary)]',
   },
 ]
 
 const GLOSSARY = [
   {
     term: 'Brier Score',
-    def: 'Mean squared error of probability estimates. Lower is better. A random 3-outcome guess scores 0.333.',
+    def: 'Mean squared error of probability estimates. Lower is better. A uniform 3-outcome guess (⅓ each) scores 0.667 (multiclass Brier, range 0–2).',
   },
   {
     term: 'Expected Value (EV)',
@@ -76,13 +62,13 @@ const GLOSSARY = [
 const DATA_SOURCES = [
   {
     source: 'football-data.co.uk',
-    coverage: '14 competitions · 1993–2026',
+    coverage: '11 leagues · 1993–2026',
     provides: 'Results, bookmaker odds, match statistics',
   },
   {
     source: 'Understat',
     coverage: 'Top 5 leagues · 2014–2025',
-    provides: 'Expected Goals (xG) for shots and matches',
+    provides: 'Expected Goals (xG) for shots and matches. Feed currently paused — matches since May 2025 have no xG.',
   },
   {
     source: 'football-data.org',
@@ -91,7 +77,7 @@ const DATA_SOURCES = [
   },
   {
     source: 'Supabase',
-    coverage: 'All 128,797 matches',
+    coverage: 'All 128,602 matches',
     provides: 'Database hosting processed data for the API',
   },
 ]
@@ -129,25 +115,28 @@ export default function HowItWorks() {
         <SectionLabel>Overview</SectionLabel>
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-6 space-y-4">
           <p className="text-gray-300 leading-relaxed">
-            FormCast combines <span className="text-white font-semibold">7 independent models</span> into
+            FormCast combines <span className="text-white font-semibold">5 models</span> — Elo, Glicko-2,
+            Dixon-Coles, XGBoost and a draw classifier — into
             a single ensemble. Each model sees football differently — some track rating momentum, some
             model goal distributions, some learn from raw features. No single model captures everything,
             so we let them vote.
           </p>
           <p className="text-gray-400 leading-relaxed text-sm">
-            The ensemble is a meta-learner trained on out-of-fold predictions from all 7 models. It learns
-            which models to trust in which situations, then outputs a final probability for each of the three
+            The ensemble is a meta-learner trained on out-of-fold predictions from all 5 models. It learns
+            how much to trust each model, then outputs a final probability for each of the three
             outcomes: home win, draw, away win.
           </p>
-          <div className="grid grid-cols-3 gap-3 pt-2">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
             {[
-              { value: '128,797', label: 'Matches' },
+              { value: '128,602', label: 'Matches in database', sub: '1993–2026 · Elo history' },
+              { value: '50,298',  label: 'Ensemble training', sub: '2014+ · xG era' },
               { value: '1993–2026', label: 'Time span' },
-              { value: '14', label: 'Competitions' },
-            ].map(({ value, label }) => (
+              { value: '11', label: 'Leagues' },
+            ].map(({ value, label, sub }) => (
               <div key={label} className="text-center bg-gray-950 rounded-lg py-4 border border-gray-800">
                 <p className="text-xl sm:text-2xl font-black font-mono text-emerald-400 tabular-nums">{value}</p>
                 <p className="text-[10px] font-mono text-gray-600 uppercase tracking-wider mt-1">{label}</p>
+                {sub && <p className="text-[10px] text-gray-600 mt-0.5">{sub}</p>}
               </div>
             ))}
           </div>
@@ -177,10 +166,10 @@ export default function HowItWorks() {
         <SectionLabel>The Ensemble</SectionLabel>
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-6 space-y-5">
           <p className="text-gray-300 leading-relaxed text-sm">
-            All 7 models output a probability vector{' '}
-            <code className="text-xs font-mono text-gray-400 bg-gray-950 px-1.5 py-0.5 rounded">[P(H), P(D), P(A)]</code>.
-            A meta-learner — logistic regression trained on out-of-fold predictions — learns the optimal
-            combination weights. Walk-forward validation ensures no future data leaks into training.
+            The 5 models' outputs — probability vectors such as{' '}
+            <code className="text-xs font-mono text-gray-400 bg-gray-950 px-1.5 py-0.5 rounded">[P(H), P(D), P(A)]</code>,
+            rating gaps and the draw classifier's P(draw) — feed one global meta-learner: a logistic regression
+            trained on out-of-fold predictions (time-ordered splits), so it never learns from a match it is scoring.
           </p>
 
           {/* Flow diagram */}
@@ -222,8 +211,9 @@ export default function HowItWorks() {
           <div className="flex items-start gap-2 text-xs text-gray-500 bg-gray-950 border border-gray-800 rounded-lg px-3 py-2.5">
             <span className="text-[var(--brand)] shrink-0">ℹ</span>
             <span>
-              Walk-forward validation: the ensemble is trained only on data before each prediction date.
-              Results after 2019 are used for evaluation — the 1993–2019 window is training only.
+              Evaluation: the ensemble is trained on the first 80% of matches (to March 2024) and scored on
+              the most recent 20% it never saw (10,060 matches). The deployed model is then refit on all data
+              through the latest completed match, so live predictions use the full history.
             </span>
           </div>
         </div>

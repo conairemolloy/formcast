@@ -3,7 +3,6 @@ import { BarChart2, Menu, X, LayoutDashboard, ChevronDown, LogIn } from 'lucide-
 import api from './api'
 import { clearAuthToken } from './api'
 import { setOddsFormat } from './oddsFormat'
-import Landing from './components/Landing'
 import Dashboard from './components/Dashboard'
 import RatingsTable from './components/RatingsTable'
 import TeamProfile from './components/TeamProfile'
@@ -331,7 +330,6 @@ function App() {
 
       {/* The remodelled landing is full-bleed — skip the padded, max-width frame. */}
       <main className={active === 'landing-new' ? 'flex-1 w-full' : 'flex-1 max-w-7xl mx-auto w-full px-4 py-6'}>
-        {active === 'landing'        && <Landing onNavigate={handleNav} />}
         {active === 'landing-new'    && <LandingNew onNavigate={handleNav} onShowAuth={() => setShowAuth(true)} />}
         {active === 'about'          && <About />}
         {active === 'proof'          && <ProofPage />}

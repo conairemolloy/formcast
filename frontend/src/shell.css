@@ -7,7 +7,8 @@
  *
  * Exception: --border. index.css already defines a global --border that ~29
  * old-page rules depend on, so the hairline version is scoped to .fc-shell
- * (the <header>) only. It moves to :root when the old pages are retired.
+ * (the <header>) and .fc-page (migrated pages) only. It moves to :root when
+ * the old pages are retired.
  */
 :root {
   --background:         #171e19;
@@ -21,6 +22,21 @@
   --primary:            #ed5238;
   --primary-foreground: #171e19;
   --ring:               #ed7559;
+  /* Semantic data colours (DESIGN.md §2). chart-2 = positive edge / settled
+     win only — named chart-2, not --positive: index.css's old --positive is
+     emerald. Mirrored as hex in chartTheme.js for Recharts. */
+  --chart-2:            #b6d294;
+  --chart-3:            #e8b64c; /* pending / caution */
+  --chart-4:            #9c6bdf; /* categorical accent (international marker) */
+}
+
+/*
+ * Migrated page wrapper — gives a page the hairline --border without putting
+ * it on :root (see the --border note above). Pages opt in one at a time.
+ */
+.fc-page {
+  --border: rgba(241, 238, 228, 0.13);
+  color: var(--foreground);
 }
 
 .fc-shell {
@@ -72,3 +88,82 @@
 .fc-icon-btn:hover { color: var(--primary); }
 .fc-mobile-signin { color: var(--primary); }
 .fc-mobile-signin:hover { color: var(--ring); }
+
+/* ── Plain-language explanations ─────────────────────────────────────── */
+
+/* One-sentence intro line under a section header. */
+.fc-explain {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--muted-foreground);
+  max-width: 60ch;
+  margin-top: 0.25rem;
+}
+
+/* InfoTip (components/InfoTip.jsx) — a quiet sage "?", coral only on
+   hover/focus. The popover resets type styles so it never inherits the
+   uppercase mono of a stat label or the Fraunces of a display heading. */
+.fc-tip {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  margin-left: 0.25rem;
+}
+.fc-tip-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;               /* larger hit area without a larger glyph */
+  margin: -2px;
+  border-radius: 9999px;
+  background: none;
+  border: 0;
+  color: var(--muted-foreground);
+  cursor: help;
+  line-height: 0;
+  transition: color 120ms ease;
+}
+.fc-tip-btn:hover,
+.fc-tip-btn:focus-visible,
+.fc-tip-btn[aria-expanded='true'] { color: var(--primary); }
+.fc-tip-btn:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 1px;
+}
+.fc-tip-icon { width: 13px; height: 13px; }
+
+.fc-tip-pop {
+  --border: rgba(241, 238, 228, 0.13); /* hairline, independent of page scope */
+  position: fixed;
+  z-index: 1000;
+  display: block;
+  box-sizing: border-box;
+  max-width: 260px;
+  padding: 10px 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius, 0.625rem);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  pointer-events: auto;
+
+  /* reset anything inherited from the label/heading the trigger sits in */
+  font-family: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 0.8125rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-transform: none;
+  text-align: left;
+  white-space: normal;
+}
+.fc-tip-term {
+  display: block;
+  margin-bottom: 2px;
+  font-weight: 600;
+  color: var(--foreground);
+}
+.fc-tip-body {
+  display: block;
+  color: var(--muted-foreground);
+}

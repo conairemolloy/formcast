@@ -106,6 +106,22 @@ PREDICTION_LOG_CSV = os.path.normpath(
 )
 
 
+def _multiclass_brier(df: pd.DataFrame) -> tuple[float | None, int]:
+    """Multiclass Brier over settled log rows: mean of sum_k (p_k - 1{actual=k})^2
+    for k in H/D/A. Range 0 (perfect) to 2; uniform 1/3 guessing scores 0.667.
+    Rows without a H/D/A result or with unparseable probabilities are skipped."""
+    probs = df[["p_home", "p_draw", "p_away"]].apply(pd.to_numeric, errors="coerce")
+    rows  = df["actual_result"].isin(["H", "D", "A"]) & probs.notna().all(axis=1)
+    if not rows.any():
+        return None, 0
+    actual = df.loc[rows, "actual_result"]
+    p      = probs[rows]
+    score  = ((p["p_home"] - (actual == "H")) ** 2
+              + (p["p_draw"] - (actual == "D")) ** 2
+              + (p["p_away"] - (actual == "A")) ** 2)
+    return round(float(score.mean()), 4), int(rows.sum())
+
+
 @predictions_bp.get("/predictions/log")
 def get_prediction_log():
     if not os.path.exists(PREDICTION_LOG_CSV):
@@ -113,7 +129,8 @@ def get_prediction_log():
             "success": True,
             "data": [],
             "summary": {"total": 0, "correct": 0, "settled": 0, "tracked": 0, "pending": 0, "not_tracked": 0,
-                        "hit_rate": None, "leagues": [], "date_from": None, "date_to": None},
+                        "hit_rate": None, "leagues": [], "date_from": None, "date_to": None,
+                        "brier_live": None, "brier_live_n": 0},
             "meta": {"count": 0, "generated_at": datetime.now(timezone.utc).isoformat()},
         })
 
@@ -141,6 +158,7 @@ def get_prediction_log():
     dates       = tracked["match_date"].replace("", pd.NA).dropna()
     date_from   = str(dates.min()) if len(dates) else None
     date_to     = str(dates.max()) if len(dates) else None
+    brier_live, brier_live_n = _multiclass_brier(df)
 
     records = []
     for row in df.to_dict(orient="records"):
@@ -160,6 +178,8 @@ def get_prediction_log():
             "leagues":  leagues,
             "date_from": date_from,
             "date_to":   date_to,
+            "brier_live":   brier_live,
+            "brier_live_n": brier_live_n,
         },
         "meta": {"count": len(records), "generated_at": datetime.now(timezone.utc).isoformat()},
     })
