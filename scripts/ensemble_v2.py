@@ -9,6 +9,10 @@ Stack inputs (13 features):
   draw_prob
 
 Meta-learner: LogisticRegression in a StandardScaler Pipeline.
+
+main() evaluates models fit on the first 80% against the last 20% (holdout),
+then refits everything on 100% of the data and saves THOSE as the deployed
+models, so serving never lags the most recent ~20% of matches.
 """
 import json
 import math
@@ -191,8 +195,6 @@ STACK_COLS = [
     "p_home_dc", "p_draw_dc", "p_away_dc",
     "p_home_xgb", "p_draw_xgb", "p_away_xgb",
     "elo_diff", "h2h_goal_diff_avg", "h2h_home_win_rate", "momentum_diff",
-    "p_home_lstm",
-    "p_home_btl",
     "draw_prob",
 ]
 
@@ -579,10 +581,6 @@ def compute_match_features(
     *,
     xg_vals: tuple | None = None,
     ref_raw: str | None = None,
-    lstm_lookup: dict | None = None,
-    btl_lookup: dict | None = None,
-    global_mean_home: float = 0.45,
-    btl_global_mean: float = 0.45,
 ) -> dict:
     """
     Compute the full feature dict for one fixture using the current pre-match
@@ -591,13 +589,10 @@ def compute_match_features(
     call update_state() after this to advance the walk-forward state.
 
     Returns a dict with all 85 FEATURE_COLS keys plus p_home_dc/p_draw_dc/
-    p_away_dc, p_home_lstm, p_home_btl (stack inputs not in FEATURE_COLS),
+    p_away_dc (stack inputs not in FEATURE_COLS),
     and prediction_uncertainty (metadata only, not in FEATURE_COLS).
     """
     _apply_pre_match_adjustments(state, home, away, season, league)
-
-    lstm_lookup = lstm_lookup or {}
-    btl_lookup  = btl_lookup  or {}
 
     elo         = state["elo"]
     g2          = state["g2"]
@@ -764,11 +759,6 @@ def compute_match_features(
     # Prediction uncertainty (metadata — NOT in FEATURE_COLS)
     prediction_uncertainty = (home_phi + away_phi) / (2.0 * G2_INITIAL_PHI)
 
-    # LSTM and BTL stack lookups (fall back to global mean for unseen fixtures)
-    _date_str    = str(date.date()) if hasattr(date, "date") else str(date)
-    p_home_lstm  = lstm_lookup.get((home, away, _date_str), global_mean_home)
-    p_home_btl   = btl_lookup.get((home, away, _date_str), btl_global_mean)
-
     return {
         # Elo
         "home_elo": home_elo, "away_elo": away_elo,
@@ -871,8 +861,6 @@ def compute_match_features(
         # Prediction uncertainty (metadata — NOT a model feature)
         "prediction_uncertainty": prediction_uncertainty,
         # Stack inputs (not in FEATURE_COLS but needed for meta-learner)
-        "p_home_lstm": p_home_lstm,
-        "p_home_btl":  p_home_btl,
         "p_home_dc": p_home_dc, "p_draw_dc": p_draw_dc, "p_away_dc": p_away_dc,
     }
 
@@ -1078,27 +1066,6 @@ def build_all_features(
     for _dname in sorted({n for pair in DERBY_PAIRS for n in pair} - _all_data_teams):
         print(f"  WARNING: DERBY_PAIRS name '{_dname}' not found in results.csv")
 
-    _base = os.path.dirname(__file__)
-    lstm_lookup: dict[tuple, float] = {}
-    global_mean_home = 0.45
-    _lstm_path = os.path.normpath(os.path.join(_base, "..", "data", "processed", "lstm_predictions.csv"))
-    if os.path.exists(_lstm_path):
-        _lstm_df = pd.read_csv(_lstm_path, parse_dates=["match_date"])
-        if len(_lstm_df) > 0:
-            global_mean_home = float(_lstm_df["p_home"].mean())
-        for _, r in _lstm_df.iterrows():
-            lstm_lookup[(r["home_team"], r["away_team"], str(r["match_date"].date()))] = float(r["p_home"])
-
-    btl_lookup: dict[tuple, float] = {}
-    btl_global_mean = 0.45
-    _btl_path = os.path.normpath(os.path.join(_base, "..", "data", "processed", "btl_predictions.csv"))
-    if os.path.exists(_btl_path):
-        _btl_df = pd.read_csv(_btl_path, parse_dates=["match_date"])
-        if len(_btl_df) > 0:
-            btl_global_mean = float(_btl_df["p_home_btl"].mean())
-        for _, r in _btl_df.iterrows():
-            btl_lookup[(r["home_team"], r["away_team"], str(r["match_date"].date()))] = float(r["p_home_btl"])
-
     state   = init_state()
     rows    = []
     n_total = len(df)
@@ -1143,8 +1110,6 @@ def build_all_features(
         feat = compute_match_features(
             state, home, away, date, season, league, league_enc,
             xg_vals=xg_vals, ref_raw=ref_raw,
-            lstm_lookup=lstm_lookup, btl_lookup=btl_lookup,
-            global_mean_home=global_mean_home, btl_global_mean=btl_global_mean,
         )
 
         rows.append({
@@ -1245,8 +1210,6 @@ def _build_stack(df: pd.DataFrame, xgb_proba: np.ndarray) -> np.ndarray:
         df["h2h_goal_diff_avg"].values,
         df["h2h_home_win_rate"].values,
         df["momentum_diff"].values,
-        df["p_home_lstm"].values,
-        df["p_home_btl"].values,
     ])
 
 
@@ -1274,6 +1237,77 @@ def expected_calibration_error(y_true, y_prob, n_bins=10):
             conf = y_prob[mask].mean()
             ece += mask.mean() * abs(acc - conf)
     return ece
+
+
+# ---------------------------------------------------------------------------
+# Stack fitting (shared by holdout evaluation and deployment refit)
+# ---------------------------------------------------------------------------
+
+def fit_stack_models(fit_df: pd.DataFrame, n_splits: int = 5) -> dict:
+    """
+    Fit the full stack (XGBoost, draw classifier, meta-learner, calibrated
+    meta-learner) on fit_df, which must be sorted by match_date.
+
+    The meta-learner is trained on OUT-OF-FOLD base-model predictions only:
+    TimeSeriesSplit over fit_df, so each row's p_*_xgb / draw_prob comes from
+    a model trained strictly on earlier rows. The base models that are returned
+    (and used for prediction) are then refit on all of fit_df.
+    """
+    X_xgb = fit_df[FEATURE_COLS].values
+    y     = fit_df["target"].values
+
+    # Step 1: OOF XGBoost predictions
+    print(f"Generating OOF XGBoost predictions ({n_splits}-fold TimeSeriesSplit)...")
+    oof_proba = generate_oof_xgb(X_xgb, y, n_splits=n_splits)
+    stack = _build_stack(fit_df, oof_proba)
+
+    # Step 1b: OOF draw classifier (dedicated binary draw model)
+    print(f"\nGenerating OOF draw classifier predictions ({n_splits}-fold TimeSeriesSplit)...")
+    X_draw        = fit_df[DRAW_COLS].values
+    draw_y        = (fit_df["result"] == "D").astype(int).values
+    draw_prob_oof = np.zeros(len(fit_df))
+    tss_draw = TimeSeriesSplit(n_splits=n_splits)
+    for fold, (tr_idx, val_idx) in enumerate(tss_draw.split(X_draw)):
+        print(f"  Draw fold {fold + 1}/{n_splits}"
+              f"  (train={len(tr_idx):,}, val={len(val_idx):,})")
+        dc_model = _make_draw_xgb()
+        dc_model.fit(X_draw[tr_idx], draw_y[tr_idx])
+        draw_prob_oof[val_idx] = dc_model.predict_proba(X_draw[val_idx])[:, 1]
+
+    draw_clf = _make_draw_xgb()
+    draw_clf.fit(X_draw, draw_y)
+
+    stack = np.column_stack([stack, draw_prob_oof])
+    assert stack.shape[1] == len(STACK_COLS), (
+        f"stack width {stack.shape[1]} != len(STACK_COLS) {len(STACK_COLS)}"
+    )
+
+    # Step 2: Full XGBoost on all of fit_df
+    print(f"\nTraining full XGBoost on {len(fit_df):,} matches...")
+    xgb_full = _make_xgb()
+    xgb_full.fit(X_xgb, y)
+
+    # Step 3: Meta-learner on the OOF stack
+    print("Training meta-learner (LogisticRegression + StandardScaler)...")
+    meta = Pipeline([
+        ("scaler", StandardScaler()),
+        ("lr", LogisticRegression(C=1.0, max_iter=5000, random_state=42)),
+    ])
+    meta.fit(stack, y)
+
+    # Calibrate via 5-fold CV on the OOF stack
+    meta_calibrated = CalibratedClassifierCV(
+        LogisticRegression(C=0.1, max_iter=5000, random_state=42),
+        method='isotonic',
+        cv=5,
+    )
+    meta_calibrated.fit(stack, y)
+
+    return {
+        "xgb": xgb_full, "draw_clf": draw_clf,
+        "meta": meta, "meta_calibrated": meta_calibrated,
+        "oof_stack": stack,
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -1325,83 +1359,20 @@ def main() -> None:
     print(f"Holdout: {len(holdout_df):,} matches  "
           f"({holdout_df['match_date'].min().date()} → {holdout_df['match_date'].max().date()})\n")
 
-    X_train_xgb = train_df[FEATURE_COLS].values
-    y_train     = train_df["target"].values
-
     # ------------------------------------------------------------------
-    # Step 1: OOF XGBoost predictions (train set only)
+    # Steps 1-3: fit the stack on train_df only (for holdout evaluation)
     # ------------------------------------------------------------------
-    print("Generating OOF XGBoost predictions (5-fold TimeSeriesSplit)...")
-    oof_proba = generate_oof_xgb(X_train_xgb, y_train)
-    train_stack = _build_stack(train_df, oof_proba)
-
-    # ------------------------------------------------------------------
-    # Step 1b: OOF draw classifier (dedicated binary draw model)
-    # ------------------------------------------------------------------
-    print("\nGenerating OOF draw classifier predictions (5-fold TimeSeriesSplit)...")
-    X_tr_draw     = train_df[DRAW_COLS].values
-    draw_y        = (train_df["result"] == "D").astype(int).values
-    draw_prob_oof = np.zeros(len(train_df))
-    tss_draw = TimeSeriesSplit(n_splits=5)
-    for fold, (tr_idx, val_idx) in enumerate(tss_draw.split(X_tr_draw)):
-        print(f"  Draw fold {fold + 1}/5"
-              f"  (train={len(tr_idx):,}, val={len(val_idx):,})")
-        dc_model = _make_draw_xgb()
-        dc_model.fit(X_tr_draw[tr_idx], draw_y[tr_idx])
-        draw_prob_oof[val_idx] = dc_model.predict_proba(X_tr_draw[val_idx])[:, 1]
-
-    draw_clf = _make_draw_xgb()
-    draw_clf.fit(X_tr_draw, draw_y)
-
-    train_stack = np.column_stack([train_stack, draw_prob_oof])
-
-    # ------------------------------------------------------------------
-    # Step 2: Full XGBoost trained on all of train_df (for holdout)
-    # ------------------------------------------------------------------
-    print("\nTraining full XGBoost on training set...")
-    xgb_full = _make_xgb()
-    xgb_full.fit(X_train_xgb, y_train)
+    eval_models     = fit_stack_models(train_df)
+    xgb_full        = eval_models["xgb"]
+    draw_clf        = eval_models["draw_clf"]
+    meta            = eval_models["meta"]
+    meta_calibrated = eval_models["meta_calibrated"]
 
     X_holdout_xgb   = holdout_df[FEATURE_COLS].values
     holdout_xgb_proba = xgb_full.predict_proba(X_holdout_xgb)
     holdout_stack     = _build_stack(holdout_df, holdout_xgb_proba)
     draw_prob_ho  = draw_clf.predict_proba(holdout_df[DRAW_COLS].values)[:, 1]
     holdout_stack = np.column_stack([holdout_stack, draw_prob_ho])
-
-    # ------------------------------------------------------------------
-    # Step 3: Meta-learner
-    # ------------------------------------------------------------------
-    print("Training meta-learner (LogisticRegression + StandardScaler)...")
-    meta = Pipeline([
-        ("scaler", StandardScaler()),
-        ("lr", LogisticRegression(C=1.0, max_iter=5000, random_state=42)),
-    ])
-    meta.fit(train_stack, y_train)
-
-    # Calibrate via 5-fold CV on training stack
-    meta_calibrated = CalibratedClassifierCV(
-        LogisticRegression(C=0.1, max_iter=5000, random_state=42),
-        method='isotonic',
-        cv=5,
-    )
-    meta_calibrated.fit(train_stack, y_train)
-
-    # ------------------------------------------------------------------
-    # Save models
-    # ------------------------------------------------------------------
-    models_dir = os.path.join(os.path.dirname(__file__), '..', 'models')
-    os.makedirs(models_dir, exist_ok=True)
-    joblib.dump(xgb_full, os.path.join(models_dir, 'xgb_ensemble.pkl'))
-    print(f"Saved XGBoost model to models/xgb_ensemble.pkl")
-    joblib.dump(meta, os.path.join(models_dir, 'meta_learner.pkl'))
-    print(f"Saved meta-learner to models/meta_learner.pkl")
-    joblib.dump(meta_calibrated, os.path.join(models_dir, 'meta_learner_calibrated.pkl'))
-    print(f"Saved calibrated meta-learner to models/meta_learner_calibrated.pkl")
-    joblib.dump(draw_clf, os.path.join(models_dir, 'draw_classifier.pkl'))
-    print(f"Saved draw classifier to models/draw_classifier.pkl")
-    with open(os.path.join(models_dir, 'feature_cols.json'), 'w') as f:
-        json.dump(FEATURE_COLS, f)
-    joblib.dump(league_encoder, os.path.join(models_dir, 'league_encoder.pkl'))
 
     # ------------------------------------------------------------------
     # Step 4: Holdout evaluation
@@ -1530,6 +1501,37 @@ def main() -> None:
     )
     holdout_df[out_cols].to_csv(out_path, index=False)
     print(f"\nSaved holdout predictions ({len(holdout_df):,} rows) to {out_path}")
+
+    # ------------------------------------------------------------------
+    # Step 7: Deployment refit on 100% of model_df
+    # ------------------------------------------------------------------
+    # The holdout numbers above come from the train-only models. The models
+    # we SERVE are refit on every match so they include the most recent ~20%.
+    # Same procedure as the evaluation fit (OOF TimeSeriesSplit stack for the
+    # meta-learner), just over model_df instead of train_df.
+    print("\n" + "=" * 68)
+    print(f"DEPLOYMENT REFIT  ({len(model_df):,} matches, "
+          f"{model_df['match_date'].min().date()} → "
+          f"{model_df['match_date'].max().date()})")
+    print("=" * 68)
+    deploy = fit_stack_models(model_df)
+
+    models_dir = os.path.join(os.path.dirname(__file__), '..', 'models')
+    os.makedirs(models_dir, exist_ok=True)
+    joblib.dump(deploy["xgb"], os.path.join(models_dir, 'xgb_ensemble.pkl'))
+    print(f"Saved XGBoost model to models/xgb_ensemble.pkl")
+    joblib.dump(deploy["meta"], os.path.join(models_dir, 'meta_learner.pkl'))
+    print(f"Saved meta-learner to models/meta_learner.pkl")
+    joblib.dump(deploy["meta_calibrated"], os.path.join(models_dir, 'meta_learner_calibrated.pkl'))
+    print(f"Saved calibrated meta-learner to models/meta_learner_calibrated.pkl")
+    joblib.dump(deploy["draw_clf"], os.path.join(models_dir, 'draw_classifier.pkl'))
+    print(f"Saved draw classifier to models/draw_classifier.pkl")
+    with open(os.path.join(models_dir, 'feature_cols.json'), 'w') as f:
+        json.dump(FEATURE_COLS, f)
+    joblib.dump(league_encoder, os.path.join(models_dir, 'league_encoder.pkl'))
+    print(f"Deployed models trained through {model_df['match_date'].max().date()} "
+          f"(holdout metrics above are from the train-only fit through "
+          f"{train_df['match_date'].max().date()})")
 
 
 if __name__ == "__main__":

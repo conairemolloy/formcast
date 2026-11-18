@@ -257,10 +257,6 @@ def predict_club_fixture(
     draw_clf,
     feature_cols: list[str],
     league_enc: dict[str, int],
-    lstm_lookup: dict,
-    btl_lookup: dict,
-    global_mean_home: float,
-    btl_global_mean: float,
 ) -> dict:
     """Run the full club ensemble prediction path for one fixture.
 
@@ -274,8 +270,6 @@ def predict_club_fixture(
     feat = compute_match_features(
         state, home, away, match_date, season, league_code, league_enc,
         xg_vals=None, ref_raw=None,
-        lstm_lookup=lstm_lookup, btl_lookup=btl_lookup,
-        global_mean_home=global_mean_home, btl_global_mean=btl_global_mean,
     )
     assert set(feat.keys()) >= set(feature_cols), (
         f"compute_match_features missing keys: {set(feature_cols) - set(feat.keys())}"
@@ -297,10 +291,11 @@ def predict_club_fixture(
         feat["h2h_goal_diff_avg"],
         feat["h2h_home_win_rate"],
         feat["momentum_diff"],
-        feat["p_home_lstm"],
-        feat["p_home_btl"],
         draw_prob,
     ]])
+    assert stack_row.shape[1] == len(STACK_COLS), (
+        f"Stack width {stack_row.shape[1]} != len(STACK_COLS) {len(STACK_COLS)}"
+    )
     assert stack_row.shape[1] == meta_model.n_features_in_, (
         f"Stack width {stack_row.shape[1]} != meta_model expects "
         f"{meta_model.n_features_in_}"
@@ -358,30 +353,6 @@ def main() -> None:
         print(f"Loaded {len(xg_lookup):,} xG records\n")
     else:
         print("Warning: results_with_xg.csv not found — xG features will use defaults\n")
-
-    # Load LSTM lookup (global mean fallback for fixtures not in the CSV)
-    lstm_lookup: dict[tuple, float] = {}
-    global_mean_home = 0.45
-    _lstm_path = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "data", "processed", "lstm_predictions.csv"))
-    if os.path.exists(_lstm_path):
-        _lstm_df = pd.read_csv(_lstm_path, parse_dates=["match_date"])
-        if len(_lstm_df) > 0:
-            global_mean_home = float(_lstm_df["p_home"].mean())
-        for _, r in _lstm_df.iterrows():
-            lstm_lookup[(r["home_team"], r["away_team"], str(r["match_date"].date()))] = float(r["p_home"])
-        print(f"Loaded {len(lstm_lookup):,} LSTM predictions (global mean={global_mean_home:.3f})\n")
-
-    # Load BTL lookup (global mean fallback)
-    btl_lookup: dict[tuple, float] = {}
-    btl_global_mean = 0.45
-    _btl_path = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "data", "processed", "btl_predictions.csv"))
-    if os.path.exists(_btl_path):
-        _btl_df = pd.read_csv(_btl_path, parse_dates=["match_date"])
-        if len(_btl_df) > 0:
-            btl_global_mean = float(_btl_df["p_home_btl"].mean())
-        for _, r in _btl_df.iterrows():
-            btl_lookup[(r["home_team"], r["away_team"], str(r["match_date"].date()))] = float(r["p_home_btl"])
-        print(f"Loaded {len(btl_lookup):,} BTL predictions (global mean={btl_global_mean:.3f})\n")
 
     # Load international Elo ratings — separate from club state, never merged
     international_elo: dict[str, float] = {}
@@ -561,8 +532,6 @@ def main() -> None:
                 state, home, away, match_date, league_code, season,
                 xgb_model=xgb_model, meta_model=meta_model, draw_clf=draw_clf,
                 feature_cols=feature_cols, league_enc=league_enc,
-                lstm_lookup=lstm_lookup, btl_lookup=btl_lookup,
-                global_mean_home=global_mean_home, btl_global_mean=btl_global_mean,
             )
             rows.append({
                 "match_id":          match_id,

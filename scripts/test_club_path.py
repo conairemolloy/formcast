@@ -69,31 +69,6 @@ def main() -> None:
     print(f"  XGBoost ({len(feature_cols)} features), meta expects "
           f"{meta_model.n_features_in_} stack cols\n")
 
-    # ── LSTM / BTL lookups (optional — fall back to global means if absent) ───
-    lstm_lookup: dict = {}
-    global_mean_home = 0.45
-    btl_lookup: dict = {}
-    btl_global_mean = 0.45
-
-    _lstm_path = os.path.join(DATA_DIR, "lstm_predictions.csv")
-    if os.path.exists(_lstm_path):
-        _lstm_df = pd.read_csv(_lstm_path, parse_dates=["match_date"])
-        if len(_lstm_df) > 0:
-            global_mean_home = float(_lstm_df["p_home"].mean())
-        for _, r in _lstm_df.iterrows():
-            lstm_lookup[(r["home_team"], r["away_team"], str(r["match_date"].date()))] = float(r["p_home"])
-        print(f"  LSTM: {len(lstm_lookup):,} records (mean={global_mean_home:.3f})")
-
-    _btl_path = os.path.join(DATA_DIR, "btl_predictions.csv")
-    if os.path.exists(_btl_path):
-        _btl_df = pd.read_csv(_btl_path, parse_dates=["match_date"])
-        if len(_btl_df) > 0:
-            btl_global_mean = float(_btl_df["p_home_btl"].mean())
-        for _, r in _btl_df.iterrows():
-            btl_lookup[(r["home_team"], r["away_team"], str(r["match_date"].date()))] = float(r["p_home_btl"])
-        print(f"  BTL:  {len(btl_lookup):,} records (mean={btl_global_mean:.3f})")
-    print()
-
     # ── xG lookup (identical to predict_upcoming.main()) ─────────────────────
     xg_lookup: dict = {}
     xg_path = os.path.join(DATA_DIR, "results_with_xg.csv")
@@ -182,10 +157,6 @@ def main() -> None:
                 draw_clf=draw_clf,
                 feature_cols=feature_cols,
                 league_enc=league_enc,
-                lstm_lookup=lstm_lookup,
-                btl_lookup=btl_lookup,
-                global_mean_home=global_mean_home,
-                btl_global_mean=btl_global_mean,
             )
         except AssertionError as exc:
             msg = f"FAIL [{home} vs {away}] guard failed: {exc}"
