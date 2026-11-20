@@ -541,10 +541,10 @@ export default function BacktestReport() {
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
               <StatCard
-                label="Final P&L"
+                label="Final P&L (backtest)"
                 value={`${positive ? '+' : ''}£${pnlData.final_pnl.toFixed(2)}`}
                 color={positive ? 'text-emerald-400' : 'text-red-400'}
-                sub={`on £${pnlData.total_bets.toLocaleString()} staked`}
+                sub={`simulated, on £${pnlData.total_bets.toLocaleString()} staked`}
               />
               <StatCard
                 label="Total Bets"
@@ -552,13 +552,11 @@ export default function BacktestReport() {
                 color="text-gray-300"
                 sub="Value bets identified"
               />
-              {/* TODO(decision): ROI display conflicts with the DESIGN.md §8 no-ROI rule.
-                  Kept for now (it is an honest backtest loss) pending a separate decision. */}
               <StatCard
-                label="ROI"
+                label="ROI (backtest)"
                 value={`${pnlData.roi >= 0 ? '+' : ''}${pnlData.roi.toFixed(2)}%`}
                 color={pnlData.roi >= 0 ? 'text-emerald-400' : 'text-red-400'}
-                sub="Return on investment"
+                sub="simulated flat stake — not a live return"
               />
               <StatCard
                 label="Bet Win Rate"

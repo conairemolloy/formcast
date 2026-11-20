@@ -70,7 +70,7 @@
 ---
 
 ## Shipped — Nov 17–20 2026 (correctness & honesty run)
-> Six feature/fix commits (plus the daily-data chores) reconciling what the site claims with what the model actually does. Numbers here were true when written; the Current State table above is the live source of truth.
+> The Nov 17–20 feature/fix commits (plus the daily-data chores) reconciling what the site claims with what the model actually does. Numbers here were true when written; the Current State table above is the live source of truth.
 
 - [x] **Plain-language tooltips + glossary site-wide (d650f16).** InfoTip component + glossary.js so an average bettor understands edge, book price, model, Brier, hit rate etc. where they appear.
 - [x] **xG pipeline recovered loudly (6a508a3, ea13591).** Dead feed no longer masquerades as current; +25 team-name mappings lifted the historical xG join 80%→99.3%.
@@ -78,6 +78,7 @@
 - [x] **Honesty cleanup of every displayed number (d650f16).** Traced and fixed the untraceable 0.156 Brier, the 128,797/14-comps/500+-teams counts, 48→78 features, the CLV stat (removed — it was log(model/book), not closing-line value), and "track record"→"backtest simulation" where the record was Elo-era. Prediction-log hash popup reworded to integrity-only.
 - [x] **Kickoff guard on publish (aed3476).** Publish skips fixtures at/after kickoff (±5 min buffer) and fixtures with no parseable kickoff time, so nothing is logged post-kickoff. Investigation found only 2 of ~1,170 logged rows were ever late (untracked Copa Libertadores), no info leaked.
 - [x] **Per-model holdout metrics served from the API (e158304).** `ensemble_v2.py` writes `models/holdout_metrics.json` in the same run as the deployed `.pkl` files; new `GET /api/backtest/model-metrics`; Model Comparison table and How It Works cards read the real numbers (see Current State). The old home-anchored `_brier` helper (wrong for every model) was deleted in favour of the 3-outcome Brier.
+- [x] **Backtest ROI/P&L labelled as backtest, not live (same session).** The ROI and P&L figures on BacktestReport and ValueBets are honest backtest numbers (value_bets.csv settled bets), confirmed not live. Kept — the no-ROI rule targets LIVE bets — but the card labels are now self-contained ("ROI (backtest)", "ROI / Bet (backtest)", "Final P&L (backtest)", "not a live return"), since the ValueBets ROI card sits just below the green LIVE section and could be skimmed as live. Resolves the two TODO(decision) comments.
 
 ## Active Priority Queue
 > One ordered list. Build order: **remodel → multi-market → Today's Tips**. Model/data fixes, measurement and infra run alongside.

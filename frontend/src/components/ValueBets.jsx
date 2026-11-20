@@ -228,9 +228,7 @@ export default function ValueBets() {
         <div className="grid grid-cols-3 gap-4">
           <StatCard label="Total Bets" value={summary.total_bets} />
           <StatCard label="Bet Win Rate" value={summary.win_rate != null ? `${(summary.win_rate * 100).toFixed(1)}%` : null} />
-          {/* TODO(decision): ROI display conflicts with the DESIGN.md §8 no-ROI rule.
-              Kept for now (it is an honest backtest loss) pending a separate decision. */}
-          <StatCard label="ROI / Bet"  value={summary.roi != null ? `${summary.roi > 0 ? '+' : ''}${summary.roi.toFixed(3)}` : null} />
+          <StatCard label="ROI / Bet (backtest)"  value={summary.roi != null ? `${summary.roi > 0 ? '+' : ''}${summary.roi.toFixed(3)}` : null} />
           {/* "Mean CLV" removed: value_bets.csv `clv` is log(p_model / implied) — the
               model's own edge, not closing-line value (no closing odds exist). */}
         </div>
