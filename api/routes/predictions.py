@@ -122,30 +122,37 @@ def _multiclass_brier(df: pd.DataFrame) -> tuple[float | None, int]:
     return round(float(score.mean()), 4), int(rows.sum())
 
 
-@predictions_bp.get("/predictions/log")
-def get_prediction_log():
+def load_prediction_log():
+    """Read prediction_log.csv as strings. Returns None if the file is absent."""
     if not os.path.exists(PREDICTION_LOG_CSV):
-        return jsonify({
-            "success": True,
-            "data": [],
-            "summary": {"total": 0, "correct": 0, "settled": 0, "tracked": 0, "pending": 0, "not_tracked": 0,
-                        "hit_rate": None, "leagues": [], "date_from": None, "date_to": None,
-                        "brier_live": None, "brier_live_n": 0},
-            "meta": {"count": 0, "generated_at": datetime.now(timezone.utc).isoformat()},
-        })
+        return None
+    return pd.read_csv(PREDICTION_LOG_CSV, dtype=str).fillna("")
 
-    df = pd.read_csv(PREDICTION_LOG_CSV, dtype=str).fillna("")
-    df = df.sort_values("match_date", ascending=False)
 
-    # Status is derived, never written back — the CSV (and every row hash) is untouched.
-    # Leagues results.csv doesn't cover can never settle, so they're "not tracked"
-    # rather than "pending" and are kept out of the tracked totals.
+def derive_status(df):
+    """Add a derived `status` column (settled > not_tracked > pending).
+    Never written back to the CSV — the file and every row hash stay untouched.
+    Leagues results.csv doesn't cover can never settle, so they're "not tracked"
+    rather than "pending" and are kept out of the tracked totals."""
     is_settled = df["correct"].isin(["0", "1"])
     covered    = df["league"].map(is_covered_league)
     df["status"] = "pending"
     df.loc[~covered, "status"] = "not_tracked"
     df.loc[is_settled, "status"] = "settled"
+    return df
 
+
+def summarize_log(df):
+    """Counts for the log/summary endpoints. `total` means tracked rows
+    (not-tracked excluded), matching the existing /log contract.
+    Adds the `status` column to `df` in place (via derive_status)."""
+    if df is None or df.empty:
+        return {"total": 0, "tracked": 0, "pending": 0, "not_tracked": 0,
+                "correct": 0, "settled": 0, "hit_rate": None,
+                "leagues": [], "date_from": None, "date_to": None,
+                "brier_live": None, "brier_live_n": 0}
+    df = derive_status(df)
+    is_settled  = df["correct"].isin(["0", "1"])
     tracked     = df[df["status"] != "not_tracked"]
     settled     = df[is_settled]
     total       = len(tracked)
@@ -159,6 +166,25 @@ def get_prediction_log():
     date_from   = str(dates.min()) if len(dates) else None
     date_to     = str(dates.max()) if len(dates) else None
     brier_live, brier_live_n = _multiclass_brier(df)
+    return {"total": total, "tracked": total, "pending": n_pending,
+            "not_tracked": not_tracked, "correct": correct, "settled": n_settled,
+            "hit_rate": hit_rate, "leagues": leagues, "date_from": date_from,
+            "date_to": date_to, "brier_live": brier_live, "brier_live_n": brier_live_n}
+
+
+@predictions_bp.get("/predictions/log")
+def get_prediction_log():
+    df = load_prediction_log()
+    if df is None:
+        return jsonify({
+            "success": True,
+            "data": [],
+            "summary": summarize_log(None),
+            "meta": {"count": 0, "generated_at": datetime.now(timezone.utc).isoformat()},
+        })
+
+    df = df.sort_values("match_date", ascending=False)
+    summary = summarize_log(df)  # also adds the derived `status` column to df
 
     records = []
     for row in df.to_dict(orient="records"):
@@ -167,21 +193,20 @@ def get_prediction_log():
     return jsonify({
         "success": True,
         "data": records,
-        "summary": {
-            "total":    total,
-            "tracked":  total,
-            "pending":  n_pending,
-            "not_tracked": not_tracked,
-            "correct":  correct,
-            "settled":  n_settled,
-            "hit_rate": hit_rate,
-            "leagues":  leagues,
-            "date_from": date_from,
-            "date_to":   date_to,
-            "brier_live":   brier_live,
-            "brier_live_n": brier_live_n,
-        },
+        "summary": summary,
         "meta": {"count": len(records), "generated_at": datetime.now(timezone.utc).isoformat()},
+    })
+
+
+@predictions_bp.get("/predictions/summary")
+def get_prediction_summary():
+    """Lightweight counts for landing/dashboard/proof pages. Same status
+    logic as /predictions/log, so the numbers always agree. No row data."""
+    df = load_prediction_log()
+    return jsonify({
+        "success": True,
+        "data": summarize_log(df),
+        "meta": {"generated_at": datetime.now(timezone.utc).isoformat()},
     })
 
 
