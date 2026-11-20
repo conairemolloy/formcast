@@ -154,7 +154,7 @@ def get_dm_test():
     except FileNotFoundError:
         return jsonify({"success": False, "error": "ensemble_backtest_predictions.csv not found"}), 404
 
-    required = {"correct_ensemble", "correct_elo"}
+    required = {"correct_ensemble", "correct_elo", "actual_result"}
     if not required.issubset(df.columns):
         return jsonify({"success": False, "error": f"Missing columns: {required - set(df.columns)}"}), 422
 
@@ -180,6 +180,10 @@ def get_dm_test():
     else:
         interp = f"No significant difference between Ensemble and Elo (p={p_value:.4f})"
 
+    nd = df[df["actual_result"] != "D"]
+    ensemble_hit_rate_nd = round(float(nd["correct_ensemble"].mean() * 100), 2) if len(nd) else None
+    elo_hit_rate_nd      = round(float(nd["correct_elo"].mean() * 100), 2) if len(nd) else None
+
     return jsonify({
         "success": True,
         "data": {
@@ -190,6 +194,9 @@ def get_dm_test():
             "n_matches":         n,
             "ensemble_hit_rate": round(float(df["correct_ensemble"].mean() * 100), 2),
             "elo_hit_rate":      round(float(df["correct_elo"].mean() * 100), 2),
+            "ensemble_hit_rate_nd": ensemble_hit_rate_nd,
+            "elo_hit_rate_nd":      elo_hit_rate_nd,
+            "n_matches_nd":         int(len(nd)),
         },
     })
 

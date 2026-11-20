@@ -199,7 +199,7 @@ export default function BacktestReport() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
           <div className="bg-gray-800/50 rounded p-3">
             <p className="text-emerald-400 font-medium mb-1">✓ What's working</p>
-            <p className="text-gray-300">The ensemble beats our Elo baseline on matches it never saw in training (66.9% vs 66.1% non-draw, 2020–25 walk-forward backtest). Calibration is not yet good — see the Hosmer-Lemeshow test below.</p>
+            <p className="text-gray-300">The ensemble beats our Elo baseline on matches it never saw in training ({dmData?.ensemble_hit_rate_nd != null ? `${dmData.ensemble_hit_rate_nd}% vs ${dmData.elo_hit_rate_nd}%` : '66.9% vs 66.1%'} non-draw, 2020–25 walk-forward backtest). Calibration is not yet good — see the Hosmer-Lemeshow test below.</p>
           </div>
           <div className="bg-gray-800/50 rounded p-3">
             <p className="text-amber-400 font-medium mb-1">⚠ Why P&amp;L looks negative</p>
@@ -207,7 +207,7 @@ export default function BacktestReport() {
           </div>
           <div className="bg-gray-800/50 rounded p-3">
             <p className="text-[var(--text-secondary)] font-medium mb-1">📊 What the numbers mean</p>
-            <p className="text-gray-300">The ensemble's non-draw hit rate (66.9%) means it picks the correct winner in roughly 2 out of 3 non-draw matches. The cards below are the Elo baseline model. The Brier score measures probability accuracy — lower is better. These figures are measured on matches the model never saw during training.</p>
+            <p className="text-gray-300">The ensemble's non-draw hit rate ({dmData?.ensemble_hit_rate_nd != null ? `${dmData.ensemble_hit_rate_nd}%` : '66.9%'}, 2020–25 walk-forward) means it picks the correct winner in roughly 2 out of 3 non-draw matches, excluding draws. The cards below are the Elo baseline model. The Brier score measures probability accuracy — lower is better. These figures are measured on matches the model never saw during training.</p>
           </div>
         </div>
       </div>
@@ -416,11 +416,11 @@ export default function BacktestReport() {
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Ensemble hit rate</span>
+                  <span className="text-gray-500">Ensemble hit rate (all matches)</span>
                   <span className="font-mono text-emerald-400">{dmData.ensemble_hit_rate?.toFixed(2)}%</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Elo hit rate</span>
+                  <span className="text-gray-500">Elo hit rate (all matches)</span>
                   <span className="font-mono text-gray-300">{dmData.elo_hit_rate?.toFixed(2)}%</span>
                 </div>
                 <div className="flex items-center gap-2 pt-2 mt-2 border-t border-gray-800">
