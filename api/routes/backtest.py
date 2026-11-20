@@ -241,6 +241,25 @@ def get_feature_importance():
     })
 
 
+@backtest_bp.get("/backtest/model-metrics")
+def get_model_metrics():
+    """Per-model holdout metrics written by ensemble_v2.py in the same run as
+    the deployed .pkl files. Read per request (a few KB) so it can never be
+    out of step with the file on disk."""
+    path = os.path.normpath(
+        os.path.join(os.path.dirname(__file__), "..", "..", "models", "holdout_metrics.json")
+    )
+    try:
+        with open(path) as f:
+            metrics = json.load(f)
+    except FileNotFoundError:
+        return jsonify({"success": False, "error": "holdout_metrics.json not found"}), 404
+    except (json.JSONDecodeError, OSError) as exc:
+        return jsonify({"success": False, "error": f"holdout_metrics.json unreadable: {exc}"}), 500
+
+    return jsonify({"success": True, "data": metrics})
+
+
 @backtest_bp.get("/backtest/clv")
 def get_clv():
     df = current_app.config["DATA"]["value_bets"].copy()

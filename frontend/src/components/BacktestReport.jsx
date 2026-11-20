@@ -93,7 +93,8 @@ export default function BacktestReport() {
   const [pnlData, setPnlData]               = useState(null)
   const [dmData, setDmData]                 = useState(null)
   const [featImportance, setFeatImportance] = useState(null)
-  const [loading, setLoading]               = useState(true)
+  const [modelMetrics, setModelMetrics]     = useState(null)
+  const [loading, setLoading]              = useState(true)
   const [error, setError]                   = useState(null)
 
   useEffect(() => {
@@ -115,6 +116,12 @@ export default function BacktestReport() {
   useEffect(() => {
     api.get('/api/backtest/dm-test')
       .then(r => setDmData(r.data.data))
+      .catch(() => {})
+  }, [])
+
+  useEffect(() => {
+    api.get('/api/backtest/model-metrics')
+      .then(r => setModelMetrics(r.data.data))
       .catch(() => {})
   }, [])
 
@@ -157,15 +164,13 @@ export default function BacktestReport() {
     count:   d.count,
   }))
 
-  // Only API-fed rows (DM test endpoint, ensemble_backtest_predictions.csv).
-  // Per-model XGB/G2/DC hit rates and per-model Brier scores were hard-coded
-  // and wrong-scale — removed until ensemble_v2.py emits real per-model
-  // holdout metrics (planned follow-up).
-  const comparisonRows = dmData ? [
-    { model: 'Ensemble',       hitRate: dmData.ensemble_hit_rate, predictions: dmData.n_matches },
-    { model: 'Elo (baseline)', hitRate: dmData.elo_hit_rate,      predictions: dmData.n_matches },
-  ] : []
-  const bestHitRate = comparisonRows.length ? Math.max(...comparisonRows.map(m => m.hitRate)) : null
+  // Per-model holdout metrics from /api/backtest/model-metrics (written by
+  // ensemble_v2.py in the same run as the deployed models). brier is null for
+  // 2-way models (Elo, Glicko-2) — they have no 3-outcome Brier.
+  const comparisonRows = modelMetrics?.models ?? []
+  const bestHitRate = comparisonRows.length ? Math.max(...comparisonRows.map(m => m.hit_rate)) : null
+  const briers = comparisonRows.map(m => m.brier).filter(b => b != null)
+  const bestBrier = briers.length ? Math.min(...briers) : null
 
   const ModelDot = (props) => {
     const { cx, cy, payload } = props
@@ -436,15 +441,14 @@ export default function BacktestReport() {
         </div>
       )}
 
-      {/* Model comparison table — API-fed rows only */}
+      {/* Model comparison table — per-model holdout metrics (model-metrics endpoint) */}
       {comparisonRows.length > 0 && (
       <div className="bg-gray-900 border border-gray-800 rounded-xl p-3 md:p-5">
         <h2 className="text-base font-semibold text-white mb-1">Model Comparison</h2>
-        <p className="text-xs text-gray-500 mb-1">
-          Hit rates below are 3-outcome (H/D/A).
-        </p>
         <p className="text-xs text-gray-600 mb-4">
-          Walk-forward backtest, Aug 2020 – Jun 2025 ({dmData.n_matches.toLocaleString()} matches)
+          Holdout: trained on matches to {modelMetrics.split.train.to}, scored on{' '}
+          {modelMetrics.split.holdout.n_matches.toLocaleString()} later matches
+          ({modelMetrics.split.holdout.from} – {modelMetrics.split.holdout.to})
         </p>
         <div className="overflow-x-auto">
           <table className="w-full text-sm min-w-[300px]">
@@ -452,24 +456,32 @@ export default function BacktestReport() {
               <tr className="text-gray-500 text-xs border-b border-gray-800">
                 <th className="text-left pb-2 font-medium">Model</th>
                 <th className="text-right pb-2 font-medium">Hit Rate</th>
-                <th className="text-right pb-2 font-medium">Predictions</th>
+                <th className="text-right pb-2 font-medium">Brier (3-outcome, 0–2)</th>
               </tr>
             </thead>
             <tbody>
               {comparisonRows.map((row, i) => (
-                <tr key={row.model} className={i < comparisonRows.length - 1 ? 'border-b border-gray-800/50' : ''}>
-                  <td className="py-2.5 text-gray-300">{row.model}</td>
-                  <td className={`py-2.5 text-right tabular-nums font-medium ${row.hitRate === bestHitRate ? 'text-emerald-400' : 'text-gray-400'}`}>
-                    {row.hitRate.toFixed(2)}%
+                <tr key={row.key} className={i < comparisonRows.length - 1 ? 'border-b border-gray-800/50' : ''}>
+                  <td className="py-2.5 text-gray-300">
+                    {row.name}
+                    {!row.predicts_draws && <span className="text-gray-600 text-xs"> · H/A only</span>}
                   </td>
-                  <td className="py-2.5 text-right tabular-nums text-gray-500">
-                    {row.predictions.toLocaleString()}
+                  <td className={`py-2.5 text-right tabular-nums font-medium ${row.hit_rate === bestHitRate ? 'text-emerald-400' : 'text-gray-400'}`}>
+                    {(row.hit_rate * 100).toFixed(2)}%
+                  </td>
+                  <td className={`py-2.5 text-right tabular-nums font-medium ${row.brier != null && row.brier === bestBrier ? 'text-emerald-400' : 'text-gray-400'}`}>
+                    {row.brier != null ? row.brier.toFixed(4) : '—'}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
+        <p className="text-xs text-gray-600 mt-3">
+          Hit rate: share of matches where the model's most likely outcome (H/D/A) happened.
+          Brier: 3-outcome score on a 0–2 scale, lower is better; guessing ⅓ each scores 0.667.
+          Elo and Glicko-2 give no draw probability, so they have no 3-outcome Brier (—) and every draw counts as a miss.
+        </p>
       </div>
       )}
 

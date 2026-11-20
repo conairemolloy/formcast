@@ -18,7 +18,7 @@ import json
 import math
 import os
 from collections import defaultdict
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
 
 import joblib
 import numpy as np
@@ -1217,13 +1217,25 @@ def _build_stack(df: pd.DataFrame, xgb_proba: np.ndarray) -> np.ndarray:
 # Metrics helpers
 # ---------------------------------------------------------------------------
 
-def _brier(p_home: np.ndarray, actual: pd.Series) -> float:
-    ahs = actual.map({"H": 1.0, "D": 0.5, "A": 0.0}).values
-    return float(((p_home - ahs) ** 2).mean())
+def _brier_3outcome(proba: np.ndarray, actual: pd.Series) -> float:
+    """Multiclass Brier: mean over matches of sum_k (p_k - y_k)^2 over H/D/A.
+    Range 0-2, lower is better; a uniform 1/3 guess scores 0.667.
+    proba columns must be [P(A), P(D), P(H)] (RESULT_MAP order). Same
+    definition as ensemble_backtest._brier_3outcome."""
+    onehot = np.column_stack([(actual.values == r).astype(float) for r in ("A", "D", "H")])
+    return float(((proba - onehot) ** 2).sum(axis=1).mean())
 
 
 def _hit(pred: np.ndarray, actual: pd.Series) -> float:
     return float((pred == actual.values).mean())
+
+
+HOLDOUT_BRIER_SCALE = (
+    "multiclass 3-outcome Brier: mean over matches of sum over H/D/A of "
+    "(p - outcome)^2; range 0-2, lower is better; uniform 1/3 guess = 0.667. "
+    "null for models with no draw probability (Elo, Glicko-2), which have no "
+    "3-outcome Brier."
+)
 
 
 def expected_calibration_error(y_true, y_prob, n_bins=10):
@@ -1396,28 +1408,32 @@ def main() -> None:
 
     actual = holdout_df["actual_result"]
 
-    ens_hit   = holdout_df["correct"].mean()
-    ens_brier = _brier(holdout_df["p_home"].values, actual)
+    # Brier is the multiclass (3-outcome, 0-2) score, and only for models that
+    # output H/D/A probabilities. Elo and Glicko-2 give a 2-way home/away
+    # probability with no draw, so they have no 3-outcome Brier (None) — the
+    # old home-anchored score (draw = 0.5) isn't comparable and isn't reported.
+    ens_hit   = float(holdout_df["correct"].mean())
+    ens_brier = _brier_3outcome(meta_proba, actual)
 
     cal_pred_str = np.array([RESULT_INV[int(p)] for p in cal_pred])
     cal_hit   = _hit(cal_pred_str, actual)
-    cal_brier = _brier(holdout_df["p_home_cal"].values, actual)
+    cal_brier = _brier_3outcome(cal_proba, actual)
 
     # Full XGBoost standalone
     xgb_pred_str = np.array([RESULT_INV[int(p)] for p in xgb_full.predict(X_holdout_xgb)])
     xgb_hit      = _hit(xgb_pred_str, actual)
-    xgb_brier    = _brier(holdout_xgb_proba[:, 2], actual)
+    xgb_brier    = _brier_3outcome(holdout_xgb_proba, actual)
 
-    # Elo baseline
+    # Elo baseline (2-way: never predicts a draw)
     elo_pred_str = np.where(holdout_df["home_expected"].values > 0.5, "H", "A")
     elo_hit      = _hit(elo_pred_str, actual)
-    elo_brier    = _brier(holdout_df["home_expected"].values, actual)
+    elo_brier    = None
 
-    # Glicko-2 baseline
+    # Glicko-2 baseline (2-way: never predicts a draw)
     p_home_g2_holdout = _sigmoid(holdout_df["g2_diff"].values / G2_SCALE * 1.6)
     g2_pred_str       = np.where(p_home_g2_holdout > 0.5, "H", "A")
     g2_hit            = _hit(g2_pred_str, actual)
-    g2_brier          = _brier(p_home_g2_holdout, actual)
+    g2_brier          = None
 
     # Dixon-Coles baseline
     dc_cols = np.column_stack([
@@ -1425,7 +1441,7 @@ def main() -> None:
     ])
     dc_pred_str = np.array([RESULT_INV[int(i)] for i in np.argmax(dc_cols, axis=1)])
     dc_hit      = _hit(dc_pred_str, actual)
-    dc_brier    = _brier(holdout_df["p_home_dc"].values, actual)
+    dc_brier    = _brier_3outcome(dc_cols, actual)
 
     # ------------------------------------------------------------------
     # Step 5: Print results
@@ -1442,15 +1458,15 @@ def main() -> None:
         print(f"  {feat:<28s}  {coefs[0]:>8.4f}  {coefs[1]:>8.4f}  {coefs[2]:>8.4f}  {mean_abs:>7.4f}")
 
     best_hit   = max(elo_hit, g2_hit, xgb_hit, dc_hit)
-    best_brier = min(elo_brier, g2_brier, xgb_brier, dc_brier)
+    best_brier = min(xgb_brier, dc_brier)   # single models with a 3-outcome Brier
 
     print("\n" + "=" * 68)
     print(f"HOLDOUT EVALUATION  ({len(holdout_df):,} matches, "
           f"{holdout_df['match_date'].min().date()} → "
           f"{holdout_df['match_date'].max().date()})")
     print("=" * 68)
-    print(f"  {'Model':<20s}  {'Hit Rate':>10}  {'Brier':>10}")
-    print(f"  {'-' * 44}")
+    print(f"  {'Model':<20s}  {'Hit Rate':>10}  {'Brier (3-way, 0-2)':>18}")
+    print(f"  {'-' * 52}")
 
     rows_table = [
         ("Ensemble v2",       ens_hit,  ens_brier),
@@ -1460,10 +1476,59 @@ def main() -> None:
         ("Glicko-2",          g2_hit,   g2_brier),
         ("Dixon-Coles",       dc_hit,   dc_brier),
     ]
+    top_hit   = max(r[1] for r in rows_table)
+    top_brier = min(r[2] for r in rows_table if r[2] is not None)
     for name, hr, br in rows_table:
-        marker = " ◀ best" if (hr == max(r[1] for r in rows_table) or
-                                br == min(r[2] for r in rows_table)) else ""
-        print(f"  {name:<20s}  {hr:>10.4f}  {br:>10.6f}{marker}")
+        marker = " ◀ best" if (hr == top_hit or br == top_brier) else ""
+        br_s = f"{br:>18.6f}" if br is not None else f"{'— (2-way, no draw)':>18}"
+        print(f"  {name:<20s}  {hr:>10.4f}  {br_s}{marker}")
+
+    # Persisted alongside the deployed .pkl files (written in Step 7) so the
+    # API always serves the metrics from the same run as the served models.
+    # "Ensemble v2 (cal)" is monitoring-only (not served) and is left out.
+    holdout_from = str(holdout_df["match_date"].min().date())
+    holdout_to   = str(holdout_df["match_date"].max().date())
+
+    def _metric_row(key, name, outputs, hit, brier):
+        return {
+            "key": key, "name": name, "outputs": outputs,
+            "predicts_draws": outputs == "H/D/A",
+            "hit_rate": round(float(hit), 4),
+            "brier": None if brier is None else round(float(brier), 4),
+            "n_matches": len(holdout_df),
+            "holdout_from": holdout_from, "holdout_to": holdout_to,
+        }
+
+    holdout_metrics = {
+        "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "hit_rate_definition": (
+            "share of holdout matches where the model's most likely outcome "
+            "(H/D/A) was the actual result; 2-way models never pick a draw, "
+            "so every draw counts as a miss for them"
+        ),
+        "brier_scale": HOLDOUT_BRIER_SCALE,
+        "split": {
+            "method": "chronological 80/20 (models fit on train only, scored on holdout)",
+            "train":   {"from": str(train_df["match_date"].min().date()),
+                        "to":   str(train_df["match_date"].max().date()),
+                        "n_matches": len(train_df)},
+            "holdout": {"from": holdout_from, "to": holdout_to,
+                        "n_matches": len(holdout_df)},
+        },
+        "deployed_models": {
+            "trained_through": str(model_df["match_date"].max().date()),
+            "n_matches": len(model_df),
+            "note": "served models are refit on train + holdout after evaluation",
+        },
+        "models": [
+            _metric_row("ensemble",    "Ensemble",    "H/D/A", ens_hit, ens_brier),
+            _metric_row("xgboost",     "XGBoost",     "H/D/A", xgb_hit, xgb_brier),
+            _metric_row("dixon_coles", "Dixon-Coles", "H/D/A", dc_hit,  dc_brier),
+            _metric_row("elo",         "Elo",         "H/A",   elo_hit, elo_brier),
+            _metric_row("glicko2",     "Glicko-2",    "H/A",   g2_hit,  g2_brier),
+        ],
+    }
+    holdout_metrics["n_models"] = len(holdout_metrics["models"])
 
     hit_delta   = ens_hit - best_hit
     brier_delta = ens_brier - best_brier
@@ -1529,6 +1594,12 @@ def main() -> None:
     with open(os.path.join(models_dir, 'feature_cols.json'), 'w') as f:
         json.dump(FEATURE_COLS, f)
     joblib.dump(league_encoder, os.path.join(models_dir, 'league_encoder.pkl'))
+    # allow_nan=False: a NaN metric fails the run loudly instead of writing
+    # invalid JSON the API would choke on.
+    with open(os.path.join(models_dir, 'holdout_metrics.json'), 'w') as f:
+        json.dump(holdout_metrics, f, indent=2, allow_nan=False)
+        f.write("\n")
+    print(f"Saved holdout metrics to models/holdout_metrics.json")
     print(f"Deployed models trained through {model_df['match_date'].max().date()} "
           f"(holdout metrics above are from the train-only fit through "
           f"{train_df['match_date'].max().date()})")

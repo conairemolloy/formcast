@@ -1,6 +1,10 @@
+import { useState, useEffect } from 'react'
+import api from '../api'
+
 const MODELS = [
   {
     name: 'Elo Rating',
+    metricsKey: 'elo',
     desc: 'Dynamic strength rating updated after every result. Teams gain points for wins, lose for losses, with larger swings for upsets.',
     formula: 'E(A) = 1 / (1 + 10^(-(R_A - R_B) / 400))',
     metric: 'Dynamic strength rating, updated every match',
@@ -8,6 +12,7 @@ const MODELS = [
   },
   {
     name: 'Glicko-2',
+    metricsKey: 'glicko2',
     desc: 'Extends Elo with a confidence interval (RD) and consistency measure (σ). New teams start uncertain; certainty grows with more matches.',
     formula: 'E = 1 / (1 + exp(-g(φ) × (μ_A - μ_B)))',
     metric: 'Uncertainty-aware ratings',
@@ -15,6 +20,7 @@ const MODELS = [
   },
   {
     name: 'Dixon-Coles',
+    metricsKey: 'dixon_coles',
     desc: 'Models the number of goals each team scores using Poisson distributions, with a correction for low-scoring matches near 0-0.',
     formula: 'P(x,y) = τ(x,y) × P(X=x) × P(Y=y)',
     metric: 'Full scoreline probabilities',
@@ -22,6 +28,7 @@ const MODELS = [
   },
   {
     name: 'XGBoost',
+    metricsKey: 'xgboost',
     desc: 'Gradient-boosted decision trees trained on 78 engineered features including form, fatigue, H2H history, and xG statistics.',
     formula: 'F(x) = Σ f_k(x),  minimising log-loss',
     metric: 'Feature-driven H/D/A probabilities',
@@ -99,6 +106,16 @@ function SectionLabel({ children }) {
 }
 
 export default function HowItWorks() {
+  // Holdout metrics from the same training run as the deployed models.
+  // If the endpoint is unavailable the cards just show their descriptive tags.
+  const [holdout, setHoldout] = useState(null)
+  useEffect(() => {
+    api.get('/api/backtest/model-metrics')
+      .then(r => setHoldout(r.data.data))
+      .catch(() => {})
+  }, [])
+  const metricsByKey = Object.fromEntries((holdout?.models ?? []).map(m => [m.key, m]))
+
   return (
     <div className="space-y-12 max-w-5xl mx-auto">
 
@@ -147,17 +164,26 @@ export default function HowItWorks() {
       <section className="space-y-4">
         <SectionLabel>The Models</SectionLabel>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {MODELS.map(({ name, desc, formula, metric, metricColor }) => (
-            <div
-              key={name}
-              className="bg-gray-900 border border-gray-800 rounded-xl p-4 flex flex-col"
-            >
-              <p className="text-sm font-bold text-white mb-1">{name}</p>
-              <p className="text-xs text-gray-500 leading-relaxed flex-1">{desc}</p>
-              <FormulaBlock formula={formula} />
-              <p className={`text-xs font-semibold mt-3 ${metricColor}`}>{metric}</p>
-            </div>
-          ))}
+          {MODELS.map(({ name, desc, formula, metric, metricColor, metricsKey }) => {
+            const m = metricsByKey[metricsKey]
+            return (
+              <div
+                key={name}
+                className="bg-gray-900 border border-gray-800 rounded-xl p-4 flex flex-col"
+              >
+                <p className="text-sm font-bold text-white mb-1">{name}</p>
+                <p className="text-xs text-gray-500 leading-relaxed flex-1">{desc}</p>
+                <FormulaBlock formula={formula} />
+                <p className={`text-xs font-semibold mt-3 ${metricColor}`}>{metric}</p>
+                {m && (
+                  <p className="text-xs font-mono text-emerald-400 mt-1 tabular-nums">
+                    {(m.hit_rate * 100).toFixed(1)}% holdout hit rate
+                    {!m.predicts_draws && <span className="text-gray-600 font-sans"> (never picks a draw)</span>}
+                  </p>
+                )}
+              </div>
+            )
+          })}
         </div>
       </section>
 
@@ -211,9 +237,12 @@ export default function HowItWorks() {
           <div className="flex items-start gap-2 text-xs text-gray-500 bg-gray-950 border border-gray-800 rounded-lg px-3 py-2.5">
             <span className="text-[var(--brand)] shrink-0">ℹ</span>
             <span>
-              Evaluation: the ensemble is trained on the first 80% of matches (to March 2024) and scored on
-              the most recent 20% it never saw (10,060 matches). The deployed model is then refit on all data
-              through the latest completed match, so live predictions use the full history.
+              Evaluation: the ensemble is trained on the first 80% of matches
+              {holdout && <> (to {holdout.split.train.to})</>} and scored on the most recent 20% it never saw
+              {holdout && <> ({holdout.split.holdout.n_matches.toLocaleString()} matches)</>}
+              {metricsByKey.ensemble && <>, where it picks the right outcome {(metricsByKey.ensemble.hit_rate * 100).toFixed(1)}% of the time</>}.
+              The deployed model is then refit on all data through the latest completed match, so live
+              predictions use the full history.
             </span>
           </div>
         </div>
