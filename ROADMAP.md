@@ -1,17 +1,19 @@
 # FormCast — Sports Prediction Platform
-### Elo + Glicko-2 + Dixon-Coles + BTL + XGBoost + Feedforward NN + LSTM → stacked ensemble (78 features)
-*Last updated: Nov 12 2026. Completed work and superseded decisions are in [ROADMAP_HISTORY.md](ROADMAP_HISTORY.md).*
+### Elo + Glicko-2 + Dixon-Coles + XGBoost + draw classifier → stacked ensemble (78 features)
+*Live stack is 5 models. Feedforward NN, LSTM and BTL are built but were dropped from the deployed stack (commit 3b25616) — they added nothing and the meta-learner is cleaner without them.*
+*Last updated: Nov 20 2026. Completed work and superseded decisions are in [ROADMAP_HISTORY.md](ROADMAP_HISTORY.md).*
 
 ---
 
-## Current State & Honest Claims (Nov 12 2026)
+## Current State & Honest Claims (Nov 20 2026)
 > **Single source of truth.** Every other section (and the site copy) defers to this one. If a number anywhere else disagrees, this section wins; fix the other place.
 
 **What production does**
-- Weekly pipeline (GitHub Actions, Monday 6am UTC) re-ingests data and retrains every model (Elo, DC, BTL, XGBoost + meta-learner + draw classifier, NN, LSTM, the four market models).
+- Weekly pipeline (GitHub Actions, Monday 6am UTC) re-ingests data and retrains every model (Elo, DC, XGBoost + meta-learner + draw classifier, and the four market models). NN, LSTM and BTL are still retrained for monitoring but are no longer in the deployed stack (3b25616).
 - `predict_upcoming` writes 78-feature ensemble probabilities, keyed by `match_id`, to `upcoming_predictions.csv`. CI now runs `publish_predictions` **after** `predict_upcoming`, so publish reads this week's ensemble (9cb6d15).
 - `publish_predictions` logs the **ensemble** probabilities tagged `source=ensemble`, falling back to Elo (`source=elo`) only for unresolved/international/missing/stale fixtures (dbad933). Hashes are unchanged; `source` is not part of the hash.
-  - ⚠️ **Not yet visible in the data:** the on-disk `prediction_log.csv` does not have the `source` column yet. It is added at the next publish (~Nov 14, when fixtures re-enter the 7-day window). **Every logged row to date is Elo.**
+  - **Live since ~Nov 14:** the `source` column is now on disk and new rows log `source=ensemble`. Rows before ~Nov 14 are Elo; the ensemble's live record builds from here.
+  - **Kickoff guard (aed3476):** publish skips any fixture whose kickoff is within 5 minutes or already passed, and any fixture with a missing/unparseable kickoff time — so nothing can be logged after a match has started.
 - Settlement and the odds-join share one `FixtureMatcher` (`scripts/fixture_matching.py`): **608/608** settled predictions now have odds attached (7a35e7d).
 - Live value bets are 100% from the ensemble, 108/108 join verified (these come from fetch_live_odds → upcoming_predictions.csv, a DIFFERENT pipeline from the logged predictions above — which is why the logged record is still Elo while the live value-bet feed is already ensemble).
 - The live endpoint (`api/routes/live.py` `_prematch_probs`) still shows **plain Elo**, with broken name resolution (~15 of 144 teams defaulting to 1500; scope of "144" per the Nov 12 session, not recounted). See queue (e).
@@ -23,10 +25,22 @@
 | **1,110** published / **608** settled | Predictions published before kickoff, SHA-256 hashed / settled in tracked leagues | `prediction_log.csv` (617 tracked, 493 not tracked) | Nov 12 2026 |
 | **64.4%** | Ensemble hit rate, **non-draw** | 2026-27 season backtest, n=913 | Nov 2026 |
 | **~67.0%** | Ensemble walk-forward hit rate, **non-draw** (Elo baseline 66.7%) | 2020-2024, ~20k matches | Jul 2026 |
-| **49.0%** | Ensemble hit rate, **3-way** (H/D/A) | Ensemble holdout | Jul 2026 |
+| **48.9%** | Ensemble hit rate, **3-way** (H/D/A) | Holdout n=10,060, 2024-03-30→2026-11-15 | Nov 20 2026 (see per-model table below) |
 | **ECE 0.0127** | Ensemble calibration error (uncalibrated, Platt retired) | Walk-forward | Jul 2026 |
 | **50.3%** | **Elo-era** live logged record, **3-way incl. draws** (306/608) | Logged predictions to Nov 12 | Nov 12 2026. Superseded once ensemble rows accumulate |
 | **−7% ROI** | **Elo-era 1X2 value bets only** (45 bets, flat stake) | Logged predictions | Nov 2026. **Not** a verdict on the ensemble |
+
+**Per-model holdout metrics (new — served live from `/api/backtest/model-metrics`, commit e158304).** Written by `ensemble_v2.py` in the same run that saves the deployed `.pkl` files, so the numbers can never drift from the models. Chronological 80/20 split: trained on 40,238 matches (2014-08-24 → 2024-03-30), scored on the 10,060 it never saw (2024-03-30 → 2026-11-15). Deployed models are then refit on all 50,298 matches through 2026-11-15.
+
+| Model | Outputs | Holdout hit rate | Brier (3-outcome, 0–2) |
+|---|---|---|---|
+| Ensemble | H/D/A | 48.9% | 0.6115 |
+| XGBoost | H/D/A | 48.7% | 0.6117 |
+| Dixon-Coles | H/D/A | 46.2% | 0.6416 |
+| Elo | H/A | 48.3% | — |
+| Glicko-2 | H/A | 46.7% | — |
+
+> These are **3-way (H/D/A)** hit rates — draws included — so they are lower than the non-draw figures elsewhere in this table, and are NOT contradictory: 48.9% 3-way and 64.4% non-draw measure different things on different samples. Brier is the multiclass 3-outcome score (range 0–2, uniform guess 0.667); Elo and Glicko-2 are 2-way (no draw probability) so they have no 3-outcome Brier. The ensemble is ~0.6pp ahead of Elo on hit rate and essentially tied with XGBoost on Brier — that gap is the honest size of the ensemble's edge over a plain rating model.
 
 **Data counts (recounted Nov 12 2026 from `data/processed/`)**
 - **Club matches:** `results.csv` has 128,592 rows, 1993-07-23 → 2026-11-09, including 1,212 rows from 2026-27. It contains 1,222 duplicate (date, home, away) keys, so there are ~127,370 unique matches; the dedup fix is in the backlog. *The old "128,797" figure matches no current count. Retire it.*
@@ -55,6 +69,16 @@
 
 ---
 
+## Shipped — Nov 17–20 2026 (correctness & honesty run)
+> Six feature/fix commits (plus the daily-data chores) reconciling what the site claims with what the model actually does. Numbers here were true when written; the Current State table above is the live source of truth.
+
+- [x] **Plain-language tooltips + glossary site-wide (d650f16).** InfoTip component + glossary.js so an average bettor understands edge, book price, model, Brier, hit rate etc. where they appear.
+- [x] **xG pipeline recovered loudly (6a508a3, ea13591).** Dead feed no longer masquerades as current; +25 team-name mappings lifted the historical xG join 80%→99.3%.
+- [x] **Model hygiene (3b25616).** Deployed ensemble now refits on 100% of data (50,298 matches through 2026-11-15) after the holdout eval; dropped the dead LSTM/BTL stack inputs (STACK_COLS 15→13). No leakage: the meta-learner is still fit on out-of-fold predictions only.
+- [x] **Honesty cleanup of every displayed number (d650f16).** Traced and fixed the untraceable 0.156 Brier, the 128,797/14-comps/500+-teams counts, 48→78 features, the CLV stat (removed — it was log(model/book), not closing-line value), and "track record"→"backtest simulation" where the record was Elo-era. Prediction-log hash popup reworded to integrity-only.
+- [x] **Kickoff guard on publish (aed3476).** Publish skips fixtures at/after kickoff (±5 min buffer) and fixtures with no parseable kickoff time, so nothing is logged post-kickoff. Investigation found only 2 of ~1,170 logged rows were ever late (untracked Copa Libertadores), no info leaked.
+- [x] **Per-model holdout metrics served from the API (e158304).** `ensemble_v2.py` writes `models/holdout_metrics.json` in the same run as the deployed `.pkl` files; new `GET /api/backtest/model-metrics`; Model Comparison table and How It Works cards read the real numbers (see Current State). The old home-anchored `_brier` helper (wrong for every model) was deleted in favour of the 3-outcome Brier.
+
 ## Active Priority Queue
 > One ordered list. Build order: **remodel → multi-market → Today's Tips**. Model/data fixes, measurement and infra run alongside.
 
@@ -68,7 +92,7 @@ Executes against the **Design Constitution** below. It's design work only and do
 - [ ] **Integrate the approved v0 landing page** into the repo (replaces the old `Landing.jsx`). Wire real auth/signup into the CTAs. Feed REAL data to the Today's Tips teaser and the animated public ledger (SHA-256 log). **Do not port the +8.4% placeholder**: use the record stats. Add the founder photo/bio. Closed front door: logged-out nav = About · How it works · Log in · Sign up free.
 - [ ] **About / founder bio section.** The trust differentiator vs anonymous tipsters. Currently placeholders.
 - [ ] **Public proof page** (turn the Prediction Log into it). It works but opens into a ~1,110-row table: a data dump. LEAD with the honest headline (verifiable record + labelled accuracy, per Current State) + recent settled results; put the full log behind "View full log". KEEP the "Cryptographically verified · SHA-256 hashed" framing, the "How does verification work?" link and the clickable hashes. Show a `source` (ensemble/Elo) label per row once the column exists.
-- [ ] **Purge the remaining stale stats in the frontend:**
+- [x] **Purge the remaining stale stats in the frontend — DONE (d650f16):** 0.156 Brier, 128,797/14 comps/500+ teams, 48→78 features, hardcoded 1,110/608 and the CLV stat all corrected. Two walk-forward lines remain in `BacktestReport.jsx` (202/210, "66.9% vs 66.1% non-draw") — left and labelled as walk-forward, not API-fed; tracked as an open item in (b) below.
   - `BacktestReport.jsx` "What the numbers mean" box: hardcoded "Hit rate (66.9%)". Read it from the API or label it; the page's own stat card shows the API value.
   - "0.156" Brier (`Landing.jsx` STATS, `Dashboard.jsx` MODEL_STATS). This is the old Elo non-draw Brier. Relabel as Elo or replace.
   - "128,797 matches" / "14 competitions" / "500+ teams" (`Landing.jsx` hero, use-case copy and STATS; `Dashboard.jsx`). Use the recounted figures from Current State.
@@ -76,6 +100,7 @@ Executes against the **Design Constitution** below. It's design work only and do
   - Hardcoded "1,110+ / 608" (Landing/Dashboard). Replace with live counts (next item).
 - [ ] **Add `/api/predictions/summary`.** A lightweight `{total, tracked, settled, pending, not_tracked}` so landing/dashboard/proof page show live counts. `/api/predictions/log` returns all rows.
 - [ ] **Retire `/api/backtest/clv`** (backend). The frontend no longer calls it (Nov 12 purge). Remove it or rename the metric to what it is (model-vs-book log ratio) for internal use only.
+- [ ] **Two hardcoded walk-forward figures in `BacktestReport.jsx` (lines 202/210): "66.9% vs 66.1% non-draw".** Ensemble-vs-Elo walk-forward numbers the new `/api/backtest/model-metrics` endpoint doesn't produce. Decide: leave and label as walk-forward (current state), feed from the API, or remove. Low priority — they're labelled, not false.
 - [ ] Component library audit: standardise cards, badges, tables and filters; single icon library (lucide-react).
 - [ ] Loading skeletons instead of bare "Loading…" spinners; designed empty states.
 - [ ] **Full site remodel — "bring it to life + findability" (Nov 2026 direction)** — the whole-site UX pass the Core Product Principle demands. GOALS: (1) users can actually FIND what they want — nav/IA restructured around what people come for, not a feature dump across 5 dropdowns; (2) every screen leads with ONE thing, progressive disclosure, kill flat lists (dashboard especially); (3) "bring it to life" — restrained, purposeful motion only (edge meter fill, numbers ticking, probability bars on load) — NOT decorative animation, which cuts against a trust/quant product; (4) consistency — replicate the Backtest page's honest plain-English framing and the Ratings/H2H visual quality across weaker pages; (5) DESIGN.md is OPEN TO REVISION to match current taste (clean/minimal/modern/restrained-motion) — treat as updatable, rewrite as output of the remodel. Precedes/absorbs the individual page-redesign items below. Mobile-first throughout.
@@ -123,7 +148,7 @@ The product's real edge question. The four market models (corners, cards, BTTS, 
 - [ ] **Unify the two Elo fallback formulas.** `fetch_live_odds` (HOME_ADV=50 + own draw formula) and `predict_upcoming` disagree.
 - [ ] **Season-helper migration.** `predict_upcoming.py:162` `_current_season()` still uses `month >= 8`, while `api/app.py _season()` uses `month >= 7`. 2026-27 data starts 2026-07-31, so late-July matches get mislabelled. Migrate both to `scripts/season_utils.current_season()` in one change, then re-check season-filtered output.
 - [ ] **~9 pending covered-league predictions + void rule** (608 of 617 tracked settle). Unresolved names: Stade Rennais FC 1901, CA Osasuna, Athletic Club, ES Troyes AC, Olympique Lyonnais, Angers SCO, Stade Brestois 29. Some are rescheduled matches: add a `void` status (bookmakers void bets not played within ~48-72h). These may be the same ~9 rows, so check before fixing twice.
-- [ ] **Stale xG.** `ingest_xg_data.py` stops at 2024-25, so 2025-26 and 2026-27 xG features use defaults. Extend it, or confirm Understat has current data.
+- [x] **Stale xG — DONE (6a508a3, ea13591).** The pipeline now fails loudly instead of letting stale xG masquerade as current, and recovered ~20% more historical xG by mapping 25 missing team names (join 80%→99.3%). NOTE: the Understat feed itself is DEAD (maintenance page since ~Nov 2026), so current-season xG is unavailable at source — but it no longer silently poisons features, and xG is <0.5% of the model's signal regardless.
 - [ ] **Weather is not actually live.** `upcoming_weather.csv` is header-only (0 rows) even though both workflows pass `secrets.OPENWEATHER_API_KEY`. Check the secret is set/valid and that `fetch_weather.py` fails loudly. After that, the historical backfill is needed for weather as a training feature.
 - [ ] **Ingest dedup.** `results.csv` has 1,222 duplicate (match_date, home_team, away_team) keys: the same match ingested under two leagues (e.g. LaLiga + Segunda, 1993-94). Add a dedup step to ingest; `lstm_model.py` already guards against the merge inflation.
 - [ ] "Belgium vs Mirandes" club-in-international-feed bug. The history has it both fixed and "flagged, not investigated". Verify which.
