@@ -99,7 +99,7 @@ Executes against the **Design Constitution** below. It's design work only and do
   - "48 engineered features" (`HowItWorks.jsx` XGBoost/NN cards). Now 78.
   - Hardcoded "1,110+ / 608" (Landing/Dashboard). Replace with live counts (next item).
 - [ ] **Add `/api/predictions/summary`.** A lightweight `{total, tracked, settled, pending, not_tracked}` so landing/dashboard/proof page show live counts. `/api/predictions/log` returns all rows.
-- [ ] **Retire `/api/backtest/clv`** (backend). The frontend no longer calls it (Nov 12 purge). Remove it or rename the metric to what it is (model-vs-book log ratio) for internal use only.
+- [x] **Retire `/api/backtest/clv` — DONE.** Route deleted and the `mean_clv` field dropped from the value-bets summary, so the mislabelled log(model/book) metric is gone from the API entirely. Only the explanatory frontend comments remain.
 - [ ] **Two hardcoded walk-forward figures in `BacktestReport.jsx` (lines 202/210): "66.9% vs 66.1% non-draw".** Ensemble-vs-Elo walk-forward numbers the new `/api/backtest/model-metrics` endpoint doesn't produce. Decide: leave and label as walk-forward (current state), feed from the API, or remove. Low priority — they're labelled, not false.
 - [ ] Component library audit: standardise cards, badges, tables and filters; single icon library (lucide-react).
 - [ ] Loading skeletons instead of bare "Loading…" spinners; designed empty states.

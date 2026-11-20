@@ -47,8 +47,6 @@ def get_summary():
     else:
         roi = None
 
-    mean_clv = round(df["clv"].mean(), 4) if "clv" in df.columns else None
-
     if "profit_flat" in df.columns and total_bets > 1:
         returns = df["profit_flat"]
         sharpe = round(returns.mean() / returns.std(), 4) if returns.std() > 0 else None
@@ -63,7 +61,6 @@ def get_summary():
         "total_bets": total_bets,
         "win_rate": win_rate,
         "roi": roi,
-        "mean_clv": mean_clv,
         "sharpe": sharpe,
         "max_drawdown": max_drawdown,
     }
