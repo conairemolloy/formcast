@@ -98,18 +98,18 @@ export default function RatingsTable({ onTeamClick, user, onWatchlistUpdate, onS
   }, [data, search, sortDir, league, teamLeague])
 
   if (loading) return (
-    <div className="flex items-center justify-center h-64 gap-3 text-gray-400">
+    <div className="flex items-center justify-center h-64 gap-3 text-[var(--muted-foreground)]">
       <Loader2 className="w-6 h-6 animate-spin" />
       Loading ratings…
     </div>
   )
-  if (error) return <div className="text-red-400 p-6">{error}</div>
+  if (error) return <div className="text-[var(--chart-5)] p-6">{error}</div>
 
   return (
-    <div>
+    <div className="fc-page">
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-xl font-semibold text-white">Team Ratings</h1>
-        <span className="text-sm text-gray-500">{filtered.length} teams</span>
+        <h1 className="text-xl font-semibold text-[var(--foreground)]">Team Ratings</h1>
+        <span className="text-sm text-[var(--muted-foreground)]">{filtered.length} teams</span>
       </div>
 
       {/* League filter */}
@@ -120,8 +120,8 @@ export default function RatingsTable({ onTeamClick, user, onWatchlistUpdate, onS
             onClick={() => setLeague(l)}
             className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
               league === l
-                ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                : 'bg-gray-900 text-gray-400 border border-gray-700 hover:text-white'
+                ? 'bg-[var(--primary)]/12 text-[var(--primary)] border border-[var(--primary)]/30'
+                : 'bg-[var(--card)] text-[var(--muted-foreground)] border border-[var(--border)] hover:text-[var(--foreground)]'
             }`}
           >
             {l === 'ALL' ? 'All' : l}
@@ -135,27 +135,27 @@ export default function RatingsTable({ onTeamClick, user, onWatchlistUpdate, onS
 
       {/* Search */}
       <div className="relative mb-4 w-full sm:max-w-xs">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--muted-foreground)]" />
         <input
           type="text"
           placeholder="Search team…"
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="w-full bg-gray-900 border border-gray-700 rounded-lg pl-9 pr-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500"
+          className="fc-input w-full rounded-lg pl-9 pr-3 py-2 text-sm"
         />
       </div>
 
       {/* Table */}
-      <div className="rounded-xl border border-gray-800 overflow-x-auto">
+      <div className="fc-card overflow-x-auto">
         <table className="w-full text-sm min-w-[520px]">
           <thead>
-            <tr className="bg-gray-900 border-b border-gray-800">
+            <tr className="bg-[var(--card)] border-b border-[var(--border)]">
               <th className="px-3 py-3 w-10" aria-label="Save" />
-              <th className="px-4 py-3 text-left text-gray-400 font-medium w-16">Rank</th>
-              <th className="px-4 py-3 text-left text-gray-400 font-medium">Team</th>
-              <th className="px-4 py-3 text-left text-gray-400 font-medium">League</th>
+              <th className="px-4 py-3 text-left text-[var(--muted-foreground)] font-medium w-16">Rank</th>
+              <th className="px-4 py-3 text-left text-[var(--muted-foreground)] font-medium">Team</th>
+              <th className="px-4 py-3 text-left text-[var(--muted-foreground)] font-medium">League</th>
               <th
-                className="px-4 py-3 text-right text-gray-400 font-medium cursor-pointer select-none hover:text-white transition-colors"
+                className="px-4 py-3 text-right text-[var(--muted-foreground)] font-medium cursor-pointer select-none hover:text-[var(--foreground)] transition-colors"
                 onClick={() => setSortDir(d => d === 'desc' ? 'asc' : 'desc')}
               >
                 Elo Rating {sortDir === 'desc' ? '↓' : '↑'}
@@ -173,8 +173,8 @@ export default function RatingsTable({ onTeamClick, user, onWatchlistUpdate, onS
                 <tr
                   key={team.team}
                   onClick={() => handleRowClick(team)}
-                  className={`border-b border-gray-800/50 transition-colors hover:bg-gray-800/50 ${
-                    isMedal ? 'bg-gray-900/80' : ''
+                  className={`border-b border-[var(--border)] transition-colors hover:bg-[var(--secondary)] ${
+                    isMedal ? 'bg-[var(--primary)]/5' : ''
                   } ${onTeamClick ? 'cursor-pointer' : ''}`}
                 >
                   {/* Bookmark */}
@@ -183,8 +183,8 @@ export default function RatingsTable({ onTeamClick, user, onWatchlistUpdate, onS
                       onClick={e => toggleWatchlist(e, team.team)}
                       className={`p-1 rounded transition-colors ${
                         saved
-                          ? 'text-emerald-400 hover:text-emerald-300'
-                          : 'text-gray-600 hover:text-gray-400'
+                          ? 'text-[var(--primary)] hover:text-[var(--ring)]'
+                          : 'text-[var(--muted-foreground)]/60 hover:text-[var(--muted-foreground)]'
                       } ${pending === team.team ? 'opacity-50 cursor-not-allowed' : ''}`}
                       title={
                         !user
@@ -202,30 +202,30 @@ export default function RatingsTable({ onTeamClick, user, onWatchlistUpdate, onS
                     </button>
                   </td>
 
-                  <td className="px-4 py-3 text-gray-500 font-mono">
+                  <td className="px-4 py-3 text-[var(--muted-foreground)] font-mono">
                     {isMedal ? MEDAL[globalRank] : `#${i + 1}`}
                   </td>
                   <td className="px-4 py-3 font-medium">
-                    <span className={onTeamClick ? 'text-white hover:text-emerald-400 transition-colors' : 'text-white'}>
+                    <span className={onTeamClick ? 'text-[var(--foreground)] hover:text-[var(--primary)] transition-colors' : 'text-[var(--foreground)]'}>
                       {team.team}
                     </span>
                   </td>
                   <td className="px-4 py-3">
                     {teamLeague[team.team] && (
-                      <span className="text-xs bg-gray-800 text-gray-400 px-2 py-0.5 rounded">
+                      <span className="text-xs bg-[var(--muted)] text-[var(--muted-foreground)] px-2 py-0.5 rounded">
                         {teamLeague[team.team]}
                       </span>
                     )}
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center justify-end gap-3">
-                      <div className="hidden sm:block w-32 h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                      <div className="hidden sm:block w-32 h-1.5 bg-[var(--muted)] rounded-full overflow-hidden">
                         <div
-                          className={`h-full rounded-full ${isMedal ? 'bg-emerald-400' : 'bg-emerald-600'}`}
+                          className={`h-full rounded-full ${isMedal ? 'bg-[var(--primary)]' : 'bg-[var(--muted-foreground)]'}`}
                           style={{ width: `${pct}%` }}
                         />
                       </div>
-                      <span className={`font-mono tabular-nums ${isMedal ? 'text-emerald-300 font-semibold' : 'text-gray-300'}`}>
+                      <span className={`font-mono tabular-nums ${isMedal ? 'text-[var(--primary)] font-semibold' : 'text-[var(--foreground)]'}`}>
                         {team.elo_rating.toFixed(0)}
                       </span>
                     </div>
