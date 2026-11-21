@@ -11,6 +11,7 @@ export const CHART = {
   green:         '#b6d294', // --chart-2: positive edge, settled win
   amber:         '#e8b64c', // --chart-3: pending / caution
   purple:        '#9c6bdf', // --chart-4: categorical accent
+  red:           '#d17261', // --chart-5: negative / loss figure
   cream:         '#f1eee4', // --foreground
   grid:          'rgba(241,238,228,0.08)',
   axis:          '#a5aca2', // --muted-foreground
