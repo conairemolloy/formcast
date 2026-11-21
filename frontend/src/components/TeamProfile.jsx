@@ -4,15 +4,16 @@ import { Loader2, ArrowLeft, Bookmark } from 'lucide-react'
 import {
   LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceDot,
 } from 'recharts'
+import { CHART, AXIS, TOOLTIP_STYLE } from '../chartTheme'
 
 const RESULT_STYLE = {
-  W: { bg: 'bg-emerald-500/20', text: 'text-emerald-400', border: 'border-emerald-500/30' },
-  D: { bg: 'bg-gray-700/40',   text: 'text-gray-400',    border: 'border-gray-600/30' },
-  L: { bg: 'bg-red-500/20',    text: 'text-red-400',     border: 'border-red-500/30' },
+  W: { bg: 'bg-[var(--chart-2)]/15', text: 'text-[var(--chart-2)]', border: 'border-[var(--chart-2)]/30' },
+  D: { bg: 'bg-[var(--muted)]', text: 'text-[var(--muted-foreground)]', border: 'border-[var(--border)]' },
+  L: { bg: 'bg-[var(--chart-5)]/15', text: 'text-[var(--chart-5)]', border: 'border-[var(--chart-5)]/30' },
 }
 
 function ResultBadge({ result }) {
-  if (!result) return <span className="text-gray-600">—</span>
+  if (!result) return <span className="text-[var(--muted-foreground)]/60">—</span>
   const s = RESULT_STYLE[result] ?? RESULT_STYLE.D
   return (
     <span className={`inline-flex items-center justify-center w-6 h-6 rounded text-xs font-bold border ${s.bg} ${s.text} ${s.border}`}>
@@ -21,12 +22,12 @@ function ResultBadge({ result }) {
   )
 }
 
-function StatBlock({ label, value, color = 'text-white', sub }) {
+function StatBlock({ label, value, color = 'text-[var(--foreground)]', sub }) {
   return (
-    <div className="bg-gray-800/50 rounded-lg p-3 text-center">
-      <p className="text-xs text-gray-500 mb-1">{label}</p>
+    <div className="bg-[var(--muted)] rounded-lg p-3 text-center">
+      <p className="text-xs text-[var(--muted-foreground)] mb-1">{label}</p>
       <p className={`text-2xl font-bold tabular-nums ${color}`}>{value ?? '—'}</p>
-      {sub && <p className="text-xs text-gray-600 mt-0.5">{sub}</p>}
+      {sub && <p className="text-xs text-[var(--muted-foreground)]/60 mt-0.5">{sub}</p>}
     </div>
   )
 }
@@ -34,9 +35,9 @@ function StatBlock({ label, value, color = 'text-white', sub }) {
 const HistoryTooltip = ({ active, payload }) => {
   if (!active || !payload?.length) return null
   return (
-    <div className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm">
-      <p className="text-gray-400 mb-0.5">{payload[0].payload.season}</p>
-      <p className="text-emerald-400 font-semibold tabular-nums">{payload[0].value}</p>
+    <div style={TOOLTIP_STYLE}>
+      <p className="text-[var(--muted-foreground)] mb-0.5">{payload[0].payload.season}</p>
+      <p className="text-[var(--primary)] font-semibold tabular-nums">{payload[0].value}</p>
     </div>
   )
 }
@@ -92,30 +93,30 @@ export default function TeamProfile({
   const stats      = profile?.stats ?? {}
 
   return (
-    <div className="space-y-6">
+    <div className="fc-page space-y-6">
       <button
         onClick={onBack}
-        className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-white transition-colors"
+        className="flex items-center gap-1.5 text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
         Back to Ratings
       </button>
 
       {/* Header */}
-      <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+      <div className="fc-card p-6">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
             <div className="flex items-center gap-2 mb-2">
               {league && (
-                <span className="text-xs bg-gray-800 border border-gray-700 text-gray-400 px-2 py-0.5 rounded font-medium">
+                <span className="text-xs bg-[var(--muted)] text-[var(--muted-foreground)] px-2 py-0.5 rounded font-medium">
                   {league}
                 </span>
               )}
               {eloRank && league && (
-                <span className="text-xs text-gray-500">#{eloRank} in {league}</span>
+                <span className="text-xs text-[var(--muted-foreground)]">#{eloRank} in {league}</span>
               )}
             </div>
-            <h1 className="text-3xl font-bold text-white">{team}</h1>
+            <h1 className="text-3xl font-bold text-[var(--foreground)]">{team}</h1>
 
             {/* Save button */}
             <button
@@ -123,8 +124,8 @@ export default function TeamProfile({
               disabled={saving}
               className={`mt-3 flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors border ${
                 saved
-                  ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30 hover:bg-emerald-500/20'
-                  : 'text-gray-400 bg-gray-800 border-gray-700 hover:text-white hover:border-gray-600'
+                  ? 'text-[var(--primary)] bg-[var(--primary)]/10 border-[var(--primary)]/30 hover:bg-[var(--primary)]/20'
+                  : 'text-[var(--muted-foreground)] bg-[var(--muted)] border-[var(--border)] hover:text-[var(--foreground)] hover:border-[var(--input)]'
               } ${saving ? 'opacity-50 cursor-not-allowed' : ''}`}
               title={!user ? 'Sign in to save teams' : undefined}
             >
@@ -137,8 +138,8 @@ export default function TeamProfile({
           </div>
 
           <div className="text-right shrink-0">
-            <p className="text-xs text-gray-500 mb-0.5">Elo Rating</p>
-            <p className="text-4xl font-bold text-emerald-400 tabular-nums">
+            <p className="text-xs text-[var(--muted-foreground)] mb-0.5">Elo Rating</p>
+            <p className="text-4xl font-bold text-[var(--primary)] tabular-nums">
               {eloRating != null ? Math.round(eloRating) : '—'}
             </p>
           </div>
@@ -146,55 +147,41 @@ export default function TeamProfile({
       </div>
 
       {loading && (
-        <div className="flex items-center justify-center h-64 gap-3 text-gray-400">
+        <div className="flex items-center justify-center h-64 gap-3 text-[var(--muted-foreground)]">
           <Loader2 className="w-6 h-6 animate-spin" />
           Loading team data…
         </div>
       )}
 
-      {error && <div className="text-red-400 p-4 text-sm">{error}</div>}
+      {error && <div className="text-[var(--chart-5)] p-4 text-sm">{error}</div>}
 
       {!loading && !error && (
         <>
           {/* Section 1 — Elo History */}
           {history.length > 0 && (
-            <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
-              <h2 className="text-base font-semibold text-white mb-1">Elo Rating History</h2>
-              <p className="text-xs text-gray-500 mb-4">End-of-season rating, all available seasons</p>
+            <div className="fc-card p-5">
+              <h2 className="text-base font-semibold text-[var(--foreground)] mb-1">Elo Rating History</h2>
+              <p className="text-xs text-[var(--muted-foreground)] mb-4">End-of-season rating, all available seasons</p>
               <ResponsiveContainer width="100%" height={220}>
                 <LineChart data={history} margin={{ top: 12, right: 20, bottom: 8, left: 0 }}>
-                  <XAxis
-                    dataKey="season"
-                    tick={{ fill: '#6b7280', fontSize: 10 }}
-                    axisLine={false}
-                    tickLine={false}
-                    interval={4}
-                    tickFormatter={v => `'${v.slice(2, 4)}`}
-                  />
-                  <YAxis
-                    domain={['auto', 'auto']}
-                    tick={{ fill: '#6b7280', fontSize: 11 }}
-                    axisLine={false}
-                    tickLine={false}
-                    width={44}
-                    tickFormatter={v => Math.round(v)}
-                  />
-                  <Tooltip content={<HistoryTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.06)' }} />
+                  <XAxis dataKey="season" {...AXIS} interval={4} tickFormatter={v => `'${v.slice(2, 4)}`} />
+                  <YAxis domain={['auto', 'auto']} {...AXIS} width={44} tickFormatter={v => Math.round(v)} />
+                  <Tooltip content={<HistoryTooltip />} cursor={{ stroke: CHART.grid }} />
                   <Line
                     type="monotone"
                     dataKey="elo_rating"
-                    stroke="#10b981"
+                    stroke={CHART.coral}
                     strokeWidth={2}
                     dot={false}
-                    activeDot={{ r: 4, fill: '#34d399', stroke: '#10b981' }}
+                    activeDot={{ r: 4, fill: CHART.coral, stroke: CHART.cream }}
                   />
                   {lastPoint && (
                     <ReferenceDot
                       x={lastPoint.season}
                       y={lastPoint.elo_rating}
                       r={5}
-                      fill="#10b981"
-                      stroke="#34d399"
+                      fill={CHART.coral}
+                      stroke={CHART.cream}
                       strokeWidth={2}
                     />
                   )}
@@ -205,15 +192,15 @@ export default function TeamProfile({
 
           {/* Section 2 — Recent Form */}
           {profile?.last_10?.length > 0 && (
-            <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
-              <h2 className="text-base font-semibold text-white mb-3">Recent Form</h2>
+            <div className="fc-card p-5">
+              <h2 className="text-base font-semibold text-[var(--foreground)] mb-3">Recent Form</h2>
               <div className="flex items-center gap-1.5 mb-4">
                 {formStreak.map((r, i) => <ResultBadge key={i} result={r} />)}
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-gray-800 text-gray-500 text-xs">
+                    <tr className="border-b border-[var(--border)] text-[var(--muted-foreground)] text-xs">
                       <th className="text-left pb-2 font-medium">Date</th>
                       <th className="text-center pb-2 font-medium">Venue</th>
                       <th className="text-left pb-2 font-medium">Opponent</th>
@@ -223,19 +210,19 @@ export default function TeamProfile({
                   </thead>
                   <tbody>
                     {profile.last_10.map((m, i) => (
-                      <tr key={i} className="border-b border-gray-800/50">
-                        <td className="py-2.5 text-gray-400 tabular-nums whitespace-nowrap">{m.date ?? '—'}</td>
+                      <tr key={i} className="border-b border-[var(--border)]">
+                        <td className="py-2.5 text-[var(--muted-foreground)] tabular-nums whitespace-nowrap">{m.date ?? '—'}</td>
                         <td className="py-2.5 text-center">
                           <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${
                             m.venue === 'H'
-                              ? 'bg-[var(--bg-overlay)] text-[var(--text-secondary)]'
-                              : 'bg-orange-500/15 text-orange-400'
+                              ? 'bg-[var(--muted)] text-[var(--muted-foreground)]'
+                              : 'bg-[var(--chart-4)]/15 text-[var(--chart-4)]'
                           }`}>
                             {m.venue}
                           </span>
                         </td>
-                        <td className="py-2.5 text-white font-medium">{m.opponent}</td>
-                        <td className="py-2.5 text-center font-mono font-bold text-white tabular-nums">
+                        <td className="py-2.5 text-[var(--foreground)] font-medium">{m.opponent}</td>
+                        <td className="py-2.5 text-center font-mono font-bold text-[var(--foreground)] tabular-nums">
                           {m.score ?? '—'}
                         </td>
                         <td className="py-2.5 text-center">
@@ -251,20 +238,20 @@ export default function TeamProfile({
 
           {/* Section 3 — Season Stats */}
           {stats.played > 0 && (
-            <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
-              <h2 className="text-base font-semibold text-white mb-1">
+            <div className="fc-card p-5">
+              <h2 className="text-base font-semibold text-[var(--foreground)] mb-1">
                 {profile.season} Season Stats
               </h2>
-              <p className="text-xs text-gray-500 mb-4">{stats.played} matches played</p>
+              <p className="text-xs text-[var(--muted-foreground)] mb-4">{stats.played} matches played</p>
 
               <div className="grid grid-cols-4 gap-3 mb-3">
-                <StatBlock label="Wins"   value={stats.wins}   color="text-emerald-400" />
-                <StatBlock label="Draws"  value={stats.draws}  color="text-gray-300" />
-                <StatBlock label="Losses" value={stats.losses} color="text-red-400" />
+                <StatBlock label="Wins"   value={stats.wins}   color="text-[var(--chart-2)]" />
+                <StatBlock label="Draws"  value={stats.draws}  color="text-[var(--muted-foreground)]" />
+                <StatBlock label="Losses" value={stats.losses} color="text-[var(--chart-5)]" />
                 <StatBlock
                   label="Goal Diff"
                   value={(stats.goal_diff > 0 ? '+' : '') + stats.goal_diff}
-                  color={stats.goal_diff > 0 ? 'text-emerald-400' : stats.goal_diff < 0 ? 'text-red-400' : 'text-gray-300'}
+                  color={stats.goal_diff > 0 ? 'text-[var(--chart-2)]' : stats.goal_diff < 0 ? 'text-[var(--chart-5)]' : 'text-[var(--muted-foreground)]'}
                 />
               </div>
 
@@ -274,31 +261,31 @@ export default function TeamProfile({
                 <StatBlock
                   label="Avg Goals / Game"
                   value={stats.avg_goals_for}
-                  color="text-gray-300"
+                  color="text-[var(--foreground)]"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { label: 'Home', data: stats.home, color: 'text-[var(--text-secondary)]' },
-                  { label: 'Away', data: stats.away, color: 'text-orange-400' },
+                  { label: 'Home', data: stats.home, color: 'text-[var(--muted-foreground)]' },
+                  { label: 'Away', data: stats.away, color: 'text-[var(--chart-4)]' },
                 ].map(({ label, data: d, color }) => (
-                  <div key={label} className="bg-gray-800/50 rounded-lg p-3">
+                  <div key={label} className="bg-[var(--muted)] rounded-lg p-3">
                     <p className={`text-xs font-semibold mb-2 ${color}`}>{label}</p>
                     <div className="flex items-center gap-3 text-sm">
                       <span>
-                        <span className="text-emerald-400 font-bold">{d.wins}</span>
-                        <span className="text-gray-600 text-xs">W</span>
+                        <span className="text-[var(--chart-2)] font-bold">{d.wins}</span>
+                        <span className="text-[var(--muted-foreground)]/60 text-xs">W</span>
                       </span>
                       <span>
-                        <span className="text-gray-300 font-bold">{d.draws}</span>
-                        <span className="text-gray-600 text-xs">D</span>
+                        <span className="text-[var(--muted-foreground)] font-bold">{d.draws}</span>
+                        <span className="text-[var(--muted-foreground)]/60 text-xs">D</span>
                       </span>
                       <span>
-                        <span className="text-red-400 font-bold">{d.losses}</span>
-                        <span className="text-gray-600 text-xs">L</span>
+                        <span className="text-[var(--chart-5)] font-bold">{d.losses}</span>
+                        <span className="text-[var(--muted-foreground)]/60 text-xs">L</span>
                       </span>
-                      <span className="ml-auto text-gray-500 text-xs tabular-nums">
+                      <span className="ml-auto text-[var(--muted-foreground)] text-xs tabular-nums">
                         {d.gf}–{d.ga}
                       </span>
                     </div>
@@ -310,29 +297,29 @@ export default function TeamProfile({
 
           {/* Section 4 — H2H */}
           {profile?.h2h?.length > 0 && (
-            <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
-              <h2 className="text-base font-semibold text-white mb-1">Head to Head</h2>
-              <p className="text-xs text-gray-500 mb-4">All-time record vs most frequent opponents</p>
+            <div className="fc-card p-5">
+              <h2 className="text-base font-semibold text-[var(--foreground)] mb-1">Head to Head</h2>
+              <p className="text-xs text-[var(--muted-foreground)] mb-4">All-time record vs most frequent opponents</p>
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-gray-800 text-xs text-gray-500">
+                  <tr className="border-b border-[var(--border)] text-xs text-[var(--muted-foreground)]">
                     <th className="text-left pb-2 font-medium">Opponent</th>
                     <th className="text-center pb-2 font-medium">P</th>
-                    <th className="text-center pb-2 font-medium text-emerald-500">W</th>
+                    <th className="text-center pb-2 font-medium text-[var(--chart-2)]">W</th>
                     <th className="text-center pb-2 font-medium">D</th>
-                    <th className="text-center pb-2 font-medium text-red-500">L</th>
+                    <th className="text-center pb-2 font-medium text-[var(--chart-5)]">L</th>
                     <th className="text-right pb-2 font-medium">Win %</th>
                   </tr>
                 </thead>
                 <tbody>
                   {profile.h2h.map((row, i) => (
-                    <tr key={i} className={i < profile.h2h.length - 1 ? 'border-b border-gray-800/50' : ''}>
-                      <td className="py-2.5 text-white font-medium">{row.opponent}</td>
-                      <td className="py-2.5 text-center text-gray-400 tabular-nums">{row.played}</td>
-                      <td className="py-2.5 text-center text-emerald-400 font-semibold tabular-nums">{row.wins}</td>
-                      <td className="py-2.5 text-center text-gray-400 tabular-nums">{row.draws}</td>
-                      <td className="py-2.5 text-center text-red-400 font-semibold tabular-nums">{row.losses}</td>
-                      <td className="py-2.5 text-right tabular-nums text-gray-300">
+                    <tr key={i} className={i < profile.h2h.length - 1 ? 'border-b border-[var(--border)]' : ''}>
+                      <td className="py-2.5 text-[var(--foreground)] font-medium">{row.opponent}</td>
+                      <td className="py-2.5 text-center text-[var(--muted-foreground)] tabular-nums">{row.played}</td>
+                      <td className="py-2.5 text-center text-[var(--chart-2)] font-semibold tabular-nums">{row.wins}</td>
+                      <td className="py-2.5 text-center text-[var(--muted-foreground)] tabular-nums">{row.draws}</td>
+                      <td className="py-2.5 text-center text-[var(--chart-5)] font-semibold tabular-nums">{row.losses}</td>
+                      <td className="py-2.5 text-right tabular-nums text-[var(--foreground)]">
                         {row.played > 0 ? ((row.wins / row.played) * 100).toFixed(0) : 0}%
                       </td>
                     </tr>
