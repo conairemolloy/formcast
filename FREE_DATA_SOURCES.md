@@ -2,9 +2,11 @@
 
 *Research sweep, 20 Nov 2026. A reference for expanding FormCast on free data only — both new market coverage and new model signal. Pairs with the Odds API multi-market recon (see ROADMAP queue c).*
 
-> **Headline:** the biggest free wins are not new data feeds — they are using data we already have better. Market odds as a model feature, and corners-as-a-goals-signal, are both free, already on disk, and higher-value than chasing paid market coverage. A revived xG source is the third free win.
+> **Headline:** the biggest free wins use data we already have better. NOTE: market odds as a model feature was tested and REJECTED (see §1 — it just copies the bookmaker). The remaining live levers are corners-as-a-goals-signal, a revived xG source, and signal the market doesn't price (injuries/lineups) as the real "beat Elo" path.
 
-## 1. Highest-value free move: market odds as a model feature
+## 1. Market odds as a model feature — TESTED AND REJECTED (Nov 20 2026)
+> **Update:** an offline experiment (scripts/exp_market_odds.py) tested this on the real holdout. Adding de-margined odds lifts hit rate 48.9%→50.7%, but de-margined odds ALONE (no model) already score 50.5% — the ensemble adds ~0.2pp over just reading the bookmaker (noise). A market-copying model can't find value against the market it copies. REJECTED as a feature. The real finding: the market beats our model by ~1.6pp, which is the gap to close with signal the market DOESN'T price (injuries, lineups, team news). The text below is kept for the record but its "top lever" framing is superseded.
+
 Bookmaker odds are the hardest single predictor to beat; odds-inclusive models generally win on accuracy (ML for Soccer Match Result Prediction, arXiv 2403.07669). We already pull live odds AND hold football-data.co.uk historical Bet365+Pinnacle CLOSING odds back to 2005/06 — both free. Feeding de-margined implied probabilities into the ensemble is the top free "beat Elo" lever; the data is already on disk.
 - CAVEAT: keep an odds-FREE model variant for the value screen. Including a book's own odds as a feature is circular when the goal is beating that book. Design the feature pipeline so odds features can be switched off for the value-screen variant.
 - De-margin first (raw implied probs sum to >1). Prefer closing odds (B365C*/PC*).

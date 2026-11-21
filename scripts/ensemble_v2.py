@@ -137,7 +137,7 @@ def _haversine_km(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
     return 2.0 * R * math.asin(math.sqrt(a))
 
 
-# Full 85-feature set used for XGBoost base model
+# Full 78-feature set used for XGBoost base model
 FEATURE_COLS = [
     "home_elo", "away_elo", "elo_diff", "home_expected",
     "home_elo_home", "home_elo_away", "away_elo_home", "away_elo_away", "venue_elo_diff",
@@ -588,7 +588,7 @@ def compute_match_features(
     already applied by the caller). Does NOT update state with the match result;
     call update_state() after this to advance the walk-forward state.
 
-    Returns a dict with all 85 FEATURE_COLS keys plus p_home_dc/p_draw_dc/
+    Returns a dict with all 78 FEATURE_COLS keys plus p_home_dc/p_draw_dc/
     p_away_dc (stack inputs not in FEATURE_COLS),
     and prediction_uncertainty (metadata only, not in FEATURE_COLS).
     """
