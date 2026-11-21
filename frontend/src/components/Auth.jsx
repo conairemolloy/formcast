@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { X, Loader2, BarChart2 } from 'lucide-react'
 import api, { setAuthToken } from '../api'
 
-export default function Auth({ onClose, onLogin }) {
-  const [mode, setMode]       = useState('login')
+export default function Auth({ onClose, onLogin, initialMode = 'login' }) {
+  const [mode, setMode]       = useState(initialMode === 'signup' ? 'signup' : 'login')
   const [name, setName]       = useState('')
   const [email, setEmail]     = useState('')
   const [password, setPassword] = useState('')
@@ -36,7 +36,7 @@ export default function Auth({ onClose, onLogin }) {
   }
 
   const inputClass =
-    'w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 transition-colors'
+    'w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[var(--primary)] transition-colors'
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
@@ -51,17 +51,17 @@ export default function Auth({ onClose, onLogin }) {
         </button>
 
         <div className="flex items-center gap-2 mb-6">
-          <BarChart2 className="w-5 h-5 text-emerald-400" />
+          <BarChart2 className="w-5 h-5 text-[var(--primary)]" />
           <span className="font-bold text-white text-lg">FormCast</span>
         </div>
 
         <h2 className="text-2xl font-bold text-white mb-1">
-          {mode === 'login' ? 'Welcome back' : 'Create account'}
+          {mode === 'login' ? 'Log in' : 'Create account'}
         </h2>
         <p className="text-gray-400 text-sm mb-6">
           {mode === 'login'
-            ? 'Sign in to track your favourite teams'
-            : 'Free forever. Save teams, get alerts.'}
+            ? 'Welcome back.'
+            : 'Free forever. Every prediction logged, win or lose.'}
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -112,10 +112,10 @@ export default function Auth({ onClose, onLogin }) {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2"
+            className="w-full bg-[var(--primary)] hover:bg-[var(--ring)] disabled:opacity-50 disabled:cursor-not-allowed text-[var(--primary-foreground)] font-semibold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2"
           >
             {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-            {mode === 'login' ? 'Sign In' : 'Create Account'}
+            {mode === 'login' ? 'Log in' : 'Create account'}
           </button>
         </form>
 
@@ -123,9 +123,9 @@ export default function Auth({ onClose, onLogin }) {
           {mode === 'login' ? "Don't have an account? " : 'Already have an account? '}
           <button
             onClick={() => switchMode(mode === 'login' ? 'signup' : 'login')}
-            className="text-emerald-400 hover:text-emerald-300 font-medium transition-colors"
+            className="text-[var(--primary)] hover:text-[var(--ring)] font-medium transition-colors"
           >
-            {mode === 'login' ? 'Sign Up' : 'Sign In'}
+            {mode === 'login' ? 'Sign up free' : 'Log in'}
           </button>
         </p>
       </div>

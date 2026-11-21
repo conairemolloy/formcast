@@ -69,15 +69,12 @@ const NAV_GROUPS = [
       { id: 'prediction-log', label: 'Prediction Log' },
     ],
   },
-  // Remodel placeholders (DESIGN.md) — dev server only, never shown in production builds.
-  ...(import.meta.env.DEV ? [{
-    label: 'Remodel',
-    items: [
-      { id: 'landing-new', label: 'Landing (new)' },
-      { id: 'about',       label: 'About' },
-      { id: 'proof',       label: 'Proof' },
-    ],
-  }] : []),
+]
+
+// Logged-out nav: the closed front door. Log in / Sign up free sit on the right.
+const FRONT_DOOR_LINKS = [
+  { id: 'about',        label: 'About' },
+  { id: 'how-it-works', label: 'How it works' },
 ]
 
 function NavDropdown({ group, active, onNav }) {
@@ -131,13 +128,25 @@ function NavDropdown({ group, active, onNav }) {
   )
 }
 
+// Read synchronously on first render so the starting page is right from the
+// very first paint: a returning user never sees the landing flash, and a
+// logged-out visitor never sees the dashboard flash.
+function hasStoredSession() {
+  try {
+    return Boolean(localStorage.getItem('auth_user') && localStorage.getItem('auth_token'))
+  } catch {
+    return false
+  }
+}
+
 function App() {
-  const [active, setActive]         = useState('dashboard')
+  const [active, setActive]         = useState(() => hasStoredSession() ? 'dashboard' : 'landing-new')
   const [selectedTeam, setSelectedTeam] = useState(null)
   const [selectedNationalTeam, setSelectedNationalTeam] = useState(null)
   const [menuOpen, setMenuOpen]     = useState(false)
   const [user, setUser]             = useState(null)
   const [showAuth, setShowAuth]     = useState(false)
+  const [authMode, setAuthMode]     = useState('login')
   const [sessionChecked, setSessionChecked] = useState(false)
 
   // Restore session from localStorage
@@ -158,9 +167,11 @@ function App() {
           .catch(() => {
             clearAuthToken()
             setUser(null)
+            setActive('landing-new')
           })
       } catch (_) {
         clearAuthToken()
+        setActive('landing-new')
       }
     }
     setSessionChecked(true)
@@ -173,16 +184,24 @@ function App() {
     setMenuOpen(false)
   }
 
+  function openAuth(mode = 'login') {
+    setAuthMode(mode)
+    setMenuOpen(false)
+    setShowAuth(true)
+  }
+
   function handleLogin(profile) {
     setUser(profile)
+    handleNav('dashboard')
   }
 
   function handleLogout() {
     setUser(null)
-    if (['watchlist', 'settings'].includes(active)) {
-      setActive('dashboard')
-    }
+    handleNav('landing-new')
   }
+
+  const loggedIn  = sessionChecked && Boolean(user)
+  const loggedOut = sessionChecked && !user
 
   function handleWatchlistUpdate(newWatchlist) {
     setUser(u => {
@@ -208,7 +227,7 @@ function App() {
         <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between gap-4">
           {/* Logo */}
           <button
-            onClick={() => handleNav('dashboard')}
+            onClick={() => handleNav(user ? 'dashboard' : 'landing-new')}
             className="fc-logo flex items-center gap-2 font-bold text-lg tracking-tight transition-colors shrink-0"
           >
             <BarChart2 className="fc-logo-mark w-5 h-5" />
@@ -216,23 +235,40 @@ function App() {
           </button>
 
           {/* Desktop nav */}
+          {/* Nothing renders until sessionChecked, so neither nav can flash. */}
           <nav className="hidden md:flex items-center gap-1">
-            <button
-              onClick={() => handleNav('dashboard')}
-              data-active={active === 'dashboard'}
-              className="fc-nav-item flex items-center gap-1.5 px-3 py-1.5 rounded text-sm font-medium transition-colors"
-            >
-              <LayoutDashboard className="w-3.5 h-3.5" />
-              Dashboard
-            </button>
+            {loggedIn && (
+              <>
+                <button
+                  onClick={() => handleNav('dashboard')}
+                  data-active={active === 'dashboard'}
+                  className="fc-nav-item flex items-center gap-1.5 px-3 py-1.5 rounded text-sm font-medium transition-colors"
+                >
+                  <LayoutDashboard className="w-3.5 h-3.5" />
+                  Dashboard
+                </button>
 
-            {NAV_GROUPS.map(group => (
-              <NavDropdown
-                key={group.label}
-                group={group}
-                active={active}
-                onNav={handleNav}
-              />
+                {NAV_GROUPS.map(group => (
+                  <NavDropdown
+                    key={group.label}
+                    group={group}
+                    active={active}
+                    onNav={handleNav}
+                  />
+                ))}
+              </>
+            )}
+
+            {/* Closed front door: logged-out visitors get no product nav. */}
+            {loggedOut && FRONT_DOOR_LINKS.map(({ id, label }) => (
+              <button
+                key={id}
+                onClick={() => handleNav(id)}
+                data-active={active === id}
+                className="fc-nav-item px-3 py-1.5 rounded text-sm font-medium transition-colors"
+              >
+                {label}
+              </button>
             ))}
           </nav>
 
@@ -246,13 +282,21 @@ function App() {
                   onNavigate={handleNav}
                 />
               ) : (
-                <button
-                  onClick={() => setShowAuth(true)}
-                  className="fc-outline-btn hidden md:flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-lg transition-colors"
-                >
-                  <LogIn className="w-4 h-4" />
-                  Sign In
-                </button>
+                <div className="hidden md:flex items-center gap-2">
+                  <button
+                    onClick={() => openAuth('login')}
+                    className="fc-outline-btn flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-lg transition-colors"
+                  >
+                    <LogIn className="w-4 h-4" />
+                    Log in
+                  </button>
+                  <button
+                    onClick={() => openAuth('signup')}
+                    className="fc-primary-btn px-3 py-1.5 text-sm font-semibold rounded-lg transition-colors"
+                  >
+                    Sign up free
+                  </button>
+                </div>
               )
             )}
 
@@ -270,37 +314,36 @@ function App() {
         {/* Mobile menu */}
         {menuOpen && (
           <div className="fc-mobile-menu md:hidden px-2 py-2 space-y-0.5">
-            <button
-              onClick={() => handleNav('dashboard')}
-              data-active={active === 'dashboard'}
-              className="fc-nav-item fc-panel-item w-full text-left flex items-center gap-2.5 px-4 py-2.5 rounded text-sm font-medium transition-colors"
-            >
-              <LayoutDashboard className="w-4 h-4" />
-              Dashboard
-            </button>
+            {loggedIn && (
+              <>
+                <button
+                  onClick={() => handleNav('dashboard')}
+                  data-active={active === 'dashboard'}
+                  className="fc-nav-item fc-panel-item w-full text-left flex items-center gap-2.5 px-4 py-2.5 rounded text-sm font-medium transition-colors"
+                >
+                  <LayoutDashboard className="w-4 h-4" />
+                  Dashboard
+                </button>
 
-            {NAV_GROUPS.map(group => (
-              <div key={group.label}>
-                <p className="fc-group-label px-4 pt-3 pb-1 text-[9px] font-mono uppercase tracking-[0.18em] select-none">
-                  {group.label}
-                </p>
-                {group.items.map(({ id, label }) => (
-                  <button
-                    key={id}
-                    onClick={() => handleNav(id)}
-                    data-active={active === id}
-                    className="fc-nav-item fc-panel-item w-full text-left flex items-center px-6 py-2.5 rounded text-sm font-medium transition-colors"
-                  >
-                    {label}
-                  </button>
+                {NAV_GROUPS.map(group => (
+                  <div key={group.label}>
+                    <p className="fc-group-label px-4 pt-3 pb-1 text-[9px] font-mono uppercase tracking-[0.18em] select-none">
+                      {group.label}
+                    </p>
+                    {group.items.map(({ id, label }) => (
+                      <button
+                        key={id}
+                        onClick={() => handleNav(id)}
+                        data-active={active === id}
+                        className="fc-nav-item fc-panel-item w-full text-left flex items-center px-6 py-2.5 rounded text-sm font-medium transition-colors"
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
                 ))}
-              </div>
-            ))}
 
-            {/* Mobile auth */}
-            <div className="fc-divider mt-2 pt-2">
-              {user ? (
-                <>
+                <div className="fc-divider mt-2 pt-2">
                   <button
                     onClick={() => handleNav('watchlist')}
                     className="fc-nav-item fc-panel-item w-full text-left px-4 py-2.5 text-sm rounded transition-colors"
@@ -313,24 +356,46 @@ function App() {
                   >
                     Settings
                   </button>
-                </>
-              ) : (
-                <button
-                  onClick={() => { setMenuOpen(false); setShowAuth(true) }}
-                  className="fc-mobile-signin w-full text-left flex items-center gap-2 px-4 py-2.5 text-sm font-medium transition-colors"
-                >
-                  <LogIn className="w-4 h-4" />
-                  Sign In
-                </button>
-              )}
-            </div>
+                </div>
+              </>
+            )}
+
+            {loggedOut && (
+              <>
+                {FRONT_DOOR_LINKS.map(({ id, label }) => (
+                  <button
+                    key={id}
+                    onClick={() => handleNav(id)}
+                    data-active={active === id}
+                    className="fc-nav-item fc-panel-item w-full text-left px-4 py-2.5 rounded text-sm font-medium transition-colors"
+                  >
+                    {label}
+                  </button>
+                ))}
+                <div className="fc-divider mt-2 pt-2 space-y-1">
+                  <button
+                    onClick={() => openAuth('login')}
+                    className="fc-mobile-signin w-full text-left flex items-center gap-2 px-4 py-2.5 text-sm font-medium transition-colors"
+                  >
+                    <LogIn className="w-4 h-4" />
+                    Log in
+                  </button>
+                  <button
+                    onClick={() => openAuth('signup')}
+                    className="fc-primary-btn w-full text-left px-4 py-2.5 text-sm font-semibold rounded-lg transition-colors"
+                  >
+                    Sign up free
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         )}
       </header>
 
       {/* The remodelled landing is full-bleed — skip the padded, max-width frame. */}
       <main className={active === 'landing-new' ? 'flex-1 w-full' : 'flex-1 max-w-7xl mx-auto w-full px-4 py-6'}>
-        {active === 'landing-new'    && <LandingNew onNavigate={handleNav} onShowAuth={() => setShowAuth(true)} />}
+        {active === 'landing-new'    && <LandingNew onNavigate={handleNav} onShowAuth={() => openAuth('signup')} />}
         {active === 'about'          && <About />}
         {active === 'proof'          && <ProofPage />}
         {active === 'dashboard'      && <Dashboard onNavigate={handleNav} />}
@@ -339,7 +404,7 @@ function App() {
             onTeamClick={setSelectedTeam}
             user={user}
             onWatchlistUpdate={handleWatchlistUpdate}
-            onShowAuth={() => setShowAuth(true)}
+            onShowAuth={() => openAuth('login')}
           />
         )}
         {active === 'ratings'        && selectedTeam && (
@@ -351,7 +416,7 @@ function App() {
             onBack={() => setSelectedTeam(null)}
             user={user}
             onWatchlistUpdate={handleWatchlistUpdate}
-            onShowAuth={() => setShowAuth(true)}
+            onShowAuth={() => openAuth('login')}
           />
         )}
         {active === 'matches'        && <Matches />}
@@ -403,6 +468,7 @@ function App() {
       {/* Auth modal */}
       {showAuth && (
         <Auth
+          initialMode={authMode}
           onClose={() => setShowAuth(false)}
           onLogin={handleLogin}
         />

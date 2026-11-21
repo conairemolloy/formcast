@@ -88,6 +88,13 @@
 .fc-icon-btn:hover { color: var(--primary); }
 .fc-mobile-signin { color: var(--primary); }
 .fc-mobile-signin:hover { color: var(--ring); }
+/* Sign up free — coral primary, matches the landing's .rl-btn--primary. */
+.fc-primary-btn {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border: 1px solid var(--primary);
+}
+.fc-primary-btn:hover { background: var(--ring); border-color: var(--ring); }
 
 /* ── Plain-language explanations ─────────────────────────────────────── */
 
