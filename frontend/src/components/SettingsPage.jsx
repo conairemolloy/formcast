@@ -36,19 +36,19 @@ export default function SettingsPage({ user, onUserUpdate }) {
   }
 
   const inputClass =
-    'w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 transition-colors'
+    'fc-input w-full rounded-lg px-4 py-2.5 text-sm transition-colors'
 
   return (
-    <div className="max-w-lg mx-auto space-y-5">
-      <h1 className="text-xl font-semibold text-white">Settings</h1>
+    <div className="fc-page max-w-lg mx-auto space-y-5">
+      <h1 className="text-xl font-semibold text-[var(--foreground)]">Settings</h1>
 
       <form onSubmit={handleSave} className="space-y-5">
         {/* Account */}
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-5 space-y-4">
-          <h2 className="text-sm font-semibold text-gray-300">Account</h2>
+        <div className="fc-card rounded-xl p-5 space-y-4">
+          <h2 className="text-sm font-semibold text-[var(--foreground)]">Account</h2>
 
           <div>
-            <label className="block text-xs font-medium text-gray-400 mb-1.5">Name</label>
+            <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1.5">Name</label>
             <input
               type="text"
               value={name}
@@ -59,25 +59,25 @@ export default function SettingsPage({ user, onUserUpdate }) {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-400 mb-1.5">Email</label>
+            <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1.5">Email</label>
             <input
               type="email"
               value={user?.email || ''}
               disabled
-              className="w-full bg-gray-800/40 border border-gray-700 rounded-lg px-4 py-2.5 text-sm text-gray-500 cursor-not-allowed"
+              className="fc-input w-full rounded-lg px-4 py-2.5 text-sm opacity-60 text-[var(--muted-foreground)] cursor-not-allowed"
             />
-            <p className="text-xs text-gray-600 mt-1">Email cannot be changed here</p>
+            <p className="text-xs text-[var(--muted-foreground)]/60 mt-1">Email cannot be changed here</p>
           </div>
         </div>
 
         {/* Notifications */}
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
-          <h2 className="text-sm font-semibold text-gray-300 mb-4">Notifications</h2>
+        <div className="fc-card rounded-xl p-5">
+          <h2 className="text-sm font-semibold text-[var(--foreground)] mb-4">Notifications</h2>
 
           <label className="flex items-center justify-between cursor-pointer gap-4">
             <div>
-              <p className="text-sm text-white font-medium">Email alerts</p>
-              <p className="text-xs text-gray-500 mt-0.5">
+              <p className="text-sm text-[var(--foreground)] font-medium">Email alerts</p>
+              <p className="text-xs text-[var(--muted-foreground)] mt-0.5">
                 Get notified about teams in your watchlist
               </p>
             </div>
@@ -85,13 +85,13 @@ export default function SettingsPage({ user, onUserUpdate }) {
               type="button"
               onClick={() => setEmailAlerts(v => !v)}
               className={`relative shrink-0 w-11 h-6 rounded-full transition-colors duration-200 ${
-                emailAlerts ? 'bg-emerald-600' : 'bg-gray-700'
+                emailAlerts ? 'bg-[var(--primary)]' : 'bg-[var(--input)]'
               }`}
               role="switch"
               aria-checked={emailAlerts}
             >
               <div
-                className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-sm transition-transform duration-200 ${
+                className={`absolute top-0.5 w-5 h-5 rounded-full bg-[var(--primary-foreground)] shadow-sm transition-transform duration-200 ${
                   emailAlerts ? 'translate-x-5' : 'translate-x-0.5'
                 }`}
               />
@@ -100,13 +100,13 @@ export default function SettingsPage({ user, onUserUpdate }) {
         </div>
 
         {/* Display */}
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
-          <h2 className="text-sm font-semibold text-gray-300 mb-4">Display</h2>
+        <div className="fc-card rounded-xl p-5">
+          <h2 className="text-sm font-semibold text-[var(--foreground)] mb-4">Display</h2>
 
           <div className="flex items-center justify-between gap-4">
             <div>
-              <p className="text-sm text-white font-medium">Odds format</p>
-              <p className="text-xs text-gray-500 mt-0.5">How odds are displayed across the site</p>
+              <p className="text-sm text-[var(--foreground)] font-medium">Odds format</p>
+              <p className="text-xs text-[var(--muted-foreground)] mt-0.5">How odds are displayed across the site</p>
             </div>
             <div className="flex gap-1 shrink-0">
               {[
@@ -121,8 +121,8 @@ export default function SettingsPage({ user, onUserUpdate }) {
                   onClick={() => handleFormatChange(val)}
                   className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
                     oddsFormat === val
-                      ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                      : 'bg-gray-800 text-gray-400 border border-gray-700 hover:text-white'
+                      ? 'bg-[var(--primary)]/12 text-[var(--primary)] border border-[var(--primary)]/30'
+                      : 'bg-[var(--card)] text-[var(--muted-foreground)] border border-[var(--border)] hover:text-[var(--foreground)]'
                   }`}
                 >
                   {label}
@@ -133,12 +133,12 @@ export default function SettingsPage({ user, onUserUpdate }) {
         </div>
 
         {error && (
-          <p className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2.5">
+          <p className="text-[var(--chart-5)] text-sm bg-[var(--chart-5)]/10 border border-[var(--chart-5)]/20 rounded-lg px-3 py-2.5">
             {error}
           </p>
         )}
         {saved && (
-          <p className="text-emerald-400 text-sm bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-3 py-2.5">
+          <p className="text-[var(--chart-2)] text-sm bg-[var(--chart-2)]/10 border border-[var(--chart-2)]/20 rounded-lg px-3 py-2.5">
             Settings saved successfully
           </p>
         )}
@@ -146,7 +146,7 @@ export default function SettingsPage({ user, onUserUpdate }) {
         <button
           type="submit"
           disabled={saving}
-          className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-lg transition-colors flex items-center gap-2"
+          className="fc-primary-btn px-5 py-2.5 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold rounded-lg transition-colors flex items-center gap-2"
         >
           {saving && <Loader2 className="w-4 h-4 animate-spin" />}
           Save Changes
@@ -154,18 +154,18 @@ export default function SettingsPage({ user, onUserUpdate }) {
       </form>
 
       {/* Danger zone */}
-      <div className="bg-gray-900 border border-red-900/30 rounded-xl p-5">
-        <h2 className="text-sm font-semibold text-red-400 flex items-center gap-2 mb-2">
+      <div className="fc-card border-[var(--chart-5)]/30 rounded-xl p-5">
+        <h2 className="text-sm font-semibold text-[var(--chart-5)] flex items-center gap-2 mb-2">
           <AlertTriangle className="w-4 h-4" />
           Danger Zone
         </h2>
-        <p className="text-xs text-gray-500 mb-3">
+        <p className="text-xs text-[var(--muted-foreground)] mb-3">
           Permanently delete your account and all associated data.
         </p>
         <button
           type="button"
           disabled
-          className="px-4 py-2 text-sm text-red-400 border border-red-900/50 rounded-lg opacity-40 cursor-not-allowed"
+          className="px-4 py-2 text-sm text-[var(--chart-5)] border border-[var(--chart-5)]/50 rounded-lg opacity-40 cursor-not-allowed"
           title="Coming soon"
         >
           Delete Account
