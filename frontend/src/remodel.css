@@ -20,7 +20,7 @@
   --primary-foreground: #171e19;
   --ring:               #ed7559;
 
-  /* Fraunces / mono faces aren't loaded yet — fallbacks until integration. */
+  /* Fraunces + Geist are loaded (index.html); mono uses the system stack. */
   --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
   --font-mono:    ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
