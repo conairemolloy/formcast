@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Bookmark, Search, X, Loader2, Plus } from 'lucide-react'
 import api from '../api'
 
-const FORM_COLOR = { W: 'bg-emerald-500', D: 'bg-gray-500', L: 'bg-red-500' }
+const FORM_COLOR = { W: 'bg-[var(--chart-2)]', D: 'bg-[var(--muted-foreground)]', L: 'bg-[var(--chart-5)]' }
 
 function FormDots({ form }) {
   return (
@@ -10,7 +10,7 @@ function FormDots({ form }) {
       {form.slice(0, 5).map((r, i) => (
         <div
           key={i}
-          className={`w-2.5 h-2.5 rounded-full ${FORM_COLOR[r] || 'bg-gray-700'}`}
+          className={`w-2.5 h-2.5 rounded-full ${FORM_COLOR[r] || 'bg-[var(--muted)]'}`}
           title={r === 'W' ? 'Win' : r === 'D' ? 'Draw' : 'Loss'}
         />
       ))}
@@ -20,15 +20,15 @@ function FormDots({ form }) {
 
 function TeamCard({ teamName, elo, league, form, onRemove }) {
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 flex items-start justify-between gap-4 hover:border-gray-700 transition-colors">
+    <div className="fc-card p-4 flex items-start justify-between gap-4 hover:border-[var(--input)] transition-colors">
       <div className="min-w-0 flex-1">
-        <h3 className="font-semibold text-white truncate">{teamName}</h3>
+        <h3 className="font-semibold text-[var(--foreground)] truncate">{teamName}</h3>
         <div className="flex items-center gap-2 mt-1 flex-wrap">
           {league && (
-            <span className="text-xs bg-gray-800 text-gray-400 px-2 py-0.5 rounded">{league}</span>
+            <span className="text-xs bg-[var(--muted)] text-[var(--muted-foreground)] px-2 py-0.5 rounded">{league}</span>
           )}
           {elo != null && (
-            <span className="text-xs text-emerald-400 font-mono tabular-nums">{Math.round(elo)} Elo</span>
+            <span className="text-xs text-[var(--chart-2)] font-mono tabular-nums">{Math.round(elo)} Elo</span>
           )}
         </div>
         {form.length > 0 && (
@@ -39,7 +39,7 @@ function TeamCard({ teamName, elo, league, form, onRemove }) {
       </div>
       <button
         onClick={() => onRemove(teamName)}
-        className="shrink-0 p-1.5 text-gray-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+        className="shrink-0 p-1.5 text-[var(--muted-foreground)] hover:text-[var(--chart-5)] hover:bg-[var(--chart-5)]/10 rounded-lg transition-colors"
         title="Remove from watchlist"
       >
         <X className="w-4 h-4" />
@@ -132,12 +132,12 @@ export default function WatchlistPage({ user, onWatchlistUpdate }) {
     : []
 
   return (
-    <div className="max-w-2xl mx-auto space-y-5">
+    <div className="fc-page max-w-2xl mx-auto space-y-5">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-white">My Watchlist</h1>
+        <h1 className="text-xl font-semibold text-[var(--foreground)]">My Watchlist</h1>
         <button
           onClick={() => setShowSearch(s => !s)}
-          className="flex items-center gap-2 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium rounded-lg transition-colors"
+          className="fc-primary-btn flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-lg transition-colors"
         >
           <Plus className="w-4 h-4" />
           Add Team
@@ -147,25 +147,25 @@ export default function WatchlistPage({ user, onWatchlistUpdate }) {
       {/* Search */}
       {showSearch && (
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--muted-foreground)]" />
           <input
             autoFocus
             type="text"
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search for a team…"
-            className="w-full bg-gray-900 border border-gray-700 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 transition-colors"
+            className="fc-input w-full rounded-xl pl-10 pr-4 py-3 text-sm text-[var(--foreground)] placeholder-[var(--muted-foreground)] transition-colors"
           />
           {searchResults.length > 0 && (
-            <div className="absolute top-full left-0 right-0 mt-1 bg-gray-900 border border-gray-800 rounded-xl shadow-2xl z-10 overflow-hidden">
+            <div className="absolute top-full left-0 right-0 mt-1 fc-card shadow-2xl z-10 overflow-hidden">
               {searchResults.map(t => (
                 <button
                   key={t.team}
                   onClick={() => addTeam(t.team)}
-                  className="w-full text-left px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-800 hover:text-white flex items-center justify-between transition-colors"
+                  className="w-full text-left px-4 py-2.5 text-sm text-[var(--foreground)] hover:bg-[var(--secondary)] hover:text-[var(--foreground)] flex items-center justify-between transition-colors"
                 >
                   <span>{t.team}</span>
-                  <span className="text-xs text-gray-500">{leagueMap[t.team]}</span>
+                  <span className="text-xs text-[var(--muted-foreground)]">{leagueMap[t.team]}</span>
                 </button>
               ))}
             </div>
@@ -174,17 +174,17 @@ export default function WatchlistPage({ user, onWatchlistUpdate }) {
       )}
 
       {loadingData && (
-        <div className="flex items-center justify-center h-32 gap-3 text-gray-400">
+        <div className="flex items-center justify-center h-32 gap-3 text-[var(--muted-foreground)]">
           <Loader2 className="w-5 h-5 animate-spin" />
           Loading…
         </div>
       )}
 
       {!loadingData && watchlist.length === 0 && (
-        <div className="text-center py-20 text-gray-500">
+        <div className="text-center py-20 text-[var(--muted-foreground)]">
           <Bookmark className="w-10 h-10 mx-auto mb-3 opacity-30" />
           <p className="text-sm">Save your favourite teams to track them here</p>
-          <p className="text-xs text-gray-600 mt-1">Use the star icon on any team in Ratings</p>
+          <p className="text-xs text-[var(--muted-foreground)]/60 mt-1">Use the star icon on any team in Ratings</p>
         </div>
       )}
 
