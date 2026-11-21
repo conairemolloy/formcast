@@ -13,9 +13,9 @@ function initials(name, email) {
 }
 
 const TIER_BADGE = {
-  free:  'text-gray-400 bg-gray-700/80 border border-gray-600',
-  pro:   'text-[var(--brand)] bg-[var(--brand-subtle)] border border-[var(--brand-border)]',
-  elite: 'text-amber-400 bg-amber-500/20 border border-amber-500/30',
+  free:  'text-[var(--muted-foreground)] bg-[var(--muted)] border border-[var(--border)]',
+  pro:   'text-[var(--primary)] bg-[var(--primary)]/12 border border-[var(--primary)]/30',
+  elite: 'text-[var(--chart-3)] bg-[var(--chart-3)]/15 border border-[var(--chart-3)]/30',
 }
 
 export default function UserMenu({ user, onLogout, onNavigate }) {
@@ -46,18 +46,18 @@ export default function UserMenu({ user, onLogout, onNavigate }) {
         className="flex items-center gap-1.5 focus:outline-none"
         aria-label="User menu"
       >
-        <div className="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-xs font-bold text-white select-none">
+        <div className="w-8 h-8 rounded-full bg-[var(--primary)] flex items-center justify-center text-xs font-bold text-[var(--primary-foreground)] select-none">
           {initials(user.name, user.email)}
         </div>
-        <ChevronDown className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-150 ${open ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`w-3.5 h-3.5 text-[var(--muted-foreground)] transition-transform duration-150 ${open ? 'rotate-180' : ''}`} />
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-56 bg-gray-900 border border-gray-800 rounded-xl shadow-2xl z-50 overflow-hidden py-1">
+        <div className="absolute right-0 top-full mt-2 w-56 fc-card shadow-2xl z-50 overflow-hidden py-1">
           {/* User info */}
-          <div className="px-4 py-3 border-b border-gray-800">
-            <p className="text-sm font-semibold text-white truncate">{user.name || 'User'}</p>
-            <p className="text-xs text-gray-500 truncate mt-0.5">{user.email}</p>
+          <div className="px-4 py-3 border-b border-[var(--border)]">
+            <p className="text-sm font-semibold text-[var(--foreground)] truncate">{user.name || 'User'}</p>
+            <p className="text-xs text-[var(--muted-foreground)] truncate mt-0.5">{user.email}</p>
             <span className={`inline-block mt-2 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${badge}`}>
               {user.tier || 'free'}
             </span>
@@ -65,7 +65,7 @@ export default function UserMenu({ user, onLogout, onNavigate }) {
 
           <button
             onClick={() => { setOpen(false); onNavigate('watchlist') }}
-            className="w-full text-left flex items-center gap-3 px-4 py-2.5 text-sm text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
+            className="w-full text-left flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--secondary)] transition-colors"
           >
             <Bookmark className="w-4 h-4" />
             My Watchlist
@@ -73,17 +73,17 @@ export default function UserMenu({ user, onLogout, onNavigate }) {
 
           <button
             onClick={() => { setOpen(false); onNavigate('settings') }}
-            className="w-full text-left flex items-center gap-3 px-4 py-2.5 text-sm text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
+            className="w-full text-left flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--secondary)] transition-colors"
           >
             <Settings className="w-4 h-4" />
             Settings
           </button>
 
-          <div className="border-t border-gray-800 my-1" />
+          <div className="border-t border-[var(--border)] my-1" />
 
           <button
             onClick={handleLogout}
-            className="w-full text-left flex items-center gap-3 px-4 py-2.5 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors"
+            className="w-full text-left flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--chart-5)] hover:text-[var(--chart-5)] hover:bg-[var(--chart-5)]/10 transition-colors"
           >
             <LogOut className="w-4 h-4" />
             Sign Out
