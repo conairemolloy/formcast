@@ -1,0 +1,81 @@
+{
+  "generated_at": "2026-11-23T17:29:33Z",
+  "hit_rate_definition": "share of holdout matches where the model's most likely outcome (H/D/A) was the actual result; 2-way models never pick a draw, so every draw counts as a miss for them",
+  "brier_scale": "multiclass 3-outcome Brier: mean over matches of sum over H/D/A of (p - outcome)^2; range 0-2, lower is better; uniform 1/3 guess = 0.667. null for models with no draw probability (Elo, Glicko-2), which have no 3-outcome Brier.",
+  "split": {
+    "method": "chronological 80/20 (models fit on train only, scored on holdout)",
+    "train": {
+      "from": "2014-08-24",
+      "to": "2024-04-05",
+      "n_matches": 40318
+    },
+    "holdout": {
+      "from": "2024-04-05",
+      "to": "2026-11-22",
+      "n_matches": 10080
+    }
+  },
+  "deployed_models": {
+    "trained_through": "2026-11-22",
+    "n_matches": 50398,
+    "note": "served models are refit on train + holdout after evaluation"
+  },
+  "models": [
+    {
+      "key": "ensemble",
+      "name": "Ensemble",
+      "outputs": "H/D/A",
+      "predicts_draws": true,
+      "hit_rate": 0.4882,
+      "brier": 0.6111,
+      "n_matches": 10080,
+      "holdout_from": "2024-04-05",
+      "holdout_to": "2026-11-22"
+    },
+    {
+      "key": "xgboost",
+      "name": "XGBoost",
+      "outputs": "H/D/A",
+      "predicts_draws": true,
+      "hit_rate": 0.4869,
+      "brier": 0.6113,
+      "n_matches": 10080,
+      "holdout_from": "2024-04-05",
+      "holdout_to": "2026-11-22"
+    },
+    {
+      "key": "dixon_coles",
+      "name": "Dixon-Coles",
+      "outputs": "H/D/A",
+      "predicts_draws": true,
+      "hit_rate": 0.4618,
+      "brier": 0.6414,
+      "n_matches": 10080,
+      "holdout_from": "2024-04-05",
+      "holdout_to": "2026-11-22"
+    },
+    {
+      "key": "elo",
+      "name": "Elo",
+      "outputs": "H/A",
+      "predicts_draws": false,
+      "hit_rate": 0.4836,
+      "brier": null,
+      "n_matches": 10080,
+      "holdout_from": "2024-04-05",
+      "holdout_to": "2026-11-22"
+    },
+    {
+      "key": "glicko2",
+      "name": "Glicko-2",
+      "outputs": "H/A",
+      "predicts_draws": false,
+      "hit_rate": 0.4674,
+      "brier": null,
+      "n_matches": 10080,
+      "holdout_from": "2024-04-05",
+      "holdout_to": "2026-11-22"
+    }
+  ],
+  "n_models": 5
+}
