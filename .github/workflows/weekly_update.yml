@@ -35,8 +35,9 @@ jobs:
       - name: Fix team names
         run: python scripts/fix_team_names.py
 
-      # xG failures must turn the run red, but must not block predictions:
-      # these steps continue, and the final step fails the run if either broke.
+      # xG steps continue on error so they never block predictions. The status
+      # step below warns on ingest failure (Understat is down) and only fails
+      # the run on a merge failure.
       - name: Ingest xG data (Understat)
         id: xg_ingest
         run: python scripts/ingest_xg_data.py
@@ -127,8 +128,16 @@ jobs:
             git push
           fi
 
-      - name: Fail run if xG ingest/merge failed
+      # xG ingest source (Understat) is down indefinitely, so an ingest failure
+      # is expected and only warns. A merge failure is a real problem and fails
+      # the run. Restore ingest to fatal once xG is migrated to a live source.
+      - name: Report xG pipeline status
         if: steps.xg_ingest.outcome == 'failure' || steps.xg_merge.outcome == 'failure'
         run: |
-          echo "::error title=xG pipeline::ingest=${{ steps.xg_ingest.outcome }} merge=${{ steps.xg_merge.outcome }} — see those steps' logs"
-          exit 1
+          if [ "${{ steps.xg_ingest.outcome }}" = "failure" ]; then
+            echo "::warning title=xG ingest::Understat ingest failed (source down) — xG features skipped this run"
+          fi
+          if [ "${{ steps.xg_merge.outcome }}" = "failure" ]; then
+            echo "::error title=xG merge::merge_xg_features.py failed — see that step's log"
+            exit 1
+          fi
