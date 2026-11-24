@@ -224,7 +224,7 @@ function App() {
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col">
       <header className="fc-shell sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between gap-4">
+        <div className="w-full px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-4">
           {/* Logo */}
           <button
             onClick={() => handleNav(user ? 'dashboard' : 'landing-new')}
@@ -394,7 +394,7 @@ function App() {
       </header>
 
       {/* The remodelled landing is full-bleed — skip the padded, max-width frame. */}
-      <main className={active === 'landing-new' ? 'flex-1 w-full' : 'flex-1 max-w-7xl mx-auto w-full px-4 py-6'}>
+      <main className={active === 'landing-new' ? 'flex-1 w-full' : 'flex-1 w-full px-4 sm:px-6 lg:px-8 py-6'}>
         {active === 'landing-new'    && <LandingNew onNavigate={handleNav} onShowAuth={() => openAuth('signup')} />}
         {active === 'about'          && <About />}
         {active === 'proof'          && <ProofPage />}
