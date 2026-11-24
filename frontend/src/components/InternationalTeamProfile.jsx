@@ -3,23 +3,23 @@ import api from '../api'
 import { Loader2, ChevronLeft } from 'lucide-react'
 
 const CONF_STYLE = {
-  'UEFA':             'bg-[var(--bg-overlay)] text-[var(--text-secondary)]',
-  'CONMEBOL':         'bg-[var(--bg-overlay)] text-[var(--text-secondary)]',
-  'CONCACAF':         'bg-red-500/20 text-red-400',
-  'CAF':              'bg-orange-500/20 text-orange-400',
-  'AFC':              'bg-violet-500/20 text-violet-400',
-  'OFC':              'bg-teal-500/20 text-teal-400',
-  'Other / Non-FIFA': 'bg-gray-800 text-gray-500',
+  'UEFA':             'bg-[var(--muted)] text-[var(--muted-foreground)]',
+  'CONMEBOL':         'bg-[var(--muted)] text-[var(--muted-foreground)]',
+  'CONCACAF':         'bg-[var(--muted)] text-[var(--muted-foreground)]',
+  'CAF':              'bg-[var(--muted)] text-[var(--muted-foreground)]',
+  'AFC':              'bg-[var(--muted)] text-[var(--muted-foreground)]',
+  'OFC':              'bg-[var(--muted)] text-[var(--muted-foreground)]',
+  'Other / Non-FIFA': 'bg-[var(--muted)] text-[var(--muted-foreground)]',
 }
 
 const RESULT_STYLE = {
-  W: { bg: 'bg-emerald-500/20', text: 'text-emerald-400', border: 'border-emerald-500/30' },
-  D: { bg: 'bg-gray-700/40',   text: 'text-gray-400',    border: 'border-gray-600/30' },
-  L: { bg: 'bg-red-500/20',    text: 'text-red-400',     border: 'border-red-500/30' },
+  W: { bg: 'bg-[var(--chart-2)]/15', text: 'text-[var(--chart-2)]', border: 'border-[var(--chart-2)]/30' },
+  D: { bg: 'bg-[var(--muted)]', text: 'text-[var(--muted-foreground)]', border: 'border-[var(--border)]' },
+  L: { bg: 'bg-[var(--chart-5)]/15', text: 'text-[var(--chart-5)]', border: 'border-[var(--chart-5)]/30' },
 }
 
 function ResultBadge({ result }) {
-  if (!result) return <span className="text-gray-600">—</span>
+  if (!result) return <span className="text-[var(--muted-foreground)]/60">—</span>
   const s = RESULT_STYLE[result] ?? RESULT_STYLE.D
   return (
     <span className={`inline-flex items-center justify-center w-6 h-6 rounded text-xs font-bold border ${s.bg} ${s.text} ${s.border}`}>
@@ -42,23 +42,23 @@ export default function InternationalTeamProfile({ team, eloRating, confederatio
       .finally(() => setLoading(false))
   }, [team])
 
-  const confStyle = CONF_STYLE[confederation] ?? 'bg-gray-800 text-gray-500'
+  const confStyle = CONF_STYLE[confederation] ?? 'bg-[var(--muted)] text-[var(--muted-foreground)]'
   // API returns matches descending (newest first) — reverse for chronological form row
   const formChron = [...(profile?.recent_results ?? [])].reverse()
 
   return (
-    <div className="space-y-6">
+    <div className="fc-page space-y-6">
       {/* Back button */}
       <button
         onClick={onBack}
-        className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-white transition-colors"
+        className="flex items-center gap-1.5 text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
       >
         <ChevronLeft className="w-4 h-4" />
         Back to Ratings
       </button>
 
       {/* Header */}
-      <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+      <div className="fc-card p-6">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
             <div className="flex items-center gap-2 mb-2">
@@ -66,14 +66,14 @@ export default function InternationalTeamProfile({ team, eloRating, confederatio
                 {confederation}
               </span>
               {eloRank != null && (
-                <span className="text-xs text-gray-500">#{eloRank}</span>
+                <span className="text-xs text-[var(--muted-foreground)]">#{eloRank}</span>
               )}
             </div>
-            <h1 className="text-3xl font-bold text-white">{team}</h1>
+            <h1 className="text-3xl font-bold text-[var(--foreground)]">{team}</h1>
           </div>
           <div className="text-right shrink-0">
-            <p className="text-xs text-gray-500 mb-0.5">Elo Rating</p>
-            <p className="text-4xl font-bold text-emerald-400 tabular-nums">
+            <p className="text-xs text-[var(--muted-foreground)] mb-0.5">Elo Rating</p>
+            <p className="text-4xl font-bold text-[var(--primary)] tabular-nums">
               {eloRating != null ? Math.round(eloRating) : '—'}
             </p>
           </div>
@@ -82,35 +82,35 @@ export default function InternationalTeamProfile({ team, eloRating, confederatio
 
       {/* Loading */}
       {loading && (
-        <div className="flex items-center justify-center h-64 gap-3 text-gray-400">
+        <div className="flex items-center justify-center h-64 gap-3 text-[var(--muted-foreground)]">
           <Loader2 className="w-6 h-6 animate-spin" />
           Loading team data…
         </div>
       )}
 
       {/* Error */}
-      {error && <div className="text-red-400 p-4 text-sm">{error}</div>}
+      {error && <div className="text-[var(--chart-5)] p-4 text-sm">{error}</div>}
 
       {!loading && !error && profile && (
         <>
           {/* Stats row */}
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+          <div className="fc-card p-5">
             <div className="grid grid-cols-3 gap-3">
-              <div className="bg-gray-800/50 rounded-lg p-3 text-center">
-                <p className="text-xs text-gray-500 mb-1">Matches Played</p>
-                <p className="text-2xl font-bold tabular-nums text-white">
+              <div className="bg-[var(--muted)] rounded-lg p-3 text-center">
+                <p className="text-xs text-[var(--muted-foreground)] mb-1">Matches Played</p>
+                <p className="text-2xl font-bold tabular-nums text-[var(--foreground)]">
                   {profile.matches_played ?? '—'}
                 </p>
               </div>
-              <div className="bg-gray-800/50 rounded-lg p-3 text-center">
-                <p className="text-xs text-gray-500 mb-1">First Match</p>
-                <p className="text-sm font-semibold text-gray-300 tabular-nums mt-1">
+              <div className="bg-[var(--muted)] rounded-lg p-3 text-center">
+                <p className="text-xs text-[var(--muted-foreground)] mb-1">First Match</p>
+                <p className="text-sm font-semibold text-[var(--foreground)] tabular-nums mt-1">
                   {profile.first_match_date ?? '—'}
                 </p>
               </div>
-              <div className="bg-gray-800/50 rounded-lg p-3 text-center">
-                <p className="text-xs text-gray-500 mb-1">Last Match</p>
-                <p className="text-sm font-semibold text-gray-300 tabular-nums mt-1">
+              <div className="bg-[var(--muted)] rounded-lg p-3 text-center">
+                <p className="text-xs text-[var(--muted-foreground)] mb-1">Last Match</p>
+                <p className="text-sm font-semibold text-[var(--foreground)] tabular-nums mt-1">
                   {profile.last_match_date ?? '—'}
                 </p>
               </div>
@@ -119,8 +119,8 @@ export default function InternationalTeamProfile({ team, eloRating, confederatio
 
           {/* Recent form + results */}
           {profile.recent_results?.length > 0 && (
-            <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
-              <h2 className="text-base font-semibold text-white mb-3">Recent Form</h2>
+            <div className="fc-card p-5">
+              <h2 className="text-base font-semibold text-[var(--foreground)] mb-3">Recent Form</h2>
 
               {/* Form badges — oldest left, newest right */}
               <div className="flex items-center gap-1.5 mb-4">
@@ -131,7 +131,7 @@ export default function InternationalTeamProfile({ team, eloRating, confederatio
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-gray-800 text-gray-500 text-xs">
+                    <tr className="border-b border-[var(--border)] text-[var(--muted-foreground)] text-xs">
                       <th className="text-left pb-2 font-medium">Date</th>
                       <th className="text-left pb-2 font-medium">Opponent</th>
                       <th className="text-center pb-2 font-medium">Venue</th>
@@ -142,23 +142,23 @@ export default function InternationalTeamProfile({ team, eloRating, confederatio
                   </thead>
                   <tbody>
                     {profile.recent_results.map((m, i) => (
-                      <tr key={i} className="border-b border-gray-800/50">
-                        <td className="py-2.5 text-gray-400 tabular-nums whitespace-nowrap">
+                      <tr key={i} className="border-b border-[var(--border)]">
+                        <td className="py-2.5 text-[var(--muted-foreground)] tabular-nums whitespace-nowrap">
                           {m.date ?? '—'}
                         </td>
-                        <td className="py-2.5 text-white font-medium">{m.opponent}</td>
+                        <td className="py-2.5 text-[var(--foreground)] font-medium">{m.opponent}</td>
                         <td className="py-2.5 text-center">
                           <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${
                             m.venue === 'H'
-                              ? 'bg-[var(--bg-overlay)] text-[var(--text-secondary)]'
+                              ? 'bg-[var(--muted)] text-[var(--muted-foreground)]'
                               : m.venue === 'A'
-                              ? 'bg-orange-500/15 text-orange-400'
-                              : 'bg-gray-700/40 text-gray-400'
+                              ? 'bg-[var(--chart-4)]/15 text-[var(--chart-4)]'
+                              : 'bg-transparent border border-[var(--border)] text-[var(--muted-foreground)]'
                           }`}>
                             {m.venue ?? '—'}
                           </span>
                         </td>
-                        <td className="py-2.5 text-center font-mono font-bold text-white tabular-nums">
+                        <td className="py-2.5 text-center font-mono font-bold text-[var(--foreground)] tabular-nums">
                           {m.team_score != null && m.opponent_score != null
                             ? `${m.team_score}–${m.opponent_score}`
                             : '—'}
@@ -166,7 +166,7 @@ export default function InternationalTeamProfile({ team, eloRating, confederatio
                         <td className="py-2.5 text-center">
                           <ResultBadge result={m.result} />
                         </td>
-                        <td className="py-2.5 text-gray-500 text-xs">{m.tournament ?? '—'}</td>
+                        <td className="py-2.5 text-[var(--muted-foreground)] text-xs">{m.tournament ?? '—'}</td>
                       </tr>
                     ))}
                   </tbody>
