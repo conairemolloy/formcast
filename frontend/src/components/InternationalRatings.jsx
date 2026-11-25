@@ -10,13 +10,13 @@ const WC_2026_TEAMS = new Set(['Algeria','Argentina','Australia','Austria','Belg
 const CONF_TABS = ['WC 2026', 'All', 'UEFA', 'CONMEBOL', 'CONCACAF', 'CAF', 'AFC', 'OFC']
 
 const CONF_STYLE = {
-  'UEFA':             'bg-[var(--bg-overlay)] text-[var(--text-secondary)]',
-  'CONMEBOL':         'bg-[var(--bg-overlay)] text-[var(--text-secondary)]',
-  'CONCACAF':         'bg-red-500/20 text-red-400',
-  'CAF':              'bg-orange-500/20 text-orange-400',
-  'AFC':              'bg-violet-500/20 text-violet-400',
-  'OFC':              'bg-teal-500/20 text-teal-400',
-  'Other / Non-FIFA': 'bg-gray-800 text-gray-500',
+  'UEFA':             'bg-[var(--muted)] text-[var(--muted-foreground)]',
+  'CONMEBOL':         'bg-[var(--muted)] text-[var(--muted-foreground)]',
+  'CONCACAF':         'bg-[var(--muted)] text-[var(--muted-foreground)]',
+  'CAF':              'bg-[var(--muted)] text-[var(--muted-foreground)]',
+  'AFC':              'bg-[var(--muted)] text-[var(--muted-foreground)]',
+  'OFC':              'bg-[var(--muted)] text-[var(--muted-foreground)]',
+  'Other / Non-FIFA': 'bg-[var(--muted)] text-[var(--muted-foreground)]',
 }
 
 export default function InternationalRatings({ onTeamClick }) {
@@ -63,11 +63,11 @@ export default function InternationalRatings({ onTeamClick }) {
                          confCounts[conf] ?? null
 
   return (
-    <div>
+    <div className="fc-page">
       {/* Header */}
       <div className="mb-5">
-        <h1 className="text-xl font-semibold text-white">International Ratings</h1>
-        <p className="mt-1 text-sm text-gray-500">
+        <h1 className="text-xl font-semibold text-[var(--foreground)]">International Ratings</h1>
+        <p className="mt-1 text-sm text-[var(--muted-foreground)]">
           Separate rating system from club football — calibrated for national teams with
           tournament-importance weighting and neutral-venue adjustment
         </p>
@@ -83,10 +83,10 @@ export default function InternationalRatings({ onTeamClick }) {
               onClick={() => setActiveConf(conf)}
               className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
                 activeConf === conf && conf === 'WC 2026'
-                  ? 'bg-amber-500/20 text-amber-400 border border-amber-400/40'
+                  ? 'bg-[var(--primary)]/12 text-[var(--primary)] border border-[var(--primary)]/30'
                   : activeConf === conf
-                  ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                  : 'bg-gray-900 text-gray-400 border border-gray-700 hover:text-white'
+                  ? 'bg-[var(--primary)]/12 text-[var(--primary)] border border-[var(--primary)]/30'
+                  : 'bg-[var(--card)] text-[var(--muted-foreground)] border border-[var(--border)] hover:text-[var(--foreground)]'
               }`}
             >
               {conf === 'WC 2026' ? '🏆 WC 2026' : conf}
@@ -100,7 +100,7 @@ export default function InternationalRatings({ onTeamClick }) {
 
       {/* Sub-controls */}
       <div className="flex items-center justify-between mb-4">
-        <span className="text-sm text-gray-500">
+        <span className="text-sm text-[var(--muted-foreground)]">
           {loading ? '…' : `${displayData.length} teams`}
         </span>
         <label className="flex items-center gap-2 cursor-pointer select-none">
@@ -108,15 +108,15 @@ export default function InternationalRatings({ onTeamClick }) {
             type="checkbox"
             checked={showAll}
             onChange={e => setShowAll(e.target.checked)}
-            className="w-4 h-4 rounded border-gray-700 bg-gray-900 accent-emerald-500"
+            className="w-4 h-4 rounded border-[var(--border)] bg-[var(--card)] accent-[var(--primary)]"
           />
-          <span className="text-sm text-gray-400">Show all teams (including non-FIFA)</span>
+          <span className="text-sm text-[var(--muted-foreground)]">Show all teams (including non-FIFA)</span>
         </label>
       </div>
 
       {/* Loading */}
       {loading && (
-        <div className="flex items-center justify-center h-64 gap-3 text-gray-400">
+        <div className="flex items-center justify-center h-64 gap-3 text-[var(--muted-foreground)]">
           <Loader2 className="w-6 h-6 animate-spin" />
           Loading ratings…
         </div>
@@ -124,46 +124,46 @@ export default function InternationalRatings({ onTeamClick }) {
 
       {/* Error */}
       {!loading && error && (
-        <div className="text-red-400 p-6">{error}</div>
+        <div className="text-[var(--chart-5)] p-6">{error}</div>
       )}
 
       {/* Empty */}
       {!loading && !error && displayData.length === 0 && (
-        <div className="text-center py-20 text-gray-500">No teams found</div>
+        <div className="text-center py-20 text-[var(--muted-foreground)]">No teams found</div>
       )}
 
       {/* Table */}
       {!loading && !error && displayData.length > 0 && (
-        <div className="rounded-xl border border-gray-800 overflow-x-auto">
+        <div className="fc-card overflow-x-auto">
           <table className="w-full text-sm min-w-[640px]">
             <thead>
-              <tr className="bg-gray-900 border-b border-gray-800">
-                <th className="px-4 py-3 text-left text-gray-400 font-medium w-14">#</th>
-                <th className="px-4 py-3 text-left text-gray-400 font-medium">Team</th>
-                <th className="px-4 py-3 text-left text-gray-400 font-medium">Confederation</th>
-                <th className="px-4 py-3 text-right text-gray-400 font-medium">Elo Rating</th>
-                <th className="px-4 py-3 text-right text-gray-400 font-medium">Matches</th>
-                <th className="px-4 py-3 text-right text-gray-400 font-medium">Last Match</th>
+              <tr className="bg-[var(--card)] border-b border-[var(--border)]">
+                <th className="px-4 py-3 text-left text-[var(--muted-foreground)] font-medium w-14">#</th>
+                <th className="px-4 py-3 text-left text-[var(--muted-foreground)] font-medium">Team</th>
+                <th className="px-4 py-3 text-left text-[var(--muted-foreground)] font-medium">Confederation</th>
+                <th className="px-4 py-3 text-right text-[var(--muted-foreground)] font-medium">Elo Rating</th>
+                <th className="px-4 py-3 text-right text-[var(--muted-foreground)] font-medium">Matches</th>
+                <th className="px-4 py-3 text-right text-[var(--muted-foreground)] font-medium">Last Match</th>
               </tr>
             </thead>
             <tbody>
               {displayData.map((team, i) => {
                 const pct       = Math.min((team.elo_rating / MAX_RATING) * 100, 100)
                 const isMedal   = i < 3 && activeConf === 'All'
-                const confStyle = CONF_STYLE[team.confederation] ?? 'bg-gray-800 text-gray-500'
+                const confStyle = CONF_STYLE[team.confederation] ?? 'bg-[var(--muted)] text-[var(--muted-foreground)]'
 
                 return (
                   <tr
                     key={team.team}
                     onClick={() => onTeamClick?.({ name: team.team, elo: team.elo_rating, confederation: team.confederation, rank: i + 1 })}
-                    className={`border-b border-gray-800/50 transition-colors hover:bg-gray-800/50 cursor-pointer ${
-                      isMedal ? 'bg-gray-900/80' : ''
+                    className={`border-b border-[var(--border)] transition-colors hover:bg-[var(--secondary)] cursor-pointer ${
+                      isMedal ? 'bg-[var(--primary)]/5' : ''
                     }`}
                   >
-                    <td className="px-4 py-3 text-gray-500 font-mono">
+                    <td className="px-4 py-3 text-[var(--muted-foreground)] font-mono">
                       {isMedal ? MEDAL[i] : `#${i + 1}`}
                     </td>
-                    <td className="px-4 py-3 font-medium text-white">{team.team}</td>
+                    <td className="px-4 py-3 font-medium text-[var(--foreground)] hover:text-[var(--primary)] transition-colors">{team.team}</td>
                     <td className="px-4 py-3">
                       <span className={`text-xs px-2 py-0.5 rounded font-medium ${confStyle}`}>
                         {team.confederation}
@@ -171,21 +171,21 @@ export default function InternationalRatings({ onTeamClick }) {
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-end gap-3">
-                        <div className="hidden sm:block w-28 h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                        <div className="hidden sm:block w-28 h-1.5 bg-[var(--muted)] rounded-full overflow-hidden">
                           <div
-                            className={`h-full rounded-full ${isMedal ? 'bg-emerald-400' : 'bg-emerald-600'}`}
+                            className={`h-full rounded-full ${isMedal ? 'bg-[var(--primary)]' : 'bg-[var(--muted-foreground)]'}`}
                             style={{ width: `${pct}%` }}
                           />
                         </div>
-                        <span className={`font-mono tabular-nums ${isMedal ? 'text-emerald-300 font-semibold' : 'text-gray-300'}`}>
+                        <span className={`font-mono tabular-nums ${isMedal ? 'text-[var(--primary)] font-semibold' : 'text-[var(--foreground)]'}`}>
                           {team.elo_rating.toFixed(0)}
                         </span>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-right text-gray-400 tabular-nums">
+                    <td className="px-4 py-3 text-right text-[var(--muted-foreground)] tabular-nums">
                       {team.matches_played}
                     </td>
-                    <td className="px-4 py-3 text-right text-gray-400 font-mono text-xs">
+                    <td className="px-4 py-3 text-right text-[var(--muted-foreground)] font-mono text-xs">
                       {team.last_match_date}
                     </td>
                   </tr>
