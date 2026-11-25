@@ -5,6 +5,23 @@
 
 ---
 
+## Product Thesis — what FormCast is
+
+> The north star. FormCast is **not** trying to predict every game or beat the sharp match-odds market. It's a **data-driven selection engine**: the model reads each fixture and surfaces its most confident, best-supported picks — across markets (result, corners, cards, BTTS, goals, player props), not just 1X2 — and the user builds an **accumulator** from the strongest legs across different games. The matchday **email digest** is the delivery surface for these acca-ready picks; **every pick is logged to the honest ledger, win or lose**, and that verifiable record is the moat.
+
+**Why this works (and why the bar is achievable):**
+- We only need to be right about the **confident top slice**, not every game — so we don't surface fixtures the model shrugs on. The bar is per-market *confidence calibration*, not broad accuracy.
+- The edge, if it exists, lives in **softer markets** (corners, cards, player props) that bookmakers price more lazily than match-odds — not in beating Pinnacle on 1X2. "Easier" there means easier to beat the *price*, not easier to predict the (noisier) event.
+- **Accas fit how recreational punters actually bet**, and a small per-leg edge compounds. The honesty discipline (track accas *as sold* — compounded hit rate, correlation-respected — not just individual legs) is what separates FormCast from every tipster.
+
+**First proof-of-edge to run:** backtest **corners as a market** against historical odds — a soft market, data already on disk (football-data.co.uk HC/AC), research-backed signal (Wheatcroft: shots/corners beat raw goals for O/U). Free to test before paying for live pricing. This is the cheapest experiment that could prove the whole thesis.
+
+**Two-axis expansion:** (1) MARKETS — result → corners/cards/BTTS/goals → player props. (2) SPORTS — football now → **horse racing** next (structurally different: variable field sizes, per-runner form/going/weight/trainer/jockey — the true stress-test of the sport-agnostic architecture) → GAA (via PreGame Edge) → others. Everything (tips, value bets, accas, email, track record) is scoped per sport the user follows.
+
+The detailed build items that serve this thesis live in the Active Priority Queue (multi-market value bets, Today's Tips ranked set, Acca of the Day) and Later/Backlog (other sports). This section states the *why*; those state the *how*.
+
+---
+
 ## Current State & Honest Claims (Nov 20 2026)
 > **Single source of truth.** Every other section (and the site copy) defers to this one. If a number anywhere else disagrees, this section wins; fix the other place.
 
