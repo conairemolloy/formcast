@@ -177,15 +177,14 @@ export default function LandingNew({ onNavigate, onShowAuth }) {
       {/* ── 4. ABOUT ── */}
       <section className="rl-section rl-rule">
         <div className="rl-container rl-about">
-          {/* TODO(bio): replace with Conaire's photo, name and title (DESIGN.md §8). */}
-          <div className="rl-photo">[your photo]</div>
+          <img src="/conaire.jpg" alt="Conaire Molloy" className="rl-photo" />
           <div>
             <Eyebrow>Who built this</Eyebrow>
             <h2 className="rl-display">
-              [Your name] — <em>[title]</em>
+              Conaire Molloy — <em>Data Analyst</em>
             </h2>
             <p className="rl-body">
-              Data and risk analyst with a maths and finance background. Built the
+              Data analyst with a maths and finance background. Built the
               five-model ensemble solo. No tipping service — just a model, and every
               result logged publicly.
             </p>

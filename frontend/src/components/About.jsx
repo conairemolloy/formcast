@@ -1,19 +1,20 @@
 import '../remodel.css'
 
-// Placeholder About / founder page (DESIGN.md).
+// About / founder page (DESIGN.md).
 export default function About() {
   return (
     <section className="remodel">
       <div className="remodel-inner">
         <p className="remodel-eyebrow">Who built this</p>
-        <div className="remodel-photo" aria-hidden="true">[your photo]</div>
+        <img src="/conaire.jpg" alt="Conaire Molloy" className="remodel-photo" />
         <h1 className="remodel-heading">
-          [Your name] — <em>[title]</em>
+          Conaire Molloy — <em>Data Analyst</em>
         </h1>
         <p className="remodel-body">
-          [One line of bio: who you are and why you built FormCast.]
+          Data analyst with a maths and finance background. Built the
+          five-model ensemble solo. No tipping service — just a model, and every
+          result logged publicly.
         </p>
-        <p className="remodel-note">Placeholder — built in the remodel (see ROADMAP queue b)</p>
       </div>
     </section>
   )
